@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
+import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { VedicPanel } from "@/components/report/VedicPanel";
-import { guideHref, type GuideTopic } from "@/lib/guides/content";
+import type { GuideTopic } from "@/lib/guides/content";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
 type Props = {
@@ -166,41 +166,81 @@ export function ReportView({ report, watermarkEmail }: Props) {
         <section>
           <h2 className="text-xl text-ink">Numerology snapshot</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Tap any number for a generic guide page.
+            Hover a number for a tip · click to open its guide in a new tab.
           </p>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-[var(--line)] bg-white/55">
-            <table className="w-full min-w-[28rem] text-left text-sm">
-              <thead className="border-b border-[var(--line)] text-ink-soft">
+            <table className="w-full min-w-[22rem] text-left text-sm">
+              <thead className="border-b border-[var(--line)] bg-mist/50 text-ink-soft">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Aspect</th>
-                  <th className="px-4 py-3 font-medium">Number</th>
+                  <th className="px-3 py-2 font-medium">Aspect</th>
+                  <th className="px-3 py-2 font-medium">No.</th>
+                  <th className="px-3 py-2 font-medium">Aspect</th>
+                  <th className="px-3 py-2 font-medium">No.</th>
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => (
-                  <tr key={row.topic} className="border-b border-[var(--line)] last:border-0">
-                    <td className="px-4 py-3 text-ink">{row.label}</td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={guideHref(row.topic, row.value)}
-                        className="brand text-lg text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
-                      >
-                        {row.value}
-                      </Link>
+                {Array.from({ length: Math.ceil(rows.length / 2) }, (_, i) => {
+                  const left = rows[i * 2];
+                  const right = rows[i * 2 + 1];
+                  return (
+                    <tr
+                      key={left.topic}
+                      className="border-b border-[var(--line)] last:border-0"
+                    >
+                      <td className="px-3 py-2 text-ink">{left.label}</td>
+                      <td className="px-3 py-2">
+                        <GuideNumberLink
+                          topic={left.topic}
+                          value={left.value}
+                          label={left.label}
+                        />
+                      </td>
+                      {right ? (
+                        <>
+                          <td className="px-3 py-2 text-ink">{right.label}</td>
+                          <td className="px-3 py-2">
+                            <GuideNumberLink
+                              topic={right.topic}
+                              value={right.value}
+                              label={right.label}
+                            />
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="px-3 py-2 text-ink">
+                            Chaldean compound
+                          </td>
+                          <td
+                            className="px-3 py-2 text-ink"
+                            title="Compound total before reduction"
+                          >
+                            {snap.compound_number}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  );
+                })}
+                {rows.length % 2 === 0 ? (
+                  <tr>
+                    <td className="px-3 py-2 text-ink">Chaldean compound</td>
+                    <td
+                      className="px-3 py-2 text-ink"
+                      title="Compound total before reduction"
+                    >
+                      {snap.compound_number}
                     </td>
+                    <td className="px-3 py-2" colSpan={2} />
                   </tr>
-                ))}
-                <tr>
-                  <td className="px-4 py-3 text-ink">Chaldean compound</td>
-                  <td className="px-4 py-3 text-ink">{snap.compound_number}</td>
-                </tr>
+                ) : null}
               </tbody>
             </table>
           </div>
         </section>
 
         <section>
-          <h2 className="text-xl text-ink">Core numbers chart</h2>
+          <h2 className="text-xl text-ink">Core numbers at a glance</h2>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <CoreNumbersChart items={chartItems} />
           </div>

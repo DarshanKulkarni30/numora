@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { guideHref, type GuideTopic } from "@/lib/guides/content";
+import { GuideNumberLink } from "@/components/report/GuideNumberLink";
+import type { GuideTopic } from "@/lib/guides/content";
 
 type Item = {
   label: string;
@@ -13,31 +13,34 @@ type Props = {
   items: Item[];
 };
 
+/** Visual map of calculated core numbers — not strength, intensity, or ranking. */
 export function CoreNumbersChart({ items }: Props) {
-  const max = 33;
   return (
-    <div className="space-y-3">
-      {items.map((item) => {
-        const n = Number(item.value) || 0;
-        const width = Math.max(8, Math.min(100, (n / max) * 100));
-        return (
-          <div key={item.topic} className="grid grid-cols-[7.5rem_1fr_auto] items-center gap-3">
-            <span className="text-sm text-ink-soft">{item.label}</span>
-            <div className="h-3 overflow-hidden rounded-full bg-mist">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-ink to-gold"
-                style={{ width: `${width}%` }}
-              />
-            </div>
-            <Link
-              href={guideHref(item.topic, item.value)}
-              className="brand min-w-8 text-right text-lg text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
-            >
-              {item.value}
-            </Link>
+    <div>
+      <p className="text-sm leading-6 text-ink-soft">
+        These tiles show your <span className="text-ink">calculated core numbers</span>{" "}
+        (Life Path, Expression, etc.). The figure is the number itself —{" "}
+        <span className="text-ink">not</span> intensity, strength, progress, or a
+        score out of 100. Hover a number and click to open a short guide.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+        {items.map((item) => (
+          <div
+            key={item.topic}
+            className="rounded-xl border border-[var(--line)] bg-mist/60 px-3 py-4 text-center"
+          >
+            <p className="text-[11px] uppercase tracking-wider text-ink-soft">
+              {item.label}
+            </p>
+            <GuideNumberLink
+              topic={item.topic}
+              value={item.value}
+              label={item.label}
+              className="brand mt-2 inline-block text-3xl text-ink hover:text-gold-deep"
+            />
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }

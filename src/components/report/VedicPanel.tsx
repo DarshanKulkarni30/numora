@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { guideHref } from "@/lib/guides/content";
+import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 
 type Props = {
   psychic: string;
@@ -26,20 +25,25 @@ export function VedicPanel({
     <div className="rounded-2xl border border-[var(--line)] bg-gradient-to-br from-ink via-[#1e293b] to-[#0f172a] p-6 text-paper">
       <p className="text-sm uppercase tracking-[0.2em] text-sand">Vedic numbers</p>
       <p className="mt-2 text-sm text-paper/75">
-        Reflective panel (not a full kundli). Tap a number for generic guidance.
+        Reflective panel (not a full kundli). Hover a number · click opens a
+        guide in a new tab.
       </p>
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => (
-          <Link
+          <div
             key={c.topic}
-            href={guideHref(c.topic, c.value)}
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center transition hover:bg-white/10"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center"
           >
             <p className="text-[10px] uppercase tracking-wider text-sand">
               {c.label}
             </p>
-            <p className="brand mt-2 text-3xl">{c.value}</p>
-          </Link>
+            <GuideNumberLink
+              topic={c.topic}
+              value={c.value}
+              label={`Vedic ${c.label}`}
+              className="brand mt-2 inline-block text-3xl text-paper hover:text-sand"
+            />
+          </div>
         ))}
       </div>
       <p className="mt-5 text-sm text-paper/80">

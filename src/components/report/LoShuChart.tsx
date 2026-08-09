@@ -70,6 +70,9 @@ export function LoShuChart({ loShu }: Props) {
                     {slug ? (
                       <Link
                         href={guideHref("lo-shu-arrow", slug)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`Click for more about ${name}`}
                         className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
                       >
                         {name}
@@ -96,6 +99,9 @@ export function LoShuChart({ loShu }: Props) {
                     {slug ? (
                       <Link
                         href={guideHref("lo-shu-arrow", slug)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`Click for more about ${name}`}
                         className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
                       >
                         {name}
