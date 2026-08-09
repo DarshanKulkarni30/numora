@@ -15,9 +15,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const fullName = String(body.fullName || "").trim();
     const dateOfBirth = String(body.dateOfBirth || "").trim();
-    if (!fullName || !dateOfBirth) {
+    const gender = String(body.gender || "").trim();
+    const purpose = String(body.purpose || "").trim();
+    if (!fullName || !dateOfBirth || !gender || !purpose) {
       return NextResponse.json(
-        { error: "Full name and date of birth are required." },
+        {
+          error:
+            "Full name, date of birth, gender, and purpose are required.",
+        },
         { status: 400 },
       );
     }
@@ -26,8 +31,8 @@ export async function POST(request: Request) {
       fullName,
       preferredName: String(body.preferredName || ""),
       dateOfBirth,
-      gender: String(body.gender || ""),
-      purpose: String(body.purpose || ""),
+      gender,
+      purpose,
     });
 
     const supabase = await createClient();

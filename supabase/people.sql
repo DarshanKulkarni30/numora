@@ -1,36 +1,5 @@
--- Numora: run in Supabase SQL editor
+-- Incremental: people table only (safe if reports already exists)
 
-create table if not exists public.reports (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users (id) on delete cascade,
-  full_name text not null,
-  preferred_name text default '',
-  date_of_birth text not null,
-  age integer not null,
-  report_type text not null,
-  snapshot jsonb not null,
-  report jsonb not null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists reports_user_id_created_at_idx
-  on public.reports (user_id, created_at desc);
-
-alter table public.reports enable row level security;
-
-create policy "Users read own reports"
-  on public.reports for select
-  using (auth.uid() = user_id);
-
-create policy "Users insert own reports"
-  on public.reports for insert
-  with check (auth.uid() = user_id);
-
-create policy "Users delete own reports"
-  on public.reports for delete
-  using (auth.uid() = user_id);
-
--- Saved people for readings (self + up to 3 family members)
 create table if not exists public.people (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -50,6 +19,11 @@ create index if not exists people_user_id_sort_idx
   on public.people (user_id, sort_order);
 
 alter table public.people enable row level security;
+
+drop policy if exists "Users read own people" on public.people;
+drop policy if exists "Users insert own people" on public.people;
+drop policy if exists "Users update own people" on public.people;
+drop policy if exists "Users delete own people" on public.people;
 
 create policy "Users read own people"
   on public.people for select

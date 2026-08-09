@@ -1,28 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DobInput } from "@/components/DobInput";
+import { isValidDob } from "@/lib/profile/date";
+import {
+  GENDER_OPTIONS,
+  PURPOSE_OPTIONS,
+  type PersonRecord,
+} from "@/lib/profile/options";
 
-export function ReportForm() {
+type Props = {
+  people: PersonRecord[];
+};
+
+const fieldClass =
+  "w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2";
+
+export function ReportForm({ people }: Props) {
   const router = useRouter();
+  const completePeople = useMemo(
+    () =>
+      people.filter(
+        (p) =>
+          p.full_name.trim() &&
+          isValidDob(p.date_of_birth) &&
+          p.gender &&
+          p.purpose,
+      ),
+    [people],
+  );
+
+  const [personId, setPersonId] = useState(completePeople[0]?.id || "");
+  const selected = completePeople.find((p) => p.id === personId) || completePeople[0];
+
+  const [fullName, setFullName] = useState(selected?.full_name || "");
+  const [preferredName, setPreferredName] = useState(selected?.preferred_name || "");
+  const [dateOfBirth, setDateOfBirth] = useState(selected?.date_of_birth || "");
+  const [gender, setGender] = useState(selected?.gender || "");
+  const [purpose, setPurpose] = useState(selected?.purpose || "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function applyPerson(p: PersonRecord) {
+    setPersonId(p.id || "");
+    setFullName(p.full_name);
+    setPreferredName(p.preferred_name);
+    setDateOfBirth(p.date_of_birth);
+    setGender(p.gender);
+    setPurpose(p.purpose);
+  }
+
+  const canGenerate = Boolean(
+    fullName.trim() && isValidDob(dateOfBirth) && gender && purpose,
+  );
+
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!canGenerate) return;
     setError(null);
     setLoading(true);
-    const form = new FormData(e.currentTarget);
     try {
       const res = await fetch("/api/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullName: form.get("fullName"),
-          preferredName: form.get("preferredName"),
-          dateOfBirth: form.get("dateOfBirth"),
-          gender: form.get("gender"),
-          purpose: form.get("purpose"),
+          fullName,
+          preferredName,
+          dateOfBirth,
+          gender,
+          purpose,
         }),
       });
       const data = await res.json();
@@ -34,20 +82,68 @@ export function ReportForm() {
     }
   }
 
+  if (completePeople.length === 0) {
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-[var(--line)] bg-white/55 px-6 py-10 text-center">
+        <p className="text-ink">
+          Save at least one complete profile (you or a family member) before
+          generating a reading.
+        </p>
+        <Link
+          href="/profile"
+          className="mt-6 inline-block rounded-full bg-ink px-6 py-3 text-paper hover:bg-sea-deep"
+        >
+          Go to profile settings
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={onSubmit} className="mx-auto w-full max-w-xl space-y-5">
+      <div>
+        <label className="mb-1 block text-sm text-ink-soft" htmlFor="person">
+          Who is this reading for? *
+        </label>
+        <select
+          id="person"
+          className={fieldClass}
+          value={selected?.id || ""}
+          onChange={(e) => {
+            const p = completePeople.find((x) => x.id === e.target.value);
+            if (p) applyPerson(p);
+          }}
+        >
+          {completePeople.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.is_self
+                ? `${p.preferred_name || p.full_name} (Self)`
+                : `${p.preferred_name || p.full_name} (${p.relationship})`}
+            </option>
+          ))}
+        </select>
+        <p className="mt-1 text-xs text-ink-soft">
+          Manage people in{" "}
+          <Link href="/profile" className="underline">
+            Profile settings
+          </Link>
+          .
+        </p>
+      </div>
+
       <div>
         <label className="mb-1 block text-sm text-ink-soft" htmlFor="fullName">
           Full name (as per birth certificate) *
         </label>
         <input
           id="fullName"
-          name="fullName"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
           required
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
-          placeholder="e.g. Aarav Mehta"
+          className={fieldClass}
         />
       </div>
+
       <div>
         <label
           className="mb-1 block text-sm text-ink-soft"
@@ -57,47 +153,56 @@ export function ReportForm() {
         </label>
         <input
           id="preferredName"
-          name="preferredName"
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
+          value={preferredName}
+          onChange={(e) => setPreferredName(e.target.value)}
+          className={fieldClass}
         />
       </div>
-      <div>
-        <label
-          className="mb-1 block text-sm text-ink-soft"
-          htmlFor="dateOfBirth"
-        >
-          Date of birth (DD/MM/YYYY) *
-        </label>
-        <input
-          id="dateOfBirth"
-          name="dateOfBirth"
-          required
-          pattern="\d{2}/\d{2}/\d{4}"
-          placeholder="DD/MM/YYYY"
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
-        />
-      </div>
+
+      <DobInput
+        id="dateOfBirth"
+        value={dateOfBirth}
+        onChange={setDateOfBirth}
+      />
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm text-ink-soft" htmlFor="gender">
-            Gender (optional)
+            Gender *
           </label>
-          <input
+          <select
             id="gender"
-            name="gender"
-            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
-          />
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className={fieldClass}
+            required
+          >
+            <option value="">Select gender</option>
+            {GENDER_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="mb-1 block text-sm text-ink-soft" htmlFor="purpose">
-            Purpose (optional)
+            Purpose *
           </label>
-          <input
+          <select
             id="purpose"
-            name="purpose"
-            placeholder="Self-reflection"
-            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
-          />
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            className={fieldClass}
+            required
+          >
+            <option value="">Select purpose</option>
+            {PURPOSE_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -109,8 +214,8 @@ export function ReportForm() {
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full rounded-full bg-ink px-6 py-3 font-medium text-paper transition hover:bg-sea-deep disabled:opacity-60"
+        disabled={!canGenerate || loading}
+        className="w-full rounded-full bg-ink px-6 py-3 font-medium text-paper transition hover:bg-sea-deep disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? "Generating your reading…" : "Generate reading"}
       </button>
