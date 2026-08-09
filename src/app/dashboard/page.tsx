@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import {
+  ReportsList,
+  type DashboardReport,
+} from "@/components/dashboard/ReportsList";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -16,8 +20,12 @@ export default async function DashboardPage() {
 
   const { data: reports } = await supabase
     .from("reports")
-    .select("id, full_name, preferred_name, date_of_birth, age, report_type, created_at, snapshot")
+    .select(
+      "id, full_name, preferred_name, date_of_birth, age, report_type, created_at, snapshot",
+    )
     .order("created_at", { ascending: false });
+
+  const list = (reports ?? []) as DashboardReport[];
 
   return (
     <div>
@@ -38,44 +46,8 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        <div className="mt-10 space-y-3">
-          {(reports ?? []).length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[var(--line)] bg-white/40 px-6 py-12 text-center text-ink-soft">
-              No saved readings yet.{" "}
-              <Link href="/report/new" className="text-gold-deep underline">
-                Create your first report
-              </Link>
-              .
-            </div>
-          ) : (
-            (reports ?? []).map((r) => {
-              const snap = r.snapshot as { life_path?: string } | null;
-              return (
-                <Link
-                  key={r.id}
-                  href={`/report/${r.id}`}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-4 transition hover:bg-white/80"
-                >
-                  <div>
-                    <p className="text-lg text-ink">
-                      {r.preferred_name || r.full_name}
-                    </p>
-                    <p className="text-sm text-ink-soft">
-                      {r.date_of_birth} · Age {r.age} · {r.report_type}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="brand text-2xl text-ink">
-                      {snap?.life_path ?? "—"}
-                    </p>
-                    <p className="text-xs text-ink-soft">
-                      {new Date(r.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                </Link>
-              );
-            })
-          )}
+        <div className="mt-10">
+          <ReportsList initialReports={list} />
         </div>
       </main>
     </div>
