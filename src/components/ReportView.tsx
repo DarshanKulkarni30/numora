@@ -1,12 +1,48 @@
 "use client";
 
-import { useEffect } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
+import { LoShuChart } from "@/components/report/LoShuChart";
+import { VedicPanel } from "@/components/report/VedicPanel";
+import { guideHref, type GuideTopic } from "@/lib/guides/content";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
 type Props = {
   report: NumerologyReport;
   watermarkEmail?: string;
 };
+
+type SnapshotRow = {
+  label: string;
+  topic: GuideTopic;
+  value: string;
+};
+
+function Accordion({
+  title,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="rounded-2xl border border-[var(--line)] bg-white/45">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+      >
+        <span className="text-lg text-ink">{title}</span>
+        <span className="text-ink-soft">{open ? "−" : "+"}</span>
+      </button>
+      {open ? <div className="border-t border-[var(--line)] px-5 py-4">{children}</div> : null}
+    </div>
+  );
+}
 
 export function ReportView({ report, watermarkEmail }: Props) {
   useEffect(() => {
@@ -35,6 +71,35 @@ export function ReportView({ report, watermarkEmail }: Props) {
   }, []);
 
   const snap = report.numerology_snapshot;
+  const person = report.person;
+
+  const rows: SnapshotRow[] = [
+    { label: "Life Path", topic: "life-path", value: snap.life_path },
+    { label: "Birth Day", topic: "birth-day", value: snap.birth_day },
+    { label: "Expression", topic: "expression", value: snap.expression_number },
+    { label: "Soul Urge", topic: "soul-urge", value: snap.soul_urge_number },
+    { label: "Personality", topic: "personality", value: snap.personality_number },
+    { label: "Maturity", topic: "maturity", value: snap.maturity_number },
+    { label: "Chaldean Name", topic: "chaldean-name", value: snap.chaldean_name_number },
+    { label: "Vedic Psychic", topic: "vedic-psychic", value: snap.vedic_psychic },
+    { label: "Vedic Destiny", topic: "vedic-destiny", value: snap.vedic_destiny },
+    { label: "Vedic Name", topic: "vedic-name", value: snap.vedic_name },
+    { label: "Personal Year", topic: "personal-year", value: snap.personal_year },
+    { label: "Personal Month", topic: "personal-month", value: snap.personal_month },
+  ];
+
+  const chartItems = [
+    { label: "Life Path", topic: "life-path" as const, value: snap.life_path },
+    { label: "Expression", topic: "expression" as const, value: snap.expression_number },
+    { label: "Soul Urge", topic: "soul-urge" as const, value: snap.soul_urge_number },
+    { label: "Personality", topic: "personality" as const, value: snap.personality_number },
+    { label: "Maturity", topic: "maturity" as const, value: snap.maturity_number },
+  ];
+
+  const summary = report.sections.find((s) => s.id === "executive-summary");
+  const detailSections = report.sections.filter(
+    (s) => s.id !== "executive-summary" && s.id !== "snapshot",
+  );
 
   return (
     <article className="report-protected relative mx-auto max-w-3xl px-5 pb-20 pt-4">
@@ -51,55 +116,138 @@ export function ReportView({ report, watermarkEmail }: Props) {
         </div>
       ) : null}
 
-      <div className="relative z-10">
-        <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
-          Private reading
-        </p>
-        <h1 className="mt-2 text-4xl text-ink md:text-5xl">
-          {report.person.preferred_name || report.person.full_name}
-        </h1>
-        <p className="mt-3 text-ink-soft">
-          Born {report.person.date_of_birth} · Age {report.person.age} ·{" "}
-          {report.person.report_type} report
-        </p>
+      <div className="relative z-10 space-y-10">
+        <header>
+          <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
+            Private reading
+          </p>
+          <h1 className="mt-2 text-4xl text-ink md:text-5xl">
+            {person.preferred_name || person.full_name}
+          </h1>
+        </header>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {[
-            ["Life Path", snap.life_path],
-            ["Expression", snap.expression_number],
-            ["Vedic Destiny", snap.vedic_destiny],
-            ["Personal Year", snap.personal_year],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-2xl border border-[var(--line)] bg-white/50 px-4 py-3 backdrop-blur"
-            >
-              <p className="text-xs uppercase tracking-wider text-ink-soft">
-                {label}
-              </p>
-              <p className="brand mt-1 text-2xl text-ink">{value}</p>
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Person details</h2>
+          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+            {[
+              ["Full name", person.full_name],
+              ["Preferred name", person.preferred_name || "—"],
+              ["Date of birth", person.date_of_birth],
+              ["Age", String(person.age)],
+              ["Gender", person.gender || "—"],
+              ["Purpose", person.purpose || "—"],
+              ["Report type", person.report_type],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <dt className="text-ink-soft">{k}</dt>
+                <dd className="mt-0.5 text-ink">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">Numerology snapshot</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Tap any number for a generic guide page.
+          </p>
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-[var(--line)] bg-white/55">
+            <table className="w-full min-w-[28rem] text-left text-sm">
+              <thead className="border-b border-[var(--line)] text-ink-soft">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Aspect</th>
+                  <th className="px-4 py-3 font-medium">Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.topic} className="border-b border-[var(--line)] last:border-0">
+                    <td className="px-4 py-3 text-ink">{row.label}</td>
+                    <td className="px-4 py-3">
+                      <Link
+                        href={guideHref(row.topic, row.value)}
+                        className="brand text-lg text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
+                      >
+                        {row.value}
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="px-4 py-3 text-ink">Chaldean compound</td>
+                  <td className="px-4 py-3 text-ink">{snap.compound_number}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">Core numbers chart</h2>
+          <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <CoreNumbersChart items={chartItems} />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">Vedic number panel</h2>
+          <div className="mt-4">
+            <VedicPanel
+              psychic={snap.vedic_psychic}
+              destiny={snap.vedic_destiny}
+              nameNumber={snap.vedic_name}
+              rulingPlanet={report.vedic.ruling_planet}
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">Lo Shu birth grid</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Present arrows may show strength patterns; missing arrows are growth
+            areas—not fixed limits.
+          </p>
+          <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <LoShuChart loShu={report.lo_shu} />
+          </div>
+        </section>
+
+        {summary ? (
+          <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <h2 className="text-xl text-ink">Executive summary</h2>
+            <div className="mt-3 whitespace-pre-wrap leading-8 text-ink-soft">
+              {summary.body}
             </div>
-          ))}
-        </div>
+          </section>
+        ) : null}
 
-        <div className="mt-10 space-y-10">
-          {report.sections.map((section) => (
-            <section key={section.id}>
-              <h2 className="text-2xl text-ink">{section.title}</h2>
-              <div className="mt-3 whitespace-pre-wrap text-[1.05rem] leading-8 text-ink-soft">
+        <section className="space-y-3">
+          <h2 className="text-xl text-ink">Detailed reading</h2>
+          <p className="text-sm text-ink-soft">
+            Expand a section when you want the fuller narrative.
+          </p>
+          {detailSections.map((section, i) => (
+            <Accordion
+              key={section.id}
+              title={section.title}
+              defaultOpen={i === 0}
+            >
+              <div className="whitespace-pre-wrap leading-8 text-ink-soft">
                 {section.body}
               </div>
-            </section>
+            </Accordion>
           ))}
-        </div>
+        </section>
 
-        <p className="mt-12 border-t border-[var(--line)] pt-6 text-sm text-ink-soft">
-          {report.disclaimer}
-        </p>
-        <p className="mt-2 text-xs text-ink-soft/80">
-          On-screen viewing only. Copying, downloading, and printing are
-          disabled on free reports. PDF export arrives in a future paid plan.
-        </p>
+        <footer>
+          <p className="border-t border-[var(--line)] pt-6 text-sm text-ink-soft">
+            {report.disclaimer}
+          </p>
+          <p className="mt-2 text-xs text-ink-soft/80">
+            On-screen viewing only. Copying, downloading, and printing are
+            disabled on free reports. Guide links open standard reference pages.
+          </p>
+        </footer>
       </div>
     </article>
   );

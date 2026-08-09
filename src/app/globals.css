@@ -56,6 +56,11 @@ h3,
   -webkit-touch-callout: none;
 }
 
+.report-protected a {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .report-protected ::selection {
   background: transparent;
 }
