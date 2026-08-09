@@ -13,6 +13,11 @@ import {
   pickUnique,
   yearMonthMeaning,
 } from "./meanings";
+import { CAREER_DISCLAIMER, modernProfessionsFor } from "./careers";
+import {
+  COMPAT_DISCLAIMER,
+  buildCompatibilityMatrix,
+} from "./compatibility";
 import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
@@ -325,7 +330,16 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     {
       id: "career",
       title: interestsTitle,
-      body: report.personality.career_style,
+      body: [
+        report.personality.career_style,
+        "",
+        report.career_suggestions.disclaimer,
+        "",
+        report.person.report_type === "child"
+          ? "Interest / activity ideas (playful exploration only):"
+          : "Modern profession ideas to explore (brainstorming only):",
+        ...report.career_suggestions.professions.map((p) => `• ${p}`),
+      ].join("\n"),
     },
     {
       id: "relationships",
@@ -387,6 +401,21 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         report.recommendations_disclaimer,
         "",
         ...report.recommendations.map((r, i) => `${i + 1}. ${r}`),
+      ].join("\n"),
+    },
+    {
+      id: "compatibility",
+      title: "18. Compatibility Matrix (Life Path)",
+      body: [
+        report.compatibility.disclaimer,
+        "",
+        `Your Life Path ${report.compatibility.life_path} × partner Life Path tones:`,
+        ...report.compatibility.matrix.map(
+          (row) =>
+            `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
+        ),
+        "",
+        "Supportive = often easier rapport in tradition · Balanced = mixed ease/stretch · Growth-oriented = may need patience and clear boundaries. Never a verdict on people.",
       ].join("\n"),
     },
     {
@@ -460,20 +489,58 @@ export function generateReport(
     "relationships",
   );
 
+  const professions = modernProfessionsFor(pyth.lifePath, pyth.expression);
   const career = assertSafeCopy(
-    isChild || isTeen
+    isChild
       ? [
           `Interests and learning tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
           meaningFor(pyth.expression),
           "Activities that allow curiosity, contribution, and ethical growth may feel engaging. This is not career placement, talent ranking, or a prediction of future success.",
         ].join(" ")
-      : [
-          `Career tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
-          meaningFor(pyth.expression),
-          "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical progress still depends on preparation, relationships, and consistent effort—not chart numbers alone.",
-        ].join(" "),
+      : isTeen
+        ? [
+            `Interests and learning tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
+            meaningFor(pyth.expression),
+            "Below are modern fields teens sometimes explore for inspiration—not a locked career path or school-stream decision tool.",
+          ].join(" ")
+        : [
+            `Career tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
+            meaningFor(pyth.expression),
+            "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical progress still depends on preparation, relationships, and consistent effort—not chart numbers alone.",
+            "A short list of modern professions linked to these numbers appears below for brainstorming only.",
+          ].join(" "),
     "career",
   );
+
+  const career_suggestions = {
+    professions: assertSafeList(
+      isChild
+        ? [
+            "Building / making projects",
+            "Drawing, music, or storytelling",
+            "Nature walks and collecting facts",
+            "Helping roles at home or class",
+            "Puzzles, coding toys, or logic games",
+            "Sports and movement games",
+            "Caring for plants or pets (with adults)",
+            "Group games that need teamwork",
+          ]
+        : professions,
+      "professions",
+    ),
+    disclaimer: CAREER_DISCLAIMER,
+  };
+
+  const compatibility = {
+    life_path: String(pyth.lifePath),
+    matrix: buildCompatibilityMatrix(pyth.lifePath).map((row) => ({
+      partnerLifePath: row.partnerLifePath,
+      romantic: isChild ? "—" : row.romantic,
+      business: isChild ? row.friendship : row.business,
+      friendship: row.friendship,
+    })),
+    disclaimer: COMPAT_DISCLAIMER,
+  };
 
   const chaldeanAnalysis = assertSafeCopy(
     [
@@ -603,6 +670,8 @@ export function generateReport(
       relationship_style: relationships,
       career_style: career,
     },
+    career_suggestions,
+    compatibility,
     strengths,
     growth_opportunities,
     age_guidance,

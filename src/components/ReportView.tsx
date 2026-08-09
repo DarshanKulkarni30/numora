@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { LoShuChart } from "@/components/report/LoShuChart";
@@ -99,7 +100,10 @@ export function ReportView({ report, watermarkEmail }: Props) {
 
   const summary = report.sections.find((s) => s.id === "executive-summary");
   const detailSections = report.sections.filter(
-    (s) => s.id !== "executive-summary" && s.id !== "snapshot",
+    (s) =>
+      s.id !== "executive-summary" &&
+      s.id !== "snapshot" &&
+      s.id !== "compatibility",
   );
 
   return (
@@ -312,12 +316,56 @@ export function ReportView({ report, watermarkEmail }: Props) {
                   {report.recommendations_disclaimer || report.disclaimer}
                 </div>
               ) : null}
-              <div className="whitespace-pre-wrap leading-8 text-ink-soft">
-                {section.body}
-              </div>
+              {section.id === "career" && report.career_suggestions ? (
+                <div className="space-y-4">
+                  <div className="whitespace-pre-wrap leading-8 text-ink-soft">
+                    {report.personality.career_style}
+                  </div>
+                  <p className="rounded-xl border border-amber-700/30 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                    {report.career_suggestions.disclaimer}
+                  </p>
+                  <div>
+                    <h3 className="text-ink">
+                      {person.report_type === "child"
+                        ? "Interest ideas to explore"
+                        : "Modern profession ideas"}
+                    </h3>
+                    <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                      {report.career_suggestions.professions.map((p) => (
+                        <li
+                          key={p}
+                          className="rounded-xl border border-[var(--line)] bg-mist/50 px-3 py-2 text-sm text-ink"
+                        >
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <div className="whitespace-pre-wrap leading-8 text-ink-soft">
+                  {section.body}
+                </div>
+              )}
             </Accordion>
           ))}
         </section>
+
+        {report.compatibility ? (
+          <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <h2 className="text-xl text-ink">
+              Compatibility matrix (Life Path)
+            </h2>
+            <div className="mt-4">
+              <CompatibilityMatrix
+                lifePath={report.compatibility.life_path}
+                matrix={report.compatibility.matrix}
+                disclaimer={report.compatibility.disclaimer}
+                hideRomantic={person.report_type === "child"}
+              />
+            </div>
+          </section>
+        ) : null}
 
         <footer>
           <p className="border-t border-[var(--line)] pt-6 text-sm text-ink-soft">

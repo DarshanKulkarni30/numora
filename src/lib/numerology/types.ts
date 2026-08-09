@@ -87,6 +87,20 @@ export type NumerologyReport = {
     relationship_style: string;
     career_style: string;
   };
+  career_suggestions: {
+    professions: string[];
+    disclaimer: string;
+  };
+  compatibility: {
+    life_path: string;
+    matrix: {
+      partnerLifePath: number;
+      romantic: string;
+      business: string;
+      friendship: string;
+    }[];
+    disclaimer: string;
+  };
   strengths: string[];
   growth_opportunities: string[];
   age_guidance: {
