@@ -1,103 +1,93 @@
-import Image from "next/image";
+import Link from "next/link";
+import { SiteHeader } from "@/components/SiteHeader";
+import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  let email: string | null = null;
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      email = user?.email ?? null;
+    } catch {
+      email = null;
+    }
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div>
+      <SiteHeader email={email} />
+      <main className="mx-auto max-w-6xl px-5 pb-24">
+        <section className="relative grid min-h-[78vh] items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
+          <div className="animate-rise">
+            <p className="brand text-5xl text-sea-deep md:text-7xl">Numerora</p>
+            <h1 className="mt-4 max-w-xl text-3xl leading-tight text-ink md:text-4xl">
+              Quiet clarity from your name and birth date
+            </h1>
+            <p className="mt-4 max-w-lg text-lg leading-8 text-ink-soft">
+              Pythagorean, Chaldean, Vedic, and Lo Shu insights woven into one
+              private, on-screen reading—for reflection, not prediction.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href={email ? "/report/new" : "/login?next=/report/new"}
+                className="rounded-full bg-sea px-6 py-3 text-paper transition hover:bg-sea-deep"
+              >
+                Begin a reading
+              </Link>
+              <Link
+                href={email ? "/dashboard" : "/login"}
+                className="rounded-full border border-[var(--line)] bg-white/50 px-6 py-3 text-ink transition hover:bg-white"
+              >
+                {email ? "Your dashboard" : "Sign in with email"}
+              </Link>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+          <div className="animate-rise-delay relative">
+            <div className="animate-drift absolute -right-4 -top-6 h-40 w-40 rounded-full bg-sea/15 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--line)] bg-gradient-to-br from-[#1f6f78] via-[#14545b] to-[#122028] p-8 text-paper shadow-[0_30px_80px_var(--glow)]">
+              <p className="text-sm uppercase tracking-[0.25em] text-sand">
+                Sample snapshot
+              </p>
+              <p className="brand mt-6 text-5xl">Life Path</p>
+              <p className="mt-2 text-7xl font-light">7</p>
+              <p className="mt-6 max-w-sm text-sm leading-7 text-paper/80">
+                According to numerology traditions, this may indicate a season of
+                thoughtful study and inward clarity—possibilities, never
+                certainties.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 grid gap-8 border-t border-[var(--line)] pt-14 md:grid-cols-3">
+          {[
+            [
+              "Four traditions",
+              "Pythagorean core numbers, Chaldean name vibration, Vedic psychic & destiny, and Lo Shu grid planes.",
+            ],
+            [
+              "Saved privately",
+              "Magic-link sign-in keeps your readings in your account—ready when you return.",
+            ],
+            [
+              "View-only free tier",
+              "On-screen reports with copy protection. PDF export is planned for a later paid plan.",
+            ],
+          ].map(([title, copy]) => (
+            <div key={title}>
+              <h2 className="text-xl text-ink">{title}</h2>
+              <p className="mt-2 leading-7 text-ink-soft">{copy}</p>
+            </div>
+          ))}
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }

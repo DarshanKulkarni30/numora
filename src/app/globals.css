@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #122028;
+  --ink-soft: #2a3d47;
+  --mist: #eef3f4;
+  --paper: #f7faf9;
+  --sea: #1f6f78;
+  --sea-deep: #14545b;
+  --sand: #d8c3a5;
+  --line: rgba(18, 32, 40, 0.12);
+  --glow: rgba(31, 111, 120, 0.18);
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-mist: var(--mist);
+  --color-paper: var(--paper);
+  --color-sea: var(--sea);
+  --color-sea-deep: var(--sea-deep);
+  --color-sand: var(--sand);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(31, 111, 120, 0.16), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(216, 195, 165, 0.35), transparent 50%),
+    linear-gradient(180deg, #f7faf9 0%, #eef3f4 45%, #f4f0ea 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), Georgia, serif;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.report-protected {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.report-protected ::selection {
+  background: transparent;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  body::before {
+    content: "Printing is disabled for free Numerora reports.";
+    visibility: visible;
+    display: block;
+    padding: 2rem;
+    font-size: 1.25rem;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.8s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: rise 0.9s ease-out 0.15s both;
+}
+
+.animate-drift {
+  animation: drift 7s ease-in-out infinite;
 }
