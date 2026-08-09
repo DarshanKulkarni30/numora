@@ -1,3 +1,4 @@
+import { loShuEffectNotes } from "./loShuEffects";
 import type { LoShuResult } from "./types";
 import { parseDob } from "./reduce";
 
@@ -61,13 +62,15 @@ export function calculateLoShu(dob: string): LoShuResult {
     a.numbers.every((n) => grid[n] === 0),
   ).map((a) => a.name);
 
+  const effects = loShuEffectNotes(repeated_numbers, missing_numbers);
+
   const analysis = [
     `According to Lo Shu traditions, present numbers (${present_numbers.join(", ") || "none highlighted"}) may indicate active traits in the birth-date pattern.`,
     missing_numbers.length
-      ? `Missing numbers (${missing_numbers.join(", ")}) may suggest growth opportunities to cultivate through habits—not fixed limits.`
+      ? `Missing numbers (${missing_numbers.join(", ")}) may suggest growth opportunities to cultivate through habits—not fixed limits. ${effects.missing.join(" ")}`
       : "No missing numbers appear in this grid pattern, which may suggest a broadly distributed set of traits.",
     repeated_numbers.length
-      ? `Repeated numbers (${repeated_numbers.map((r) => `${r.number}×${r.count}`).join(", ")}) may emphasize those themes more strongly.`
+      ? `Repeated numbers (${repeated_numbers.map((r) => `${r.number}×${r.count}`).join(", ")}) may emphasize those themes more strongly. ${effects.repeated.join(" ")}`
       : "No repeated numbers stand out beyond single occurrences.",
     `Mental plane: ${mental_plane}. Emotional plane: ${emotional_plane}. Practical plane: ${practical_plane}.`,
     present_arrows.length

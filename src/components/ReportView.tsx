@@ -266,8 +266,8 @@ export function ReportView({ report, watermarkEmail }: Props) {
         <section>
           <h2 className="text-xl text-ink">Lo Shu birth grid</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Present arrows may show strength patterns; missing arrows are growth
-            areas—not fixed limits.
+            Color-coded planes, number meanings, and notes on repeats or gaps.
+            Missing arrows are growth areas—not fixed limits.
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <LoShuChart loShu={report.lo_shu} />

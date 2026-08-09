@@ -2,33 +2,11 @@
 
 import Link from "next/link";
 import { arrowNameToSlug, guideHref } from "@/lib/guides/content";
+import {
+  LO_SHU_NUMBER_META,
+  loShuEffectNotes,
+} from "@/lib/numerology/loShuEffects";
 import type { LoShuResult } from "@/lib/numerology/types";
-
-/** Short Lo Shu cell themes (1–2 words) for the chart legend. */
-const NUMBER_LABELS: Record<number, string> = {
-  1: "Initiative",
-  2: "Cooperation",
-  3: "Expression",
-  4: "Structure",
-  5: "Freedom",
-  6: "Care",
-  7: "Insight",
-  8: "Ambition",
-  9: "Compassion",
-};
-
-/** Light Vedic numerology nicknames for the same legend. */
-const VEDIC_NICKNAMES: Record<number, string> = {
-  1: "King",
-  2: "Queen",
-  3: "Guru",
-  4: "Rebel",
-  5: "Prince",
-  6: "Lover",
-  7: "Mystic",
-  8: "Judge",
-  9: "Commander",
-};
 
 const NUMBER_PLANE_TINT: Record<number, string> = {
   4: "text-sky-800",
@@ -61,6 +39,11 @@ type Props = {
 };
 
 export function LoShuChart({ loShu }: Props) {
+  const effects = loShuEffectNotes(
+    loShu.repeated_numbers,
+    loShu.missing_numbers,
+  );
+
   const planes: PlaneRow[] = [
     {
       id: "mental",
@@ -126,7 +109,7 @@ export function LoShuChart({ loShu }: Props) {
                 return (
                   <div
                     key={n}
-                    title={`${plane.label} · ${n} ${NUMBER_LABELS[n]} (${VEDIC_NICKNAMES[n]})${missing ? " (missing)" : ` ×${count}`}`}
+                    title={`${plane.label} · ${n} ${LO_SHU_NUMBER_META[n].trait} (${LO_SHU_NUMBER_META[n].vedic})${missing ? " (missing)" : ` ×${count}`}`}
                     className={`flex aspect-square flex-col items-center justify-center rounded-lg border ${
                       missing ? plane.missing : plane.present
                     }`}
@@ -170,13 +153,48 @@ export function LoShuChart({ loShu }: Props) {
                 {n}
               </span>
               <span className="text-ink-soft">
-                {NUMBER_LABELS[n]}{" "}
-                <span className="text-ink/70">· {VEDIC_NICKNAMES[n]}</span>
+                {LO_SHU_NUMBER_META[n].trait}{" "}
+                <span className="text-ink/70">
+                  · {LO_SHU_NUMBER_META[n].vedic}
+                </span>
               </span>
             </li>
           ))}
         </ul>
       </div>
+
+      {(effects.repeated.length > 0 || effects.missing.length > 0) && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <h3 className="text-ink">Repeated numbers</h3>
+            {effects.repeated.length ? (
+              <ul className="mt-2 space-y-2 text-sm text-ink-soft">
+                {effects.repeated.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-ink-soft">
+                No repeats beyond single occurrences.
+              </p>
+            )}
+          </div>
+          <div>
+            <h3 className="text-ink">Missing numbers</h3>
+            {effects.missing.length ? (
+              <ul className="mt-2 space-y-2 text-sm text-ink-soft">
+                {effects.missing.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-ink-soft">
+                No missing numbers in this grid.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div>
