@@ -2,9 +2,12 @@ import { calculateChaldean } from "./chaldean";
 import { personalMonth, personalYear } from "./cycles";
 import { calculateLoShu } from "./loShu";
 import {
+  CHILD_REPORT_DISCLAIMER,
   DISCLAIMER,
   GROWTH_BANK,
+  RECOMMENDATIONS_DISCLAIMER,
   STRENGTH_BANK,
+  TEEN_REPORT_DISCLAIMER,
   chaldeanCompoundMeaning,
   meaningFor,
   pickUnique,
@@ -12,6 +15,7 @@ import {
 } from "./meanings";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
+import { assertSafeCopy, assertSafeList } from "./safety";
 import type {
   NumerologyReport,
   PersonInput,
@@ -40,6 +44,13 @@ function growthFor(...nums: number[]): string[] {
   return pickUnique(pool, 7);
 }
 
+function safetyNoticesFor(reportType: ReportType): string[] {
+  if (reportType === "child") return [CHILD_REPORT_DISCLAIMER, RECOMMENDATIONS_DISCLAIMER];
+  if (reportType === "adolescent")
+    return [TEEN_REPORT_DISCLAIMER, RECOMMENDATIONS_DISCLAIMER];
+  return [RECOMMENDATIONS_DISCLAIMER];
+}
+
 function ageGuidance(age: number, name: string, lifePath: number): {
   category: string;
   guidance: string;
@@ -48,13 +59,14 @@ function ageGuidance(age: number, name: string, lifePath: number): {
     return {
       category: "Parent Guidance",
       guidance: [
-        `For ${name}, according to numerology traditions, Life Path ${lifePath} may offer supportive clues about learning style and emotional needs—not fixed labels.`,
-        "Learning style: this pattern may suggest responding well to encouragement, clear routines, and creative exploration matched to attention span.",
+        CHILD_REPORT_DISCLAIMER,
+        `For ${name}, according to numerology traditions, Life Path ${lifePath} may offer supportive clues about learning preferences and emotional needs—not fixed labels or abilities.`,
+        "Learning style (reflective only): this pattern may suggest responding well to encouragement, clear routines, and creative exploration matched to attention span. This is not an educational diagnosis.",
         "Confidence building: celebrate small completions and effort, not only outcomes. Short wins can strengthen a sense of capability.",
         "Emotional needs: warmth, predictable care, and space to name feelings may help this period of development.",
-        "Parenting approach: firm kindness—boundaries with explanation—may align well with growing self-trust.",
+        "Parenting approach: firm kindness—boundaries with explanation—may support growing self-trust. Adapt to the individual child and seek professional guidance when needed.",
         "Communication advice: ask open questions, reflect feelings, and avoid comparing progress to peers.",
-        "Children continue developing emotionally, socially and intellectually. These insights should be used as supportive guidance rather than fixed labels.",
+        "Children continue developing emotionally, socially and intellectually. These insights should be used as supportive reflection rather than fixed labels, rankings, or predictions.",
       ].join("\n\n"),
     };
   }
@@ -62,14 +74,15 @@ function ageGuidance(age: number, name: string, lifePath: number): {
     return {
       category: "Guidance For Teens And Parents",
       guidance: [
-        `For ${name} (age ${age}), numerology traditions may describe tendencies around identity and motivation linked with Life Path ${lifePath}.`,
-        "Identity formation: this period may emphasize trying roles, values, and friendships. Curiosity can be a strength when paired with reflection.",
+        TEEN_REPORT_DISCLAIMER,
+        `For ${name} (age ${age}), numerology traditions may describe optional reflective themes around identity and motivation linked with Life Path ${lifePath}.`,
+        "Identity formation: this period may emphasize trying roles, values, and friendships. Curiosity can be a strength when paired with reflection—not a fixed identity verdict.",
         "Self-confidence: progress may come from skills practiced consistently more than from sudden breakthroughs.",
         "Friendships: social belonging may matter deeply; supportive peers and clear personal boundaries can coexist.",
-        "Academic motivation: purpose-linked goals and varied study methods may help more than pressure alone.",
-        "Emotional regulation: naming stress and using short resets (walks, journaling, music) may support steadier choices.",
+        "Academic motivation: purpose-linked goals and varied study methods may help more than pressure alone. This is not school placement advice.",
+        "Emotional regulation: naming stress and using short resets (walks, journaling, music) may support steadier choices. This is not therapy.",
         "Healthy communication: respectful honesty between teens and parents may reduce misunderstandings during growth spurts of independence.",
-        "These interpretations describe potential tendencies and should not limit personal growth or future choices.",
+        "These interpretations describe potential tendencies and should not limit personal growth, identity, or future choices.",
       ].join("\n\n"),
     };
   }
@@ -86,13 +99,68 @@ function ageGuidance(age: number, name: string, lifePath: number): {
   };
 }
 
-function monthlyGuidance(py: number, pm: number) {
+function monthlyGuidance(py: number, pm: number, reportType: ReportType) {
+  if (reportType === "child") {
+    return {
+      career:
+        "Learning & play pacing (reflective only): this month may emphasize curiosity through short, enjoyable activities—not performance pressure or career forecasting.",
+      relationships:
+        "Family & friendships: gentle presence, clear routines, and kind communication may support connection. Outcomes are not predicted.",
+      finances:
+        "Money themes are not applicable as career finance advice for children. For family budgeting, rely on adult judgment—not this report.",
+      learning:
+        "Study & exploration may feel easier in short playful sessions with rest breaks. This is optional reflection, not an academic plan.",
+      wellbeing:
+        "Emotional focus may include rest, outdoor play, and reducing overstimulation. Seek a qualified professional for any wellbeing concerns.",
+      focus_areas: [
+        "One enjoyable learning activity",
+        "Warm family check-ins",
+        "A calm daily rhythm",
+        "Short practice blocks with praise for effort",
+        "Plenty of rest and free play",
+      ],
+      avoid: [
+        "Treating numbers as labels of ability",
+        "Comparing the child to others",
+        "Using the report to pressure performance",
+        "Reading themes as medical or behavioral diagnoses",
+      ],
+    };
+  }
+
+  if (reportType === "adolescent") {
+    return {
+      career: `Interests & future pacing (reflective only): Personal Month ${pm} within Personal Year ${py} may emphasize exploring interests without locking a lifelong path. This is not career counseling.`,
+      relationships:
+        "Friendships & family: presence and respectful communication may help. This does not predict relationship outcomes.",
+      finances:
+        "Money awareness, if relevant, may benefit from simple tracking with a trusted adult. Not financial advice.",
+      learning:
+        "Study may flow in short focused sessions with realistic goals. Not an academic assessment.",
+      wellbeing:
+        "Emotional focus may include rest and reducing overload. For distress or safety concerns, contact qualified help—do not rely on this report.",
+      focus_areas: [
+        "One clear weekly priority",
+        "Kind communication at home",
+        "A sustainable study rhythm",
+        "Skill practice in short blocks",
+        "Rest without guilt",
+      ],
+      avoid: [
+        "Treating cycle numbers as guarantees",
+        "Using charts to shame or compare",
+        "Overcommitting from peer pressure",
+        "Ignoring professional support when needed",
+      ],
+    };
+  }
+
   return {
-    career: `According to numerology traditions, Personal Month ${pm} within a Personal Year ${py} may emphasize thoughtful career pacing—progress through clear priorities rather than forced urgency. This could suggest reviewing commitments and choosing one high-value focus.`,
+    career: `According to numerology traditions, Personal Month ${pm} within a Personal Year ${py} may emphasize thoughtful career pacing—progress through clear priorities rather than urgency. This could suggest reviewing commitments and choosing one high-value focus. Not a guarantee of results.`,
     relationships: `This period may emphasize presence and honest communication. Small consistent gestures may matter more than grand statements. Outcomes remain open; the invitation is reflective connection.`,
-    finances: `Money awareness this month may benefit from tracking, simplifying, and avoiding impulsive upgrades. Numerology may highlight stewardship themes—not windfalls or losses as certainties.`,
+    finances: `Money awareness this month may benefit from tracking, simplifying, and avoiding impulsive upgrades. Numerology may highlight stewardship themes—not windfalls or losses as certainties. Not financial advice.`,
     learning: `Study and skill-building may flow when broken into short sessions. Curiosity paired with a simple weekly review could support retention.`,
-    wellbeing: `Emotional focus may include rest, nervous-system care, and reducing overstimulation. Supportive routines may help more than dramatic overhauls.`,
+    wellbeing: `Emotional focus may include rest and reducing overstimulation. Supportive routines may help more than dramatic overhauls. Not medical or psychological advice.`,
     focus_areas: [
       "One priority project",
       "Clearer communication in key relationships",
@@ -102,11 +170,59 @@ function monthlyGuidance(py: number, pm: number) {
     ],
     avoid: [
       "Treating cycle numbers as guarantees",
-      "Overcommitting out of FOMO",
+      "Overcommitting from FOMO",
       "Neglecting rest during ambitious pushes",
       "Harsh self-judgment when plans adjust",
     ],
   };
+}
+
+function recommendationsFor(
+  reportType: ReportType,
+  pyth: { lifePath: number; personality: number; expression: number },
+  py: number,
+  pm: number,
+  missing: number[],
+): string[] {
+  if (reportType === "child") {
+    return [
+      `For parents/guardians only: notice how Life Path ${pyth.lifePath} themes might show up as preferences—not as fixed ability.`,
+      "Offer one encouraging learning activity this week and praise effort over outcomes.",
+      "Keep communication warm and specific; avoid comparing the child to siblings or peers using this report.",
+      `Personal Year ${py} / Month ${pm} themes may inform gentle pacing of activities—not schedules of destiny.`,
+      missing.length
+        ? `If exploring Lo Shu “missing” numbers (${missing.slice(0, 3).join(", ")}), treat them as optional play/learning variety—not deficits.`
+        : "Keep a balanced mix of quiet, creative, and active play across the week.",
+      "Do not use this report for school placement, diagnosis, or disciplinary decisions.",
+      "If concerns arise about development, learning, mood, or safety, consult qualified professionals.",
+    ];
+  }
+
+  if (reportType === "adolescent") {
+    return [
+      `Reflect (optionally) on how Life Path ${pyth.lifePath} shows up in weekly choices—without treating it as identity or destiny.`,
+      `Practice one kind communication habit aligned with Personality ${pyth.personality}.`,
+      `Explore Expression ${pyth.expression} through a hobby or subject for a few weeks—not a lifelong career lock-in.`,
+      `In Personal Year ${py} and Month ${pm}, keep goals small enough to finish without self-criticism.`,
+      missing.length
+        ? `Treat missing Lo Shu numbers (${missing.slice(0, 3).join(", ")}) as optional growth experiments—not flaws.`
+        : "Balance study, rest, and social time across the week.",
+      "Do not use this report as counseling, academic placement, or medical guidance.",
+      "Seek trusted adults or qualified professionals for wellbeing, safety, or major decisions.",
+    ];
+  }
+
+  return [
+    `Journal weekly on how Life Path ${pyth.lifePath} shows up in real choices.`,
+    `Practice one communication habit aligned with Personality ${pyth.personality}.`,
+    `Choose a skill path that expresses Expression ${pyth.expression} for the next 90 days.`,
+    `In Personal Year ${py}, favor pacing suggested by that cycle's theme—without treating it as certainty.`,
+    `For Personal Month ${pm}, keep goals small enough to finish.`,
+    missing.length
+      ? `Gently cultivate qualities linked with missing Lo Shu numbers (${missing.slice(0, 3).join(", ")}) through habits, not pressure.`
+      : "Keep balancing mental, emotional, and practical planes with varied weekly activities.",
+    "Revisit this report after major life changes; update name spelling if you legally change your name.",
+  ];
 }
 
 function buildSections(report: Omit<NumerologyReport, "sections">): ReportSection[] {
@@ -117,14 +233,29 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
   });
   const snap = report.numerology_snapshot;
   const py = report.pythagorean;
+  const isMinor =
+    report.person.report_type === "child" ||
+    report.person.report_type === "adolescent";
+  const interestsTitle =
+    report.person.report_type === "adult"
+      ? "10. Career Tendencies"
+      : "10. Interests & Learning Tendencies";
+  const relationshipTitle =
+    report.person.report_type === "child"
+      ? "11. Family & Friendship Style"
+      : "11. Relationship Style";
+
   const sections: ReportSection[] = [
     {
       id: "executive-summary",
       title: "1. Executive Summary",
       body: [
-        `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
-        `Your snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, and Personal Year ${snap.personal_year}.`,
-        `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing. They are mirrors for reflection—not forecasts of fixed destiny.`,
+        isMinor
+          ? `${n}'s Numora reading weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from name and birth date for supportive reflection by a parent/guardian or teen—with care.`
+          : `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
+        `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, and Personal Year ${snap.personal_year}.`,
+        `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing. They are mirrors for reflection—not forecasts of fixed destiny, ability, health, or character.`,
+        ...(isMinor ? report.safety_notices.slice(0, 1) : []),
         report.personality.core_personality,
       ].join("\n\n"),
     },
@@ -153,7 +284,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         `Soul Urge ${py.soul_urge.number}: ${py.soul_urge.meaning}`,
         `Personality ${py.personality.number}: ${py.personality.meaning}`,
         `Maturity ${py.maturity.number}: ${py.maturity.meaning}`,
-        "Together, these Pythagorean numbers may describe the journey (Life Path), outer talents (Expression), inner longing (Soul Urge), first impressions (Personality), and longer-arc integration (Maturity).",
+        "Together, these Pythagorean numbers may describe optional reflective themes—not ranked worth or fixed fate.",
       ].join("\n\n"),
     },
     {
@@ -187,17 +318,17 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       body: [
         ...report.growth_opportunities.map((s) => `• ${s}`),
         "",
-        "These are conscious improvement areas—invitations for practice, not judgments or fixed limits.",
+        "These are conscious improvement areas—invitations for practice, not judgments, deficits, or fixed limits.",
       ].join("\n"),
     },
     {
       id: "career",
-      title: "10. Career Tendencies",
+      title: interestsTitle,
       body: report.personality.career_style,
     },
     {
       id: "relationships",
-      title: "11. Relationship Style",
+      title: relationshipTitle,
       body: report.personality.relationship_style,
     },
     {
@@ -230,15 +361,17 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       id: "current-month",
       title: "16. Current Month Guidance",
       body: [
-        `Career: ${report.monthly_guidance.career}`,
+        report.person.report_type === "adult"
+          ? `Career: ${report.monthly_guidance.career}`
+          : `Learning & interests: ${report.monthly_guidance.career}`,
         `Study: ${report.monthly_guidance.learning}`,
         `Relationships: ${report.monthly_guidance.relationships}`,
         `Communication: lean into clarity and kindness; pause before reacting when emotions run high.`,
         `Personal Growth: ${report.monthly_guidance.wellbeing}`,
         `Money Awareness: ${report.monthly_guidance.finances}`,
-        `Emotional Focus: notice what restores you and schedule it like an appointment.`,
+        `Emotional Focus: notice what restores calm and schedule gentle recovery time.`,
         "",
-        "Recommended focus areas:",
+        "Recommended focus areas (optional):",
         ...report.monthly_guidance.focus_areas.map((f) => `• ${f}`),
         "",
         "Helpful to de-emphasize:",
@@ -248,16 +381,24 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     {
       id: "recommendations",
       title: "17. Recommended Focus Areas",
-      body: report.recommendations.map((r, i) => `${i + 1}. ${r}`).join("\n"),
+      body: [
+        "⚠ RECOMMENDATIONS — READ FIRST",
+        report.recommendations_disclaimer,
+        "",
+        ...report.recommendations.map((r, i) => `${i + 1}. ${r}`),
+      ].join("\n"),
     },
     {
       id: "closing",
       title: "Closing Reflection",
       body: [
-        `${n}, according to numerology traditions your pattern blends initiative and reflection in ways that can support meaningful self-understanding.`,
-        "Use this report as a warm companion for journaling, conversations, and gentle course-correction—not as a verdict.",
-        "You remain free to grow beyond any chart. May the next season meet you with curiosity, steadiness, and kindness toward yourself.",
+        isMinor
+          ? `${n}'s chart themes may blend initiative and reflection as supportive mirrors—not verdicts on character or future.`
+          : `${n}, according to numerology traditions your pattern blends initiative and reflection in ways that can support meaningful self-understanding.`,
+        "Use this report as a warm companion for journaling and kind conversation—not as a verdict, ranking, or prediction.",
+        "Everyone remains free to grow beyond any chart. Meet the next season with curiosity, steadiness, and kindness.",
         DISCLAIMER,
+        ...report.safety_notices,
       ].join("\n\n"),
     },
   ];
@@ -281,74 +422,109 @@ export function generateReport(
   const py = personalYear(input.dateOfBirth, now);
   const pm = personalMonth(py, now);
   const name = displayName(input);
+  const isChild = report_type === "child";
+  const isTeen = report_type === "adolescent";
 
-  const core = [
-    `At the center of this reading, Life Path ${pyth.lifePath} and Expression ${pyth.expression} may describe how ${name} moves through goals and self-expression.`,
-    meaningFor(pyth.lifePath),
-    `Soul Urge ${pyth.soulUrge} may point to inner motivations, while Personality ${pyth.personality} may color first impressions. Maturity ${pyth.maturity} could suggest themes that deepen with experience.`,
-  ].join(" ");
-
-  const communication = [
-    `Communication style may lean through Personality ${pyth.personality} and Expression ${pyth.expression}.`,
-    meaningFor(pyth.personality),
-    "In practice, this could suggest balancing clarity with warmth: say the true thing, and leave room for the other person's pace. When emotions rise, a short pause before responding may improve understanding.",
-  ].join(" ");
-
-  const relationships = [
-    `Relationship style may be colored by Soul Urge ${pyth.soulUrge} and Life Path ${pyth.lifePath}.`,
-    meaningFor(pyth.soulUrge),
-    "According to numerology traditions, closeness may grow through reliability, respectful honesty, and shared rituals of attention. This may indicate preferences—not guarantees—about partnership outcomes.",
-  ].join(" ");
-
-  const career = [
-    `Career tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
-    meaningFor(pyth.expression),
-    "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical success still depends on preparation, relationships, and consistent effort—not chart numbers alone.",
-  ].join(" ");
-
-  const chaldeanAnalysis = [
-    `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) offers a traditional vibration reading of the full name.`,
-    chaldeanCompoundMeaning(chald.compound),
-    meaningFor(chald.nameNumber),
-    "In Chaldean practice, compound numbers may add nuance before reduction. Interpretations remain reflective possibilities.",
-  ].join(" ");
-
-  const vedicAnalysis = [
-    `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
-    `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) reflects the name spelling used in this reading.`,
-    `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}. According to tradition this may indicate stylistic tendencies—not scientific causation.`,
-    meaningFor(vedic.psychic),
-    meaningFor(vedic.destiny),
-    "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
-  ].join(" ");
-
-  const strengths = strengthsFor(
-    pyth.lifePath,
-    pyth.expression,
-    pyth.soulUrge,
-    vedic.psychic,
+  const core = assertSafeCopy(
+    [
+      `At the center of this reading, Life Path ${pyth.lifePath} and Expression ${pyth.expression} may describe how ${name} moves through goals and self-expression.`,
+      meaningFor(pyth.lifePath),
+      `Soul Urge ${pyth.soulUrge} may point to inner motivations, while Personality ${pyth.personality} may color first impressions. Maturity ${pyth.maturity} could suggest themes that deepen with experience.`,
+      "These are reflective possibilities—not judgments of worth, intelligence, morality, or destiny.",
+    ].join(" "),
+    "core",
   );
-  const growth_opportunities = growthFor(
-    pyth.lifePath,
-    pyth.personality,
-    pyth.expression,
-    loShu.missing_numbers[0] ?? pyth.lifePath,
+
+  const communication = assertSafeCopy(
+    [
+      `Communication style may lean through Personality ${pyth.personality} and Expression ${pyth.expression}.`,
+      meaningFor(pyth.personality),
+      "In practice, this could suggest balancing clarity with warmth: say the true thing, and leave room for the other person's pace. When emotions rise, a short pause before responding may improve understanding.",
+    ].join(" "),
+    "communication",
+  );
+
+  const relationships = assertSafeCopy(
+    isChild
+      ? [
+          `Family and friendship style may be colored by Soul Urge ${pyth.soulUrge} and Life Path ${pyth.lifePath}.`,
+          meaningFor(pyth.soulUrge),
+          "According to numerology traditions, closeness may grow through reliability, respectful honesty, and shared attention. This may indicate preferences—not guarantees—and must not be used to judge a child’s character.",
+        ].join(" ")
+      : [
+          `Relationship style may be colored by Soul Urge ${pyth.soulUrge} and Life Path ${pyth.lifePath}.`,
+          meaningFor(pyth.soulUrge),
+          "According to numerology traditions, closeness may grow through reliability, respectful honesty, and shared rituals of attention. This may indicate preferences—not guarantees—about partnership outcomes.",
+        ].join(" "),
+    "relationships",
+  );
+
+  const career = assertSafeCopy(
+    isChild || isTeen
+      ? [
+          `Interests and learning tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
+          meaningFor(pyth.expression),
+          "Activities that allow curiosity, contribution, and ethical growth may feel engaging. This is not career placement, talent ranking, or a prediction of future success.",
+        ].join(" ")
+      : [
+          `Career tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
+          meaningFor(pyth.expression),
+          "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical progress still depends on preparation, relationships, and consistent effort—not chart numbers alone.",
+        ].join(" "),
+    "career",
+  );
+
+  const chaldeanAnalysis = assertSafeCopy(
+    [
+      `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) offers a traditional vibration reading of the full name.`,
+      chaldeanCompoundMeaning(chald.compound),
+      meaningFor(chald.nameNumber),
+      "In Chaldean practice, compound numbers may add nuance before reduction. Interpretations remain reflective possibilities.",
+    ].join(" "),
+    "chaldean",
+  );
+
+  const vedicAnalysis = assertSafeCopy(
+    [
+      `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
+      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) reflects the name spelling used in this reading.`,
+      `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}. According to tradition this may indicate stylistic tendencies—not scientific causation.`,
+      meaningFor(vedic.psychic),
+      meaningFor(vedic.destiny),
+      "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
+    ].join(" "),
+    "vedic",
+  );
+
+  const strengths = assertSafeList(
+    strengthsFor(pyth.lifePath, pyth.expression, pyth.soulUrge, vedic.psychic),
+    "strengths",
+  );
+  const growth_opportunities = assertSafeList(
+    growthFor(
+      pyth.lifePath,
+      pyth.personality,
+      pyth.expression,
+      loShu.missing_numbers[0] ?? pyth.lifePath,
+    ),
+    "growth",
   );
 
   const age_guidance = ageGuidance(age, name, pyth.lifePath);
-  const monthly_guidance = monthlyGuidance(py, pm);
+  assertSafeCopy(age_guidance.guidance, "age_guidance");
+  const monthly_guidance = monthlyGuidance(py, pm, report_type);
+  const recommendations = assertSafeList(
+    recommendationsFor(
+      report_type,
+      pyth,
+      py,
+      pm,
+      loShu.missing_numbers,
+    ),
+    "recommendations",
+  );
 
-  const recommendations = [
-    `Journal weekly on how Life Path ${pyth.lifePath} shows up in real choices.`,
-    `Practice one communication habit aligned with Personality ${pyth.personality}.`,
-    `Choose a skill path that expresses Expression ${pyth.expression} for the next 90 days.`,
-    `In Personal Year ${py}, favor pacing suggested by that cycle's theme.`,
-    `For Personal Month ${pm}, keep goals small enough to finish.`,
-    loShu.missing_numbers.length
-      ? `Gently cultivate qualities linked with missing Lo Shu numbers (${loShu.missing_numbers.slice(0, 3).join(", ")}) through habits, not pressure.`
-      : "Keep balancing mental, emotional, and practical planes with varied weekly activities.",
-    "Revisit this report after major life changes; update name spelling if you legally change your name.",
-  ];
+  const safety_notices = safetyNoticesFor(report_type);
 
   const base: Omit<NumerologyReport, "sections"> = {
     person: {
@@ -436,6 +612,8 @@ export function generateReport(
     monthly_guidance,
     recommendations,
     disclaimer: DISCLAIMER,
+    safety_notices,
+    recommendations_disclaimer: RECOMMENDATIONS_DISCLAIMER,
   };
 
   return { ...base, sections: buildSections(base) };

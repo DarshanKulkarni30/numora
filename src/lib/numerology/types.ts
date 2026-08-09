@@ -109,6 +109,9 @@ export type NumerologyReport = {
   recommendations: string[];
   sections: ReportSection[];
   disclaimer: string;
+  /** Extra legal/safety notices shown prominently in the UI */
+  safety_notices: string[];
+  recommendations_disclaimer: string;
 };
 
 export type ReportSection = {

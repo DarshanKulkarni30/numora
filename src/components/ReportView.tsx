@@ -126,6 +126,23 @@ export function ReportView({ report, watermarkEmail }: Props) {
           </h1>
         </header>
 
+        {(person.report_type === "child" ||
+          person.report_type === "adolescent" ||
+          report.safety_notices?.length) && (
+          <aside className="space-y-3 rounded-2xl border-2 border-amber-700/40 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-950">
+            <p className="font-semibold uppercase tracking-wide">
+              {person.report_type === "child"
+                ? "Child / minor — important disclaimer"
+                : person.report_type === "adolescent"
+                  ? "Teen / adolescent — important disclaimer"
+                  : "Important disclaimer"}
+            </p>
+            {(report.safety_notices ?? [report.disclaimer]).map((notice) => (
+              <p key={notice.slice(0, 48)}>{notice}</p>
+            ))}
+          </aside>
+        )}
+
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Person details</h2>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -230,8 +247,13 @@ export function ReportView({ report, watermarkEmail }: Props) {
             <Accordion
               key={section.id}
               title={section.title}
-              defaultOpen={i === 0}
+              defaultOpen={i === 0 || section.id === "recommendations"}
             >
+              {section.id === "recommendations" ? (
+                <div className="mb-4 rounded-xl border border-amber-700/30 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950">
+                  {report.recommendations_disclaimer || report.disclaimer}
+                </div>
+              ) : null}
               <div className="whitespace-pre-wrap leading-8 text-ink-soft">
                 {section.body}
               </div>

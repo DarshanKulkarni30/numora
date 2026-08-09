@@ -44,10 +44,10 @@ const CHALDEAN_COMPOUND: Record<number, string> = {
   20: "Compound 20 may suggest decisions ripened through patience and partnership.",
   21: "Compound 21 may suggest creative success when optimism meets follow-through.",
   22: "Compound 22 may suggest masterful building when vision stays practical.",
-  23: "Compound 23 may suggest supportive networks and fortunate timing for learning.",
+  23: "Compound 23 may suggest supportive networks and helpful timing for learning.",
   24: "Compound 24 may suggest love of beauty and care expressed through reliable action.",
   25: "Compound 25 may suggest wisdom earned through varied experience.",
-  26: "Compound 26 may suggest power paired with duty; stewardship over force.",
+  26: "Compound 26 may suggest influence paired with duty; stewardship over pressure.",
   27: "Compound 27 may suggest teaching and completion through broad understanding.",
   28: "Compound 28 may suggest leadership tested and refined by responsibility.",
   29: "Compound 29 may suggest intuitive partnerships needing clear boundaries.",
@@ -94,7 +94,16 @@ export function chaldeanCompoundMeaning(compound: number): string {
 }
 
 export const DISCLAIMER =
-  "Numerology is a belief-based reflective practice and should not be treated as scientific, medical, legal, financial, or psychological advice.";
+  "Numerology is a belief-based reflective practice and should not be treated as scientific, medical, legal, financial, educational, parenting, or psychological advice. It does not diagnose, treat, or predict outcomes.";
+
+export const RECOMMENDATIONS_DISCLAIMER =
+  "IMPORTANT — Recommendations disclaimer: The focus ideas below are optional reflective suggestions only. They are not instructions, prescriptions, or guarantees. They must not replace professional advice from qualified educators, clinicians, counselors, legal advisors, or other licensed professionals. Numora and its operators accept no liability for decisions made solely from this belief-based content.";
+
+export const CHILD_REPORT_DISCLAIMER =
+  "CHILD / MINOR SAFETY NOTICE: This reading is for supportive reflection by a parent or guardian only. It is not a developmental assessment, school evaluation, behavioral diagnosis, or parenting directive. Children develop at different rates; do not use these themes to label, limit, compare, pressure, or discriminate against a child. If you have concerns about a child’s wellbeing, learning, or safety, consult qualified professionals. Nothing here predicts future success, setbacks, health, relationships, or character.";
+
+export const TEEN_REPORT_DISCLAIMER =
+  "TEEN / ADOLESCENT SAFETY NOTICE: This reading offers optional reflective themes for teens and parents. It is not counseling, mental-health advice, academic placement guidance, or a prediction of identity, ability, or future outcomes. Do not use it to stereotype, shame, or restrict a young person’s choices. Seek qualified professional support for wellbeing, safety, or educational decisions.";
 
 export const STRENGTH_BANK: Record<number, string[]> = {
   1: [
