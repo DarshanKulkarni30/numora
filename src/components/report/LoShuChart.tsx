@@ -4,6 +4,31 @@ import Link from "next/link";
 import { arrowNameToSlug, guideHref } from "@/lib/guides/content";
 import type { LoShuResult } from "@/lib/numerology/types";
 
+/** Short Lo Shu cell themes (1–2 words) for the chart legend. */
+const NUMBER_LABELS: Record<number, string> = {
+  1: "Initiative",
+  2: "Cooperation",
+  3: "Expression",
+  4: "Structure",
+  5: "Freedom",
+  6: "Care",
+  7: "Insight",
+  8: "Ambition",
+  9: "Compassion",
+};
+
+const NUMBER_PLANE_TINT: Record<number, string> = {
+  4: "text-sky-800",
+  9: "text-sky-800",
+  2: "text-sky-800",
+  3: "text-rose-800",
+  5: "text-rose-800",
+  7: "text-rose-800",
+  8: "text-emerald-800",
+  1: "text-emerald-800",
+  6: "text-emerald-800",
+};
+
 type PlaneRow = {
   id: "mental" | "emotional" | "practical";
   label: string;
@@ -88,7 +113,7 @@ export function LoShuChart({ loShu }: Props) {
                 return (
                   <div
                     key={n}
-                    title={`${plane.label} plane · ${n}${missing ? " (missing)" : ` ×${count}`}`}
+                    title={`${plane.label} · ${n} ${NUMBER_LABELS[n]}${missing ? " (missing)" : ` ×${count}`}`}
                     className={`flex aspect-square flex-col items-center justify-center rounded-lg border ${
                       missing ? plane.missing : plane.present
                     }`}
@@ -116,6 +141,22 @@ export function LoShuChart({ loShu }: Props) {
           <span className="h-2.5 w-2.5 rounded-sm bg-emerald-700" /> Practical
           (8–1–6)
         </span>
+      </div>
+
+      <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+        <p className="text-xs uppercase tracking-wider text-ink-soft">
+          Number meanings
+        </p>
+        <ul className="mt-2 grid grid-cols-3 gap-x-3 gap-y-1.5 text-sm sm:grid-cols-5">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+            <li key={n} className="flex items-baseline gap-1.5">
+              <span className={`brand text-base ${NUMBER_PLANE_TINT[n]}`}>
+                {n}
+              </span>
+              <span className="text-ink-soft">{NUMBER_LABELS[n]}</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
