@@ -131,23 +131,6 @@ export function ReportView({ report, watermarkEmail }: Props) {
           </h1>
         </header>
 
-        {(person.report_type === "child" ||
-          person.report_type === "adolescent" ||
-          report.safety_notices?.length) && (
-          <aside className="space-y-3 rounded-2xl border-2 border-amber-700/40 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-950">
-            <p className="font-semibold uppercase tracking-wide">
-              {person.report_type === "child"
-                ? "Child / minor — important disclaimer"
-                : person.report_type === "adolescent"
-                  ? "Teen / adolescent — important disclaimer"
-                  : "Important disclaimer"}
-            </p>
-            {(report.safety_notices ?? [report.disclaimer]).map((notice) => (
-              <p key={notice.slice(0, 48)}>{notice}</p>
-            ))}
-          </aside>
-        )}
-
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Person details</h2>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -311,17 +294,12 @@ export function ReportView({ report, watermarkEmail }: Props) {
               title={section.title}
               defaultOpen={i === 0 || section.id === "recommendations"}
             >
-              {section.id === "recommendations" ? (
-                <div className="mb-4 rounded-xl border border-amber-700/30 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950">
-                  {report.recommendations_disclaimer || report.disclaimer}
-                </div>
-              ) : null}
               {section.id === "career" && report.career_suggestions ? (
                 <div className="space-y-4">
                   <div className="whitespace-pre-wrap leading-8 text-ink-soft">
                     {report.personality.career_style}
                   </div>
-                  <p className="rounded-xl border border-amber-700/30 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                  <p className="text-xs leading-5 text-ink-soft/90">
                     {report.career_suggestions.disclaimer}
                   </p>
                   <div>
@@ -367,14 +345,26 @@ export function ReportView({ report, watermarkEmail }: Props) {
           </section>
         ) : null}
 
-        <footer>
-          <p className="border-t border-[var(--line)] pt-6 text-sm text-ink-soft">
-            {report.disclaimer}
-          </p>
-          <p className="mt-2 text-xs text-ink-soft/80">
-            On-screen viewing only. Copying, downloading, and printing are
-            disabled on free reports. Guide links open standard reference pages.
-          </p>
+        <footer className="border-t border-[var(--line)] pt-6">
+          <details className="group">
+            <summary className="cursor-pointer text-xs text-ink-soft/80 hover:text-ink-soft">
+              About this reading · reflective guidance notes
+            </summary>
+            <div className="mt-3 space-y-2 text-xs leading-5 text-ink-soft/75">
+              <p>{report.disclaimer}</p>
+              {(report.safety_notices ?? []).map((notice) => (
+                <p key={notice.slice(0, 40)}>{notice}</p>
+              ))}
+              {report.recommendations_disclaimer ? (
+                <p>{report.recommendations_disclaimer}</p>
+              ) : null}
+              <p>
+                On-screen viewing only. Copying, downloading, and printing are
+                disabled on free reports. Guide links open standard reference
+                pages.
+              </p>
+            </div>
+          </details>
         </footer>
       </div>
     </article>

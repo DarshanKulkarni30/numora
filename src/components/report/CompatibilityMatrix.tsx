@@ -45,13 +45,11 @@ export function CompatibilityMatrix({
 }: Props) {
   return (
     <div className="space-y-4">
-      <p className="rounded-xl border border-amber-700/30 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950">
-        {disclaimer}
-      </p>
       <p className="text-sm text-ink-soft">
         Your Life Path <span className="brand text-ink">{lifePath}</span> with
         another person’s Life Path (1–9). Hover a tone for a short note.
       </p>
+      <p className="text-xs leading-5 text-ink-soft/80">{disclaimer}</p>
       <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
         <table className="w-full min-w-[28rem] text-left text-sm">
           <thead className="bg-mist/60 text-ink-soft">

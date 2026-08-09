@@ -397,25 +397,23 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       id: "recommendations",
       title: "17. Recommended Focus Areas",
       body: [
-        "⚠ RECOMMENDATIONS — READ FIRST",
-        report.recommendations_disclaimer,
-        "",
         ...report.recommendations.map((r, i) => `${i + 1}. ${r}`),
+        "",
+        `(Notes: ${report.recommendations_disclaimer})`,
       ].join("\n"),
     },
     {
       id: "compatibility",
       title: "18. Compatibility Matrix (Life Path)",
       body: [
-        report.compatibility.disclaimer,
-        "",
         `Your Life Path ${report.compatibility.life_path} × partner Life Path tones:`,
         ...report.compatibility.matrix.map(
           (row) =>
             `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
         ),
         "",
-        "Supportive = often easier rapport in tradition · Balanced = mixed ease/stretch · Growth-oriented = may need patience and clear boundaries. Never a verdict on people.",
+        "Supportive = often easier rapport in tradition · Balanced = mixed ease/stretch · Growth-oriented = may need patience and clear boundaries.",
+        `(${report.compatibility.disclaimer})`,
       ].join("\n"),
     },
     {
