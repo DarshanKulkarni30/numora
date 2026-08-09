@@ -25,7 +25,7 @@ export default async function HomePage() {
       <main className="mx-auto max-w-6xl px-5 pb-24">
         <section className="relative grid min-h-[78vh] items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
           <div className="animate-rise">
-            <p className="brand text-5xl text-sea-deep md:text-7xl">Numerora</p>
+            <p className="brand text-5xl text-sea-deep md:text-7xl">Numora</p>
             <h1 className="mt-4 max-w-xl text-3xl leading-tight text-ink md:text-4xl">
               Quiet clarity from your name and birth date
             </h1>

@@ -8,7 +8,7 @@ export function SiteHeader({ email }: Props) {
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
       <Link href="/" className="brand text-2xl text-ink">
-        Numerora
+        Numora
       </Link>
       <nav className="flex items-center gap-4 text-sm text-ink-soft">
         {email ? (

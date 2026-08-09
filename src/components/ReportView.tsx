@@ -45,7 +45,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
         >
           {Array.from({ length: 18 }).map((_, i) => (
             <span key={i} className="rotate-[-24deg] text-sm text-ink">
-              {watermarkEmail} · Numerora
+              {watermarkEmail} · Numora
             </span>
           ))}
         </div>

@@ -1,4 +1,4 @@
-# Numerora
+# Numora
 
 Reflective numerology web app: Pythagorean, Chaldean, Vedic, and Lo Shu readings from a full name and date of birth (DD/MM/YYYY).
 
@@ -7,7 +7,7 @@ Belief-based self-reflection only — not scientific, medical, legal, financial,
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind
-- Deterministic calculation engines (no LLM)
+- Traditional numerology calculation engines
 - Supabase Auth (email magic link) + Postgres for saved reports
 - Free tier: on-screen reports with best-effort copy protection (PDF later for paid)
 

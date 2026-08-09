@@ -1,4 +1,4 @@
--- Numerora: run in Supabase SQL editor
+-- Numora: run in Supabase SQL editor
 
 create table if not exists public.reports (
   id uuid primary key default gen_random_uuid(),

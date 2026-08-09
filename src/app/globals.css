@@ -61,7 +61,7 @@ h3,
     visibility: hidden !important;
   }
   body::before {
-    content: "Printing is disabled for free Numerora reports.";
+    content: "Printing is disabled for free Numora reports.";
     visibility: visible;
     display: block;
     padding: 2rem;

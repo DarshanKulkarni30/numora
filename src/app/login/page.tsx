@@ -17,7 +17,7 @@ export default async function LoginPage({ searchParams }: Props) {
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-10">
         <div className="mx-auto max-w-lg text-center">
-          <h1 className="text-4xl text-ink">Sign in to Numerora</h1>
+          <h1 className="text-4xl text-ink">Sign in to Numora</h1>
           <p className="mt-3 text-ink-soft">
             We&apos;ll email you a magic link—no password to remember.
           </p>

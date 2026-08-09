@@ -122,7 +122,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       id: "executive-summary",
       title: "1. Executive Summary",
       body: [
-        `${n}, this Numerora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
+        `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
         `Your snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, and Personal Year ${snap.personal_year}.`,
         `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing. They are mirrors for reflection—not forecasts of fixed destiny.`,
         report.personality.core_personality,
