@@ -17,6 +17,19 @@ const NUMBER_LABELS: Record<number, string> = {
   9: "Compassion",
 };
 
+/** Light Vedic numerology nicknames for the same legend. */
+const VEDIC_NICKNAMES: Record<number, string> = {
+  1: "King",
+  2: "Queen",
+  3: "Guru",
+  4: "Rebel",
+  5: "Prince",
+  6: "Lover",
+  7: "Mystic",
+  8: "Judge",
+  9: "Commander",
+};
+
 const NUMBER_PLANE_TINT: Record<number, string> = {
   4: "text-sky-800",
   9: "text-sky-800",
@@ -113,7 +126,7 @@ export function LoShuChart({ loShu }: Props) {
                 return (
                   <div
                     key={n}
-                    title={`${plane.label} · ${n} ${NUMBER_LABELS[n]}${missing ? " (missing)" : ` ×${count}`}`}
+                    title={`${plane.label} · ${n} ${NUMBER_LABELS[n]} (${VEDIC_NICKNAMES[n]})${missing ? " (missing)" : ` ×${count}`}`}
                     className={`flex aspect-square flex-col items-center justify-center rounded-lg border ${
                       missing ? plane.missing : plane.present
                     }`}
@@ -147,13 +160,19 @@ export function LoShuChart({ loShu }: Props) {
         <p className="text-xs uppercase tracking-wider text-ink-soft">
           Number meanings
         </p>
-        <ul className="mt-2 grid grid-cols-3 gap-x-3 gap-y-1.5 text-sm sm:grid-cols-5">
+        <p className="mt-1 text-[11px] text-ink-soft">
+          Trait · Vedic nickname
+        </p>
+        <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
             <li key={n} className="flex items-baseline gap-1.5">
               <span className={`brand text-base ${NUMBER_PLANE_TINT[n]}`}>
                 {n}
               </span>
-              <span className="text-ink-soft">{NUMBER_LABELS[n]}</span>
+              <span className="text-ink-soft">
+                {NUMBER_LABELS[n]}{" "}
+                <span className="text-ink/70">· {VEDIC_NICKNAMES[n]}</span>
+              </span>
             </li>
           ))}
         </ul>
