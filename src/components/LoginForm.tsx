@@ -5,9 +5,13 @@ import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   nextPath?: string;
+  siteUrl?: string;
 };
 
-export function LoginForm({ nextPath = "/dashboard" }: Props) {
+export function LoginForm({
+  nextPath = "/dashboard",
+  siteUrl,
+}: Props) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -20,7 +24,11 @@ export function LoginForm({ nextPath = "/dashboard" }: Props) {
     setMessage("");
     try {
       const supabase = createClient();
-      const origin = window.location.origin;
+      // Prefer canonical production URL so magic links never hit protected *.vercel.app hosts
+      const origin =
+        siteUrl ||
+        process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+        window.location.origin;
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {

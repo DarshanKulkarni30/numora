@@ -32,6 +32,17 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
+  const code = request.nextUrl.searchParams.get("code");
+
+  // Supabase sometimes returns ?code= on Site URL (/) instead of /auth/callback
+  if (code && path !== "/auth/callback") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/auth/callback";
+    const next = request.nextUrl.searchParams.get("next") || "/dashboard";
+    redirectUrl.searchParams.set("next", next);
+    return NextResponse.redirect(redirectUrl);
+  }
+
   const protectedPaths = ["/dashboard", "/report"];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(`${p}/`),

@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { LoginForm } from "@/components/LoginForm";
+import { getSiteUrl } from "@/lib/site";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ type Props = {
 export default async function LoginPage({ searchParams }: Props) {
   const { next } = await searchParams;
   const configured = isSupabaseConfigured();
+  const siteUrl = getSiteUrl();
 
   return (
     <div>
@@ -24,7 +26,7 @@ export default async function LoginPage({ searchParams }: Props) {
         </div>
         <div className="mt-10">
           {configured ? (
-            <LoginForm nextPath={next || "/dashboard"} />
+            <LoginForm nextPath={next || "/dashboard"} siteUrl={siteUrl} />
           ) : (
             <div className="mx-auto max-w-md rounded-2xl border border-[var(--line)] bg-white/60 p-6 text-sm leading-7 text-ink-soft">
               <p className="font-medium text-ink">Supabase setup needed</p>
