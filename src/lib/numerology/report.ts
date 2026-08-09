@@ -13,6 +13,7 @@ import {
   pickUnique,
   yearMonthMeaning,
 } from "./meanings";
+import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
 import { assertSafeCopy, assertSafeList } from "./safety";
@@ -488,13 +489,19 @@ export function generateReport(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
       `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) reflects the name spelling used in this reading.`,
-      `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}. According to tradition this may indicate stylistic tendencies—not scientific causation.`,
-      meaningFor(vedic.psychic),
-      meaningFor(vedic.destiny),
-      "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
+    `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}. According to tradition these may indicate stylistic tendencies—not scientific causation.`,
+    meaningFor(vedic.psychic),
+    meaningFor(vedic.destiny),
+    "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
     ].join(" "),
     "vedic",
   );
+
+  const pyRuling = {
+    life_path: planetLabel(planetForPythagorean(pyth.lifePath)),
+    birth_day: planetLabel(planetForPythagorean(pyth.birthDay)),
+    expression: planetLabel(planetForPythagorean(pyth.expression)),
+  };
 
   const strengths = assertSafeList(
     strengthsFor(pyth.lifePath, pyth.expression, pyth.soulUrge, vedic.psychic),
@@ -564,6 +571,7 @@ export function generateReport(
         meaning: meaningFor(pyth.personality),
       },
       maturity: { number: pyth.maturity, meaning: meaningFor(pyth.maturity) },
+      ruling_planets: pyRuling,
     },
     chaldean: {
       name_number: String(chald.nameNumber),
@@ -585,6 +593,7 @@ export function generateReport(
         meaning: meaningFor(vedic.nameNumber),
       },
       ruling_planet: vedic.rulingPlanet,
+      destiny_ruling_planet: vedic.destinyRulingPlanet,
       analysis: vedicAnalysis,
     },
     lo_shu: loShu,

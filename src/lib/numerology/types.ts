@@ -60,6 +60,11 @@ export type NumerologyReport = {
     soul_urge: NumberMeaning;
     personality: NumberMeaning;
     maturity: NumberMeaning;
+    ruling_planets: {
+      life_path: string;
+      birth_day: string;
+      expression: string;
+    };
   };
   chaldean: {
     name_number: string;
@@ -72,6 +77,7 @@ export type NumerologyReport = {
     destiny_number: NumberMeaning;
     name_number: NumberMeaning;
     ruling_planet: string;
+    destiny_ruling_planet: string;
     analysis: string;
   };
   lo_shu: LoShuResult;

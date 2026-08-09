@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { LoShuChart } from "@/components/report/LoShuChart";
+import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import type { GuideTopic } from "@/lib/guides/content";
 import type { NumerologyReport } from "@/lib/numerology/types";
@@ -247,6 +248,19 @@ export function ReportView({ report, watermarkEmail }: Props) {
         </section>
 
         <section>
+          <h2 className="text-xl text-ink">Ruling planets</h2>
+          <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <RulingPlanetsPanel
+              lifePath={snap.life_path}
+              birthDay={snap.birth_day}
+              expression={snap.expression_number}
+              vedicPsychic={snap.vedic_psychic}
+              vedicDestiny={snap.vedic_destiny}
+            />
+          </div>
+        </section>
+
+        <section>
           <h2 className="text-xl text-ink">Vedic number panel</h2>
           <div className="mt-4">
             <VedicPanel
@@ -254,6 +268,10 @@ export function ReportView({ report, watermarkEmail }: Props) {
               destiny={snap.vedic_destiny}
               nameNumber={snap.vedic_name}
               rulingPlanet={report.vedic.ruling_planet}
+              destinyRulingPlanet={
+                report.vedic.destiny_ruling_planet ||
+                report.vedic.ruling_planet
+              }
             />
           </div>
         </section>

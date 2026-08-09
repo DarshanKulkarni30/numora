@@ -1,3 +1,5 @@
+import { PLANETS, VEDIC_PLANET_BY_NUMBER } from "./planets";
+
 /** Pythagorean letter values */
 export const PYTHAGOREAN: Record<string, number> = {
   A: 1, J: 1, S: 1,
@@ -29,20 +31,13 @@ export const CHALDEAN: Record<string, number> = {
  */
 export const VEDIC_NAME = CHALDEAN;
 
-export const RULING_PLANETS: Record<number, string> = {
-  1: "Sun",
-  2: "Moon",
-  3: "Jupiter",
-  4: "Rahu",
-  5: "Mercury",
-  6: "Venus",
-  7: "Ketu",
-  8: "Saturn",
-  9: "Mars",
-  11: "Moon (Master)",
-  22: "Uranus / Master Builder influence (reflective)",
-  33: "Venus / Master Teacher influence (reflective)",
-};
+/** String labels for Vedic number → planet (UI/report copy). */
+export const RULING_PLANETS: Record<number, string> = Object.fromEntries(
+  Object.entries(VEDIC_PLANET_BY_NUMBER).map(([n, id]) => [
+    Number(n),
+    PLANETS[id].name,
+  ]),
+) as Record<number, string>;
 
 export function sumMappedLetters(
   name: string,

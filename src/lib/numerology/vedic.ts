@@ -1,4 +1,5 @@
-import { RULING_PLANETS, VEDIC_NAME, sumMappedLetters } from "./mappings";
+import { VEDIC_NAME, sumMappedLetters } from "./mappings";
+import { planetForVedic, planetLabel } from "./planets";
 import { parseDob, reduceNumber, reduceWithCompound } from "./reduce";
 
 export type VedicResult = {
@@ -7,6 +8,7 @@ export type VedicResult = {
   nameNumber: number;
   nameCompound: number;
   rulingPlanet: string;
+  destinyRulingPlanet: string;
 };
 
 export function calculateVedic(fullName: string, dob: string): VedicResult {
@@ -18,7 +20,8 @@ export function calculateVedic(fullName: string, dob: string): VedicResult {
     [],
   );
   const nameNumber = reduced === 0 ? 9 : reduced;
-  const rulingPlanet = RULING_PLANETS[psychic] ?? "Reflective planetary theme";
+  const rulingPlanet = planetLabel(planetForVedic(psychic));
+  const destinyRulingPlanet = planetLabel(planetForVedic(destiny));
 
   return {
     psychic,
@@ -26,5 +29,6 @@ export function calculateVedic(fullName: string, dob: string): VedicResult {
     nameNumber,
     nameCompound: compound,
     rulingPlanet,
+    destinyRulingPlanet,
   };
 }

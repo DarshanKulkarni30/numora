@@ -1,12 +1,15 @@
 "use client";
 
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
+import { PlanetIcon } from "@/components/report/PlanetIcon";
+import { planetForVedic } from "@/lib/numerology/planets";
 
 type Props = {
   psychic: string;
   destiny: string;
   nameNumber: string;
   rulingPlanet: string;
+  destinyRulingPlanet?: string;
 };
 
 export function VedicPanel({
@@ -14,6 +17,7 @@ export function VedicPanel({
   destiny,
   nameNumber,
   rulingPlanet,
+  destinyRulingPlanet,
 }: Props) {
   const cards = [
     { label: "Psychic", topic: "vedic-psychic" as const, value: psychic },
@@ -43,13 +47,24 @@ export function VedicPanel({
               label={`Vedic ${c.label}`}
               className="brand mt-2 inline-block text-3xl text-paper hover:text-sand"
             />
+            <div className="mt-3 flex justify-center [&_span]:text-paper [&_.text-ink]:text-paper/90">
+              <PlanetIcon planet={planetForVedic(c.value)} size="sm" />
+            </div>
           </div>
         ))}
       </div>
-      <p className="mt-5 text-sm text-paper/80">
-        Ruling planet association (psychic):{" "}
-        <span className="text-sand">{rulingPlanet}</span>
-      </p>
+      <div className="mt-5 space-y-1 text-sm text-paper/80">
+        <p>
+          Psychic ruling planet:{" "}
+          <span className="text-sand">{rulingPlanet}</span>
+        </p>
+        {destinyRulingPlanet ? (
+          <p>
+            Destiny ruling planet:{" "}
+            <span className="text-sand">{destinyRulingPlanet}</span>
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }
