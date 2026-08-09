@@ -6,11 +6,11 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 export const dynamic = "force-dynamic";
 
 type Props = {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: Props) {
-  const { next } = await searchParams;
+  const { next, error } = await searchParams;
   const configured = isSupabaseConfigured();
   const siteUrl = getSiteUrl();
 
@@ -23,6 +23,11 @@ export default async function LoginPage({ searchParams }: Props) {
           <p className="mt-3 text-ink-soft">
             We&apos;ll email you a magic link—no password to remember.
           </p>
+          {error ? (
+            <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">
+              Sign-in couldn&apos;t finish ({error}). Request a new magic link.
+            </p>
+          ) : null}
         </div>
         <div className="mt-10">
           {configured ? (
