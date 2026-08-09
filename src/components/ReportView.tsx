@@ -52,7 +52,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
       ) : null}
 
       <div className="relative z-10">
-        <p className="text-sm uppercase tracking-[0.2em] text-sea">
+        <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
           Private reading
         </p>
         <h1 className="mt-2 text-4xl text-ink md:text-5xl">
@@ -77,7 +77,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
               <p className="text-xs uppercase tracking-wider text-ink-soft">
                 {label}
               </p>
-              <p className="brand mt-1 text-2xl text-sea-deep">{value}</p>
+              <p className="brand mt-1 text-2xl text-ink">{value}</p>
             </div>
           ))}
         </div>

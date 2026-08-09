@@ -54,14 +54,14 @@ export function LoginForm({ nextPath = "/dashboard" }: Props) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
           placeholder="you@example.com"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full bg-sea px-6 py-3 text-paper transition hover:bg-sea-deep disabled:opacity-60"
+        className="w-full rounded-full bg-ink px-6 py-3 text-paper transition hover:bg-sea-deep disabled:opacity-60"
       >
         {loading ? "Sending…" : "Email me a magic link"}
       </button>
@@ -70,7 +70,7 @@ export function LoginForm({ nextPath = "/dashboard" }: Props) {
           className={`rounded-xl px-4 py-3 text-sm ${
             status === "error"
               ? "bg-red-50 text-red-800"
-              : "bg-sea/10 text-sea-deep"
+              : "bg-gold/15 text-ink"
           }`}
         >
           {message}

@@ -44,7 +44,7 @@ export function ReportForm() {
           id="fullName"
           name="fullName"
           required
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
           placeholder="e.g. Aarav Mehta"
         />
       </div>
@@ -58,7 +58,7 @@ export function ReportForm() {
         <input
           id="preferredName"
           name="preferredName"
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
         />
       </div>
       <div>
@@ -74,7 +74,7 @@ export function ReportForm() {
           required
           pattern="\d{2}/\d{2}/\d{4}"
           placeholder="DD/MM/YYYY"
-          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+          className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
         />
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
@@ -85,7 +85,7 @@ export function ReportForm() {
           <input
             id="gender"
             name="gender"
-            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
           />
         </div>
         <div>
@@ -96,7 +96,7 @@ export function ReportForm() {
             id="purpose"
             name="purpose"
             placeholder="Self-reflection"
-            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-sea focus:ring-2"
+            className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@ export function ReportForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full bg-sea px-6 py-3 font-medium text-paper transition hover:bg-sea-deep disabled:opacity-60"
+        className="w-full rounded-full bg-ink px-6 py-3 font-medium text-paper transition hover:bg-sea-deep disabled:opacity-60"
       >
         {loading ? "Generating your reading…" : "Generate reading"}
       </button>

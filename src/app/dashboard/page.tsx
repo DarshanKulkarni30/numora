@@ -32,7 +32,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/report/new"
-            className="rounded-full bg-sea px-5 py-2.5 text-paper hover:bg-sea-deep"
+            className="rounded-full bg-ink px-5 py-2.5 text-paper hover:bg-sea-deep"
           >
             New report
           </Link>
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
           {(reports ?? []).length === 0 ? (
             <div className="rounded-2xl border border-dashed border-[var(--line)] bg-white/40 px-6 py-12 text-center text-ink-soft">
               No saved readings yet.{" "}
-              <Link href="/report/new" className="text-sea-deep underline">
+              <Link href="/report/new" className="text-gold-deep underline">
                 Create your first report
               </Link>
               .
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="brand text-2xl text-sea-deep">
+                    <p className="brand text-2xl text-ink">
                       {snap?.life_path ?? "—"}
                     </p>
                     <p className="text-xs text-ink-soft">

@@ -13,9 +13,13 @@ const body = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Numora — Reflective numerology readings",
+  title: "Numora — Discover the story hidden in your numbers",
   description:
     "Personal numerology reports from Pythagorean, Chaldean, Vedic, and Lo Shu traditions. Belief-based insight for self-reflection.",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/numora-mark.png",
+  },
 };
 
 export default function RootLayout({

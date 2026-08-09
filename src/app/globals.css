@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #122028;
-  --ink-soft: #2a3d47;
-  --mist: #eef3f4;
-  --paper: #f7faf9;
-  --sea: #1f6f78;
-  --sea-deep: #14545b;
-  --sand: #d8c3a5;
-  --line: rgba(18, 32, 40, 0.12);
-  --glow: rgba(31, 111, 120, 0.18);
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --mist: #f1f5f9;
+  --paper: #f8fafc;
+  --sea: #0f172a;
+  --sea-deep: #020617;
+  --sand: #f59e0b;
+  --gold: #f59e0b;
+  --gold-deep: #d97706;
+  --line: rgba(15, 23, 42, 0.12);
+  --glow: rgba(245, 158, 11, 0.16);
   --background: var(--paper);
   --foreground: var(--ink);
 }
@@ -24,15 +26,17 @@
   --color-sea: var(--sea);
   --color-sea-deep: var(--sea-deep);
   --color-sand: var(--sand);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
 }
 
 body {
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(31, 111, 120, 0.16), transparent 55%),
-    radial-gradient(900px 500px at 90% 0%, rgba(216, 195, 165, 0.35), transparent 50%),
-    linear-gradient(180deg, #f7faf9 0%, #eef3f4 45%, #f4f0ea 100%);
+    radial-gradient(1100px 560px at 8% -12%, rgba(245, 158, 11, 0.14), transparent 55%),
+    radial-gradient(900px 480px at 92% 0%, rgba(15, 23, 42, 0.08), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 55%, #eef2f7 100%);
   color: var(--foreground);
   font-family: var(--font-body), Georgia, serif;
   min-height: 100vh;
@@ -90,6 +94,16 @@ h3,
   }
 }
 
+@keyframes ring-soft {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(2deg) scale(1.015);
+  }
+}
+
 .animate-rise {
   animation: rise 0.8s ease-out both;
 }
@@ -100,4 +114,8 @@ h3,
 
 .animate-drift {
   animation: drift 7s ease-in-out infinite;
+}
+
+.animate-ring {
+  animation: ring-soft 10s ease-in-out infinite;
 }
