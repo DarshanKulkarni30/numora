@@ -16,8 +16,6 @@ export function VedicPanel({
   psychic,
   destiny,
   nameNumber,
-  rulingPlanet,
-  destinyRulingPlanet,
 }: Props) {
   const cards = [
     { label: "Psychic", topic: "vedic-psychic" as const, value: psychic },
@@ -47,23 +45,33 @@ export function VedicPanel({
               label={`Vedic ${c.label}`}
               className="brand mt-2 inline-block text-3xl text-paper hover:text-sand"
             />
-            <div className="mt-3 flex justify-center [&_span]:text-paper [&_.text-ink]:text-paper/90">
-              <PlanetIcon planet={planetForVedic(c.value)} size="sm" />
+            <div className="mt-3 flex justify-center">
+              <PlanetIcon
+                planet={planetForVedic(c.value)}
+                size="sm"
+                variant="dark"
+              />
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-5 space-y-1 text-sm text-paper/80">
-        <p>
-          Psychic ruling planet:{" "}
-          <span className="text-sand">{rulingPlanet}</span>
+      <div className="mt-5 space-y-2 text-sm text-paper/80">
+        <p className="flex flex-wrap items-center gap-2">
+          <span>Psychic ruling planet:</span>
+          <PlanetIcon
+            planet={planetForVedic(psychic)}
+            size="sm"
+            variant="dark"
+          />
         </p>
-        {destinyRulingPlanet ? (
-          <p>
-            Destiny ruling planet:{" "}
-            <span className="text-sand">{destinyRulingPlanet}</span>
-          </p>
-        ) : null}
+        <p className="flex flex-wrap items-center gap-2">
+          <span>Destiny ruling planet:</span>
+          <PlanetIcon
+            planet={planetForVedic(destiny)}
+            size="sm"
+            variant="dark"
+          />
+        </p>
       </div>
     </div>
   );

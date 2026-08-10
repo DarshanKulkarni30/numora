@@ -2,16 +2,25 @@ import { loShuEffectNotes } from "./loShuEffects";
 import type { LoShuResult } from "./types";
 import { parseDob } from "./reduce";
 
-const ARROWS: { name: string; numbers: number[] }[] = [
-  { name: "Arrow of Planning (Mental)", numbers: [4, 9, 2] },
-  { name: "Arrow of Will (Emotional)", numbers: [3, 5, 7] },
-  { name: "Arrow of Action (Practical)", numbers: [8, 1, 6] },
-  { name: "Arrow of Thought", numbers: [4, 3, 8] },
-  { name: "Arrow of Determination", numbers: [9, 5, 1] },
-  { name: "Arrow of Practicality", numbers: [2, 7, 6] },
-  { name: "Arrow of Intellect", numbers: [4, 5, 6] },
-  { name: "Arrow of Emotion", numbers: [2, 5, 8] },
+export type LoShuArrowDef = {
+  name: string;
+  numbers: number[];
+  /** Orientation for subtle on-grid markers */
+  kind: "row" | "col" | "diag";
+};
+
+export const LO_SHU_ARROWS: LoShuArrowDef[] = [
+  { name: "Arrow of Planning (Mental)", numbers: [4, 9, 2], kind: "row" },
+  { name: "Arrow of Will (Emotional)", numbers: [3, 5, 7], kind: "row" },
+  { name: "Arrow of Action (Practical)", numbers: [8, 1, 6], kind: "row" },
+  { name: "Arrow of Thought", numbers: [4, 3, 8], kind: "col" },
+  { name: "Arrow of Determination", numbers: [9, 5, 1], kind: "col" },
+  { name: "Arrow of Practicality", numbers: [2, 7, 6], kind: "col" },
+  { name: "Arrow of Intellect", numbers: [4, 5, 6], kind: "diag" },
+  { name: "Arrow of Emotion", numbers: [2, 5, 8], kind: "diag" },
 ];
+
+const ARROWS = LO_SHU_ARROWS;
 
 export function calculateLoShu(dob: string): LoShuResult {
   const { day, month, year } = parseDob(dob);

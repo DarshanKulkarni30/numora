@@ -20,6 +20,27 @@ type Props = {
   vedicDestiny: string;
 };
 
+function PlanetRow({
+  aspect,
+  number,
+  system,
+}: Row) {
+  const planet =
+    system === "pythagorean"
+      ? planetForPythagorean(number)
+      : planetForVedic(number);
+
+  return (
+    <li className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+      <span className="text-sm leading-none text-ink-soft">
+        {aspect}{" "}
+        <span className="brand text-base leading-none text-ink">{number}</span>
+      </span>
+      <PlanetIcon planet={planet} />
+    </li>
+  );
+}
+
 export function RulingPlanetsPanel({
   lifePath,
   birthDay,
@@ -47,43 +68,19 @@ export function RulingPlanetsPanel({
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
           <h3 className="text-ink">Pythagorean ruling planets</h3>
-          <ul className="mt-3 space-y-3">
-            {pythagorean.map((row) => {
-              const planet = planetForPythagorean(row.number);
-              return (
-                <li
-                  key={row.aspect}
-                  className="flex items-center justify-between gap-3"
-                >
-                  <span className="text-sm text-ink-soft">
-                    {row.aspect}{" "}
-                    <span className="brand text-ink">{row.number}</span>
-                  </span>
-                  <PlanetIcon planet={planet} />
-                </li>
-              );
-            })}
+          <ul className="mt-3 space-y-3.5">
+            {pythagorean.map((row) => (
+              <PlanetRow key={row.aspect} {...row} />
+            ))}
           </ul>
         </div>
 
         <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
           <h3 className="text-ink">Vedic ruling planets</h3>
-          <ul className="mt-3 space-y-3">
-            {vedic.map((row) => {
-              const planet = planetForVedic(row.number);
-              return (
-                <li
-                  key={row.aspect}
-                  className="flex items-center justify-between gap-3"
-                >
-                  <span className="text-sm text-ink-soft">
-                    {row.aspect}{" "}
-                    <span className="brand text-ink">{row.number}</span>
-                  </span>
-                  <PlanetIcon planet={planet} />
-                </li>
-              );
-            })}
+          <ul className="mt-3 space-y-3.5">
+            {vedic.map((row) => (
+              <PlanetRow key={row.aspect} {...row} />
+            ))}
           </ul>
         </div>
       </div>

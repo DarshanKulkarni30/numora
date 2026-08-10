@@ -6,7 +6,14 @@ import {
   LO_SHU_NUMBER_META,
   loShuEffectNotes,
 } from "@/lib/numerology/loShuEffects";
+import { LO_SHU_ARROWS } from "@/lib/numerology/loShu";
 import type { LoShuResult } from "@/lib/numerology/types";
+
+const CELL_ORDER = [
+  [4, 9, 2],
+  [3, 5, 7],
+  [8, 1, 6],
+];
 
 const NUMBER_PLANE_TINT: Record<number, string> = {
   4: "text-sky-800",
@@ -25,11 +32,8 @@ type PlaneRow = {
   label: string;
   numbers: number[];
   strength: string;
-  /** Cell fill when present */
   present: string;
-  /** Cell style when missing */
   missing: string;
-  /** Row label chip */
   chip: string;
   rail: string;
 };
@@ -38,10 +42,25 @@ type Props = {
   loShu: LoShuResult;
 };
 
+/** Cell center in a 3×3 SVG viewBox 0–100 (with ~4% inset for gaps). */
+function cellCenter(n: number): { x: number; y: number } {
+  const row = CELL_ORDER.findIndex((r) => r.includes(n));
+  const col = CELL_ORDER[row].indexOf(n);
+  const slot = 100 / 3;
+  return { x: slot * col + slot / 2, y: slot * row + slot / 2 };
+}
+
 export function LoShuChart({ loShu }: Props) {
   const effects = loShuEffectNotes(
     loShu.repeated_numbers,
     loShu.missing_numbers,
+  );
+
+  const presentSet = new Set(loShu.present_arrows);
+  const missingSet = new Set(loShu.missing_arrows);
+
+  const overlayArrows = LO_SHU_ARROWS.filter(
+    (a) => presentSet.has(a.name) || missingSet.has(a.name),
   );
 
   const planes: PlaneRow[] = [
@@ -83,16 +102,18 @@ export function LoShuChart({ loShu }: Props) {
         Rows are color-coded by plane:{" "}
         <span className="font-medium text-sky-800">Mental</span>,{" "}
         <span className="font-medium text-rose-800">Emotional</span>,{" "}
-        <span className="font-medium text-emerald-800">Practical</span>.
+        <span className="font-medium text-emerald-800">Practical</span>. Soft
+        gold lines mark present arrows; dashed slate lines mark fully missing
+        arrows.
       </p>
 
-      <div className="mx-auto max-w-md space-y-2">
-        {planes.map((plane) => (
-          <div
-            key={plane.id}
-            className={`grid grid-cols-[5.5rem_1fr] items-stretch gap-2 rounded-xl border p-2 ${plane.rail}`}
-          >
-            <div className="flex flex-col justify-center px-1">
+      <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
+        <div className="flex flex-col gap-2 py-2">
+          {planes.map((plane) => (
+            <div
+              key={plane.id}
+              className={`flex flex-1 flex-col justify-center rounded-xl border px-1.5 py-2 ${plane.rail}`}
+            >
               <span
                 className={`inline-flex w-fit rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${plane.chip}`}
               >
@@ -102,28 +123,62 @@ export function LoShuChart({ loShu }: Props) {
                 {plane.strength}
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-1.5">
-              {plane.numbers.map((n) => {
-                const count = loShu.grid[n] ?? 0;
-                const missing = count === 0;
+          ))}
+        </div>
+
+        <div className="relative">
+          <div className="grid grid-cols-3 gap-1.5">
+            {CELL_ORDER.flat().map((n) => {
+              const plane = planes.find((p) => p.numbers.includes(n))!;
+              const count = loShu.grid[n] ?? 0;
+              const missing = count === 0;
+              return (
+                <div
+                  key={n}
+                  title={`${plane.label} · ${n} ${LO_SHU_NUMBER_META[n].trait} (${LO_SHU_NUMBER_META[n].vedic})${missing ? " (missing)" : ` ×${count}`}`}
+                  className={`relative z-[1] flex aspect-square flex-col items-center justify-center rounded-lg border ${
+                    missing ? plane.missing : plane.present
+                  }`}
+                >
+                  <span className="brand text-xl leading-none">{n}</span>
+                  <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
+                    {missing ? "miss" : `×${count}`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {overlayArrows.length > 0 ? (
+            <svg
+              className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden
+            >
+              {overlayArrows.map((arrow) => {
+                const present = presentSet.has(arrow.name);
+                const a = cellCenter(arrow.numbers[0]);
+                const b = cellCenter(arrow.numbers[2]);
                 return (
-                  <div
-                    key={n}
-                    title={`${plane.label} · ${n} ${LO_SHU_NUMBER_META[n].trait} (${LO_SHU_NUMBER_META[n].vedic})${missing ? " (missing)" : ` ×${count}`}`}
-                    className={`flex aspect-square flex-col items-center justify-center rounded-lg border ${
-                      missing ? plane.missing : plane.present
-                    }`}
+                  <line
+                    key={arrow.name}
+                    x1={a.x}
+                    y1={a.y}
+                    x2={b.x}
+                    y2={b.y}
+                    stroke={present ? "rgba(217, 119, 6, 0.55)" : "rgba(100, 116, 139, 0.45)"}
+                    strokeWidth={present ? 1.6 : 1.3}
+                    strokeLinecap="round"
+                    strokeDasharray={present ? undefined : "3 2.5"}
                   >
-                    <span className="brand text-xl">{n}</span>
-                    <span className="text-[9px] uppercase tracking-wider opacity-90">
-                      {missing ? "miss" : `×${count}`}
-                    </span>
-                  </div>
+                    <title>{arrow.name}</title>
+                  </line>
                 );
               })}
-            </div>
-          </div>
-        ))}
+            </svg>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
@@ -136,6 +191,14 @@ export function LoShuChart({ loShu }: Props) {
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm bg-emerald-700" /> Practical
           (8–1–6)
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-0.5 w-4 rounded-full bg-amber-600/70" /> Present
+          arrow
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-0.5 w-4 border-t border-dashed border-slate-500" />{" "}
+          Missing arrow
         </span>
       </div>
 

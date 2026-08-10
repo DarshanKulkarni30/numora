@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { TONE_HINT, type CompatTone } from "@/lib/numerology/compatibility";
+import {
+  CHANNEL_HINT,
+  TONE_HINT,
+  type CompatTone,
+} from "@/lib/numerology/compatibility";
 import {
   masterNumberNote,
   reduceToSingleDigit,
@@ -78,26 +82,65 @@ function MatrixTable({
             this 1–9 table
           </>
         ) : null}
-        . Partner columns are 1–9. Hover a tone for a short note.
+        . Each row is a partner’s matching number (1–9). Hover a tone pill for a
+        short plain-language note.
       </p>
       {masterNote ? (
         <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-sm text-amber-950">
           {masterNote}
         </p>
       ) : null}
+
+      <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-xs leading-5 text-ink-soft">
+        <p className="font-medium text-ink">What the columns mean</p>
+        <ul className="mt-2 space-y-1.5">
+          {!hideRomantic ? (
+            <li>
+              <strong className="text-ink">Romantic</strong> —{" "}
+              {CHANNEL_HINT.romantic}
+            </li>
+          ) : null}
+          <li>
+            <strong className="text-ink">
+              {hideRomantic ? "Team / class" : "Business"}
+            </strong>{" "}
+            — {hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
+          </li>
+          <li>
+            <strong className="text-ink">Friendship</strong> —{" "}
+            {CHANNEL_HINT.friendship}
+          </li>
+        </ul>
+      </div>
+
       <p className="text-xs leading-5 text-ink-soft/80">{disclaimer}</p>
       <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
         <table className="w-full min-w-[28rem] text-left text-sm">
           <thead className="bg-mist/60 text-ink-soft">
             <tr>
-              <th className="px-3 py-2 font-medium">Partner #</th>
+              <th className="px-3 py-2 font-medium" title="Partner’s matching number (1–9)">
+                Partner #
+              </th>
               {!hideRomantic ? (
-                <th className="px-3 py-2 font-medium">Romantic</th>
+                <th
+                  className="px-3 py-2 font-medium"
+                  title={CHANNEL_HINT.romantic}
+                >
+                  Romantic
+                </th>
               ) : null}
-              <th className="px-3 py-2 font-medium">
+              <th
+                className="px-3 py-2 font-medium"
+                title={hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
+              >
                 {hideRomantic ? "Team / class" : "Business"}
               </th>
-              <th className="px-3 py-2 font-medium">Friendship</th>
+              <th
+                className="px-3 py-2 font-medium"
+                title={CHANNEL_HINT.friendship}
+              >
+                Friendship
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -105,9 +148,7 @@ function MatrixTable({
               <tr
                 key={row.partnerLifePath}
                 className={`border-t border-[var(--line)] ${
-                  row.partnerLifePath === Number(reduced)
-                    ? "bg-gold/10"
-                    : ""
+                  row.partnerLifePath === Number(reduced) ? "bg-gold/10" : ""
                 }`}
               >
                 <td className="px-3 py-2">
@@ -136,19 +177,23 @@ function MatrixTable({
           </tbody>
         </table>
       </div>
-      <ul className="text-xs text-ink-soft">
-        <li>
-          <strong className="text-ink">Supportive</strong> — often easier rapport
-          in tradition
-        </li>
-        <li>
-          <strong className="text-ink">Balanced</strong> — mix of ease and stretch
-        </li>
-        <li>
-          <strong className="text-ink">Growth-oriented</strong> — may need
-          patience and clear boundaries
-        </li>
-      </ul>
+
+      <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
+        <p className="font-medium text-ink">What the tones mean</p>
+        <ul className="mt-2 space-y-2">
+          <li>
+            <strong className="text-ink">Supportive</strong> —{" "}
+            {TONE_HINT.Supportive}
+          </li>
+          <li>
+            <strong className="text-ink">Balanced</strong> — {TONE_HINT.Balanced}
+          </li>
+          <li>
+            <strong className="text-ink">Growth-oriented</strong> —{" "}
+            {TONE_HINT["Growth-oriented"]}
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

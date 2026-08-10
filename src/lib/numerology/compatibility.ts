@@ -111,8 +111,20 @@ export const COMPAT_DISCLAIMER =
   "Compatibility tones are optional numerology reflections for conversation only. They are not relationship advice, matchmaking, hiring guidance, or predictions of love, partnership success, or conflict.";
 
 export const TONE_HINT: Record<CompatTone, string> = {
-  Supportive: "Often easy rapport in tradition—still needs real communication.",
-  Balanced: "Steady mix of ease and stretch—depends on respect and timing.",
+  Supportive:
+    "In numerology tradition, this pairing is often described as easier day-to-day rapport—conversation and cooperation may take less effort. Still needs real communication; not a guarantee.",
+  Balanced:
+    "A mix of ease and stretch: some areas feel natural, others need mutual effort, timing, and respect.",
   "Growth-oriented":
-    "May invite patience and clear boundaries—growth, not a verdict.",
+    "May highlight differences that invite patience, clear boundaries, and learning together—growth potential, not a “bad match” verdict.",
 };
+
+export const CHANNEL_HINT = {
+  romantic:
+    "Personal / romantic connection tone in tradition—how easy closeness may feel to start, not a prediction of love success.",
+  business:
+    "Work and collaboration tone—how teamwork, projects, or professional partnership may feel in tradition.",
+  friendship:
+    "Friendship and social tone—how easy camaraderie and mutual support may feel in tradition.",
+  team: "Team / class tone—how easy group cooperation may feel in tradition (for child readings).",
+} as const;
