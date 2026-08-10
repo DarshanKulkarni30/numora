@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { arrowNameToSlug, guideHref } from "@/lib/guides/content";
+import { useMemo, useState } from "react";
+import {
+  arrowNameToSlug,
+  guideHref,
+  LO_SHU_ARROW_GUIDES,
+} from "@/lib/guides/content";
 import {
   LO_SHU_NUMBER_META,
   loShuEffectNotes,
@@ -14,6 +19,18 @@ const CELL_ORDER = [
   [3, 5, 7],
   [8, 1, 6],
 ];
+
+const PLANE_BY_NUMBER: Record<number, string> = {
+  4: "Mental",
+  9: "Mental",
+  2: "Mental",
+  3: "Emotional",
+  5: "Emotional",
+  7: "Emotional",
+  8: "Practical",
+  1: "Practical",
+  6: "Practical",
+};
 
 const NUMBER_PLANE_TINT: Record<number, string> = {
   4: "text-sky-800",
@@ -42,7 +59,6 @@ type Props = {
   loShu: LoShuResult;
 };
 
-/** Cell center in a 3×3 SVG viewBox 0–100 (with ~4% inset for gaps). */
 function cellCenter(n: number): { x: number; y: number } {
   const row = CELL_ORDER.findIndex((r) => r.includes(n));
   const col = CELL_ORDER[row].indexOf(n);
@@ -50,14 +66,25 @@ function cellCenter(n: number): { x: number; y: number } {
   return { x: slot * col + slot / 2, y: slot * row + slot / 2 };
 }
 
+function arrowSlugKey(name: string): string | null {
+  return arrowNameToSlug(name);
+}
+
 export function LoShuChart({ loShu }: Props) {
   const effects = loShuEffectNotes(
     loShu.repeated_numbers,
     loShu.missing_numbers,
   );
+  const [tip, setTip] = useState<string | null>(null);
 
-  const presentSet = new Set(loShu.present_arrows);
-  const missingSet = new Set(loShu.missing_arrows);
+  const presentSet = useMemo(
+    () => new Set(loShu.present_arrows),
+    [loShu.present_arrows],
+  );
+  const missingSet = useMemo(
+    () => new Set(loShu.missing_arrows),
+    [loShu.missing_arrows],
+  );
 
   const overlayArrows = LO_SHU_ARROWS.filter(
     (a) => presentSet.has(a.name) || missingSet.has(a.name),
@@ -99,12 +126,11 @@ export function LoShuChart({ loShu }: Props) {
   return (
     <div className="space-y-5">
       <p className="text-sm text-ink-soft">
-        Rows are color-coded by plane:{" "}
-        <span className="font-medium text-sky-800">Mental</span>,{" "}
-        <span className="font-medium text-rose-800">Emotional</span>,{" "}
-        <span className="font-medium text-emerald-800">Practical</span>. Soft
-        gold lines mark present arrows; dashed slate lines mark fully missing
-        arrows.
+        Rows are color-coded by plane.{" "}
+        <span className="font-medium text-amber-800">Gold arrows</span> =
+        present;{" "}
+        <span className="font-medium text-slate-600">thin dotted slate</span> =
+        fully missing. Hover a tile or arrow for a short meaning.
       </p>
 
       <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
@@ -132,11 +158,21 @@ export function LoShuChart({ loShu }: Props) {
               const plane = planes.find((p) => p.numbers.includes(n))!;
               const count = loShu.grid[n] ?? 0;
               const missing = count === 0;
+              const meta = LO_SHU_NUMBER_META[n];
+              const tileTip = [
+                `${n} · ${meta.trait} (${meta.vedic})`,
+                `Plane: ${PLANE_BY_NUMBER[n]} · ${plane.strength}`,
+                missing
+                  ? "Missing in this birth grid — a growth invite, not a deficit."
+                  : `Present ×${count} — core strength theme: ${meta.theme}.`,
+              ].join("\n");
               return (
                 <div
                   key={n}
-                  title={`${plane.label} · ${n} ${LO_SHU_NUMBER_META[n].trait} (${LO_SHU_NUMBER_META[n].vedic})${missing ? " (missing)" : ` ×${count}`}`}
-                  className={`relative z-[1] flex aspect-square flex-col items-center justify-center rounded-lg border ${
+                  title={tileTip}
+                  onMouseEnter={() => setTip(tileTip)}
+                  onMouseLeave={() => setTip(null)}
+                  className={`relative z-[1] flex aspect-square cursor-help flex-col items-center justify-center rounded-lg border ${
                     missing ? plane.missing : plane.present
                   }`}
                 >
@@ -151,32 +187,98 @@ export function LoShuChart({ loShu }: Props) {
 
           {overlayArrows.length > 0 ? (
             <svg
-              className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
+              className="absolute inset-0 z-[2] h-full w-full"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
               aria-hidden
             >
+              <defs>
+                <marker
+                  id="numora-arrow-present"
+                  markerWidth="5"
+                  markerHeight="5"
+                  refX="4"
+                  refY="2.5"
+                  orient="auto"
+                  markerUnits="strokeWidth"
+                >
+                  <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(180, 83, 9, 0.9)" />
+                </marker>
+                <marker
+                  id="numora-arrow-missing"
+                  markerWidth="4"
+                  markerHeight="4"
+                  refX="3.5"
+                  refY="2"
+                  orient="auto"
+                  markerUnits="strokeWidth"
+                >
+                  <path d="M0,0 L4,2 L0,4 Z" fill="rgba(71, 85, 105, 0.75)" />
+                </marker>
+              </defs>
               {overlayArrows.map((arrow) => {
                 const present = presentSet.has(arrow.name);
                 const a = cellCenter(arrow.numbers[0]);
                 const b = cellCenter(arrow.numbers[2]);
+                const slug = arrowSlugKey(arrow.name);
+                const guide = slug ? LO_SHU_ARROW_GUIDES[slug] : null;
+                const meaning = guide
+                  ? present
+                    ? guide.present
+                    : guide.missing
+                  : present
+                    ? "Present strength pattern in this grid."
+                    : "Fully missing pattern — a gentle growth area.";
+                const arrowTip = `${arrow.name}\n${present ? "Present" : "Missing"} · ${arrow.numbers.join("–")}\n${meaning}`;
                 return (
-                  <line
-                    key={arrow.name}
-                    x1={a.x}
-                    y1={a.y}
-                    x2={b.x}
-                    y2={b.y}
-                    stroke={present ? "rgba(217, 119, 6, 0.55)" : "rgba(100, 116, 139, 0.45)"}
-                    strokeWidth={present ? 1.6 : 1.3}
-                    strokeLinecap="round"
-                    strokeDasharray={present ? undefined : "3 2.5"}
-                  >
-                    <title>{arrow.name}</title>
-                  </line>
+                  <g key={arrow.name}>
+                    {/* Wide invisible hit target */}
+                    <line
+                      x1={a.x}
+                      y1={a.y}
+                      x2={b.x}
+                      y2={b.y}
+                      stroke="transparent"
+                      strokeWidth={8}
+                      className="cursor-help"
+                      onMouseEnter={() => setTip(arrowTip)}
+                      onMouseLeave={() => setTip(null)}
+                    >
+                      <title>{arrowTip}</title>
+                    </line>
+                    <line
+                      x1={a.x}
+                      y1={a.y}
+                      x2={b.x}
+                      y2={b.y}
+                      stroke={
+                        present
+                          ? "rgba(180, 83, 9, 0.85)"
+                          : "rgba(71, 85, 105, 0.7)"
+                      }
+                      strokeWidth={present ? 1.8 : 1}
+                      strokeLinecap="round"
+                      strokeDasharray={present ? undefined : "2 2.2"}
+                      markerEnd={
+                        present
+                          ? "url(#numora-arrow-present)"
+                          : "url(#numora-arrow-missing)"
+                      }
+                      pointerEvents="none"
+                    />
+                  </g>
                 );
               })}
             </svg>
+          ) : null}
+
+          {tip ? (
+            <div
+              role="tooltip"
+              className="absolute bottom-full left-1/2 z-[3] mb-2 w-[min(100%,18rem)] -translate-x-1/2 rounded-lg border border-[var(--line)] bg-paper px-3 py-2 text-[11px] leading-snug text-ink shadow-md whitespace-pre-line"
+            >
+              {tip}
+            </div>
           ) : null}
         </div>
       </div>
@@ -193,12 +295,11 @@ export function LoShuChart({ loShu }: Props) {
           (8–1–6)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-0.5 w-4 rounded-full bg-amber-600/70" /> Present
-          arrow
+          <span className="inline-block h-0.5 w-5 bg-amber-700" /> Present arrow
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-0.5 w-4 border-t border-dashed border-slate-500" />{" "}
-          Missing arrow
+          <span className="inline-block w-5 border-t border-dotted border-slate-600" />{" "}
+          Missing arrow (thinner)
         </span>
       </div>
 

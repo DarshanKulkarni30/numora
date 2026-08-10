@@ -6,6 +6,7 @@ import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
+import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import type { GuideTopic } from "@/lib/guides/content";
 import type { NumerologyReport } from "@/lib/numerology/types";
@@ -361,6 +362,16 @@ export function ReportView({ report, watermarkEmail }: Props) {
             </div>
           </section>
         ) : null}
+
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Trivia · similar numbers</h2>
+          <div className="mt-4">
+            <TriviaPanel
+              lifePath={snap.life_path}
+              destiny={snap.vedic_destiny}
+            />
+          </div>
+        </section>
 
         <footer className="border-t border-[var(--line)] pt-6">
           <details className="group">

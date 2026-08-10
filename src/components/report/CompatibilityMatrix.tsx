@@ -204,9 +204,27 @@ export function CompatibilityMatrix({
   hideRomantic = false,
 }: Props) {
   const [tab, setTab] = useState<"pythagorean" | "vedic">("pythagorean");
+  const sameCore =
+    reduceToSingleDigit(Number(pythagorean.rawNumber)) ===
+    reduceToSingleDigit(Number(vedic.rawNumber));
 
   return (
     <div className="space-y-4">
+      {sameCore ? (
+        <p className="rounded-xl border border-sky-200 bg-sky-50/80 px-3 py-2 text-sm text-sky-950">
+          Not a mistake: your Pythagorean Life Path{" "}
+          <span className="brand">{pythagorean.rawNumber}</span> and Vedic Destiny{" "}
+          <span className="brand">{vedic.rawNumber}</span> reduce to the same
+          1–9 core for this table, so both tabs show matching partner tones.
+          The systems still differ elsewhere (e.g. Expression vs Psychic/Name).
+        </p>
+      ) : (
+        <p className="text-sm text-ink-soft">
+          Toggle systems below — Pythagorean uses Life Path{" "}
+          <span className="brand text-ink">{pythagorean.rawNumber}</span>; Vedic
+          uses Destiny <span className="brand text-ink">{vedic.rawNumber}</span>.
+        </p>
+      )}
       <div className="flex rounded-full border border-[var(--line)] bg-white/50 p-1">
         <button
           type="button"

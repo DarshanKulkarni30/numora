@@ -9,10 +9,12 @@ import {
   STRENGTH_BANK,
   TEEN_REPORT_DISCLAIMER,
   chaldeanCompoundMeaning,
+  coreTraitFor,
   meaningFor,
   pickUnique,
   yearMonthMeaning,
 } from "./meanings";
+import { LO_SHU_NUMBER_META } from "./loShuEffects";
 import { CAREER_DISCLAIMER, modernProfessionsFor } from "./careers";
 import {
   COMPAT_DISCLAIMER,
@@ -190,14 +192,27 @@ function recommendationsFor(
   pm: number,
   missing: number[],
 ): string[] {
+  const lp = coreTraitFor(pyth.lifePath);
+  const pers = coreTraitFor(pyth.personality);
+  const expr = coreTraitFor(pyth.expression);
+  const pyTheme = yearMonthMeaning(py);
+  const pmTheme = yearMonthMeaning(pm);
+  const missingTips = missing
+    .slice(0, 3)
+    .map((n) => {
+      const m = LO_SHU_NUMBER_META[n];
+      return m ? `${n} (${m.trait}) via ${m.growth}` : String(n);
+    })
+    .join("; ");
+
   if (reportType === "child") {
     return [
-      `For parents/guardians only: notice how Life Path ${pyth.lifePath} themes might show up as preferences—not as fixed ability.`,
+      `For parents/guardians only: Life Path ${pyth.lifePath} (${lp}) may show up as preferences in play or learning—not as fixed ability. Notice one preference this week and support it without pressure.`,
       "Offer one encouraging learning activity this week and praise effort over outcomes.",
       "Keep communication warm and specific; avoid comparing the child to siblings or peers using this report.",
-      `Personal Year ${py} / Month ${pm} themes may inform gentle pacing of activities—not schedules of destiny.`,
+      `Personal Year ${py} / Month ${pm}: ${pyTheme} Use this only as gentle pacing—not a schedule of destiny.`,
       missing.length
-        ? `If exploring Lo Shu “missing” numbers (${missing.slice(0, 3).join(", ")}), treat them as optional play/learning variety—not deficits.`
+        ? `Optional Lo Shu play themes for missing numbers: ${missingTips}. Treat as variety, not deficits.`
         : "Keep a balanced mix of quiet, creative, and active play across the week.",
       "Do not use this report for school placement, diagnosis, or disciplinary decisions.",
       "If concerns arise about development, learning, mood, or safety, consult qualified professionals.",
@@ -206,27 +221,27 @@ function recommendationsFor(
 
   if (reportType === "adolescent") {
     return [
-      `Reflect (optionally) on how Life Path ${pyth.lifePath} shows up in weekly choices—without treating it as identity or destiny.`,
-      `Practice one kind communication habit aligned with Personality ${pyth.personality}.`,
-      `Explore Expression ${pyth.expression} through a hobby or subject for a few weeks—not a lifelong career lock-in.`,
-      `In Personal Year ${py} and Month ${pm}, keep goals small enough to finish without self-criticism.`,
+      `Life Path ${pyth.lifePath} (${lp}): once this week, notice one choice where this theme showed up—without treating the number as your whole identity.`,
+      `Personality ${pyth.personality} (${pers}): practice one concrete communication habit (for example: one clear ask, or one full listen before advising).`,
+      `Expression ${pyth.expression} (${expr}): try a hobby or school project for a few weeks that uses this energy—exploration, not a locked career path.`,
+      `Personal Year ${py}: ${pyTheme} Keep goals small enough to finish without harsh self-criticism.`,
+      `Personal Month ${pm}: ${pmTheme}`,
       missing.length
-        ? `Treat missing Lo Shu numbers (${missing.slice(0, 3).join(", ")}) as optional growth experiments—not flaws.`
+        ? `Missing Lo Shu growth experiments (optional): ${missingTips}.`
         : "Balance study, rest, and social time across the week.",
-      "Do not use this report as counseling, academic placement, or medical guidance.",
-      "Seek trusted adults or qualified professionals for wellbeing, safety, or major decisions.",
+      "Do not use this report as counseling, academic placement, or medical guidance. Seek trusted adults or qualified professionals for wellbeing or major decisions.",
     ];
   }
 
   return [
-    `Journal weekly on how Life Path ${pyth.lifePath} shows up in real choices.`,
-    `Practice one communication habit aligned with Personality ${pyth.personality}.`,
-    `Choose a skill path that expresses Expression ${pyth.expression} for the next 90 days.`,
-    `In Personal Year ${py}, favor pacing suggested by that cycle's theme—without treating it as certainty.`,
-    `For Personal Month ${pm}, keep goals small enough to finish.`,
+    `Life Path ${pyth.lifePath} (${lp}): journal once this week on a real choice where you led, started, or held back—and what you’d repeat.`,
+    `Personality ${pyth.personality} (${pers}): pick one visible communication habit for 7 days (e.g. open with the point, then the story; or ask one clarifying question before answering).`,
+    `Expression ${pyth.expression} (${expr}): choose one skill or project for the next 90 days that uses this energy in a concrete weekly block (not a vague “align with the number”).`,
+    `Personal Year ${py}: ${pyTheme} Favor that pacing without treating it as certainty.`,
+    `Personal Month ${pm}: ${pmTheme} Keep goals small enough to finish this month.`,
     missing.length
-      ? `Gently cultivate qualities linked with missing Lo Shu numbers (${missing.slice(0, 3).join(", ")}) through habits, not pressure.`
-      : "Keep balancing mental, emotional, and practical planes with varied weekly activities.",
+      ? `Missing Lo Shu numbers invite gentle habits—not pressure: ${missingTips}.`
+      : "Vary the week across mental planning, emotional connection, and practical finishing so all three Lo Shu planes get airtime.",
     "Revisit this report after major life changes; update name spelling if you legally change your name.",
   ];
 }

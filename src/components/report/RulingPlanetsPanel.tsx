@@ -20,19 +20,15 @@ type Props = {
   vedicDestiny: string;
 };
 
-function PlanetRow({
-  aspect,
-  number,
-  system,
-}: Row) {
+function PlanetRow({ aspect, number, system }: Row) {
   const planet =
     system === "pythagorean"
       ? planetForPythagorean(number)
       : planetForVedic(number);
 
   return (
-    <li className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-      <span className="text-sm leading-none text-ink-soft">
+    <li className="flex items-center gap-3">
+      <span className="w-[7.25rem] shrink-0 text-sm leading-none text-ink-soft">
         {aspect}{" "}
         <span className="brand text-base leading-none text-ink">{number}</span>
       </span>

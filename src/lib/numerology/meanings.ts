@@ -76,6 +76,27 @@ const CHALDEAN_COMPOUND: Record<number, string> = {
   52: "Compound 52 may suggest intuitive strategy and careful timing.",
 };
 
+/** One short core trait label for tiles and recommendations. */
+export const CORE_TRAIT: Record<number, string> = {
+  1: "Leadership & initiative",
+  2: "Cooperation & diplomacy",
+  3: "Creative expression",
+  4: "Structure & reliability",
+  5: "Freedom & adaptability",
+  6: "Care & responsibility",
+  7: "Insight & analysis",
+  8: "Ambition & stewardship",
+  9: "Compassion & completion",
+  11: "Inspired intuition",
+  22: "Master builder",
+  33: "Compassionate teaching",
+};
+
+export function coreTraitFor(n: number | string): string {
+  const num = Number(n);
+  return CORE_TRAIT[num] ?? `Themes of ${n}`;
+}
+
 export function meaningFor(n: number, map: MeaningMap = CORE): string {
   return (
     map[n] ??
