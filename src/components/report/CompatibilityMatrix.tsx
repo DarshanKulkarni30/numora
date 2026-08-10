@@ -3,7 +3,9 @@
 import { useState } from "react";
 import {
   CHANNEL_HINT,
+  COMPAT_DISCLAIMER,
   TONE_HINT,
+  normalizeCompatTone,
   type CompatTone,
 } from "@/lib/numerology/compatibility";
 import {
@@ -30,23 +32,30 @@ type Props = {
   hideRomantic?: boolean;
 };
 
+const TONE_COLOR: Record<CompatTone, string> = {
+  Amazing: "bg-emerald-100 text-emerald-950 border-emerald-300",
+  Favourable: "bg-teal-50 text-teal-900 border-teal-200",
+  Neutral: "bg-slate-50 text-slate-800 border-slate-200",
+  Challenging: "bg-amber-50 text-amber-950 border-amber-200",
+};
+
 function TonePill({ tone }: { tone: string }) {
   if (tone === "—") {
     return <span className="text-ink-soft">—</span>;
   }
-  const hint = TONE_HINT[tone as CompatTone] ?? tone;
-  const color =
-    tone === "Supportive"
-      ? "bg-emerald-50 text-emerald-900 border-emerald-200"
-      : tone === "Growth-oriented"
-        ? "bg-amber-50 text-amber-950 border-amber-200"
-        : "bg-slate-50 text-slate-800 border-slate-200";
+  const normalized = normalizeCompatTone(tone);
+  const known = normalized in TONE_HINT ? (normalized as CompatTone) : null;
+  const label = known ?? normalized;
+  const hint = known ? TONE_HINT[known] : String(normalized);
+  const color = known
+    ? TONE_COLOR[known]
+    : "bg-slate-50 text-slate-800 border-slate-200";
   return (
     <span
       title={hint}
       className={`inline-block rounded-full border px-2 py-0.5 text-xs ${color}`}
     >
-      {tone}
+      {label}
     </span>
   );
 }
@@ -56,14 +65,12 @@ function MatrixTable({
   numberLabel,
   rawNumber,
   matrix,
-  disclaimer,
   hideRomantic,
 }: {
   systemLabel: string;
   numberLabel: string;
   rawNumber: string;
   matrix: Row[];
-  disclaimer: string;
   hideRomantic: boolean;
 }) {
   const raw = Number(rawNumber);
@@ -82,8 +89,8 @@ function MatrixTable({
             this 1–9 table
           </>
         ) : null}
-        . Each row is a partner’s matching number (1–9). Hover a tone pill for a
-        short plain-language note.
+        . Tones: Amazing · Favourable · Neutral · Challenging. Hover a pill for
+        a short note.
       </p>
       {masterNote ? (
         <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-sm text-amber-950">
@@ -113,34 +120,18 @@ function MatrixTable({
         </ul>
       </div>
 
-      <p className="text-xs leading-5 text-ink-soft/80">{disclaimer}</p>
       <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
         <table className="w-full min-w-[28rem] text-left text-sm">
           <thead className="bg-mist/60 text-ink-soft">
             <tr>
-              <th className="px-3 py-2 font-medium" title="Partner’s matching number (1–9)">
-                Partner #
-              </th>
+              <th className="px-3 py-2 font-medium">Partner #</th>
               {!hideRomantic ? (
-                <th
-                  className="px-3 py-2 font-medium"
-                  title={CHANNEL_HINT.romantic}
-                >
-                  Romantic
-                </th>
+                <th className="px-3 py-2 font-medium">Romantic</th>
               ) : null}
-              <th
-                className="px-3 py-2 font-medium"
-                title={hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
-              >
+              <th className="px-3 py-2 font-medium">
                 {hideRomantic ? "Team / class" : "Business"}
               </th>
-              <th
-                className="px-3 py-2 font-medium"
-                title={CHANNEL_HINT.friendship}
-              >
-                Friendship
-              </th>
+              <th className="px-3 py-2 font-medium">Friendship</th>
             </tr>
           </thead>
           <tbody>
@@ -181,19 +172,19 @@ function MatrixTable({
       <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
         <p className="font-medium text-ink">What the tones mean</p>
         <ul className="mt-2 space-y-2">
-          <li>
-            <strong className="text-ink">Supportive</strong> —{" "}
-            {TONE_HINT.Supportive}
-          </li>
-          <li>
-            <strong className="text-ink">Balanced</strong> — {TONE_HINT.Balanced}
-          </li>
-          <li>
-            <strong className="text-ink">Growth-oriented</strong> —{" "}
-            {TONE_HINT["Growth-oriented"]}
-          </li>
+          {(
+            ["Amazing", "Favourable", "Neutral", "Challenging"] as CompatTone[]
+          ).map((t) => (
+            <li key={t}>
+              <strong className="text-ink">{t}</strong> — {TONE_HINT[t]}
+            </li>
+          ))}
         </ul>
       </div>
+
+      <p className="rounded-xl border border-[var(--line)] bg-mist/50 px-3 py-2 text-xs leading-5 text-ink-soft">
+        {COMPAT_DISCLAIMER}
+      </p>
     </div>
   );
 }
@@ -210,21 +201,20 @@ export function CompatibilityMatrix({
 
   return (
     <div className="space-y-4">
+      <p className="text-sm text-ink-soft">
+        Same four-tone scale for both systems (recommended for clarity):{" "}
+        <span className="text-ink">Amazing</span>, Favourable, Neutral,
+        Challenging — Vedic Destiny and Pythagorean Life Path each get their own
+        tab.
+      </p>
       {sameCore ? (
         <p className="rounded-xl border border-sky-200 bg-sky-50/80 px-3 py-2 text-sm text-sky-950">
           Not a mistake: your Pythagorean Life Path{" "}
           <span className="brand">{pythagorean.rawNumber}</span> and Vedic Destiny{" "}
           <span className="brand">{vedic.rawNumber}</span> reduce to the same
           1–9 core for this table, so both tabs show matching partner tones.
-          The systems still differ elsewhere (e.g. Expression vs Psychic/Name).
         </p>
-      ) : (
-        <p className="text-sm text-ink-soft">
-          Toggle systems below — Pythagorean uses Life Path{" "}
-          <span className="brand text-ink">{pythagorean.rawNumber}</span>; Vedic
-          uses Destiny <span className="brand text-ink">{vedic.rawNumber}</span>.
-        </p>
-      )}
+      ) : null}
       <div className="flex rounded-full border border-[var(--line)] bg-white/50 p-1">
         <button
           type="button"
@@ -256,7 +246,6 @@ export function CompatibilityMatrix({
           numberLabel="Life Path"
           rawNumber={pythagorean.rawNumber}
           matrix={pythagorean.matrix}
-          disclaimer={pythagorean.disclaimer}
           hideRomantic={hideRomantic}
         />
       ) : (
@@ -265,7 +254,6 @@ export function CompatibilityMatrix({
           numberLabel="Destiny Number"
           rawNumber={vedic.rawNumber}
           matrix={vedic.matrix}
-          disclaimer={vedic.disclaimer}
           hideRomantic={hideRomantic}
         />
       )}

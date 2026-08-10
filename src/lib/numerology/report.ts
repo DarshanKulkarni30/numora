@@ -433,7 +433,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
             `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
         ),
         "",
-        "Supportive = often easier rapport in tradition · Balanced = mixed ease/stretch · Growth-oriented = may need patience and clear boundaries.",
+        "Amazing = especially natural affinity · Favourable = generally supportive · Neutral = mixed / situational · Challenging = may need more patience (not a bad match).",
         "Master numbers (11/22/33) are traced as their single-digit sums in 1–9 partner tables.",
         `(${report.compatibility.disclaimer})`,
       ].join("\n"),

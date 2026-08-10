@@ -1,61 +1,71 @@
 /**
- * Simple core-number × partner tone matrix (1–9).
- * Levels are constructive labels — not “good/bad destiny”.
+ * Core-number × partner tone matrix (1–9).
+ * Four reflective tiers shared by Pythagorean and Vedic tabs.
  */
 
 import { reduceToSingleDigit } from "./dateNumbers";
 
-export type CompatTone = "Supportive" | "Balanced" | "Growth-oriented";
+export type CompatTone =
+  | "Amazing"
+  | "Favourable"
+  | "Neutral"
+  | "Challenging";
 
 export type CompatChannel = "romantic" | "business" | "friendship";
 
-/** Pair key "a-b" with a <= b for symmetry lookup helpers */
+/**
+ * Pair key "a-b" with a <= b.
+ * Amazing = especially easy affinity in tradition
+ * Favourable = generally supportive
+ * Neutral = mixed / depends on effort
+ * Challenging = may need more patience and clarity (not “bad”)
+ */
 const PAIR_TONE: Record<string, CompatTone> = {
-  "1-1": "Growth-oriented",
-  "1-2": "Supportive",
-  "1-3": "Supportive",
-  "1-4": "Balanced",
-  "1-5": "Supportive",
-  "1-6": "Balanced",
-  "1-7": "Growth-oriented",
-  "1-8": "Supportive",
-  "1-9": "Balanced",
-  "2-2": "Supportive",
-  "2-3": "Supportive",
-  "2-4": "Supportive",
-  "2-5": "Balanced",
-  "2-6": "Supportive",
-  "2-7": "Balanced",
-  "2-8": "Growth-oriented",
-  "2-9": "Supportive",
-  "3-3": "Supportive",
-  "3-4": "Balanced",
-  "3-5": "Supportive",
-  "3-6": "Supportive",
-  "3-7": "Balanced",
-  "3-8": "Balanced",
-  "3-9": "Supportive",
-  "4-4": "Supportive",
-  "4-5": "Growth-oriented",
-  "4-6": "Supportive",
-  "4-7": "Balanced",
-  "4-8": "Supportive",
-  "4-9": "Balanced",
-  "5-5": "Growth-oriented",
-  "5-6": "Balanced",
-  "5-7": "Supportive",
-  "5-8": "Balanced",
-  "5-9": "Supportive",
-  "6-6": "Supportive",
-  "6-7": "Balanced",
-  "6-8": "Balanced",
-  "6-9": "Supportive",
-  "7-7": "Supportive",
-  "7-8": "Growth-oriented",
-  "7-9": "Supportive",
-  "8-8": "Growth-oriented",
-  "8-9": "Balanced",
-  "9-9": "Supportive",
+  "1-1": "Challenging",
+  "1-2": "Favourable",
+  "1-3": "Favourable",
+  "1-4": "Neutral",
+  "1-5": "Amazing",
+  "1-6": "Neutral",
+  "1-7": "Challenging",
+  "1-8": "Favourable",
+  "1-9": "Neutral",
+  "2-2": "Amazing",
+  "2-3": "Favourable",
+  "2-4": "Favourable",
+  "2-5": "Neutral",
+  "2-6": "Amazing",
+  "2-7": "Neutral",
+  "2-8": "Challenging",
+  "2-9": "Favourable",
+  "3-3": "Amazing",
+  "3-4": "Neutral",
+  "3-5": "Favourable",
+  "3-6": "Favourable",
+  "3-7": "Neutral",
+  "3-8": "Neutral",
+  "3-9": "Amazing",
+  "4-4": "Favourable",
+  "4-5": "Challenging",
+  "4-6": "Favourable",
+  "4-7": "Neutral",
+  "4-8": "Amazing",
+  "4-9": "Neutral",
+  "5-5": "Challenging",
+  "5-6": "Neutral",
+  "5-7": "Favourable",
+  "5-8": "Neutral",
+  "5-9": "Favourable",
+  "6-6": "Amazing",
+  "6-7": "Neutral",
+  "6-8": "Neutral",
+  "6-9": "Favourable",
+  "7-7": "Favourable",
+  "7-8": "Challenging",
+  "7-9": "Favourable",
+  "8-8": "Challenging",
+  "8-9": "Neutral",
+  "9-9": "Amazing",
 };
 
 function pairKey(a: number, b: number): string {
@@ -65,7 +75,7 @@ function pairKey(a: number, b: number): string {
 }
 
 function baseTone(a: number, b: number): CompatTone {
-  return PAIR_TONE[pairKey(a, b)] ?? "Balanced";
+  return PAIR_TONE[pairKey(a, b)] ?? "Neutral";
 }
 
 /** Slight channel nuance without harsh negatives */
@@ -75,14 +85,14 @@ function channelTone(
   a: number,
   b: number,
 ): CompatTone {
-  if (channel === "business" && (a === 8 || b === 8) && base === "Balanced") {
-    return "Supportive";
+  if (channel === "business" && (a === 8 || b === 8) && base === "Neutral") {
+    return "Favourable";
   }
   if (channel === "romantic" && (a === 2 || b === 2 || a === 6 || b === 6)) {
-    if (base === "Growth-oriented") return "Balanced";
+    if (base === "Challenging") return "Neutral";
   }
   if (channel === "friendship" && (a === 3 || b === 3 || a === 5 || b === 5)) {
-    if (base === "Balanced") return "Supportive";
+    if (base === "Neutral") return "Favourable";
   }
   return base;
 }
@@ -108,16 +118,28 @@ export function buildCompatibilityMatrix(coreNumber: number): CompatCell[] {
 }
 
 export const COMPAT_DISCLAIMER =
-  "Compatibility tones are optional numerology reflections for conversation only. They are not relationship advice, matchmaking, hiring guidance, or predictions of love, partnership success, or conflict.";
+  "This is a generic numerology compatibility snapshot for reflection only. Real compatibility depends on many other factors—upbringing, culture, values, location, communication habits, timing, and lived experience. It is not relationship advice, matchmaking, hiring guidance, or a prediction of love, partnership success, or conflict.";
 
 export const TONE_HINT: Record<CompatTone, string> = {
-  Supportive:
-    "In numerology tradition, this pairing is often described as easier day-to-day rapport—conversation and cooperation may take less effort. Still needs real communication; not a guarantee.",
-  Balanced:
-    "A mix of ease and stretch: some areas feel natural, others need mutual effort, timing, and respect.",
-  "Growth-oriented":
-    "May highlight differences that invite patience, clear boundaries, and learning together—growth potential, not a “bad match” verdict.",
+  Amazing:
+    "In tradition, this pairing is often described as an especially natural affinity—rapport may feel easy to start. Still needs care and communication; not a guarantee.",
+  Favourable:
+    "Generally supportive in tradition: cooperation and goodwill may come more readily when both people show up with respect.",
+  Neutral:
+    "Mixed or situational: some ease and some stretch. Outcomes depend heavily on effort, timing, and mutual respect.",
+  Challenging:
+    "May highlight differences that ask for patience, clear boundaries, and honest talk—growth potential, not a “bad match” verdict.",
 };
+
+/** Map older saved-report labels if present */
+export function normalizeCompatTone(tone: string): CompatTone | string {
+  const map: Record<string, CompatTone> = {
+    Supportive: "Favourable",
+    Balanced: "Neutral",
+    "Growth-oriented": "Challenging",
+  };
+  return map[tone] ?? tone;
+}
 
 export const CHANNEL_HINT = {
   romantic:
