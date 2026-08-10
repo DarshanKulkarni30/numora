@@ -1,7 +1,9 @@
 /**
- * Simple Life Path × partner Life Path tone matrix (1–9).
+ * Simple core-number × partner tone matrix (1–9).
  * Levels are constructive labels — not “good/bad destiny”.
  */
+
+import { reduceToSingleDigit } from "./dateNumbers";
 
 export type CompatTone = "Supportive" | "Balanced" | "Growth-oriented";
 
@@ -92,8 +94,8 @@ export type CompatCell = {
   friendship: CompatTone;
 };
 
-export function buildCompatibilityMatrix(lifePath: number): CompatCell[] {
-  const self = lifePath > 9 ? reduceMaster(lifePath) : lifePath;
+export function buildCompatibilityMatrix(coreNumber: number): CompatCell[] {
+  const self = reduceToSingleDigit(coreNumber);
   return [1, 2, 3, 4, 5, 6, 7, 8, 9].map((partner) => {
     const base = baseTone(self, partner);
     return {
@@ -103,15 +105,6 @@ export function buildCompatibilityMatrix(lifePath: number): CompatCell[] {
       friendship: channelTone(base, "friendship", self, partner),
     };
   });
-}
-
-function reduceMaster(n: number): number {
-  if (n === 11 || n === 22 || n === 33) {
-    return String(n)
-      .split("")
-      .reduce((s, d) => s + Number(d), 0);
-  }
-  return n;
 }
 
 export const COMPAT_DISCLAIMER =

@@ -36,7 +36,13 @@ export async function GET(request: NextRequest) {
         });
         response = NextResponse.redirect(redirectTo);
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          response.cookies.set(name, value, {
+            ...options,
+            path: options?.path ?? "/",
+            sameSite: options?.sameSite ?? "lax",
+            secure:
+              options?.secure ?? process.env.NODE_ENV === "production",
+          });
         });
       },
     },

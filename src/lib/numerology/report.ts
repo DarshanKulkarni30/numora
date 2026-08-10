@@ -404,15 +404,22 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     },
     {
       id: "compatibility",
-      title: "18. Compatibility Matrix (Life Path)",
+      title: "18. Compatibility Matrix",
       body: [
-        `Your Life Path ${report.compatibility.life_path} × partner Life Path tones:`,
-        ...report.compatibility.matrix.map(
+        `Pythagorean Life Path ${report.compatibility.pythagorean.raw_number} × partner tones:`,
+        ...report.compatibility.pythagorean.matrix.map(
+          (row) =>
+            `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
+        ),
+        "",
+        `Vedic Destiny ${report.compatibility.vedic.raw_number} × partner tones:`,
+        ...report.compatibility.vedic.matrix.map(
           (row) =>
             `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
         ),
         "",
         "Supportive = often easier rapport in tradition · Balanced = mixed ease/stretch · Growth-oriented = may need patience and clear boundaries.",
+        "Master numbers (11/22/33) are traced as their single-digit sums in 1–9 partner tables.",
         `(${report.compatibility.disclaimer})`,
       ].join("\n"),
     },
@@ -529,15 +536,26 @@ export function generateReport(
     disclaimer: CAREER_DISCLAIMER,
   };
 
-  const compatibility = {
-    life_path: String(pyth.lifePath),
-    matrix: buildCompatibilityMatrix(pyth.lifePath).map((row) => ({
+  const mapCompatRows = (core: number) =>
+    buildCompatibilityMatrix(core).map((row) => ({
       partnerLifePath: row.partnerLifePath,
       romantic: isChild ? "—" : row.romantic,
       business: isChild ? row.friendship : row.business,
       friendship: row.friendship,
-    })),
+    }));
+
+  const compatibility = {
+    life_path: String(pyth.lifePath),
+    matrix: mapCompatRows(pyth.lifePath),
     disclaimer: COMPAT_DISCLAIMER,
+    pythagorean: {
+      raw_number: String(pyth.lifePath),
+      matrix: mapCompatRows(pyth.lifePath),
+    },
+    vedic: {
+      raw_number: String(vedic.destiny),
+      matrix: mapCompatRows(vedic.destiny),
+    },
   };
 
   const chaldeanAnalysis = assertSafeCopy(

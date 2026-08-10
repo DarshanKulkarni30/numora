@@ -19,13 +19,15 @@ export default async function LoginPage({ searchParams }: Props) {
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-10">
         <div className="mx-auto max-w-lg text-center">
-          <h1 className="text-4xl text-ink">Sign in to Numora</h1>
+          <h1 className="text-4xl text-ink">Welcome to Numora</h1>
           <p className="mt-3 text-ink-soft">
-            We&apos;ll email you a magic link—no password to remember.
+            Sign in if you already have an account, or register if you&apos;re
+            new. Use Google (your Chrome profile) or an email magic link.
           </p>
           {error ? (
             <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">
-              Sign-in couldn&apos;t finish ({error}). Request a new magic link.
+              Sign-in couldn&apos;t finish ({error}). Try Google again or request
+              a new email link.
             </p>
           ) : null}
         </div>
@@ -39,7 +41,7 @@ export default async function LoginPage({ searchParams }: Props) {
                 Copy <code>.env.local.example</code> to{" "}
                 <code>.env.local</code>, add your project URL and anon key, run{" "}
                 <code>supabase/schema.sql</code> in the SQL editor, then enable
-                Email magic-link auth.
+                Email magic-link auth and the Google provider.
               </p>
             </div>
           )}

@@ -92,14 +92,34 @@ export type NumerologyReport = {
     disclaimer: string;
   };
   compatibility: {
-    life_path: string;
-    matrix: {
+    /** @deprecated use pythagorean.raw_number — kept for older saved reports */
+    life_path?: string;
+    /** @deprecated use pythagorean.matrix */
+    matrix?: {
       partnerLifePath: number;
       romantic: string;
       business: string;
       friendship: string;
     }[];
     disclaimer: string;
+    pythagorean: {
+      raw_number: string;
+      matrix: {
+        partnerLifePath: number;
+        romantic: string;
+        business: string;
+        friendship: string;
+      }[];
+    };
+    vedic: {
+      raw_number: string;
+      matrix: {
+        partnerLifePath: number;
+        romantic: string;
+        business: string;
+        friendship: string;
+      }[];
+    };
   };
   strengths: string[];
   growth_opportunities: string[];

@@ -331,14 +331,31 @@ export function ReportView({ report, watermarkEmail }: Props) {
 
         {report.compatibility ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <h2 className="text-xl text-ink">
-              Compatibility matrix (Life Path)
-            </h2>
+            <h2 className="text-xl text-ink">Compatibility matrix</h2>
             <div className="mt-4">
               <CompatibilityMatrix
-                lifePath={report.compatibility.life_path}
-                matrix={report.compatibility.matrix}
-                disclaimer={report.compatibility.disclaimer}
+                pythagorean={{
+                  rawNumber:
+                    report.compatibility.pythagorean?.raw_number ??
+                    report.compatibility.life_path ??
+                    snap.life_path,
+                  matrix:
+                    report.compatibility.pythagorean?.matrix ??
+                    report.compatibility.matrix ??
+                    [],
+                  disclaimer: report.compatibility.disclaimer,
+                }}
+                vedic={{
+                  rawNumber:
+                    report.compatibility.vedic?.raw_number ??
+                    snap.vedic_destiny,
+                  matrix:
+                    report.compatibility.vedic?.matrix ??
+                    report.compatibility.pythagorean?.matrix ??
+                    report.compatibility.matrix ??
+                    [],
+                  disclaimer: report.compatibility.disclaimer,
+                }}
                 hideRomantic={person.report_type === "child"}
               />
             </div>
