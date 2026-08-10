@@ -126,11 +126,11 @@ export function LoShuChart({ loShu }: Props) {
   return (
     <div className="space-y-5">
       <p className="text-sm text-ink-soft">
-        Rows are color-coded by plane.{" "}
-        <span className="font-medium text-amber-800">Gold arrows</span> =
-        present;{" "}
-        <span className="font-medium text-slate-600">thin dotted slate</span> =
-        fully missing. Hover a tile or arrow for a short meaning.
+        Rows are color-coded by plane. Arrows are soft{" "}
+        <span className="font-medium text-amber-800">thin dotted amber</span>{" "}
+        (present) or{" "}
+        <span className="font-medium text-slate-600">slate</span> (missing).
+        Hover a tile or arrow for a short meaning.
       </p>
 
       <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
@@ -195,25 +195,25 @@ export function LoShuChart({ loShu }: Props) {
               <defs>
                 <marker
                   id="numora-arrow-present"
-                  markerWidth="5"
-                  markerHeight="5"
-                  refX="4"
-                  refY="2.5"
+                  markerWidth="3.5"
+                  markerHeight="3.5"
+                  refX="3"
+                  refY="1.75"
                   orient="auto"
-                  markerUnits="strokeWidth"
+                  markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(180, 83, 9, 0.9)" />
+                  <path d="M0,0 L3.5,1.75 L0,3.5 Z" fill="rgba(217, 119, 6, 0.45)" />
                 </marker>
                 <marker
                   id="numora-arrow-missing"
-                  markerWidth="4"
-                  markerHeight="4"
-                  refX="3.5"
-                  refY="2"
+                  markerWidth="3"
+                  markerHeight="3"
+                  refX="2.5"
+                  refY="1.5"
                   orient="auto"
-                  markerUnits="strokeWidth"
+                  markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L4,2 L0,4 Z" fill="rgba(71, 85, 105, 0.75)" />
+                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.4)" />
                 </marker>
               </defs>
               {overlayArrows.map((arrow) => {
@@ -253,12 +253,12 @@ export function LoShuChart({ loShu }: Props) {
                       y2={b.y}
                       stroke={
                         present
-                          ? "rgba(180, 83, 9, 0.85)"
-                          : "rgba(71, 85, 105, 0.7)"
+                          ? "rgba(217, 119, 6, 0.4)"
+                          : "rgba(100, 116, 139, 0.35)"
                       }
-                      strokeWidth={present ? 1.8 : 1}
+                      strokeWidth={0.85}
                       strokeLinecap="round"
-                      strokeDasharray={present ? undefined : "2 2.2"}
+                      strokeDasharray="1.6 2.4"
                       markerEnd={
                         present
                           ? "url(#numora-arrow-present)"
@@ -295,11 +295,12 @@ export function LoShuChart({ loShu }: Props) {
           (8–1–6)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-5 bg-amber-700" /> Present arrow
+          <span className="inline-block w-5 border-t border-dotted border-amber-600/50" />{" "}
+          Present arrow
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-5 border-t border-dotted border-slate-600" />{" "}
-          Missing arrow (thinner)
+          <span className="inline-block w-5 border-t border-dotted border-slate-400" />{" "}
+          Missing arrow
         </span>
       </div>
 
