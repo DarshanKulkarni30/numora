@@ -152,7 +152,7 @@ export function LoShuChart({ loShu }: Props) {
           ))}
         </div>
 
-        <div className="relative">
+        <div className="relative overflow-visible">
           <div className="grid grid-cols-3 gap-1.5">
             {CELL_ORDER.flat().map((n) => {
               const plane = planes.find((p) => p.numbers.includes(n))!;
@@ -169,10 +169,12 @@ export function LoShuChart({ loShu }: Props) {
               return (
                 <div
                   key={n}
-                  title={tileTip}
                   onMouseEnter={() => setTip(tileTip)}
                   onMouseLeave={() => setTip(null)}
-                  className={`relative z-[1] flex aspect-square cursor-help flex-col items-center justify-center rounded-lg border ${
+                  onFocus={() => setTip(tileTip)}
+                  onBlur={() => setTip(null)}
+                  tabIndex={0}
+                  className={`relative z-[1] flex aspect-square cursor-help flex-col items-center justify-center rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-gold ${
                     missing ? plane.missing : plane.present
                   }`}
                 >
@@ -187,7 +189,7 @@ export function LoShuChart({ loShu }: Props) {
 
           {overlayArrows.length > 0 ? (
             <svg
-              className="absolute inset-0 z-[2] h-full w-full"
+              className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
               aria-hidden
@@ -195,14 +197,14 @@ export function LoShuChart({ loShu }: Props) {
               <defs>
                 <marker
                   id="numora-arrow-present"
-                  markerWidth="3.5"
-                  markerHeight="3.5"
-                  refX="3"
-                  refY="1.75"
+                  markerWidth="3"
+                  markerHeight="3"
+                  refX="2.5"
+                  refY="1.5"
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L3.5,1.75 L0,3.5 Z" fill="rgba(217, 119, 6, 0.45)" />
+                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(217, 119, 6, 0.4)" />
                 </marker>
                 <marker
                   id="numora-arrow-missing"
@@ -213,7 +215,7 @@ export function LoShuChart({ loShu }: Props) {
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.4)" />
+                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.35)" />
                 </marker>
               </defs>
               {overlayArrows.map((arrow) => {
@@ -232,20 +234,18 @@ export function LoShuChart({ loShu }: Props) {
                 const arrowTip = `${arrow.name}\n${present ? "Present" : "Missing"} · ${arrow.numbers.join("–")}\n${meaning}`;
                 return (
                   <g key={arrow.name}>
-                    {/* Wide invisible hit target */}
                     <line
                       x1={a.x}
                       y1={a.y}
                       x2={b.x}
                       y2={b.y}
                       stroke="transparent"
-                      strokeWidth={8}
+                      strokeWidth={10}
                       className="cursor-help"
+                      style={{ pointerEvents: "stroke" }}
                       onMouseEnter={() => setTip(arrowTip)}
                       onMouseLeave={() => setTip(null)}
-                    >
-                      <title>{arrowTip}</title>
-                    </line>
+                    />
                     <line
                       x1={a.x}
                       y1={a.y}
@@ -253,34 +253,40 @@ export function LoShuChart({ loShu }: Props) {
                       y2={b.y}
                       stroke={
                         present
-                          ? "rgba(217, 119, 6, 0.4)"
-                          : "rgba(100, 116, 139, 0.35)"
+                          ? "rgba(217, 119, 6, 0.38)"
+                          : "rgba(100, 116, 139, 0.32)"
                       }
-                      strokeWidth={0.85}
+                      strokeWidth={0.75}
                       strokeLinecap="round"
-                      strokeDasharray="1.6 2.4"
+                      strokeDasharray="1.4 2.6"
                       markerEnd={
                         present
                           ? "url(#numora-arrow-present)"
                           : "url(#numora-arrow-missing)"
                       }
-                      pointerEvents="none"
+                      style={{ pointerEvents: "none" }}
                     />
                   </g>
                 );
               })}
             </svg>
           ) : null}
-
-          {tip ? (
-            <div
-              role="tooltip"
-              className="absolute bottom-full left-1/2 z-[3] mb-2 w-[min(100%,18rem)] -translate-x-1/2 rounded-lg border border-[var(--line)] bg-paper px-3 py-2 text-[11px] leading-snug text-ink shadow-md whitespace-pre-line"
-            >
-              {tip}
-            </div>
-          ) : null}
         </div>
+      </div>
+
+      <div
+        role="status"
+        aria-live="polite"
+        className="mx-auto min-h-[4.5rem] max-w-md rounded-xl border border-dashed border-[var(--line)] bg-white/70 px-3 py-2 text-[12px] leading-snug text-ink"
+      >
+        {tip ? (
+          <p className="whitespace-pre-line">{tip}</p>
+        ) : (
+          <p className="text-ink-soft">
+            Hover a grid tile for its plane and core strength, or hover a dotted
+            arrow for its name and meaning.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
