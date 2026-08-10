@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
-import { LoShuChart } from "@/components/report/LoShuChart";
+import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -265,13 +265,17 @@ export function ReportView({ report, watermarkEmail }: Props) {
         </section>
 
         <section>
-          <h2 className="text-xl text-ink">Lo Shu birth grid</h2>
+          <h2 className="text-xl text-ink">Birth charts</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Color-coded planes, number meanings, and notes on repeats or gaps.
-            Missing arrows are growth areas—not fixed limits.
+            Lo Shu grid, Pythagorean birth table, and Vedic number chart—same
+            hover tips and click-through guides. Not a full kundli.
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <LoShuChart loShu={report.lo_shu} />
+            <BirthChartsPanel
+              loShu={report.lo_shu}
+              dateOfBirth={person.date_of_birth}
+              snap={snap}
+            />
           </div>
         </section>
 
@@ -369,6 +373,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
             <TriviaPanel
               lifePath={snap.life_path}
               destiny={snap.vedic_destiny}
+              dateOfBirth={person.date_of_birth}
             />
           </div>
         </section>

@@ -2,6 +2,24 @@ import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { TRIVIA_COUNTRIES, type TriviaCountry } from "./countries";
 import { TRIVIA_PEOPLE, type TriviaPerson } from "./people";
 
+/** DD/MM prefix from DD/MM/YYYY (year ignored). */
+export function dayMonthKey(dob: string): string | null {
+  const m = /^(\d{2})\/(\d{2})\//.exec(dob.trim());
+  return m ? `${m[1]}/${m[2]}` : null;
+}
+
+/** Celebrities sharing the same calendar day & month (ignore year). */
+export function matchPeopleByDayMonth(
+  dob: string,
+  limit = 10,
+): TriviaPerson[] {
+  const key = dayMonthKey(dob);
+  if (!key) return [];
+  return TRIVIA_PEOPLE.filter((p) => dayMonthKey(p.dob) === key)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .slice(0, limit);
+}
+
 export function matchPeople(opts: {
   lifePath: number | string;
   destiny: number | string;

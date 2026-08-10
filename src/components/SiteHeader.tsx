@@ -31,6 +31,9 @@ export function SiteHeader({ email }: Props) {
             <Link href="/trivia" className="hover:text-gold-deep">
               Trivia
             </Link>
+            <Link href="/family" className="hover:text-gold-deep">
+              Family
+            </Link>
             <Link href="/report/new" className="hover:text-gold-deep">
               New report
             </Link>

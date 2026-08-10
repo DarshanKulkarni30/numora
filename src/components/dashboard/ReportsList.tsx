@@ -12,7 +12,11 @@ export type DashboardReport = {
   age: number;
   report_type: string;
   created_at: string;
-  snapshot: { life_path?: string } | null;
+  snapshot: {
+    life_path?: string;
+    vedic_destiny?: string;
+    vedic_psychic?: string;
+  } | null;
 };
 
 type Props = {
@@ -93,10 +97,33 @@ export function ReportsList({ initialReports }: Props) {
               </Link>
               <div className="flex items-center gap-4">
                 <Link href={`/report/${r.id}`} className="text-right">
-                  <p className="brand text-2xl text-ink">
-                    {r.snapshot?.life_path ?? "—"}
-                  </p>
-                  <p className="text-xs text-ink-soft">
+                  <div className="flex items-end justify-end gap-3">
+                    <div className="text-center">
+                      <p className="brand text-xl text-ink">
+                        {r.snapshot?.life_path ?? "—"}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                        Life Path
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="brand text-xl text-ink">
+                        {r.snapshot?.vedic_destiny ?? "—"}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                        Destiny
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="brand text-xl text-ink">
+                        {r.snapshot?.vedic_psychic ?? "—"}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                        Psychic
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-1 text-xs text-ink-soft">
                     {new Date(r.created_at).toLocaleString()}
                   </p>
                 </Link>

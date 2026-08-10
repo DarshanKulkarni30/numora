@@ -3,15 +3,21 @@
 import Link from "next/link";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
-import { matchCountries, matchPeople } from "@/lib/trivia/match";
+import {
+  matchCountries,
+  matchPeople,
+  matchPeopleByDayMonth,
+} from "@/lib/trivia/match";
 
 type Props = {
   lifePath: string;
   destiny: string;
+  dateOfBirth: string;
 };
 
-export function TriviaPanel({ lifePath, destiny }: Props) {
+export function TriviaPanel({ lifePath, destiny, dateOfBirth }: Props) {
   const people = matchPeople({ lifePath, destiny, limit: 5 });
+  const birthdayTwins = matchPeopleByDayMonth(dateOfBirth, 5);
   const countries = matchCountries({ lifePath, destiny, limit: 1 });
   const topCountry = countries[0];
 
@@ -19,8 +25,8 @@ export function TriviaPanel({ lifePath, destiny }: Props) {
     <div className="space-y-8">
       <p className="text-sm text-ink-soft">
         Light trivia only: top matches whose birth or independence / formation
-        dates share your Pythagorean Life Path or Vedic Destiny number. Not
-        predictions or endorsements.{" "}
+        dates share your Pythagorean Life Path or Vedic Destiny number, plus
+        people born on the same day and month. Not predictions or endorsements.{" "}
         <Link
           href="/trivia"
           className="text-gold-deep underline underline-offset-2 hover:text-ink"
@@ -62,6 +68,46 @@ export function TriviaPanel({ lifePath, destiny }: Props) {
         ) : (
           <p className="mt-2 text-sm text-ink-soft">
             No close matches in the current bank.
+          </p>
+        )}
+      </div>
+
+      <div>
+        <h3 className="text-lg text-ink">Born on the same day &amp; month</h3>
+        <p className="mt-1 text-xs text-ink-soft">
+          Calendar day and month only (year ignored). Reflective coincidence—not
+          destiny.
+        </p>
+        {birthdayTwins.length ? (
+          <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
+            <table className="w-full min-w-[36rem] text-left text-sm">
+              <thead className="bg-mist/60 text-ink-soft">
+                <tr>
+                  <th className="px-3 py-2 font-medium">Name</th>
+                  <th className="px-3 py-2 font-medium">Known for</th>
+                  <th className="px-3 py-2 font-medium">DOB</th>
+                  <th className="px-3 py-2 font-medium">Life Path</th>
+                  <th className="px-3 py-2 font-medium">Destiny</th>
+                  <th className="px-3 py-2 font-medium">Psychic</th>
+                </tr>
+              </thead>
+              <tbody>
+                {birthdayTwins.map((p) => (
+                  <tr key={`bday-${p.name}`} className="border-t border-[var(--line)]">
+                    <td className="px-3 py-2 text-ink">{p.name}</td>
+                    <td className="px-3 py-2 text-ink-soft">{p.note}</td>
+                    <td className="px-3 py-2 text-ink-soft">{p.dob}</td>
+                    <td className="brand px-3 py-2 text-ink">{p.lifePath}</td>
+                    <td className="brand px-3 py-2 text-ink">{p.destiny}</td>
+                    <td className="brand px-3 py-2 text-ink">{p.psychic}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-2 text-sm text-ink-soft">
+            No one in the current bank shares this day and month.
           </p>
         )}
       </div>

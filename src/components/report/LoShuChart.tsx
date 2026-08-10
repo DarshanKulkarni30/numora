@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ChartTipPanel } from "@/components/report/ChartTipPanel";
 import {
   arrowNameToSlug,
   guideHref,
@@ -70,6 +71,33 @@ function arrowSlugKey(name: string): string | null {
   return arrowNameToSlug(name);
 }
 
+function ArrowListItem({ name }: { name: string }) {
+  const slug = arrowNameToSlug(name);
+  const guide = slug ? LO_SHU_ARROW_GUIDES[slug] : null;
+  return (
+    <li className="space-y-0.5">
+      {slug ? (
+        <Link
+          href={guideHref("lo-shu-arrow", slug)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`Click for more about ${name}`}
+          className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
+        >
+          {name}
+        </Link>
+      ) : (
+        <span className="text-ink">{name}</span>
+      )}
+      {guide ? (
+        <p className="text-[11px] leading-snug text-ink-soft">
+          {guide.significance}
+        </p>
+      ) : null}
+    </li>
+  );
+}
+
 export function LoShuChart({ loShu }: Props) {
   const effects = loShuEffectNotes(
     loShu.repeated_numbers,
@@ -96,8 +124,8 @@ export function LoShuChart({ loShu }: Props) {
       label: "Mental",
       numbers: [4, 9, 2],
       strength: loShu.mental_plane,
-      present: "border-sky-400/70 bg-sky-600 text-white",
-      missing: "border-dashed border-sky-300/70 bg-sky-50 text-sky-400",
+      present: "border-sky-300/80 bg-sky-100 text-sky-950",
+      missing: "border-dashed border-sky-300/60 bg-sky-50/50 text-sky-400",
       chip: "bg-sky-100 text-sky-900 border-sky-200",
       rail: "bg-sky-100/80 border-sky-200",
     },
@@ -106,8 +134,8 @@ export function LoShuChart({ loShu }: Props) {
       label: "Emotional",
       numbers: [3, 5, 7],
       strength: loShu.emotional_plane,
-      present: "border-rose-400/70 bg-rose-600 text-white",
-      missing: "border-dashed border-rose-300/70 bg-rose-50 text-rose-400",
+      present: "border-rose-300/80 bg-rose-100 text-rose-950",
+      missing: "border-dashed border-rose-300/60 bg-rose-50/50 text-rose-400",
       chip: "bg-rose-100 text-rose-900 border-rose-200",
       rail: "bg-rose-100/80 border-rose-200",
     },
@@ -116,8 +144,9 @@ export function LoShuChart({ loShu }: Props) {
       label: "Practical",
       numbers: [8, 1, 6],
       strength: loShu.practical_plane,
-      present: "border-emerald-400/70 bg-emerald-700 text-white",
-      missing: "border-dashed border-emerald-300/70 bg-emerald-50 text-emerald-400",
+      present: "border-emerald-300/80 bg-emerald-100 text-emerald-950",
+      missing:
+        "border-dashed border-emerald-300/60 bg-emerald-50/50 text-emerald-400",
       chip: "bg-emerald-100 text-emerald-900 border-emerald-200",
       rail: "bg-emerald-100/80 border-emerald-200",
     },
@@ -126,11 +155,12 @@ export function LoShuChart({ loShu }: Props) {
   return (
     <div className="space-y-5">
       <p className="text-sm text-ink-soft">
-        Rows are color-coded by plane. Arrows are soft{" "}
+        Rows are color-coded by plane (pastel cells so dotted arrows stay
+        readable). Arrows are soft{" "}
         <span className="font-medium text-amber-800">thin dotted amber</span>{" "}
         (present) or{" "}
         <span className="font-medium text-slate-600">slate</span> (missing).
-        Hover a tile or arrow for a short meaning.
+        Hover a tile or arrow for meaning; click a tile for its Lo Shu guide.
       </p>
 
       <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
@@ -167,14 +197,17 @@ export function LoShuChart({ loShu }: Props) {
                   : `Present ×${count} — core strength theme: ${meta.theme}.`,
               ].join("\n");
               return (
-                <div
+                <Link
                   key={n}
+                  href={guideHref("lo-shu-number", n)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Click for more about Lo Shu number ${n}`}
                   onMouseEnter={() => setTip(tileTip)}
                   onMouseLeave={() => setTip(null)}
                   onFocus={() => setTip(tileTip)}
                   onBlur={() => setTip(null)}
-                  tabIndex={0}
-                  className={`relative z-[1] flex aspect-square cursor-help flex-col items-center justify-center rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+                  className={`relative z-[1] flex aspect-square flex-col items-center justify-center rounded-lg border outline-none transition hover:border-gold/60 focus-visible:ring-2 focus-visible:ring-gold ${
                     missing ? plane.missing : plane.present
                   }`}
                 >
@@ -182,14 +215,14 @@ export function LoShuChart({ loShu }: Props) {
                   <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
                     {missing ? "miss" : `×${count}`}
                   </span>
-                </div>
+                </Link>
               );
             })}
           </div>
 
           {overlayArrows.length > 0 ? (
             <svg
-              className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
+              className="pointer-events-none absolute inset-0 z-[2] h-full w-full overflow-visible"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
               aria-hidden
@@ -204,7 +237,7 @@ export function LoShuChart({ loShu }: Props) {
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(217, 119, 6, 0.4)" />
+                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(217, 119, 6, 0.55)" />
                 </marker>
                 <marker
                   id="numora-arrow-missing"
@@ -215,7 +248,7 @@ export function LoShuChart({ loShu }: Props) {
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.35)" />
+                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.45)" />
                 </marker>
               </defs>
               {overlayArrows.map((arrow) => {
@@ -253,10 +286,10 @@ export function LoShuChart({ loShu }: Props) {
                       y2={b.y}
                       stroke={
                         present
-                          ? "rgba(217, 119, 6, 0.38)"
-                          : "rgba(100, 116, 139, 0.32)"
+                          ? "rgba(180, 83, 9, 0.55)"
+                          : "rgba(71, 85, 105, 0.45)"
                       }
-                      strokeWidth={0.75}
+                      strokeWidth={0.9}
                       strokeLinecap="round"
                       strokeDasharray="1.4 2.6"
                       markerEnd={
@@ -274,38 +307,30 @@ export function LoShuChart({ loShu }: Props) {
         </div>
       </div>
 
-      <div
-        role="status"
-        aria-live="polite"
-        className="mx-auto min-h-[4.5rem] max-w-md rounded-xl border border-dashed border-[var(--line)] bg-white/70 px-3 py-2 text-[12px] leading-snug text-ink"
-      >
-        {tip ? (
-          <p className="whitespace-pre-line">{tip}</p>
-        ) : (
-          <p className="text-ink-soft">
-            Hover a grid tile for its plane and core strength, or hover a dotted
-            arrow for its name and meaning.
-          </p>
-        )}
-      </div>
+      <ChartTipPanel
+        tip={tip}
+        empty="Hover a grid tile for its plane and core strength, or hover a dotted arrow for its name and meaning."
+      />
 
       <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-sky-600" /> Mental (4–9–2)
+          <span className="h-2.5 w-2.5 rounded-sm bg-sky-200 border border-sky-400" />{" "}
+          Mental (4–9–2)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-rose-600" /> Emotional (3–5–7)
+          <span className="h-2.5 w-2.5 rounded-sm bg-rose-200 border border-rose-400" />{" "}
+          Emotional (3–5–7)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-emerald-700" /> Practical
-          (8–1–6)
+          <span className="h-2.5 w-2.5 rounded-sm bg-emerald-200 border border-emerald-500" />{" "}
+          Practical (8–1–6)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-5 border-t border-dotted border-amber-600/50" />{" "}
+          <span className="inline-block w-5 border-t border-dotted border-amber-700/60" />{" "}
           Present arrow
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-5 border-t border-dotted border-slate-400" />{" "}
+          <span className="inline-block w-5 border-t border-dotted border-slate-500" />{" "}
           Missing arrow
         </span>
       </div>
@@ -315,14 +340,20 @@ export function LoShuChart({ loShu }: Props) {
           Number meanings
         </p>
         <p className="mt-1 text-[11px] text-ink-soft">
-          Trait · Vedic nickname
+          Trait · Vedic nickname — click a number for its Lo Shu guide
         </p>
         <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
             <li key={n} className="flex items-baseline gap-1.5">
-              <span className={`brand text-base ${NUMBER_PLANE_TINT[n]}`}>
+              <Link
+                href={guideHref("lo-shu-number", n)}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Click for more about Lo Shu number ${n}`}
+                className={`brand text-base underline decoration-gold/50 underline-offset-2 hover:text-gold-deep ${NUMBER_PLANE_TINT[n]}`}
+              >
                 {n}
-              </span>
+              </Link>
               <span className="text-ink-soft">
                 {LO_SHU_NUMBER_META[n].trait}{" "}
                 <span className="text-ink/70">
@@ -371,27 +402,10 @@ export function LoShuChart({ loShu }: Props) {
         <div>
           <h3 className="text-ink">Present arrows (strength patterns)</h3>
           {loShu.present_arrows.length ? (
-            <ul className="mt-2 space-y-1 text-sm text-ink-soft">
-              {loShu.present_arrows.map((name) => {
-                const slug = arrowNameToSlug(name);
-                return (
-                  <li key={name}>
-                    {slug ? (
-                      <Link
-                        href={guideHref("lo-shu-arrow", slug)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`Click for more about ${name}`}
-                        className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
-                      >
-                        {name}
-                      </Link>
-                    ) : (
-                      name
-                    )}
-                  </li>
-                );
-              })}
+            <ul className="mt-2 space-y-2 text-sm text-ink-soft">
+              {loShu.present_arrows.map((name) => (
+                <ArrowListItem key={name} name={name} />
+              ))}
             </ul>
           ) : (
             <p className="mt-2 text-sm text-ink-soft">No complete present arrows.</p>
@@ -400,27 +414,10 @@ export function LoShuChart({ loShu }: Props) {
         <div>
           <h3 className="text-ink">Missing arrows (growth areas)</h3>
           {loShu.missing_arrows.length ? (
-            <ul className="mt-2 space-y-1 text-sm text-ink-soft">
-              {loShu.missing_arrows.map((name) => {
-                const slug = arrowNameToSlug(name);
-                return (
-                  <li key={name}>
-                    {slug ? (
-                      <Link
-                        href={guideHref("lo-shu-arrow", slug)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`Click for more about ${name}`}
-                        className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
-                      >
-                        {name}
-                      </Link>
-                    ) : (
-                      name
-                    )}
-                  </li>
-                );
-              })}
+            <ul className="mt-2 space-y-2 text-sm text-ink-soft">
+              {loShu.missing_arrows.map((name) => (
+                <ArrowListItem key={name} name={name} />
+              ))}
             </ul>
           ) : (
             <p className="mt-2 text-sm text-ink-soft">No fully missing arrows.</p>

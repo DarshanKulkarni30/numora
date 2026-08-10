@@ -51,7 +51,13 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  const protectedPaths = ["/dashboard", "/report", "/profile", "/trivia"];
+  const protectedPaths = [
+    "/dashboard",
+    "/report",
+    "/profile",
+    "/trivia",
+    "/family",
+  ];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(`${p}/`),
   );

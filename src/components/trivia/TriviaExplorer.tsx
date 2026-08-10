@@ -11,7 +11,11 @@ import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
-import { matchCountries, matchPeople } from "@/lib/trivia/match";
+import {
+  matchCountries,
+  matchPeople,
+  matchPeopleByDayMonth,
+} from "@/lib/trivia/match";
 import { TRIVIA_COUNTRIES } from "@/lib/trivia/countries";
 import { TRIVIA_PEOPLE } from "@/lib/trivia/people";
 
@@ -67,6 +71,9 @@ export function TriviaExplorer({ people }: Props) {
     matchLp != null && matchDestiny != null
       ? matchPeople({ lifePath: matchLp, destiny: matchDestiny, limit: 10 })
       : [];
+  const birthdayTwins = selected
+    ? matchPeopleByDayMonth(selected.date_of_birth, 10)
+    : [];
   const matchedCountries =
     matchLp != null && matchDestiny != null
       ? matchCountries({ lifePath: matchLp, destiny: matchDestiny, limit: 10 })
@@ -166,6 +173,20 @@ export function TriviaExplorer({ people }: Props) {
               <section>
                 <h2 className="text-xl text-ink">Top 10 personalities</h2>
                 <PeopleTable rows={matchedPeople} />
+              </section>
+
+              <section>
+                <h2 className="text-xl text-ink">
+                  Born on the same day &amp; month
+                </h2>
+                <p className="mt-1 text-sm text-ink-soft">
+                  Same calendar day and month as{" "}
+                  {selected ? personLabel(selected) : "the selected person"}{" "}
+                  (year ignored). Up to 10 from the bank.
+                </p>
+                <div className="mt-3">
+                  <PeopleTable rows={birthdayTwins} />
+                </div>
               </section>
 
               <section>

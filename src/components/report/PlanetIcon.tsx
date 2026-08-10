@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { PlanetInfo } from "@/lib/numerology/planets";
 
 const TINT_LIGHT: Record<string, string> = {
@@ -35,6 +36,8 @@ type Props = {
   size?: "sm" | "md";
   showName?: boolean;
   variant?: "light" | "dark";
+  /** When set, the icon (and name) link to a planet guide in a new tab */
+  href?: string;
 };
 
 export function PlanetIcon({
@@ -42,6 +45,7 @@ export function PlanetIcon({
   size = "sm",
   showName = true,
   variant = "light",
+  href,
 }: Props) {
   const tint =
     (variant === "dark" ? TINT_DARK : TINT_LIGHT)[planet.id] ??
@@ -52,11 +56,15 @@ export function PlanetIcon({
       ? "text-sm leading-none text-paper/95"
       : "text-sm leading-none text-ink";
 
-  return (
-    <span className="inline-flex h-8 items-center gap-2">
+  const tip = href
+    ? `Click for more about ${planet.name}`
+    : planet.name;
+
+  const inner = (
+    <>
       <span
-        title={planet.name}
-        aria-label={planet.name}
+        title={tip}
+        aria-label={tip}
         className={`inline-flex shrink-0 ${box} items-center justify-center rounded-full border font-bold ${tint}`}
         style={{ lineHeight: 1 }}
       >
@@ -71,6 +79,22 @@ export function PlanetIcon({
       {showName ? (
         <span className={`${nameClass} self-center`}>{planet.name}</span>
       ) : null}
-    </span>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={tip}
+        className="inline-flex h-8 items-center gap-2 outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-gold"
+      >
+        {inner}
+      </Link>
+    );
+  }
+
+  return <span className="inline-flex h-8 items-center gap-2">{inner}</span>;
 }

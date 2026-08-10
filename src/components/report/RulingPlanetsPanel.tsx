@@ -1,6 +1,7 @@
 "use client";
 
 import { PlanetIcon } from "@/components/report/PlanetIcon";
+import { planetGuideHref } from "@/lib/guides/planets";
 import {
   planetForPythagorean,
   planetForVedic,
@@ -28,11 +29,17 @@ function PlanetRow({ aspect, number, system }: Row) {
 
   return (
     <li className="flex items-center gap-3">
-      <span className="w-[7.25rem] shrink-0 text-sm leading-none text-ink-soft">
+      <span
+        className="w-[7.25rem] shrink-0 text-sm leading-none text-ink-soft"
+        title={`${aspect} ${number} · ruling ${planet.name}`}
+      >
         {aspect}{" "}
         <span className="brand text-base leading-none text-ink">{number}</span>
       </span>
-      <PlanetIcon planet={planet} />
+      <PlanetIcon
+        planet={planet}
+        href={planetGuideHref(system, planet.id)}
+      />
     </li>
   );
 }
@@ -58,7 +65,8 @@ export function RulingPlanetsPanel({
     <div className="space-y-5">
       <p className="text-sm leading-6 text-ink-soft">
         Traditional planet links by number (belief-based associations—not
-        astronomy or astrology forecasts). Icons are symbolic labels only.
+        astronomy or astrology forecasts). Click a planet for astronomy notes
+        and system-specific traits.
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">

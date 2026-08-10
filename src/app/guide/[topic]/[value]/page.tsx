@@ -50,6 +50,40 @@ export default async function GuidePage({ params }: Props) {
         <h1 className="mt-2 text-4xl text-ink md:text-5xl">{page.title}</h1>
         <p className="mt-3 text-lg text-ink-soft">{page.subtitle}</p>
 
+        {page.imageUrl ? (
+          <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--line)] bg-ink/5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={page.imageUrl}
+              alt={page.title}
+              className="mx-auto max-h-[22rem] w-full object-cover"
+              loading="eager"
+            />
+          </div>
+        ) : topic === "planet" && !page.imageUrl ? (
+          <div className="mt-8 flex h-48 items-center justify-center rounded-2xl border border-[var(--line)] bg-gradient-to-br from-ink via-[#1e293b] to-[#334155]">
+            <span className="text-6xl text-sand" aria-hidden>
+              {page.title.includes("Rahu") ? "☊" : page.title.includes("Ketu") ? "☋" : "✦"}
+            </span>
+          </div>
+        ) : null}
+
+        {page.facts?.length ? (
+          <dl className="mt-6 grid gap-3 sm:grid-cols-2">
+            {page.facts.map((f) => (
+              <div
+                key={f.label}
+                className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
+              >
+                <dt className="text-xs uppercase tracking-wider text-ink-soft">
+                  {f.label}
+                </dt>
+                <dd className="mt-1 text-sm text-ink">{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+
         <div className="mt-8 space-y-4 text-[1.05rem] leading-8 text-ink-soft">
           {page.paragraphs.map((p) => (
             <p key={p.slice(0, 48)}>{p}</p>
