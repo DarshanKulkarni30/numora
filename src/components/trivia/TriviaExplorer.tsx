@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import {
   lifePathFromDob,
   vedicDestinyFromDob,
+  vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
@@ -56,6 +57,9 @@ export function TriviaExplorer({ people }: Props) {
   const matchLp = selected ? lifePathFromDob(selected.date_of_birth) : null;
   const matchDestiny = selected
     ? vedicDestinyFromDob(selected.date_of_birth)
+    : null;
+  const matchPsychic = selected
+    ? vedicPsychicFromDob(selected.date_of_birth)
     : null;
 
   const matchedPeople =
@@ -149,9 +153,11 @@ export function TriviaExplorer({ people }: Props) {
                 {selected ? (
                   <p className="mt-2 text-sm text-ink-soft">
                     Matching on Life Path{" "}
-                    <span className="brand text-ink">{matchLp}</span> and Destiny{" "}
-                    <span className="brand text-ink">{matchDestiny}</span>{" "}
-                    (from {selected.date_of_birth}). Showing top 10 each.
+                    <span className="brand text-ink">{matchLp}</span>, Destiny{" "}
+                    <span className="brand text-ink">{matchDestiny}</span>, and
+                    Psychic <span className="brand text-ink">{matchPsychic}</span>{" "}
+                    (from {selected.date_of_birth}). Top 10 use Life Path +
+                    Destiny; Psychic is shown for reference.
                   </p>
                 ) : null}
               </div>
