@@ -223,16 +223,33 @@ export function TriviaExplorer({ people }: Props) {
             </div>
           </div>
 
-          <p className="text-sm text-ink-soft">
-            Showing{" "}
-            {browseKind === "people"
-              ? filteredPeople.length
-              : filteredCountries.length}{" "}
-            of{" "}
-            {browseKind === "people"
-              ? TRIVIA_PEOPLE.length
-              : TRIVIA_COUNTRIES.length}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-ink-soft">
+              Showing{" "}
+              {browseKind === "people"
+                ? filteredPeople.length
+                : filteredCountries.length}{" "}
+              of{" "}
+              {browseKind === "people"
+                ? TRIVIA_PEOPLE.length
+                : TRIVIA_COUNTRIES.length}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setFilterLp("");
+                setFilterDestiny("");
+                setFilterPsychic("");
+                setQuery("");
+              }}
+              disabled={
+                !filterLp && !filterDestiny && !filterPsychic && !query.trim()
+              }
+              className="rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink hover:bg-mist/80 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Clear filters
+            </button>
+          </div>
 
           {browseKind === "people" ? (
             <PeopleTable rows={filteredPeople} />
