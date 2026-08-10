@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { matchCountries, matchPeople } from "@/lib/trivia/match";
 
 type Props = {
@@ -98,24 +99,21 @@ export function TriviaPanel({ lifePath, destiny }: Props) {
                 Founding / independence: {topCountry.dob}
               </p>
               <dl className="mt-2 grid grid-cols-3 gap-1 text-center text-xs">
-                <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                  <dt className="text-ink-soft">Life Path</dt>
-                  <dd className="brand text-base text-ink">
-                    {topCountry.lifePath}
-                  </dd>
-                </div>
-                <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                  <dt className="text-ink-soft">Destiny</dt>
-                  <dd className="brand text-base text-ink">
-                    {topCountry.destiny}
-                  </dd>
-                </div>
-                <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                  <dt className="text-ink-soft">Psychic</dt>
-                  <dd className="brand text-base text-ink">
-                    {topCountry.psychic}
-                  </dd>
-                </div>
+                <CountryNumberStat
+                  kind="lifePath"
+                  value={topCountry.lifePath}
+                  countryName={topCountry.name}
+                />
+                <CountryNumberStat
+                  kind="destiny"
+                  value={topCountry.destiny}
+                  countryName={topCountry.name}
+                />
+                <CountryNumberStat
+                  kind="psychic"
+                  value={topCountry.psychic}
+                  countryName={topCountry.name}
+                />
               </dl>
             </div>
           </div>

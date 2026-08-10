@@ -8,6 +8,7 @@ import {
 } from "@/lib/numerology/dateNumbers";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
+import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { matchCountries, matchPeople } from "@/lib/trivia/match";
 import { TRIVIA_COUNTRIES } from "@/lib/trivia/countries";
 import { TRIVIA_PEOPLE } from "@/lib/trivia/people";
@@ -391,18 +392,21 @@ function CountryCards({
               Founding / independence: {c.dob}
             </p>
             <dl className="mt-2 grid grid-cols-3 gap-1 text-center text-xs">
-              <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                <dt className="text-ink-soft">Life Path</dt>
-                <dd className="brand text-base text-ink">{c.lifePath}</dd>
-              </div>
-              <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                <dt className="text-ink-soft">Destiny</dt>
-                <dd className="brand text-base text-ink">{c.destiny}</dd>
-              </div>
-              <div className="rounded-lg bg-mist/70 px-1 py-1.5">
-                <dt className="text-ink-soft">Psychic</dt>
-                <dd className="brand text-base text-ink">{c.psychic}</dd>
-              </div>
+              <CountryNumberStat
+                kind="lifePath"
+                value={c.lifePath}
+                countryName={c.name}
+              />
+              <CountryNumberStat
+                kind="destiny"
+                value={c.destiny}
+                countryName={c.name}
+              />
+              <CountryNumberStat
+                kind="psychic"
+                value={c.psychic}
+                countryName={c.name}
+              />
             </dl>
           </div>
         </li>
