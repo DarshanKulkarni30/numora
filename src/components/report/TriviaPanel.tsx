@@ -12,21 +12,33 @@ import {
 type Props = {
   lifePath: string;
   destiny: string;
+  psychic: string;
   dateOfBirth: string;
 };
 
-export function TriviaPanel({ lifePath, destiny, dateOfBirth }: Props) {
-  const people = matchPeople({ lifePath, destiny, limit: 5 });
+export function TriviaPanel({
+  lifePath,
+  destiny,
+  psychic,
+  dateOfBirth,
+}: Props) {
+  const people = matchPeople({ lifePath, destiny, psychic, limit: 5 });
   const birthdayTwins = matchPeopleByDayMonth(dateOfBirth, 5);
-  const countries = matchCountries({ lifePath, destiny, limit: 1 });
+  const countries = matchCountries({
+    lifePath,
+    destiny,
+    psychic,
+    limit: 1,
+  });
   const topCountry = countries[0];
 
   return (
     <div className="space-y-8">
       <p className="text-sm text-ink-soft">
-        Light trivia only: top matches whose birth or independence / formation
-        dates share your Pythagorean Life Path or Vedic Destiny number, plus
-        people born on the same day and month. Not predictions or endorsements.{" "}
+        Light trivia only: countries and personalities ranked by Life Path,
+        Destiny, and Psychic (prefer all three; then closest on unmatched
+        numbers), plus people born on the same day and month. Not predictions
+        or endorsements.{" "}
         <Link
           href="/trivia"
           className="text-gold-deep underline underline-offset-2 hover:text-ink"

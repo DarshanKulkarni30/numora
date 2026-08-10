@@ -68,15 +68,25 @@ export function TriviaExplorer({ people }: Props) {
     : null;
 
   const matchedPeople =
-    matchLp != null && matchDestiny != null
-      ? matchPeople({ lifePath: matchLp, destiny: matchDestiny, limit: 10 })
+    matchLp != null && matchDestiny != null && matchPsychic != null
+      ? matchPeople({
+          lifePath: matchLp,
+          destiny: matchDestiny,
+          psychic: matchPsychic,
+          limit: 10,
+        })
       : [];
   const birthdayTwins = selected
     ? matchPeopleByDayMonth(selected.date_of_birth, 10)
     : [];
   const matchedCountries =
-    matchLp != null && matchDestiny != null
-      ? matchCountries({ lifePath: matchLp, destiny: matchDestiny, limit: 10 })
+    matchLp != null && matchDestiny != null && matchPsychic != null
+      ? matchCountries({
+          lifePath: matchLp,
+          destiny: matchDestiny,
+          psychic: matchPsychic,
+          limit: 10,
+        })
       : [];
 
   const filteredPeople = useMemo(() => {
@@ -164,8 +174,8 @@ export function TriviaExplorer({ people }: Props) {
                     <span className="brand text-ink">{matchLp}</span>, Destiny{" "}
                     <span className="brand text-ink">{matchDestiny}</span>, and
                     Psychic <span className="brand text-ink">{matchPsychic}</span>{" "}
-                    (from {selected.date_of_birth}). Top 10 use Life Path +
-                    Destiny; Psychic is shown for reference.
+                    (from {selected.date_of_birth}). Rank prefers all three
+                    exact matches, then closest unmatched numbers.
                   </p>
                 ) : null}
               </div>

@@ -373,6 +373,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
             <TriviaPanel
               lifePath={snap.life_path}
               destiny={snap.vedic_destiny}
+              psychic={snap.vedic_psychic}
               dateOfBirth={person.date_of_birth}
             />
           </div>

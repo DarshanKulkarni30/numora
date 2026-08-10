@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ChartTipPanel } from "@/components/report/ChartTipPanel";
+import { useMemo } from "react";
+import { LoShuChart } from "@/components/report/LoShuChart";
 import { guideHref, type GuideTopic } from "@/lib/guides/content";
-import { coreTraitFor } from "@/lib/numerology/meanings";
+import { loShuFromCoreNumbers } from "@/lib/numerology/loShu";
 import { parseDob, reduceNumber } from "@/lib/numerology/reduce";
 import type { NumerologySnapshot } from "@/lib/numerology/types";
 
-type Cell = {
+type Aspect = {
   label: string;
   topic: GuideTopic;
   value: string;
-  note: string;
 };
 
 type Props = {
@@ -21,120 +20,84 @@ type Props = {
 };
 
 export function PythagoreanBirthTable({ dateOfBirth, snap }: Props) {
-  const [tip, setTip] = useState<string | null>(null);
-  let dayR = "—";
-  let monthR = "—";
-  let yearR = "—";
-  try {
-    const { day, month, year } = parseDob(dateOfBirth);
-    dayR = String(reduceNumber(day));
-    monthR = String(reduceNumber(month));
-    yearR = String(reduceNumber(year));
-  } catch {
-    /* keep placeholders */
-  }
+  const aspects: Aspect[] = useMemo(() => {
+    let dayR = "—";
+    let monthR = "—";
+    let yearR = "—";
+    try {
+      const { day, month, year } = parseDob(dateOfBirth);
+      dayR = String(reduceNumber(day));
+      monthR = String(reduceNumber(month));
+      yearR = String(reduceNumber(year));
+    } catch {
+      /* keep placeholders */
+    }
+    return [
+      { label: "Day digit", topic: "birth-day", value: dayR },
+      { label: "Month digit", topic: "life-path", value: monthR },
+      { label: "Year digit", topic: "life-path", value: yearR },
+      { label: "Birth Day", topic: "birth-day", value: snap.birth_day },
+      { label: "Life Path", topic: "life-path", value: snap.life_path },
+      { label: "Expression", topic: "expression", value: snap.expression_number },
+      { label: "Soul Urge", topic: "soul-urge", value: snap.soul_urge_number },
+      {
+        label: "Personality",
+        topic: "personality",
+        value: snap.personality_number,
+      },
+      { label: "Maturity", topic: "maturity", value: snap.maturity_number },
+    ];
+  }, [dateOfBirth, snap]);
 
-  const cells: Cell[] = [
-    {
-      label: "Day digit",
-      topic: "birth-day",
-      value: dayR,
-      note: "Reduced birth day (building block of Life Path).",
-    },
-    {
-      label: "Month digit",
-      topic: "life-path",
-      value: monthR,
-      note: "Reduced birth month used in Life Path totaling.",
-    },
-    {
-      label: "Year digit",
-      topic: "life-path",
-      value: yearR,
-      note: "Reduced birth year used in Life Path totaling.",
-    },
-    {
-      label: "Birth Day",
-      topic: "birth-day",
-      value: snap.birth_day,
-      note: "Pythagorean Birth Day number from the day of month.",
-    },
-    {
-      label: "Life Path",
-      topic: "life-path",
-      value: snap.life_path,
-      note: "Full-date Life Path theme.",
-    },
-    {
-      label: "Expression",
-      topic: "expression",
-      value: snap.expression_number,
-      note: "Name-letter Expression / outer talents.",
-    },
-    {
-      label: "Soul Urge",
-      topic: "soul-urge",
-      value: snap.soul_urge_number,
-      note: "Vowel-based inner motivation.",
-    },
-    {
-      label: "Personality",
-      topic: "personality",
-      value: snap.personality_number,
-      note: "Consonant-based first impression.",
-    },
-    {
-      label: "Maturity",
-      topic: "maturity",
-      value: snap.maturity_number,
-      note: "Life Path + Expression later-life blend.",
-    },
-  ];
+  const loShu = useMemo(
+    () =>
+      loShuFromCoreNumbers(
+        aspects.map((a) => a.value).filter((v) => v !== "—"),
+        "Pythagorean birth table mapped onto a Lo Shu-style 1–9 grid (masters reduced to single digits). Same plane / arrow reading as Lo Shu—for reflection only.",
+      ),
+    [aspects],
+  );
 
   return (
-    <div className="space-y-5">
-      <p className="text-sm text-ink-soft">
-        Pythagorean birth table from your date of birth and name numbers—not a
-        Lo Shu digit grid. Hover for meaning; click a tile to open its guide.
-      </p>
-
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-3">
-        {cells.map((cell) => {
-          const trait = coreTraitFor(cell.value);
-          const tileTip = [
-            `${cell.label} ${cell.value}`,
-            trait,
-            cell.note,
-          ].join("\n");
-          return (
-            <Link
-              key={`${cell.label}-${cell.value}`}
-              href={guideHref(cell.topic, cell.value)}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={`Click for more about ${cell.label} ${cell.value}`}
-              onMouseEnter={() => setTip(tileTip)}
-              onMouseLeave={() => setTip(null)}
-              onFocus={() => setTip(tileTip)}
-              onBlur={() => setTip(null)}
-              className="flex aspect-square flex-col items-center justify-center rounded-xl border border-sky-200/80 bg-sky-50 px-2 text-center text-sky-950 outline-none transition hover:border-gold/50 hover:bg-white focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              <span className="text-[10px] uppercase tracking-wider text-sky-800/80">
-                {cell.label}
-              </span>
-              <span className="brand mt-1 text-2xl leading-none">{cell.value}</span>
-              <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-sky-900/70">
-                {trait}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-
-      <ChartTipPanel
-        tip={tip}
-        empty="Hover a tile for its Pythagorean aspect and core trait."
-      />
-    </div>
+    <LoShuChart
+      loShu={loShu}
+      intro={
+        <p className="text-sm text-ink-soft">
+          Same size and layout as Lo Shu: pastel planes, present/missing cells,
+          and dotted arrows. Digits come from your Pythagorean day/month/year
+          reductions and core numbers (masters reduced to 1–9)—not the raw DOB
+          digit Lo Shu fill.
+        </p>
+      }
+      aspectLegend={
+        <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+          <p className="text-xs uppercase tracking-wider text-ink-soft">
+            Pythagorean aspects on this grid
+          </p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {aspects.map((a) => (
+              <li key={a.label}>
+                {a.value === "—" ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[var(--line)] bg-mist/50 px-2.5 py-1 text-xs text-ink-soft">
+                    {a.label} —
+                  </span>
+                ) : (
+                  <Link
+                    href={guideHref(a.topic, a.value)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Click for more about ${a.label} ${a.value}`}
+                    className="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-xs text-sky-950 transition hover:border-gold/50 hover:bg-white"
+                  >
+                    {a.label}{" "}
+                    <span className="brand text-sm">{a.value}</span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      }
+    />
   );
 }

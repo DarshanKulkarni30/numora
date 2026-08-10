@@ -22,18 +22,16 @@ export const LO_SHU_ARROWS: LoShuArrowDef[] = [
 
 const ARROWS = LO_SHU_ARROWS;
 
-export function calculateLoShu(dob: string): LoShuResult {
-  const { day, month, year } = parseDob(dob);
-  const digits = `${day}${month}${year}`
-    .split("")
-    .map(Number)
-    .filter((d) => d !== 0);
-
+/** Build a Lo Shu-style result from digit counts (1–9). */
+export function loShuFromGrid(
+  gridInput: Record<number, number>,
+  analysisLead?: string,
+): LoShuResult {
   const grid: Record<number, number> = {
     1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
   };
-  for (const d of digits) {
-    if (d >= 1 && d <= 9) grid[d] += 1;
+  for (let n = 1; n <= 9; n++) {
+    grid[n] = Math.max(0, Math.trunc(gridInput[n] ?? 0));
   }
 
   const present_numbers = Object.entries(grid)
@@ -74,7 +72,8 @@ export function calculateLoShu(dob: string): LoShuResult {
   const effects = loShuEffectNotes(repeated_numbers, missing_numbers);
 
   const analysis = [
-    `According to Lo Shu traditions, present numbers (${present_numbers.join(", ") || "none highlighted"}) may indicate active traits in the birth-date pattern.`,
+    analysisLead ??
+      `According to Lo Shu traditions, present numbers (${present_numbers.join(", ") || "none highlighted"}) may indicate active traits in the birth-date pattern.`,
     missing_numbers.length
       ? `Missing numbers (${missing_numbers.join(", ")}) may suggest growth opportunities to cultivate through habits—not fixed limits. ${effects.missing.join(" ")}`
       : "No missing numbers appear in this grid pattern, which may suggest a broadly distributed set of traits.",
@@ -102,4 +101,42 @@ export function calculateLoShu(dob: string): LoShuResult {
     analysis,
     grid,
   };
+}
+
+/** Place core numbers (masters reduced to 1–9) onto a Lo Shu-style count grid. */
+export function loShuFromCoreNumbers(
+  values: Array<number | string>,
+  analysisLead?: string,
+): LoShuResult {
+  const grid: Record<number, number> = {
+    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
+  };
+  for (const raw of values) {
+    let n = Math.abs(Math.trunc(Number(raw)));
+    if (!Number.isFinite(n) || n <= 0) continue;
+    while (n > 9) {
+      n = String(n)
+        .split("")
+        .reduce((s, d) => s + Number(d), 0);
+    }
+    if (n >= 1 && n <= 9) grid[n] += 1;
+  }
+  return loShuFromGrid(grid, analysisLead);
+}
+
+export function calculateLoShu(dob: string): LoShuResult {
+  const { day, month, year } = parseDob(dob);
+  const digits = `${day}${month}${year}`
+    .split("")
+    .map(Number)
+    .filter((d) => d !== 0);
+
+  const grid: Record<number, number> = {
+    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
+  };
+  for (const d of digits) {
+    if (d >= 1 && d <= 9) grid[d] += 1;
+  }
+
+  return loShuFromGrid(grid);
 }

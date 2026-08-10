@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import { ChartTipPanel } from "@/components/report/ChartTipPanel";
 import {
   arrowNameToSlug,
@@ -58,6 +58,10 @@ type PlaneRow = {
 
 type Props = {
   loShu: LoShuResult;
+  /** Override the default Lo Shu intro copy */
+  intro?: ReactNode;
+  /** Optional aspect chips under the tip panel (Pythagorean / Vedic) */
+  aspectLegend?: ReactNode;
 };
 
 function cellCenter(n: number): { x: number; y: number } {
@@ -98,7 +102,10 @@ function ArrowListItem({ name }: { name: string }) {
   );
 }
 
-export function LoShuChart({ loShu }: Props) {
+export function LoShuChart({ loShu, intro, aspectLegend }: Props) {
+  const uid = useId().replace(/:/g, "");
+  const markerPresent = `numora-arrow-present-${uid}`;
+  const markerMissing = `numora-arrow-missing-${uid}`;
   const effects = loShuEffectNotes(
     loShu.repeated_numbers,
     loShu.missing_numbers,
@@ -154,14 +161,16 @@ export function LoShuChart({ loShu }: Props) {
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-ink-soft">
-        Rows are color-coded by plane (pastel cells so dotted arrows stay
-        readable). Arrows are soft{" "}
-        <span className="font-medium text-amber-800">thin dotted amber</span>{" "}
-        (present) or{" "}
-        <span className="font-medium text-slate-600">slate</span> (missing).
-        Hover a tile or arrow for meaning; click a tile for its Lo Shu guide.
-      </p>
+      {intro ?? (
+        <p className="text-sm text-ink-soft">
+          Rows are color-coded by plane (pastel cells so dotted arrows stay
+          readable). Arrows are soft{" "}
+          <span className="font-medium text-amber-800">thin dotted amber</span>{" "}
+          (present) or{" "}
+          <span className="font-medium text-slate-600">slate</span> (missing).
+          Hover a tile or arrow for meaning; click a tile for its Lo Shu guide.
+        </p>
+      )}
 
       <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
         <div className="flex flex-col gap-2 py-2">
@@ -229,7 +238,7 @@ export function LoShuChart({ loShu }: Props) {
             >
               <defs>
                 <marker
-                  id="numora-arrow-present"
+                  id={markerPresent}
                   markerWidth="3"
                   markerHeight="3"
                   refX="2.5"
@@ -240,7 +249,7 @@ export function LoShuChart({ loShu }: Props) {
                   <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(217, 119, 6, 0.55)" />
                 </marker>
                 <marker
-                  id="numora-arrow-missing"
+                  id={markerMissing}
                   markerWidth="3"
                   markerHeight="3"
                   refX="2.5"
@@ -294,8 +303,8 @@ export function LoShuChart({ loShu }: Props) {
                       strokeDasharray="1.4 2.6"
                       markerEnd={
                         present
-                          ? "url(#numora-arrow-present)"
-                          : "url(#numora-arrow-missing)"
+                          ? `url(#${markerPresent})`
+                          : `url(#${markerMissing})`
                       }
                       style={{ pointerEvents: "none" }}
                     />
@@ -311,6 +320,8 @@ export function LoShuChart({ loShu }: Props) {
         tip={tip}
         empty="Hover a grid tile for its plane and core strength, or hover a dotted arrow for its name and meaning."
       />
+
+      {aspectLegend}
 
       <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
         <span className="inline-flex items-center gap-1.5">

@@ -20,42 +20,122 @@ export function matchPeopleByDayMonth(
     .slice(0, limit);
 }
 
+type Triple = {
+  lifePath: number;
+  destiny: number;
+  psychic: number;
+};
+
+function asTriple(opts: {
+  lifePath: number | string;
+  destiny: number | string;
+  psychic?: number | string;
+}): Triple {
+  return {
+    lifePath: Number(opts.lifePath),
+    destiny: Number(opts.destiny),
+    psychic:
+      opts.psychic == null || opts.psychic === ""
+        ? NaN
+        : Number(opts.psychic),
+  };
+}
+
+/** Circular distance on 1–9 wheel (e.g. 1 vs 9 = 1). */
+function digitDistance(a: number, b: number): number {
+  const x = reduceToSingleDigit(a);
+  const y = reduceToSingleDigit(b);
+  const d = Math.abs(x - y);
+  return Math.min(d, 9 - d);
+}
+
+function scoreTriple(
+  target: Triple,
+  candidate: Triple,
+): { exact: number; closeness: number } {
+  const tLp = reduceToSingleDigit(target.lifePath);
+  const tDest = reduceToSingleDigit(target.destiny);
+  const hasPsychic = Number.isFinite(target.psychic);
+  const tPsy = hasPsychic ? reduceToSingleDigit(target.psychic) : null;
+
+  const cLp = reduceToSingleDigit(candidate.lifePath);
+  const cDest = reduceToSingleDigit(candidate.destiny);
+  const cPsy = reduceToSingleDigit(candidate.psychic);
+
+  let exact = 0;
+  let closeness = 0;
+
+  if (candidate.lifePath === target.lifePath || cLp === tLp) exact += 1;
+  else closeness += digitDistance(target.lifePath, candidate.lifePath);
+
+  if (candidate.destiny === target.destiny || cDest === tDest) exact += 1;
+  else closeness += digitDistance(target.destiny, candidate.destiny);
+
+  if (tPsy != null) {
+    if (candidate.psychic === target.psychic || cPsy === tPsy) exact += 1;
+    else closeness += digitDistance(target.psychic, candidate.psychic);
+  }
+
+  return { exact, closeness };
+}
+
+function rankByTriple<T>(
+  items: T[],
+  target: Triple,
+  get: (item: T) => Triple,
+  nameOf: (item: T) => string,
+  limit: number,
+): T[] {
+  return items
+    .map((item) => {
+      const { exact, closeness } = scoreTriple(target, get(item));
+      return { item, exact, closeness, name: nameOf(item) };
+    })
+    .sort((a, b) => {
+      if (b.exact !== a.exact) return b.exact - a.exact;
+      if (a.closeness !== b.closeness) return a.closeness - b.closeness;
+      return a.name.localeCompare(b.name);
+    })
+    .slice(0, limit)
+    .map((x) => x.item);
+}
+
 export function matchPeople(opts: {
   lifePath: number | string;
   destiny: number | string;
+  psychic?: number | string;
   limit?: number;
 }): TriviaPerson[] {
-  const lp = Number(opts.lifePath);
-  const dest = Number(opts.destiny);
-  const lpR = reduceToSingleDigit(lp);
-  const destR = reduceToSingleDigit(dest);
-  const scored = TRIVIA_PEOPLE.map((p) => {
-    let score = 0;
-    if (p.lifePath === lp || reduceToSingleDigit(p.lifePath) === lpR) score += 2;
-    if (p.destiny === dest || p.destiny === destR) score += 2;
-    return { p, score };
-  })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score || a.p.name.localeCompare(b.p.name));
-  return scored.slice(0, opts.limit ?? 12).map((x) => x.p);
+  const target = asTriple(opts);
+  return rankByTriple(
+    TRIVIA_PEOPLE,
+    target,
+    (p) => ({
+      lifePath: p.lifePath,
+      destiny: p.destiny,
+      psychic: p.psychic,
+    }),
+    (p) => p.name,
+    opts.limit ?? 12,
+  );
 }
 
 export function matchCountries(opts: {
   lifePath: number | string;
   destiny: number | string;
+  psychic?: number | string;
   limit?: number;
 }): TriviaCountry[] {
-  const lp = Number(opts.lifePath);
-  const dest = Number(opts.destiny);
-  const lpR = reduceToSingleDigit(lp);
-  const destR = reduceToSingleDigit(dest);
-  const scored = TRIVIA_COUNTRIES.map((c) => {
-    let score = 0;
-    if (c.lifePath === lp || reduceToSingleDigit(c.lifePath) === lpR) score += 2;
-    if (c.destiny === dest || c.destiny === destR) score += 2;
-    return { c, score };
-  })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score || a.c.name.localeCompare(b.c.name));
-  return scored.slice(0, opts.limit ?? 8).map((x) => x.c);
+  const target = asTriple(opts);
+  return rankByTriple(
+    TRIVIA_COUNTRIES,
+    target,
+    (c) => ({
+      lifePath: c.lifePath,
+      destiny: c.destiny,
+      psychic: c.psychic,
+    }),
+    (c) => c.name,
+    opts.limit ?? 8,
+  );
 }
