@@ -10,6 +10,7 @@ import {
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
+import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
 import { matchCountries, matchPeople } from "@/lib/trivia/match";
 import { TRIVIA_COUNTRIES } from "@/lib/trivia/countries";
 import { TRIVIA_PEOPLE } from "@/lib/trivia/people";
@@ -372,7 +373,7 @@ function CountryCards({
           key={c.iso2}
           className="flex gap-3 rounded-xl border border-[var(--line)] bg-white/50 p-3"
         >
-          <div className="flex w-20 shrink-0 flex-col items-center gap-1">
+          <div className="flex w-[5.5rem] shrink-0 flex-col items-center gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`https://flagcdn.com/w80/${c.iso2}.png`}
@@ -382,15 +383,7 @@ function CountryCards({
               className="h-auto w-full rounded border border-[var(--line)]"
               loading="lazy"
             />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`https://staticmap.openstreetmap.de/staticmap.php?center=${c.lat},${c.lng}&zoom=3&size=120x80&maptype=mapnik`}
-              alt={`Map of ${c.name}`}
-              width={120}
-              height={80}
-              className="h-auto w-full rounded border border-[var(--line)] bg-mist object-cover"
-              loading="lazy"
-            />
+            <CountryWikiMap name={c.name} iso2={c.iso2} />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-ink">{c.name}</p>

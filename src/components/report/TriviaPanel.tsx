@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
+import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
 import { matchCountries, matchPeople } from "@/lib/trivia/match";
 
 type Props = {
@@ -73,7 +74,7 @@ export function TriviaPanel({ lifePath, destiny }: Props) {
         </p>
         {topCountry ? (
           <div className="mt-3 flex max-w-lg gap-3 rounded-xl border border-[var(--line)] bg-white/50 p-3">
-            <div className="flex w-20 shrink-0 flex-col items-center gap-1">
+            <div className="flex w-[5.5rem] shrink-0 flex-col items-center gap-1.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://flagcdn.com/w80/${topCountry.iso2}.png`}
@@ -83,14 +84,9 @@ export function TriviaPanel({ lifePath, destiny }: Props) {
                 className="h-auto w-full rounded border border-[var(--line)]"
                 loading="lazy"
               />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`https://staticmap.openstreetmap.de/staticmap.php?center=${topCountry.lat},${topCountry.lng}&zoom=3&size=120x80&maptype=mapnik`}
-                alt={`Map of ${topCountry.name}`}
-                width={120}
-                height={80}
-                className="h-auto w-full rounded border border-[var(--line)] bg-mist object-cover"
-                loading="lazy"
+              <CountryWikiMap
+                name={topCountry.name}
+                iso2={topCountry.iso2}
               />
             </div>
             <div className="min-w-0 flex-1">
