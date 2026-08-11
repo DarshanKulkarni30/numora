@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   CHANNEL_HINT,
   COMPAT_DISCLAIMER,
@@ -12,6 +12,9 @@ import {
   masterNumberNote,
   reduceToSingleDigit,
 } from "@/lib/numerology/dateNumbers";
+import { planetForVedic } from "@/lib/numerology/planets";
+import { VEDIC_COMPAT_NOTE } from "@/lib/numerology/vedicCompatibility";
+import { PlanetIcon } from "@/components/report/PlanetIcon";
 
 type Row = {
   partnerLifePath: number;
@@ -20,17 +23,34 @@ type Row = {
   friendship: string;
 };
 
+type LayerMatrix = {
+  rawNumber: string;
+  matrix: Row[];
+};
+
 type SystemMatrix = {
   rawNumber: string;
   matrix: Row[];
   disclaimer: string;
 };
 
+type VedicLayers = {
+  moolank?: LayerMatrix;
+  bhagyank?: LayerMatrix;
+  namank?: LayerMatrix;
+  /** Legacy Destiny-only snapshot */
+  rawNumber?: string;
+  matrix?: Row[];
+  disclaimer: string;
+};
+
 type Props = {
   pythagorean: SystemMatrix;
-  vedic: SystemMatrix;
+  vedic: VedicLayers;
   hideRomantic?: boolean;
 };
+
+type VedicLayerId = "moolank" | "bhagyank" | "namank";
 
 const TONE_COLOR: Record<CompatTone, string> = {
   Amazing: "bg-emerald-100 text-emerald-950 border-emerald-300",
@@ -66,16 +86,22 @@ function MatrixTable({
   rawNumber,
   matrix,
   hideRomantic,
+  showPlanet = false,
 }: {
   systemLabel: string;
   numberLabel: string;
   rawNumber: string;
   matrix: Row[];
   hideRomantic: boolean;
+  showPlanet?: boolean;
 }) {
   const raw = Number(rawNumber);
   const reduced = Number.isFinite(raw) ? reduceToSingleDigit(raw) : rawNumber;
   const masterNote = masterNumberNote(rawNumber);
+  const planet =
+    showPlanet && Number.isFinite(Number(reduced))
+      ? planetForVedic(Number(reduced))
+      : null;
 
   return (
     <div className="space-y-4">
@@ -92,6 +118,12 @@ function MatrixTable({
         . Tones: Amazing · Favourable · Neutral · Challenging. Hover a pill for
         a short note.
       </p>
+      {planet ? (
+        <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+          <span>Ruling planet association:</span>
+          <PlanetIcon planet={planet} size="sm" />
+        </div>
+      ) : null}
       {masterNote ? (
         <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-sm text-amber-950">
           {masterNote}
@@ -195,26 +227,67 @@ export function CompatibilityMatrix({
   hideRomantic = false,
 }: Props) {
   const [tab, setTab] = useState<"pythagorean" | "vedic">("pythagorean");
+  const [vedicLayer, setVedicLayer] = useState<VedicLayerId>("moolank");
+
+  const layers = useMemo(() => {
+    const hasNew =
+      vedic.moolank?.matrix?.length &&
+      vedic.bhagyank?.matrix?.length &&
+      vedic.namank?.matrix?.length;
+    if (hasNew) {
+      return {
+        mode: "layered" as const,
+        moolank: vedic.moolank!,
+        bhagyank: vedic.bhagyank!,
+        namank: vedic.namank!,
+      };
+    }
+    return {
+      mode: "legacy" as const,
+      legacy: {
+        rawNumber: vedic.rawNumber ?? vedic.bhagyank?.rawNumber ?? "—",
+        matrix: vedic.matrix ?? vedic.bhagyank?.matrix ?? [],
+      },
+    };
+  }, [vedic]);
+
+  const activeVedic =
+    layers.mode === "layered"
+      ? layers[vedicLayer]
+      : layers.legacy;
+
+  const layerLabel: Record<VedicLayerId, string> = {
+    moolank: "Psychic (Moolank)",
+    bhagyank: "Destiny (Bhagyank)",
+    namank: "Name (Namank)",
+  };
+
+  const destinyRaw =
+    layers.mode === "layered"
+      ? layers.bhagyank.rawNumber
+      : layers.legacy.rawNumber;
+
   const sameCore =
     reduceToSingleDigit(Number(pythagorean.rawNumber)) ===
-    reduceToSingleDigit(Number(vedic.rawNumber));
+    reduceToSingleDigit(Number(destinyRaw));
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        Same four-tone scale for both systems (recommended for clarity):{" "}
+        Same four-tone scale for both systems:{" "}
         <span className="text-ink">Amazing</span>, Favourable, Neutral,
-        Challenging — Vedic Destiny and Pythagorean Life Path each get their own
-        tab.
+        Challenging. Pythagorean uses Life Path; Vedic uses Psychic, Destiny, and
+        Name layers with a traditional 1–9 relationship table.
       </p>
       {sameCore ? (
         <p className="rounded-xl border border-sky-200 bg-sky-50/80 px-3 py-2 text-sm text-sky-950">
-          Not a mistake: your Pythagorean Life Path{" "}
+          Note: Pythagorean Life Path{" "}
           <span className="brand">{pythagorean.rawNumber}</span> and Vedic Destiny{" "}
-          <span className="brand">{vedic.rawNumber}</span> reduce to the same
-          1–9 core for this table, so both tabs show matching partner tones.
+          <span className="brand">{destinyRaw}</span> reduce to the same 1–9
+          core. Vedic Psychic and Name may still differ.
         </p>
       ) : null}
+
       <div className="flex rounded-full border border-[var(--line)] bg-white/50 p-1">
         <button
           type="button"
@@ -236,7 +309,7 @@ export function CompatibilityMatrix({
               : "text-ink-soft hover:text-ink"
           }`}
         >
-          Vedic (Destiny)
+          Vedic layers
         </button>
       </div>
 
@@ -249,13 +322,52 @@ export function CompatibilityMatrix({
           hideRomantic={hideRomantic}
         />
       ) : (
-        <MatrixTable
-          systemLabel="Vedic"
-          numberLabel="Destiny Number"
-          rawNumber={vedic.rawNumber}
-          matrix={vedic.matrix}
-          hideRomantic={hideRomantic}
-        />
+        <div className="space-y-4">
+          {layers.mode === "layered" ? (
+            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/40 p-1">
+              {(
+                [
+                  "moolank",
+                  "bhagyank",
+                  "namank",
+                ] as VedicLayerId[]
+              ).map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setVedicLayer(id)}
+                  className={`flex-1 rounded-full px-3 py-2 text-sm transition ${
+                    vedicLayer === id
+                      ? "bg-ink text-paper"
+                      : "text-ink-soft hover:text-ink"
+                  }`}
+                >
+                  {layerLabel[id]}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-sm text-amber-950">
+              Legacy snapshot: this saved reading stores a single Vedic Destiny
+              matrix. New readings include Psychic, Destiny, and Name layers.
+            </p>
+          )}
+
+          <p className="text-xs leading-5 text-ink-soft">{VEDIC_COMPAT_NOTE}</p>
+
+          <MatrixTable
+            systemLabel="Vedic"
+            numberLabel={
+              layers.mode === "layered"
+                ? layerLabel[vedicLayer]
+                : "Destiny Number"
+            }
+            rawNumber={activeVedic.rawNumber}
+            matrix={activeVedic.matrix}
+            hideRomantic={hideRomantic}
+            showPlanet
+          />
+        </div>
       )}
     </div>
   );

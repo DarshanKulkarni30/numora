@@ -351,6 +351,27 @@ export function ReportView({ report, watermarkEmail }: Props) {
                   disclaimer: report.compatibility.disclaimer,
                 }}
                 vedic={{
+                  moolank: report.compatibility.vedic?.moolank
+                    ? {
+                        rawNumber:
+                          report.compatibility.vedic.moolank.raw_number,
+                        matrix: report.compatibility.vedic.moolank.matrix,
+                      }
+                    : undefined,
+                  bhagyank: report.compatibility.vedic?.bhagyank
+                    ? {
+                        rawNumber:
+                          report.compatibility.vedic.bhagyank.raw_number,
+                        matrix: report.compatibility.vedic.bhagyank.matrix,
+                      }
+                    : undefined,
+                  namank: report.compatibility.vedic?.namank
+                    ? {
+                        rawNumber:
+                          report.compatibility.vedic.namank.raw_number,
+                        matrix: report.compatibility.vedic.namank.matrix,
+                      }
+                    : undefined,
                   rawNumber:
                     report.compatibility.vedic?.raw_number ??
                     snap.vedic_destiny,

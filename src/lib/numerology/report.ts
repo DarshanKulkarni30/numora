@@ -23,6 +23,10 @@ import {
 import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
+import {
+  buildVedicCompatibilityMatrix,
+  VEDIC_COMPAT_NOTE,
+} from "./vedicCompatibility";
 import { assertSafeCopy, assertSafeList } from "./safety";
 import type {
   NumerologyReport,
@@ -427,12 +431,25 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
             `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
         ),
         "",
-        `Vedic Destiny ${report.compatibility.vedic.raw_number} × partner tones:`,
-        ...report.compatibility.vedic.matrix.map(
+        `Vedic Psychic (Moolank) ${report.compatibility.vedic.moolank.raw_number} × partner tones:`,
+        ...report.compatibility.vedic.moolank.matrix.map(
           (row) =>
             `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
         ),
         "",
+        `Vedic Destiny (Bhagyank) ${report.compatibility.vedic.bhagyank.raw_number} × partner tones:`,
+        ...report.compatibility.vedic.bhagyank.matrix.map(
+          (row) =>
+            `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
+        ),
+        "",
+        `Vedic Name (Namank) ${report.compatibility.vedic.namank.raw_number} × partner tones:`,
+        ...report.compatibility.vedic.namank.matrix.map(
+          (row) =>
+            `• Partner ${row.partnerLifePath}: Romantic — ${row.romantic}; Business — ${row.business}; Friendship — ${row.friendship}`,
+        ),
+        "",
+        VEDIC_COMPAT_NOTE,
         "Amazing = especially natural affinity · Favourable = generally supportive · Neutral = mixed / situational · Challenging = may need more patience (not a bad match).",
         "Master numbers (11/22/33) are traced as their single-digit sums in 1–9 partner tables.",
         `(${report.compatibility.disclaimer})`,
@@ -559,6 +576,14 @@ export function generateReport(
       friendship: row.friendship,
     }));
 
+  const mapVedicRows = (core: number) =>
+    buildVedicCompatibilityMatrix(core).map((row) => ({
+      partnerLifePath: row.partnerLifePath,
+      romantic: isChild ? "—" : row.romantic,
+      business: isChild ? row.friendship : row.business,
+      friendship: row.friendship,
+    }));
+
   const compatibility = {
     life_path: String(pyth.lifePath),
     matrix: mapCompatRows(pyth.lifePath),
@@ -568,8 +593,21 @@ export function generateReport(
       matrix: mapCompatRows(pyth.lifePath),
     },
     vedic: {
+      moolank: {
+        raw_number: String(vedic.psychic),
+        matrix: mapVedicRows(vedic.psychic),
+      },
+      bhagyank: {
+        raw_number: String(vedic.destiny),
+        matrix: mapVedicRows(vedic.destiny),
+      },
+      namank: {
+        raw_number: String(vedic.nameNumber),
+        matrix: mapVedicRows(vedic.nameNumber),
+      },
+      // Legacy fields for older clients / partial reads
       raw_number: String(vedic.destiny),
-      matrix: mapCompatRows(vedic.destiny),
+      matrix: mapVedicRows(vedic.destiny),
     },
   };
 

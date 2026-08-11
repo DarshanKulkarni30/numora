@@ -112,8 +112,37 @@ export type NumerologyReport = {
       }[];
     };
     vedic: {
-      raw_number: string;
-      matrix: {
+      moolank: {
+        raw_number: string;
+        matrix: {
+          partnerLifePath: number;
+          romantic: string;
+          business: string;
+          friendship: string;
+        }[];
+      };
+      bhagyank: {
+        raw_number: string;
+        matrix: {
+          partnerLifePath: number;
+          romantic: string;
+          business: string;
+          friendship: string;
+        }[];
+      };
+      namank: {
+        raw_number: string;
+        matrix: {
+          partnerLifePath: number;
+          romantic: string;
+          business: string;
+          friendship: string;
+        }[];
+      };
+      /** @deprecated older saved reports — Destiny-only snapshot */
+      raw_number?: string;
+      /** @deprecated older saved reports */
+      matrix?: {
         partnerLifePath: number;
         romantic: string;
         business: string;

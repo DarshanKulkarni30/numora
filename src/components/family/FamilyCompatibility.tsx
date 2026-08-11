@@ -12,7 +12,13 @@ import {
   masterNumberNote,
   reduceToSingleDigit,
   vedicDestinyFromDob,
+  vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
+import { calculateVedic } from "@/lib/numerology/vedic";
+import {
+  buildVedicCompatibilityMatrix,
+  VEDIC_COMPAT_NOTE,
+} from "@/lib/numerology/vedicCompatibility";
 import { isValidDob } from "@/lib/profile/date";
 import type { PersonRecord } from "@/lib/profile/options";
 
@@ -38,7 +44,7 @@ function TonePill({ tone }: { tone: CompatTone }) {
   );
 }
 
-function pairTones(selfRaw: number, otherRaw: number) {
+function pythagoreanPairTones(selfRaw: number, otherRaw: number) {
   const self = reduceToSingleDigit(selfRaw);
   const other = reduceToSingleDigit(otherRaw);
   const row = buildCompatibilityMatrix(self).find(
@@ -51,6 +57,55 @@ function pairTones(selfRaw: number, otherRaw: number) {
       business: "Neutral" as CompatTone,
       friendship: "Neutral" as CompatTone,
     }
+  );
+}
+
+function vedicPairTones(selfRaw: number, otherRaw: number) {
+  const self = reduceToSingleDigit(selfRaw);
+  const other = reduceToSingleDigit(otherRaw);
+  const row = buildVedicCompatibilityMatrix(self).find(
+    (r) => r.partnerLifePath === other,
+  );
+  return (
+    row ?? {
+      partnerLifePath: other,
+      romantic: "Neutral" as CompatTone,
+      business: "Neutral" as CompatTone,
+      friendship: "Neutral" as CompatTone,
+    }
+  );
+}
+
+function ChannelList({
+  tones,
+  hideRomantic,
+}: {
+  tones: {
+    romantic: CompatTone;
+    business: CompatTone;
+    friendship: CompatTone;
+  };
+  hideRomantic: boolean;
+}) {
+  return (
+    <ul className="mt-3 space-y-2 text-sm">
+      {!hideRomantic ? (
+        <li className="flex items-center justify-between gap-2">
+          <span className="text-ink-soft">Romantic</span>
+          <TonePill tone={tones.romantic} />
+        </li>
+      ) : null}
+      <li className="flex items-center justify-between gap-2">
+        <span className="text-ink-soft">
+          {hideRomantic ? "Team / class" : "Business"}
+        </span>
+        <TonePill tone={tones.business} />
+      </li>
+      <li className="flex items-center justify-between gap-2">
+        <span className="text-ink-soft">Friendship</span>
+        <TonePill tone={tones.friendship} />
+      </li>
+    </ul>
   );
 }
 
@@ -99,9 +154,12 @@ export function FamilyCompatibility({ people }: Props) {
   }
 
   const selfLp = lifePathFromDob(self.date_of_birth);
+  const selfPsychic = vedicPsychicFromDob(self.date_of_birth);
   const selfDestiny = vedicDestinyFromDob(self.date_of_birth);
+  const selfName = self.full_name?.trim()
+    ? calculateVedic(self.full_name, self.date_of_birth).nameNumber
+    : null;
   const selfLpNote = masterNumberNote(selfLp);
-  const selfDestinyNote = masterNumberNote(selfDestiny);
 
   const pairs = [
     ...spouses.map((p) => ({ person: p, kind: "Spouse/Partner" as const })),
@@ -114,31 +172,41 @@ export function FamilyCompatibility({ people }: Props) {
         <p className="text-sm text-ink-soft">
           Comparing{" "}
           <span className="font-medium text-ink">{personName(self)} (You)</span>{" "}
-          — Pythagorean Life Path{" "}
-          <span className="brand text-ink">{selfLp}</span>
+          — Life Path <span className="brand text-ink">{selfLp}</span>
           {selfLpNote ? (
             <span className="text-ink-soft">
               {" "}
-              (matrix uses {reduceToSingleDigit(selfLp)})
+              (table uses {reduceToSingleDigit(selfLp)})
             </span>
           ) : null}
-          , Vedic Destiny{" "}
-          <span className="brand text-ink">{selfDestiny}</span>
-          {selfDestinyNote ? (
-            <span className="text-ink-soft">
-              {" "}
-              (matrix uses {reduceToSingleDigit(selfDestiny)})
-            </span>
+          , Psychic <span className="brand text-ink">{selfPsychic}</span>,
+          Destiny <span className="brand text-ink">{selfDestiny}</span>
+          {selfName != null ? (
+            <>
+              , Name <span className="brand text-ink">{selfName}</span>
+            </>
           ) : null}
           .
+        </p>
+        <p className="mt-2 text-xs leading-5 text-ink-soft">
+          {VEDIC_COMPAT_NOTE}
         </p>
       </div>
 
       {pairs.map(({ person, kind }) => {
         const otherLp = lifePathFromDob(person.date_of_birth);
+        const otherPsychic = vedicPsychicFromDob(person.date_of_birth);
         const otherDestiny = vedicDestinyFromDob(person.date_of_birth);
-        const py = pairTones(selfLp, otherLp);
-        const ved = pairTones(selfDestiny, otherDestiny);
+        const otherName = person.full_name?.trim()
+          ? calculateVedic(person.full_name, person.date_of_birth).nameNumber
+          : null;
+        const py = pythagoreanPairTones(selfLp, otherLp);
+        const moolank = vedicPairTones(selfPsychic, otherPsychic);
+        const bhagyank = vedicPairTones(selfDestiny, otherDestiny);
+        const namank =
+          selfName != null && otherName != null
+            ? vedicPairTones(selfName, otherName)
+            : null;
         const hideRomantic = kind === "Child";
 
         return (
@@ -152,8 +220,15 @@ export function FamilyCompatibility({ people }: Props) {
             </h2>
             <p className="mt-1 text-sm text-ink-soft">
               Their DOB {person.date_of_birth} · Life Path{" "}
-              <span className="brand text-ink">{otherLp}</span> · Destiny{" "}
+              <span className="brand text-ink">{otherLp}</span> · Psychic{" "}
+              <span className="brand text-ink">{otherPsychic}</span> · Destiny{" "}
               <span className="brand text-ink">{otherDestiny}</span>
+              {otherName != null ? (
+                <>
+                  {" "}
+                  · Name <span className="brand text-ink">{otherName}</span>
+                </>
+              ) : null}
             </p>
 
             <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -162,50 +237,34 @@ export function FamilyCompatibility({ people }: Props) {
                 <p className="mt-1 text-xs text-ink-soft">
                   You {selfLp} × them {otherLp}
                 </p>
-                <ul className="mt-3 space-y-2 text-sm">
-                  {!hideRomantic ? (
-                    <li className="flex items-center justify-between gap-2">
-                      <span className="text-ink-soft">Romantic</span>
-                      <TonePill tone={py.romantic} />
-                    </li>
-                  ) : null}
-                  <li className="flex items-center justify-between gap-2">
-                    <span className="text-ink-soft">
-                      {hideRomantic ? "Team / class" : "Business"}
-                    </span>
-                    <TonePill tone={py.business} />
-                  </li>
-                  <li className="flex items-center justify-between gap-2">
-                    <span className="text-ink-soft">Friendship</span>
-                    <TonePill tone={py.friendship} />
-                  </li>
-                </ul>
+                <ChannelList tones={py} hideRomantic={hideRomantic} />
               </div>
 
               <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
-                <h3 className="text-ink">Vedic · Destiny</h3>
+                <h3 className="text-ink">Vedic · Psychic (Moolank)</h3>
+                <p className="mt-1 text-xs text-ink-soft">
+                  You {selfPsychic} × them {otherPsychic}
+                </p>
+                <ChannelList tones={moolank} hideRomantic={hideRomantic} />
+              </div>
+
+              <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
+                <h3 className="text-ink">Vedic · Destiny (Bhagyank)</h3>
                 <p className="mt-1 text-xs text-ink-soft">
                   You {selfDestiny} × them {otherDestiny}
                 </p>
-                <ul className="mt-3 space-y-2 text-sm">
-                  {!hideRomantic ? (
-                    <li className="flex items-center justify-between gap-2">
-                      <span className="text-ink-soft">Romantic</span>
-                      <TonePill tone={ved.romantic} />
-                    </li>
-                  ) : null}
-                  <li className="flex items-center justify-between gap-2">
-                    <span className="text-ink-soft">
-                      {hideRomantic ? "Team / class" : "Business"}
-                    </span>
-                    <TonePill tone={ved.business} />
-                  </li>
-                  <li className="flex items-center justify-between gap-2">
-                    <span className="text-ink-soft">Friendship</span>
-                    <TonePill tone={ved.friendship} />
-                  </li>
-                </ul>
+                <ChannelList tones={bhagyank} hideRomantic={hideRomantic} />
               </div>
+
+              {namank ? (
+                <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
+                  <h3 className="text-ink">Vedic · Name (Namank)</h3>
+                  <p className="mt-1 text-xs text-ink-soft">
+                    You {selfName} × them {otherName}
+                  </p>
+                  <ChannelList tones={namank} hideRomantic={hideRomantic} />
+                </div>
+              ) : null}
             </div>
           </section>
         );

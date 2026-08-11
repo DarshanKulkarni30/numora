@@ -79,7 +79,7 @@ function baseTone(a: number, b: number): CompatTone {
 }
 
 /** Slight channel nuance without harsh negatives */
-function channelTone(
+export function channelTone(
   base: CompatTone,
   channel: CompatChannel,
   a: number,
