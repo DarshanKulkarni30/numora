@@ -14,9 +14,11 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
+import { analyzeNameBookends } from "@/lib/numerology/nameBookends";
 import { calculateVedic } from "@/lib/numerology/vedic";
 import {
   buildVedicCompatibilityMatrix,
+  vedicPairTone,
   VEDIC_COMPAT_NOTE,
 } from "@/lib/numerology/vedicCompatibility";
 import { isValidDob } from "@/lib/profile/date";
@@ -208,6 +210,12 @@ export function FamilyCompatibility({ people }: Props) {
             ? vedicPairTones(selfName, otherName)
             : null;
         const hideRomantic = kind === "Child";
+        const selfCorner = analyzeNameBookends(self.full_name).cornerstone;
+        const otherCorner = analyzeNameBookends(person.full_name).cornerstone;
+        const approachTone =
+          selfCorner && otherCorner
+            ? vedicPairTone(selfCorner.group, otherCorner.group)
+            : null;
 
         return (
           <section
@@ -266,6 +274,23 @@ export function FamilyCompatibility({ people }: Props) {
                 </div>
               ) : null}
             </div>
+
+            {approachTone && selfCorner && otherCorner ? (
+              <p className="mt-4 flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+                <span>
+                  Approach letters (Cornerstone): you{" "}
+                  <span className="brand text-ink">{selfCorner.letter}</span>(
+                  {selfCorner.group}) × them{" "}
+                  <span className="brand text-ink">{otherCorner.letter}</span>(
+                  {otherCorner.group}) →
+                </span>
+                <TonePill tone={approachTone} />
+                <span className="basis-full text-xs">
+                  Reflective first-letter approach layer only—not marriage
+                  advice.
+                </span>
+              </p>
+            ) : null}
           </section>
         );
       })}

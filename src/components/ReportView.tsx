@@ -275,6 +275,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
               loShu={report.lo_shu}
               dateOfBirth={person.date_of_birth}
               snap={snap}
+              fullName={person.full_name}
             />
           </div>
         </section>

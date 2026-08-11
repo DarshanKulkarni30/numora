@@ -23,6 +23,7 @@ import {
 import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
+import { bookendsAnalysisLines } from "./nameBookends";
 import {
   buildVedicCompatibilityMatrix,
   VEDIC_COMPAT_NOTE,
@@ -617,6 +618,7 @@ export function generateReport(
       chaldeanCompoundMeaning(chald.compound),
       meaningFor(chald.nameNumber),
       "In Chaldean practice, compound numbers may add nuance before reduction. Interpretations remain reflective possibilities.",
+      ...bookendsAnalysisLines(fullName),
     ].join(" "),
     "chaldean",
   );

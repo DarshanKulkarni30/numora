@@ -355,6 +355,13 @@ export function CompatibilityMatrix({
 
           <p className="text-xs leading-5 text-ink-soft">{VEDIC_COMPAT_NOTE}</p>
 
+          {layers.mode === "layered" && vedicLayer === "namank" ? (
+            <p className="text-xs leading-5 text-ink-soft">
+              For first-letter approach cues (Cornerstone / Capstone / First
+              vowel), open Birth charts → Name letters on this report.
+            </p>
+          ) : null}
+
           <MatrixTable
             systemLabel="Vedic"
             numberLabel={

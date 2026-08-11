@@ -2,25 +2,33 @@
 
 import { useState } from "react";
 import { LoShuChart } from "@/components/report/LoShuChart";
+import { NameBookendsPanel } from "@/components/report/NameBookendsPanel";
 import { PythagoreanBirthTable } from "@/components/report/PythagoreanBirthTable";
 import { VedicBirthChart } from "@/components/report/VedicBirthChart";
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 
-type Tab = "lo-shu" | "pythagorean" | "vedic";
+type Tab = "lo-shu" | "pythagorean" | "vedic" | "name-letters";
 
 type Props = {
   loShu: LoShuResult;
   dateOfBirth: string;
   snap: NumerologySnapshot;
+  fullName: string;
 };
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "lo-shu", label: "Lo Shu" },
   { id: "pythagorean", label: "Pythagorean birth table" },
   { id: "vedic", label: "Vedic birth chart" },
+  { id: "name-letters", label: "Name letters" },
 ];
 
-export function BirthChartsPanel({ loShu, dateOfBirth, snap }: Props) {
+export function BirthChartsPanel({
+  loShu,
+  dateOfBirth,
+  snap,
+  fullName,
+}: Props) {
   const [tab, setTab] = useState<Tab>("lo-shu");
 
   return (
@@ -52,6 +60,9 @@ export function BirthChartsPanel({ loShu, dateOfBirth, snap }: Props) {
           destiny={snap.vedic_destiny}
           nameNumber={snap.vedic_name}
         />
+      ) : null}
+      {tab === "name-letters" ? (
+        <NameBookendsPanel fullName={fullName} />
       ) : null}
     </div>
   );

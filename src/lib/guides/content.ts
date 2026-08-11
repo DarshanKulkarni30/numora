@@ -1,4 +1,6 @@
 import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
+import { GROUP_BLURBS } from "@/lib/numerology/nameBookends";
+import { planetForVedic } from "@/lib/numerology/planets";
 import {
   parsePlanetGuideValue,
   PLANET_GUIDES,
@@ -20,7 +22,8 @@ export type GuideTopic =
   | "personal-month"
   | "lo-shu-arrow"
   | "lo-shu-number"
-  | "planet";
+  | "planet"
+  | "name-cornerstone";
 
 export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "life-path", title: "Life Path" },
@@ -38,10 +41,12 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "lo-shu-arrow", title: "Lo Shu Arrow" },
   { topic: "lo-shu-number", title: "Lo Shu Number" },
   { topic: "planet", title: "Planet" },
+  { topic: "name-cornerstone", title: "Name Letter Group" },
 ];
 
 const NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
 const LO_SHU_NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const NAME_CORNERSTONE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
 const NUMBER_BLURBS: Record<string, { theme: string; traits: string[]; practice: string }> = {
   "1": {
@@ -114,7 +119,10 @@ type TopicLens = {
 };
 
 const TOPIC_LENSES: Record<
-  Exclude<GuideTopic, "lo-shu-arrow" | "lo-shu-number" | "planet">,
+  Exclude<
+    GuideTopic,
+    "lo-shu-arrow" | "lo-shu-number" | "planet" | "name-cornerstone"
+  >,
   TopicLens
 > = {
   "life-path": {
@@ -308,6 +316,8 @@ export function isValidGuideValue(topic: GuideTopic, value: string): boolean {
   if (topic === "lo-shu-arrow") return value in LO_SHU_ARROW_GUIDES;
   if (topic === "lo-shu-number") return LO_SHU_NUMBER_KEYS.includes(value);
   if (topic === "planet") return parsePlanetGuideValue(value) != null;
+  if (topic === "name-cornerstone")
+    return NAME_CORNERSTONE_KEYS.includes(value);
   return NUMBER_KEYS.includes(value);
 }
 
@@ -391,6 +401,30 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
     };
   }
 
+  if (topic === "name-cornerstone") {
+    const group = Number(value);
+    const blurb = GROUP_BLURBS[group];
+    if (!blurb) return null;
+    const planet = planetForVedic(group);
+    return {
+      title: `Name letter group ${value}`,
+      subtitle: `${blurb.theme} · ${planet.name}`,
+      paragraphs: [
+        "In Chaldean-style name traditions used in Numora, the first letter of the first name (Cornerstone), last letter (Capstone), and first vowel are read as bookends—how beginnings, completions, and inner drive may feel in reflective practice.",
+        `Letters in group ${value}: ${blurb.letters}.`,
+        blurb.approach,
+        disclaimer(),
+        blurb.growth,
+      ],
+      bullets: [
+        `Chaldean group: ${value}`,
+        `Associated planet theme: ${planet.name}`,
+        `Letters: ${blurb.letters}`,
+        `Theme: ${blurb.theme}`,
+      ],
+    };
+  }
+
   const lens = TOPIC_LENSES[topic as keyof typeof TOPIC_LENSES];
   const blurb = NUMBER_BLURBS[value];
   if (!lens || !blurb) return null;
@@ -427,6 +461,10 @@ export function allGuideParams(): { topic: string; value: string }[] {
         for (const id of Object.keys(PLANET_GUIDES)) {
           params.push({ topic, value: `${system}-${id}` });
         }
+      }
+    } else if (topic === "name-cornerstone") {
+      for (const value of NAME_CORNERSTONE_KEYS) {
+        params.push({ topic, value });
       }
     } else {
       for (const value of NUMBER_KEYS) {
