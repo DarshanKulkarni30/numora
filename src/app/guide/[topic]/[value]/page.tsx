@@ -104,11 +104,6 @@ export default async function GuidePage({ params }: Props) {
             Back to dashboard
           </Link>
         </div>
-
-        <p className="mt-10 text-sm text-ink-soft">
-          Belief-based reflective material only — not scientific, medical,
-          legal, financial, or psychological advice.
-        </p>
       </main>
     </div>
   );

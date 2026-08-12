@@ -219,10 +219,6 @@ export function ReportForm({ people }: Props) {
       >
         {loading ? "Generating your reading…" : "Generate reading"}
       </button>
-      <p className="text-center text-xs text-ink-soft">
-        Belief-based reflective guidance only — not scientific, medical, legal,
-        or financial advice.
-      </p>
     </form>
   );
 }

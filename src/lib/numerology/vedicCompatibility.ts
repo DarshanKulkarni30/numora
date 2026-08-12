@@ -72,4 +72,4 @@ export function buildVedicCompatibilityMatrix(
 }
 
 export const VEDIC_COMPAT_NOTE =
-  "Vedic layers: Psychic (Moolank) reflects day-to-day temperament themes; Destiny (Bhagyank) reflects longer-path themes; Name (Namank) reflects the name spelling used in this reading. Partner tones use a traditional 1–9 relationship table mapped to Amazing / Favourable / Neutral / Challenging—belief-based reflection only, not marriage advice or a prediction.";
+  "Vedic layers: Psychic (Moolank) reflects day-to-day temperament themes; Destiny (Bhagyank) reflects longer-path themes; Name (Namank) reflects the name spelling used in this reading. Partner tones use a traditional 1–9 relationship table mapped to Amazing / Favourable / Neutral / Challenging.";

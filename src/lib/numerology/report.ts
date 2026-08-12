@@ -72,14 +72,13 @@ function ageGuidance(age: number, name: string, lifePath: number): {
     return {
       category: "Parent Guidance",
       guidance: [
-        CHILD_REPORT_DISCLAIMER,
-        `For ${name}, according to numerology traditions, Life Path ${lifePath} may offer supportive clues about learning preferences and emotional needs—not fixed labels or abilities.`,
-        "Learning style (reflective only): this pattern may suggest responding well to encouragement, clear routines, and creative exploration matched to attention span. This is not an educational diagnosis.",
+        `For ${name}, according to numerology traditions, Life Path ${lifePath} may offer supportive clues about learning preferences and emotional needs.`,
+        "Learning style: this pattern may suggest responding well to encouragement, clear routines, and creative exploration matched to attention span.",
         "Confidence building: celebrate small completions and effort, not only outcomes. Short wins can strengthen a sense of capability.",
         "Emotional needs: warmth, predictable care, and space to name feelings may help this period of development.",
-        "Parenting approach: firm kindness—boundaries with explanation—may support growing self-trust. Adapt to the individual child and seek professional guidance when needed.",
+        "Parenting approach: firm kindness—boundaries with explanation—may support growing self-trust. Adapt to the individual child.",
         "Communication advice: ask open questions, reflect feelings, and avoid comparing progress to peers.",
-        "Children continue developing emotionally, socially and intellectually. These insights should be used as supportive reflection rather than fixed labels, rankings, or predictions.",
+        "Children continue developing emotionally, socially and intellectually—use themes as supportive reflection, not fixed labels.",
       ].join("\n\n"),
     };
   }
@@ -87,15 +86,13 @@ function ageGuidance(age: number, name: string, lifePath: number): {
     return {
       category: "Guidance For Teens And Parents",
       guidance: [
-        TEEN_REPORT_DISCLAIMER,
-        `For ${name} (age ${age}), numerology traditions may describe optional reflective themes around identity and motivation linked with Life Path ${lifePath}.`,
-        "Identity formation: this period may emphasize trying roles, values, and friendships. Curiosity can be a strength when paired with reflection—not a fixed identity verdict.",
+        `For ${name} (age ${age}), numerology traditions may describe reflective themes around identity and motivation linked with Life Path ${lifePath}.`,
+        "Identity formation: this period may emphasize trying roles, values, and friendships. Curiosity can be a strength when paired with reflection.",
         "Self-confidence: progress may come from skills practiced consistently more than from sudden breakthroughs.",
         "Friendships: social belonging may matter deeply; supportive peers and clear personal boundaries can coexist.",
-        "Academic motivation: purpose-linked goals and varied study methods may help more than pressure alone. This is not school placement advice.",
-        "Emotional regulation: naming stress and using short resets (walks, journaling, music) may support steadier choices. This is not therapy.",
+        "Academic motivation: purpose-linked goals and varied study methods may help more than pressure alone.",
+        "Emotional regulation: naming stress and using short resets (walks, journaling, music) may support steadier choices.",
         "Healthy communication: respectful honesty between teens and parents may reduce misunderstandings during growth spurts of independence.",
-        "These interpretations describe potential tendencies and should not limit personal growth, identity, or future choices.",
       ].join("\n\n"),
     };
   }
@@ -280,8 +277,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
           ? `${n}'s Numora reading weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from name and birth date for supportive reflection by a parent/guardian or teen—with care.`
           : `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
         `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, and Personal Year ${snap.personal_year}.`,
-        `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing. They are mirrors for reflection—not forecasts of fixed destiny, ability, health, or character.`,
-        ...(isMinor ? report.safety_notices.slice(0, 1) : []),
+        `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing.`,
         report.personality.core_personality,
       ].join("\n\n"),
     },
@@ -353,11 +349,9 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       body: [
         report.personality.career_style,
         "",
-        report.career_suggestions.disclaimer,
-        "",
         report.person.report_type === "child"
-          ? "Interest / activity ideas (playful exploration only):"
-          : "Modern profession ideas to explore (brainstorming only):",
+          ? "Interest / activity ideas:"
+          : "Modern profession ideas to explore:",
         ...report.career_suggestions.professions.map((p) => `• ${p}`),
       ].join("\n"),
     },
@@ -416,11 +410,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     {
       id: "recommendations",
       title: "17. Recommended Focus Areas",
-      body: [
-        ...report.recommendations.map((r, i) => `${i + 1}. ${r}`),
-        "",
-        `(Notes: ${report.recommendations_disclaimer})`,
-      ].join("\n"),
+      body: report.recommendations.map((r, i) => `${i + 1}. ${r}`).join("\n"),
     },
     {
       id: "compatibility",
@@ -453,7 +443,6 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         VEDIC_COMPAT_NOTE,
         "Amazing = especially natural affinity · Favourable = generally supportive · Neutral = mixed / situational · Challenging = may need more patience (not a bad match).",
         "Master numbers (11/22/33) are traced as their single-digit sums in 1–9 partner tables.",
-        `(${report.compatibility.disclaimer})`,
       ].join("\n"),
     },
     {
@@ -463,10 +452,8 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         isMinor
           ? `${n}'s chart themes may blend initiative and reflection as supportive mirrors—not verdicts on character or future.`
           : `${n}, according to numerology traditions your pattern blends initiative and reflection in ways that can support meaningful self-understanding.`,
-        "Use this report as a warm companion for journaling and kind conversation—not as a verdict, ranking, or prediction.",
+        "Use this report as a warm companion for journaling and kind conversation.",
         "Everyone remains free to grow beyond any chart. Meet the next season with curiosity, steadiness, and kindness.",
-        DISCLAIMER,
-        ...report.safety_notices,
       ].join("\n\n"),
     },
   ];
@@ -533,19 +520,19 @@ export function generateReport(
       ? [
           `Interests and learning tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
           meaningFor(pyth.expression),
-          "Activities that allow curiosity, contribution, and ethical growth may feel engaging. This is not career placement, talent ranking, or a prediction of future success.",
+          "Activities that allow curiosity, contribution, and ethical growth may feel engaging.",
         ].join(" ")
       : isTeen
         ? [
             `Interests and learning tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
             meaningFor(pyth.expression),
-            "Below are modern fields teens sometimes explore for inspiration—not a locked career path or school-stream decision tool.",
+            "Below are modern fields teens sometimes explore for inspiration.",
           ].join(" ")
         : [
             `Career tendencies may align with Expression ${pyth.expression}, Life Path ${pyth.lifePath}, and Vedic Destiny ${vedic.destiny}.`,
             meaningFor(pyth.expression),
-            "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical progress still depends on preparation, relationships, and consistent effort—not chart numbers alone.",
-            "A short list of modern professions linked to these numbers appears below for brainstorming only.",
+            "Roles that allow meaningful contribution, skill growth, and ethical impact may feel more sustaining. Practical progress still depends on preparation, relationships, and consistent effort.",
+            "A short list of modern professions linked to these numbers appears below.",
           ].join(" "),
     "career",
   );
@@ -627,7 +614,7 @@ export function generateReport(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
       `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) reflects the name spelling used in this reading.`,
-    `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}. According to tradition these may indicate stylistic tendencies—not scientific causation.`,
+    `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}. According to tradition these may indicate stylistic tendencies.`,
     meaningFor(vedic.psychic),
     meaningFor(vedic.destiny),
     "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",

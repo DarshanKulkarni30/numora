@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import {
   CHANNEL_HINT,
-  COMPAT_DISCLAIMER,
   TONE_HINT,
   normalizeCompatTone,
   type CompatTone,
@@ -214,9 +213,6 @@ function MatrixTable({
         </ul>
       </div>
 
-      <p className="rounded-xl border border-[var(--line)] bg-mist/50 px-3 py-2 text-xs leading-5 text-ink-soft">
-        {COMPAT_DISCLAIMER}
-      </p>
     </div>
   );
 }

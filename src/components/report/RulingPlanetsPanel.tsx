@@ -64,9 +64,8 @@ export function RulingPlanetsPanel({
   return (
     <div className="space-y-5">
       <p className="text-sm leading-6 text-ink-soft">
-        Traditional planet links by number (belief-based associations—not
-        astronomy or astrology forecasts). Click a planet for astronomy notes
-        and system-specific traits.
+        Traditional planet links by number in Pythagorean and Vedic schools.
+        Click a planet for astronomy notes and system-specific traits.
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">

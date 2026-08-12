@@ -106,10 +106,6 @@ export function NameBookendsPanel({ fullName }: Props) {
         empty="Hover a letter tile for its group theme, or click to open the group guide."
       />
 
-      <p className="text-xs text-ink-soft">
-        Belief-based spelling cues for the name used here—not predictions,
-        medical advice, or fixed character labels.
-      </p>
     </div>
   );
 }

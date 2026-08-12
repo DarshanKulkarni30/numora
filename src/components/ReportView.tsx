@@ -305,9 +305,6 @@ export function ReportView({ report, watermarkEmail }: Props) {
                   <div className="whitespace-pre-wrap leading-8 text-ink-soft">
                     {report.personality.career_style}
                   </div>
-                  <p className="text-xs leading-5 text-ink-soft/90">
-                    {report.career_suggestions.disclaimer}
-                  </p>
                   <div>
                     <h3 className="text-ink">
                       {person.report_type === "child"
@@ -413,6 +410,12 @@ export function ReportView({ report, watermarkEmail }: Props) {
               ))}
               {report.recommendations_disclaimer ? (
                 <p>{report.recommendations_disclaimer}</p>
+              ) : null}
+              {report.career_suggestions?.disclaimer ? (
+                <p>{report.career_suggestions.disclaimer}</p>
+              ) : null}
+              {report.compatibility?.disclaimer ? (
+                <p>{report.compatibility.disclaimer}</p>
               ) : null}
               <p>
                 On-screen viewing only. Copying, downloading, and printing are

@@ -1,11 +1,12 @@
-import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
-import { GROUP_BLURBS } from "@/lib/numerology/nameBookends";
-import { planetForVedic } from "@/lib/numerology/planets";
+import { blurbForTopic } from "@/lib/guides/numberMeanings";
 import {
   parsePlanetGuideValue,
   PLANET_GUIDES,
   planetImageUrl,
 } from "@/lib/guides/planets";
+import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
+import { GROUP_BLURBS } from "@/lib/numerology/nameBookends";
+import { planetForVedic } from "@/lib/numerology/planets";
 
 export type GuideTopic =
   | "life-path"
@@ -47,69 +48,6 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
 const NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
 const LO_SHU_NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const NAME_CORNERSTONE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8"];
-
-const NUMBER_BLURBS: Record<string, { theme: string; traits: string[]; practice: string }> = {
-  "1": {
-    theme: "Initiative and independent direction",
-    traits: ["Self-starting energy", "Leadership instincts", "Original approaches"],
-    practice: "Balance decisive action with listening and collaboration.",
-  },
-  "2": {
-    theme: "Cooperation and sensitive partnership",
-    traits: ["Diplomatic awareness", "Patience", "Supportive presence"],
-    practice: "State needs clearly while keeping warmth in relationships.",
-  },
-  "3": {
-    theme: "Expression, creativity, and social warmth",
-    traits: ["Communicative flair", "Optimism", "Imaginative thinking"],
-    practice: "Finish creative starts and listen as actively as you speak.",
-  },
-  "4": {
-    theme: "Structure, reliability, and steady building",
-    traits: ["Practical follow-through", "Systems thinking", "Endurance"],
-    practice: "Allow flexibility inside routines so structure stays alive.",
-  },
-  "5": {
-    theme: "Freedom, curiosity, and adaptable movement",
-    traits: ["Versatility", "Learning by experience", "Quick pivots"],
-    practice: "Commit long enough to deepen skill while keeping exploration.",
-  },
-  "6": {
-    theme: "Care, responsibility, and harmony",
-    traits: ["Nurturing instincts", "Aesthetic sense", "Loyalty"],
-    practice: "Care without over-responsibility; receive support as well.",
-  },
-  "7": {
-    theme: "Insight, analysis, and inward clarity",
-    traits: ["Reflective depth", "Discernment", "Study orientation"],
-    practice: "Share insights with trusted people and move from thought to action.",
-  },
-  "8": {
-    theme: "Stewardship, ambition, and material mastery",
-    traits: ["Strategic focus", "Resource awareness", "Leadership of systems"],
-    practice: "Define success beyond status and pace ambition ethically.",
-  },
-  "9": {
-    theme: "Compassion, completion, and broad vision",
-    traits: ["Empathy", "Mentoring impulse", "Release of old chapters"],
-    practice: "Serve without erasing personal needs; complete before collecting.",
-  },
-  "11": {
-    theme: "Inspired intuition and illuminating ideas",
-    traits: ["Heightened sensitivity", "Motivational insight", "Visionary flashes"],
-    practice: "Ground intuition with rest, verification, and simple habits.",
-  },
-  "22": {
-    theme: "Large-scale building with practical vision",
-    traits: ["Long-range stamina", "Coordination skill", "Manifesting capacity"],
-    practice: "Break big visions into weekly steps and celebrate milestones.",
-  },
-  "33": {
-    theme: "Compassionate teaching and elevated care",
-    traits: ["Uplifting influence", "Creative nurture", "Service through example"],
-    practice: "Teach without self-sacrifice; model boundaries as care.",
-  },
-};
 
 type TopicLens = {
   system: string;
@@ -321,10 +259,6 @@ export function isValidGuideValue(topic: GuideTopic, value: string): boolean {
   return NUMBER_KEYS.includes(value);
 }
 
-function disclaimer(): string {
-  return "These interpretations are belief-based possibilities for self-reflection. They are not scientific, medical, legal, financial, or psychological advice—and they do not predict fixed outcomes.";
-}
-
 export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null {
   if (topic === "lo-shu-arrow") {
     const arrow = LO_SHU_ARROW_GUIDES[value];
@@ -333,11 +267,11 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       title: arrow.title,
       subtitle: `Numbers ${arrow.numbers.join(" · ")}`,
       paragraphs: [
-        "According to Lo Shu grid traditions, arrows describe patterns across the birth-date square. They are reflective metaphors, not guarantees.",
+        "According to Lo Shu grid traditions, arrows describe patterns across the birth-date square.",
         arrow.significance,
         arrow.present,
         arrow.missing,
-        "Use present arrows as strengths to steward, and missing arrows as conscious improvement areas—never as fixed destiny.",
+        "Use present arrows as strengths to steward, and missing arrows as conscious improvement areas.",
       ],
       bullets: arrow.numbers.map((n) => `Grid number ${n} participates in this arrow pattern.`),
     };
@@ -359,8 +293,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       paragraphs: [
         `In the Lo Shu birth grid, ${value} sits on the ${plane.toLowerCase()} plane and is associated with ${meta.theme}.`,
         `Vedic-style nicknames sometimes call this digit the “${meta.vedic}.” When the number is present (especially repeated), traditions may read an amplified ${meta.trait.toLowerCase()} theme; when missing, they often invite growth through ${meta.growth}.`,
-        disclaimer(),
-        `A constructive Lo Shu practice with ${value}: notice where ${meta.trait.toLowerCase()} already shows up, then strengthen it gently through ${meta.growth}—without treating the grid as fate.`,
+        `A constructive Lo Shu practice with ${value}: notice where ${meta.trait.toLowerCase()} already shows up, then strengthen it gently through ${meta.growth}.`,
       ],
       bullets: [
         `Plane: ${plane}`,
@@ -394,8 +327,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       paragraphs: [
         guide.astronomy,
         traits.note,
-        disclaimer(),
-        "Planet links in Numora are traditional number associations for reflection—not astronomy forecasts, kundli predictions, or medical advice.",
+        `In Numora, ${guide.name} is linked to numbers through ${systemLabel.toLowerCase()} tradition for reflective planet–number study.`,
       ],
       bullets: traits.traits,
     };
@@ -413,7 +345,6 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
         "In Chaldean-style name traditions used in Numora, the first letter of the first name (Cornerstone), last letter (Capstone), and first vowel are read as bookends—how beginnings, completions, and inner drive may feel in reflective practice.",
         `Letters in group ${value}: ${blurb.letters}.`,
         blurb.approach,
-        disclaimer(),
         blurb.growth,
       ],
       bullets: [
@@ -426,7 +357,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
   }
 
   const lens = TOPIC_LENSES[topic as keyof typeof TOPIC_LENSES];
-  const blurb = NUMBER_BLURBS[value];
+  const blurb = blurbForTopic(topic, value);
   if (!lens || !blurb) return null;
 
   return {
@@ -434,13 +365,12 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
     subtitle: `${lens.system} · ${blurb.theme}`,
     paragraphs: [
       lens.focus,
-      `In the ${lens.system} reading of ${lens.aspect.toLowerCase()} ${value}, traditions may associate this number with ${blurb.theme.toLowerCase()}.`,
-      disclaimer(),
+      `In the ${lens.system} reading of ${lens.aspect.toLowerCase()} ${value}, traditions associate this aspect with ${blurb.theme.toLowerCase()}.`,
       `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
     ],
     bullets: [
       `${lens.system} aspect: ${lens.aspect}`,
-      ...blurb.traits.map((t) => `${t} (as ${lens.aspect.toLowerCase()} emphasis)`),
+      ...blurb.traits.map((t) => t),
     ],
   };
 }

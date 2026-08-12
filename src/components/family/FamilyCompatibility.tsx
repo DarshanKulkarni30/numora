@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   buildCompatibilityMatrix,
-  COMPAT_DISCLAIMER,
   TONE_HINT,
   type CompatTone,
 } from "@/lib/numerology/compatibility";
@@ -285,17 +284,14 @@ export function FamilyCompatibility({ people }: Props) {
                   {otherCorner.group}) →
                 </span>
                 <TonePill tone={approachTone} />
-                <span className="basis-full text-xs">
-                  Reflective first-letter approach layer only—not marriage
-                  advice.
+                <span className="basis-full text-xs text-ink-soft">
+                  Reflective first-letter approach layer (Cornerstone groups).
                 </span>
               </p>
             ) : null}
           </section>
         );
       })}
-
-      <p className="text-sm leading-6 text-ink-soft">{COMPAT_DISCLAIMER}</p>
     </div>
   );
 }
