@@ -7,10 +7,9 @@ import {
   type PersonRecord,
 } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
+import { maxFamilyMembers } from "@/lib/profile/limits";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-
-const MAX_FAMILY = 3;
 
 function emptySelf(user: {
   email?: string | null;
@@ -60,6 +59,7 @@ export async function GET() {
   return NextResponse.json({
     email: user.email,
     people,
+    maxFamily: maxFamilyMembers(user.email),
     options: {
       gender: GENDER_OPTIONS,
       purpose: PURPOSE_OPTIONS,
@@ -93,9 +93,10 @@ export async function PUT(request: Request) {
   }
 
   const family = incoming.filter((p: PersonRecord) => !p.is_self);
-  if (family.length > MAX_FAMILY) {
+  const maxFamily = maxFamilyMembers(user.email);
+  if (family.length > maxFamily) {
     return NextResponse.json(
-      { error: `You can save up to ${MAX_FAMILY} family members.` },
+      { error: `You can save up to ${maxFamily} family members.` },
       { status: 400 },
     );
   }

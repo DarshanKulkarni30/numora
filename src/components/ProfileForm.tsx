@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { DobInput } from "@/components/DobInput";
 import { isValidDob } from "@/lib/profile/date";
+import { maxFamilyMembers } from "@/lib/profile/limits";
 import {
   GENDER_OPTIONS,
   PURPOSE_OPTIONS,
@@ -47,6 +48,9 @@ export function ProfileForm({ email, initialPeople }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const familyLimit = maxFamilyMembers(email);
+  const familyCount = people.filter((p) => !p.is_self).length;
+
   const canSave = useMemo(
     () => people.length > 0 && people.every(personComplete),
     [people],
@@ -59,7 +63,7 @@ export function ProfileForm({ email, initialPeople }: Props) {
   }
 
   function addFamily() {
-    if (people.filter((p) => !p.is_self).length >= 3) return;
+    if (people.filter((p) => !p.is_self).length >= familyLimit) return;
     setPeople((prev) => [...prev, blankFamily(prev.length)]);
   }
 
@@ -205,7 +209,7 @@ export function ProfileForm({ email, initialPeople }: Props) {
         </section>
       ))}
 
-      {people.filter((p) => !p.is_self).length < 3 ? (
+      {familyCount < familyLimit ? (
         <button
           type="button"
           onClick={addFamily}
@@ -214,7 +218,9 @@ export function ProfileForm({ email, initialPeople }: Props) {
           Add family member
         </button>
       ) : (
-        <p className="text-sm text-ink-soft">Maximum of 3 family members.</p>
+        <p className="text-sm text-ink-soft">
+          Maximum of {familyLimit} family members.
+        </p>
       )}
 
       {error ? (
