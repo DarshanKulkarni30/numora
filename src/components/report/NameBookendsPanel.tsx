@@ -6,6 +6,7 @@ import { ChartTipPanel } from "@/components/report/ChartTipPanel";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { guideHref } from "@/lib/guides/content";
 import { planetGuideHref } from "@/lib/guides/planets";
+import { firstVowelMeaning } from "@/lib/guides/firstVowelMeanings";
 import {
   analyzeNameBookends,
   groupBlurb,
@@ -24,21 +25,36 @@ function LetterTile({
   onTip: (tip: string | null) => void;
 }) {
   const blurb = groupBlurb(point.group);
+  const vowel =
+    point.role === "first-vowel" ? firstVowelMeaning(point.letter) : null;
   const tip = [
     `${point.label}: ${point.letter}`,
-    `Chaldean group ${point.group} · ${point.planet.name}`,
-    blurb ? `${blurb.theme}. ${blurb.approach}` : "",
+    point.role === "first-vowel" && vowel
+      ? `Inner tone · ${vowel.theme}. + ${vowel.strengths[0] ?? ""} · − ${vowel.watchouts[0] ?? ""}`
+      : `Chaldean group ${point.group} · ${point.planet.name}`,
+    blurb && point.role !== "first-vowel"
+      ? `${blurb.theme}. ${blurb.approach}`
+      : "",
   ]
     .filter(Boolean)
     .join("\n");
 
+  const href =
+    point.role === "first-vowel"
+      ? guideHref("name-first-vowel", point.letter.toUpperCase())
+      : guideHref("name-cornerstone", point.group);
+
   return (
     <div className="flex flex-col items-center gap-2">
       <Link
-        href={guideHref("name-cornerstone", point.group)}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
-        title={`Click for more about name letter group ${point.group}`}
+        title={
+          point.role === "first-vowel"
+            ? `Click for more about first vowel ${point.letter}`
+            : `Click for more about name letter group ${point.group}`
+        }
         onMouseEnter={() => onTip(tip)}
         onMouseLeave={() => onTip(null)}
         onFocus={() => onTip(tip)}

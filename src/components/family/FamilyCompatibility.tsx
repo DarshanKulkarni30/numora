@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CompatRadar } from "@/components/report/CompatRadar";
 import {
   buildCompatibilityMatrix,
   TONE_HINT,
@@ -89,24 +90,33 @@ function ChannelList({
   hideRomantic: boolean;
 }) {
   return (
-    <ul className="mt-3 space-y-2 text-sm">
-      {!hideRomantic ? (
+    <div className="mt-3 space-y-3">
+      <CompatRadar
+        romantic={tones.romantic}
+        business={tones.business}
+        friendship={tones.friendship}
+        hideRomantic={hideRomantic}
+        size={200}
+      />
+      <ul className="space-y-2 text-sm">
+        {!hideRomantic ? (
+          <li className="flex items-center justify-between gap-2">
+            <span className="text-ink-soft">Romantic</span>
+            <TonePill tone={tones.romantic} />
+          </li>
+        ) : null}
         <li className="flex items-center justify-between gap-2">
-          <span className="text-ink-soft">Romantic</span>
-          <TonePill tone={tones.romantic} />
+          <span className="text-ink-soft">
+            {hideRomantic ? "Team / class" : "Business"}
+          </span>
+          <TonePill tone={tones.business} />
         </li>
-      ) : null}
-      <li className="flex items-center justify-between gap-2">
-        <span className="text-ink-soft">
-          {hideRomantic ? "Team / class" : "Business"}
-        </span>
-        <TonePill tone={tones.business} />
-      </li>
-      <li className="flex items-center justify-between gap-2">
-        <span className="text-ink-soft">Friendship</span>
-        <TonePill tone={tones.friendship} />
-      </li>
-    </ul>
+        <li className="flex items-center justify-between gap-2">
+          <span className="text-ink-soft">Friendship</span>
+          <TonePill tone={tones.friendship} />
+        </li>
+      </ul>
+    </div>
   );
 }
 

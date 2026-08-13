@@ -90,11 +90,35 @@ export default async function GuidePage({ params }: Props) {
           ))}
         </div>
 
-        <ul className="mt-8 list-disc space-y-2 pl-5 text-ink-soft">
-          {page.bullets.map((b) => (
-            <li key={b}>{b}</li>
-          ))}
-        </ul>
+        {page.strengths?.length ? (
+          <div className="mt-8">
+            <h2 className="text-lg text-ink">Strengths (+)</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">
+              {page.strengths.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {page.watchouts?.length ? (
+          <div className="mt-8">
+            <h2 className="text-lg text-ink">Watch-outs (−)</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">
+              {page.watchouts.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {page.bullets.length ? (
+          <ul className="mt-8 list-disc space-y-2 pl-5 text-ink-soft">
+            {page.bullets.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+        ) : null}
 
         <div className="mt-10">
           <Link

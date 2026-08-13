@@ -7,12 +7,21 @@ type Props = {
   topic: GuideTopic;
   value: string | number;
   label: string;
+  /** Visible text; defaults to value */
+  display?: string;
   className?: string;
 };
 
-export function GuideNumberLink({ topic, value, label, className }: Props) {
+export function GuideNumberLink({
+  topic,
+  value,
+  label,
+  display,
+  className,
+}: Props) {
   const href = guideHref(topic, value);
-  const tip = `Click for more about ${label} ${value}`;
+  const shown = display ?? String(value);
+  const tip = `Click for more about ${label} ${shown}`;
   return (
     <Link
       href={href}
@@ -25,7 +34,7 @@ export function GuideNumberLink({ topic, value, label, className }: Props) {
         "brand text-lg text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
       }
     >
-      {value}
+      {shown}
     </Link>
   );
 }

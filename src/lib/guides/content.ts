@@ -1,3 +1,6 @@
+import { isSunSignId, SUN_SIGNS } from "@/lib/astrology/sunSign";
+import { firstVowelMeaning } from "@/lib/guides/firstVowelMeanings";
+import { letterMeaning } from "@/lib/guides/letterMeanings";
 import { blurbForTopic } from "@/lib/guides/numberMeanings";
 import {
   parsePlanetGuideValue,
@@ -24,7 +27,10 @@ export type GuideTopic =
   | "lo-shu-arrow"
   | "lo-shu-number"
   | "planet"
-  | "name-cornerstone";
+  | "name-cornerstone"
+  | "name-first-vowel"
+  | "name-letter"
+  | "sun-sign";
 
 export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "life-path", title: "Life Path" },
@@ -43,11 +49,16 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "lo-shu-number", title: "Lo Shu Number" },
   { topic: "planet", title: "Planet" },
   { topic: "name-cornerstone", title: "Name Letter Group" },
+  { topic: "name-first-vowel", title: "First Vowel" },
+  { topic: "name-letter", title: "Alphabet Letter" },
+  { topic: "sun-sign", title: "Sun Sign" },
 ];
 
 const NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
 const LO_SHU_NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const NAME_CORNERSTONE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const FIRST_VOWEL_KEYS = ["A", "E", "I", "O", "U", "Y"];
+const LETTER_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 type TopicLens = {
   system: string;
@@ -59,7 +70,13 @@ type TopicLens = {
 const TOPIC_LENSES: Record<
   Exclude<
     GuideTopic,
-    "lo-shu-arrow" | "lo-shu-number" | "planet" | "name-cornerstone"
+    | "lo-shu-arrow"
+    | "lo-shu-number"
+    | "planet"
+    | "name-cornerstone"
+    | "name-first-vowel"
+    | "name-letter"
+    | "sun-sign"
   >,
   TopicLens
 > = {
@@ -228,6 +245,8 @@ export type GuidePage = {
   subtitle: string;
   paragraphs: string[];
   bullets: string[];
+  strengths?: string[];
+  watchouts?: string[];
   imageUrl?: string | null;
   facts?: { label: string; value: string }[];
 };
@@ -256,6 +275,11 @@ export function isValidGuideValue(topic: GuideTopic, value: string): boolean {
   if (topic === "planet") return parsePlanetGuideValue(value) != null;
   if (topic === "name-cornerstone")
     return NAME_CORNERSTONE_KEYS.includes(value);
+  if (topic === "name-first-vowel")
+    return FIRST_VOWEL_KEYS.includes(value.toUpperCase());
+  if (topic === "name-letter")
+    return LETTER_KEYS.includes(value.toUpperCase());
+  if (topic === "sun-sign") return isSunSignId(value.toLowerCase());
   return NUMBER_KEYS.includes(value);
 }
 
@@ -356,6 +380,71 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
     };
   }
 
+  if (topic === "name-first-vowel") {
+    const fv = firstVowelMeaning(value);
+    if (!fv) return null;
+    return {
+      title: `First vowel ${fv.vowel}`,
+      subtitle: `Pythagorean tone · linked to ${fv.linkedNumber} · ${fv.theme}`,
+      paragraphs: [
+        "In Pythagorean-style name work, the first vowel of the first name is often read as an inner response style—how you meet the world from the inside.",
+        fv.theme,
+        fv.leadingVowelNote,
+        `A constructive practice: ${fv.practice}`,
+      ],
+      strengths: fv.strengths,
+      watchouts: fv.watchouts,
+      bullets: [
+        `Linked number energy: ${fv.linkedNumber}`,
+        "System: Pythagorean name vowel emphasis",
+      ],
+    };
+  }
+
+  if (topic === "name-letter") {
+    const lm = letterMeaning(value);
+    if (!lm) return null;
+    return {
+      title: `Letter ${lm.letter}`,
+      subtitle: `${lm.theme}`,
+      paragraphs: [
+        "Alphabet letters carry traditional number values. Pythagorean and Chaldean maps differ—Numora shows both so you can compare systems without mixing their rules.",
+        `A constructive practice with ${lm.letter}: ${lm.practice}`,
+      ],
+      strengths: lm.strengths,
+      watchouts: lm.watchouts,
+      facts: [
+        { label: "Pythagorean value", value: String(lm.pythagorean) },
+        {
+          label: "Chaldean value",
+          value: lm.chaldean != null ? String(lm.chaldean) : "—",
+        },
+      ],
+      bullets: [`Theme: ${lm.theme}`],
+    };
+  }
+
+  if (topic === "sun-sign") {
+    const id = value.toLowerCase();
+    if (!isSunSignId(id)) return null;
+    const sign = SUN_SIGNS[id];
+    return {
+      title: `${sign.name} ${sign.symbol}`,
+      subtitle: `Tropical sun sign · ${sign.element} · ${sign.modality} · ${sign.theme}`,
+      paragraphs: [
+        "Sun sign here uses the tropical calendar from month and day of birth (no birth time). It is a broad seasonal tone—complementary to numerology, not a full natal chart.",
+        sign.theme,
+        `A constructive practice: ${sign.practice}`,
+      ],
+      strengths: sign.strengths,
+      watchouts: sign.watchouts,
+      bullets: [
+        `Element: ${sign.element}`,
+        `Modality: ${sign.modality}`,
+      ],
+    };
+  }
+
   const lens = TOPIC_LENSES[topic as keyof typeof TOPIC_LENSES];
   const blurb = blurbForTopic(topic, value);
   if (!lens || !blurb) return null;
@@ -368,10 +457,9 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       `In the ${lens.system} reading of ${lens.aspect.toLowerCase()} ${value}, traditions associate this aspect with ${blurb.theme.toLowerCase()}.`,
       `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
     ],
-    bullets: [
-      `${lens.system} aspect: ${lens.aspect}`,
-      ...blurb.traits.map((t) => t),
-    ],
+    strengths: blurb.strengths,
+    watchouts: blurb.watchouts,
+    bullets: [`${lens.system} aspect: ${lens.aspect}`],
   };
 }
 
@@ -394,6 +482,18 @@ export function allGuideParams(): { topic: string; value: string }[] {
       }
     } else if (topic === "name-cornerstone") {
       for (const value of NAME_CORNERSTONE_KEYS) {
+        params.push({ topic, value });
+      }
+    } else if (topic === "name-first-vowel") {
+      for (const value of FIRST_VOWEL_KEYS) {
+        params.push({ topic, value });
+      }
+    } else if (topic === "name-letter") {
+      for (const value of LETTER_KEYS) {
+        params.push({ topic, value });
+      }
+    } else if (topic === "sun-sign") {
+      for (const value of Object.keys(SUN_SIGNS)) {
         params.push({ topic, value });
       }
     } else {

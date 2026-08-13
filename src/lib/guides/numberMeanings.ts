@@ -1,18 +1,24 @@
+import { watchoutsFor } from "./watchouts";
+
 /** Aspect-specific number blurbs — same digit, different methodology/role. */
 
-export type NumberBlurb = {
+type StoredBlurb = {
   theme: string;
-  traits: string[];
+  strengths: string[];
   practice: string;
 };
 
-type Map = Record<string, NumberBlurb>;
+export type NumberBlurb = StoredBlurb & {
+  watchouts: string[];
+};
+
+type Map = Record<string, StoredBlurb>;
 
 /** Lifelong growth arc from the full birth date (Pythagorean). */
 export const LIFE_PATH: Map = {
   "1": {
     theme: "A life-long invitation to lead from self-trust",
-    traits: [
+    strengths: [
       "Learning through initiating chapters",
       "Growing identity via independence",
       "Courage as a repeating life lesson",
@@ -22,7 +28,7 @@ export const LIFE_PATH: Map = {
   },
   "2": {
     theme: "A life path shaped by partnership and timing",
-    traits: [
+    strengths: [
       "Growth through cooperation",
       "Sensitivity as a lifelong skill",
       "Patience with unfolding plans",
@@ -32,7 +38,7 @@ export const LIFE_PATH: Map = {
   },
   "3": {
     theme: "A life devoted to expressive growth and connection",
-    traits: [
+    strengths: [
       "Storytelling as a life skill",
       "Social learning across decades",
       "Creative risk as a growth engine",
@@ -42,7 +48,7 @@ export const LIFE_PATH: Map = {
   },
   "4": {
     theme: "A life of building durable foundations",
-    traits: [
+    strengths: [
       "Mastery through steady systems",
       "Reliability as a life signature",
       "Progress measured in structures that last",
@@ -52,7 +58,7 @@ export const LIFE_PATH: Map = {
   },
   "5": {
     theme: "A life path of freedom, change, and experiential wisdom",
-    traits: [
+    strengths: [
       "Growth through variety and movement",
       "Lessons earned by trying paths",
       "Freedom balanced with chosen commitments",
@@ -62,7 +68,7 @@ export const LIFE_PATH: Map = {
   },
   "6": {
     theme: "A life oriented to care, duty, and harmony",
-    traits: [
+    strengths: [
       "Service as a recurring theme",
       "Family and community gravity",
       "Beauty and responsibility intertwined",
@@ -72,7 +78,7 @@ export const LIFE_PATH: Map = {
   },
   "7": {
     theme: "A life of inquiry, solitude, and inner knowing",
-    traits: [
+    strengths: [
       "Truth-seeking as a long arc",
       "Depth over noise",
       "Wisdom refined in quiet seasons",
@@ -82,7 +88,7 @@ export const LIFE_PATH: Map = {
   },
   "8": {
     theme: "A life of stewardship, power, and material accountability",
-    traits: [
+    strengths: [
       "Authority learned through responsibility",
       "Resource mastery over time",
       "Ethical ambition as a life exam",
@@ -92,7 +98,7 @@ export const LIFE_PATH: Map = {
   },
   "9": {
     theme: "A life of completion, compassion, and wide vision",
-    traits: [
+    strengths: [
       "Cycles of release and renewal",
       "Service beyond the personal circle",
       "Wisdom gathered to be given away",
@@ -102,7 +108,7 @@ export const LIFE_PATH: Map = {
   },
   "11": {
     theme: "A master life path of inspired illumination",
-    traits: [
+    strengths: [
       "Intuition as a lifelong current",
       "Uplifting others through insight",
       "Sensitivity requiring grounded habits",
@@ -112,7 +118,7 @@ export const LIFE_PATH: Map = {
   },
   "22": {
     theme: "A master builder life path of practical vision",
-    traits: [
+    strengths: [
       "Large dreams with engineering patience",
       "Systems that outlast moods",
       "Leadership through durable construction",
@@ -122,7 +128,7 @@ export const LIFE_PATH: Map = {
   },
   "33": {
     theme: "A master teacher life path of compassionate guidance",
-    traits: [
+    strengths: [
       "Care elevated into teaching",
       "Influence through example",
       "Service with emotional maturity",
@@ -136,7 +142,7 @@ export const LIFE_PATH: Map = {
 export const BIRTH_DAY: Map = {
   "1": {
     theme: "A day-number gift for decisive starts",
-    traits: [
+    strengths: [
       "Quick personal initiative",
       "Comfort going first in a skill area",
       "Specialty in sparking momentum",
@@ -146,7 +152,7 @@ export const BIRTH_DAY: Map = {
   },
   "2": {
     theme: "A day-number gift for tact and support",
-    traits: [
+    strengths: [
       "Specialty in reading the room",
       "Helpful timing instincts",
       "Skill at bridging people",
@@ -156,7 +162,7 @@ export const BIRTH_DAY: Map = {
   },
   "3": {
     theme: "A day-number gift for lively communication",
-    traits: [
+    strengths: [
       "Specialty in words, humor, or design",
       "Ease with social warmth",
       "Talent for making ideas memorable",
@@ -166,7 +172,7 @@ export const BIRTH_DAY: Map = {
   },
   "4": {
     theme: "A day-number gift for method and craft",
-    traits: [
+    strengths: [
       "Specialty in reliable process",
       "Hands-on problem solving",
       "Skill at making plans usable",
@@ -176,7 +182,7 @@ export const BIRTH_DAY: Map = {
   },
   "5": {
     theme: "A day-number gift for versatile skill and quick learning",
-    traits: [
+    strengths: [
       "Specialty in adapting under change",
       "Talent for sampling then synthesizing",
       "Skill at reading emerging trends",
@@ -186,7 +192,7 @@ export const BIRTH_DAY: Map = {
   },
   "6": {
     theme: "A day-number gift for caretaking craft",
-    traits: [
+    strengths: [
       "Specialty in support and design for others",
       "Talent for soothing environments",
       "Skill at responsible follow-through",
@@ -196,7 +202,7 @@ export const BIRTH_DAY: Map = {
   },
   "7": {
     theme: "A day-number gift for analysis and research",
-    traits: [
+    strengths: [
       "Specialty in studying beneath surfaces",
       "Talent for precise questions",
       "Skill at solitary deep work",
@@ -206,7 +212,7 @@ export const BIRTH_DAY: Map = {
   },
   "8": {
     theme: "A day-number gift for organizing results",
-    traits: [
+    strengths: [
       "Specialty in managing outcomes",
       "Talent for spotting leverage",
       "Skill at accountable leadership in a niche",
@@ -216,7 +222,7 @@ export const BIRTH_DAY: Map = {
   },
   "9": {
     theme: "A day-number gift for broad empathy and completion",
-    traits: [
+    strengths: [
       "Specialty in seeing the whole story",
       "Talent for mentoring or arts with heart",
       "Skill at finishing what others abandon",
@@ -226,7 +232,7 @@ export const BIRTH_DAY: Map = {
   },
   "11": {
     theme: "A day-number gift for intuitive spark",
-    traits: [
+    strengths: [
       "Specialty flashes of insight",
       "Talent for inspiring a moment",
       "Skill at sensing unspoken needs",
@@ -236,7 +242,7 @@ export const BIRTH_DAY: Map = {
   },
   "22": {
     theme: "A day-number gift for scalable building",
-    traits: [
+    strengths: [
       "Specialty in ambitious practical projects",
       "Talent for coordinating parts into wholes",
       "Skill at durable design",
@@ -246,7 +252,7 @@ export const BIRTH_DAY: Map = {
   },
   "33": {
     theme: "A day-number gift for uplifting care",
-    traits: [
+    strengths: [
       "Specialty in teaching through kindness",
       "Talent for creative nurture",
       "Skill at elevating a room’s tone",
@@ -260,7 +266,7 @@ export const BIRTH_DAY: Map = {
 export const EXPRESSION: Map = {
   "1": {
     theme: "Outward talent for original leadership and invention",
-    traits: [
+    strengths: [
       "Presenting as a starter and director",
       "Skills in pioneering roles",
       "Capability shown through decisive action",
@@ -270,7 +276,7 @@ export const EXPRESSION: Map = {
   },
   "2": {
     theme: "Outward talent for diplomacy and supportive craft",
-    traits: [
+    strengths: [
       "Skills in mediation and detail",
       "Capability shown through partnership",
       "Presenting as a calm collaborator",
@@ -280,7 +286,7 @@ export const EXPRESSION: Map = {
   },
   "3": {
     theme: "Outward talent for creative communication",
-    traits: [
+    strengths: [
       "Skills in writing, speaking, or performance",
       "Capability shown through charm and ideas",
       "Presenting as imaginative and social",
@@ -290,7 +296,7 @@ export const EXPRESSION: Map = {
   },
   "4": {
     theme: "Outward talent for structure and dependable delivery",
-    traits: [
+    strengths: [
       "Skills in systems, ops, and craftsmanship",
       "Capability shown through consistency",
       "Presenting as the person who makes it real",
@@ -300,7 +306,7 @@ export const EXPRESSION: Map = {
   },
   "5": {
     theme: "Outward talent for versatility, persuasion, and adaptive skill",
-    traits: [
+    strengths: [
       "Skills across sales, media, travel, or change work",
       "Capability shown through quick learning on stage",
       "Presenting as resourceful and free-moving",
@@ -310,7 +316,7 @@ export const EXPRESSION: Map = {
   },
   "6": {
     theme: "Outward talent for care, design, and responsible service",
-    traits: [
+    strengths: [
       "Skills in counseling, teaching, aesthetics, or hospitality",
       "Capability shown through nurturing excellence",
       "Presenting as trustworthy and warm",
@@ -320,7 +326,7 @@ export const EXPRESSION: Map = {
   },
   "7": {
     theme: "Outward talent for expertise, research, and refined skill",
-    traits: [
+    strengths: [
       "Skills in analysis, tech, or specialized study",
       "Capability shown through depth",
       "Presenting as thoughtful and precise",
@@ -330,7 +336,7 @@ export const EXPRESSION: Map = {
   },
   "8": {
     theme: "Outward talent for executive skill and resource leadership",
-    traits: [
+    strengths: [
       "Skills in business, finance, or organized power",
       "Capability shown through results",
       "Presenting as ambitious and capable",
@@ -340,7 +346,7 @@ export const EXPRESSION: Map = {
   },
   "9": {
     theme: "Outward talent for humanitarian expression and mentorship",
-    traits: [
+    strengths: [
       "Skills in arts, advocacy, or broad service",
       "Capability shown through compassion in public roles",
       "Presenting as wise and generous",
@@ -350,7 +356,7 @@ export const EXPRESSION: Map = {
   },
   "11": {
     theme: "Outward talent for inspirational influence",
-    traits: [
+    strengths: [
       "Skills in motivating and illuminating ideas",
       "Capability shown through visionary presence",
       "Presenting as intuitive and catalytic",
@@ -360,7 +366,7 @@ export const EXPRESSION: Map = {
   },
   "22": {
     theme: "Outward talent for building at scale",
-    traits: [
+    strengths: [
       "Skills in architecture of projects and teams",
       "Capability shown through lasting institutions",
       "Presenting as a practical visionary",
@@ -370,7 +376,7 @@ export const EXPRESSION: Map = {
   },
   "33": {
     theme: "Outward talent for compassionate teaching",
-    traits: [
+    strengths: [
       "Skills in guidance, healing arts, or creative nurture",
       "Capability shown through elevating others",
       "Presenting as a caring mentor",
@@ -384,7 +390,7 @@ export const EXPRESSION: Map = {
 export const SOUL_URGE: Map = {
   "1": {
     theme: "Inner desire for autonomy and recognition of self",
-    traits: [
+    strengths: [
       "Privately wanting to lead",
       "Craving self-directed purpose",
       "Motivated by originality",
@@ -394,7 +400,7 @@ export const SOUL_URGE: Map = {
   },
   "2": {
     theme: "Inner desire for harmony, love, and belonging",
-    traits: [
+    strengths: [
       "Privately wanting peace in relationships",
       "Motivated by partnership",
       "Craving emotional attunement",
@@ -404,7 +410,7 @@ export const SOUL_URGE: Map = {
   },
   "3": {
     theme: "Inner desire for joy, creativity, and being heard",
-    traits: [
+    strengths: [
       "Privately wanting playful expression",
       "Motivated by applause and delight",
       "Craving outlets for imagination",
@@ -414,7 +420,7 @@ export const SOUL_URGE: Map = {
   },
   "4": {
     theme: "Inner desire for security, order, and earned stability",
-    traits: [
+    strengths: [
       "Privately wanting solid ground",
       "Motivated by clear plans",
       "Craving dependable routines",
@@ -424,7 +430,7 @@ export const SOUL_URGE: Map = {
   },
   "5": {
     theme: "Inner desire for freedom, novelty, and sensory experience",
-    traits: [
+    strengths: [
       "Privately wanting open options",
       "Motivated by adventure and learning",
       "Craving change when life feels static",
@@ -434,7 +440,7 @@ export const SOUL_URGE: Map = {
   },
   "6": {
     theme: "Inner desire to nurture and be needed",
-    traits: [
+    strengths: [
       "Privately wanting to care and beautify",
       "Motivated by family or community roles",
       "Craving harmonious homes and bonds",
@@ -444,7 +450,7 @@ export const SOUL_URGE: Map = {
   },
   "7": {
     theme: "Inner desire for truth, privacy, and meaning",
-    traits: [
+    strengths: [
       "Privately wanting depth over small talk",
       "Motivated by understanding",
       "Craving solitude to think",
@@ -454,7 +460,7 @@ export const SOUL_URGE: Map = {
   },
   "8": {
     theme: "Inner desire for achievement, respect, and material mastery",
-    traits: [
+    strengths: [
       "Privately wanting tangible success",
       "Motivated by influence and resources",
       "Craving recognition for capability",
@@ -464,7 +470,7 @@ export const SOUL_URGE: Map = {
   },
   "9": {
     theme: "Inner desire to serve a larger story",
-    traits: [
+    strengths: [
       "Privately wanting to help humanity or arts",
       "Motivated by compassion",
       "Craving meaningful completion",
@@ -474,7 +480,7 @@ export const SOUL_URGE: Map = {
   },
   "11": {
     theme: "Inner desire to inspire and channel insight",
-    traits: [
+    strengths: [
       "Privately wanting to illuminate",
       "Motivated by intuitive purpose",
       "Craving spiritual or creative voltage",
@@ -484,7 +490,7 @@ export const SOUL_URGE: Map = {
   },
   "22": {
     theme: "Inner desire to build something lasting for many",
-    traits: [
+    strengths: [
       "Privately wanting legacy structures",
       "Motivated by practical idealism",
       "Craving impact at scale",
@@ -494,7 +500,7 @@ export const SOUL_URGE: Map = {
   },
   "33": {
     theme: "Inner desire to heal and teach through love",
-    traits: [
+    strengths: [
       "Privately wanting to uplift suffering",
       "Motivated by compassionate service",
       "Craving sacred caretaking roles",
@@ -508,7 +514,7 @@ export const SOUL_URGE: Map = {
 export const PERSONALITY: Map = {
   "1": {
     theme: "First impression of confidence and self-direction",
-    traits: [
+    strengths: [
       "Appearing decisive or bold",
       "Social mask of independence",
       "Others may expect you to take charge",
@@ -518,7 +524,7 @@ export const PERSONALITY: Map = {
   },
   "2": {
     theme: "First impression of gentleness and approachability",
-    traits: [
+    strengths: [
       "Appearing diplomatic or quiet",
       "Social mask of cooperativeness",
       "Others may expect you to yield",
@@ -528,7 +534,7 @@ export const PERSONALITY: Map = {
   },
   "3": {
     theme: "First impression of charm and expressive warmth",
-    traits: [
+    strengths: [
       "Appearing witty or creative",
       "Social mask of optimism",
       "Others may expect entertainment",
@@ -538,7 +544,7 @@ export const PERSONALITY: Map = {
   },
   "4": {
     theme: "First impression of steadiness and practicality",
-    traits: [
+    strengths: [
       "Appearing reliable or reserved",
       "Social mask of seriousness",
       "Others may expect structure from you",
@@ -548,7 +554,7 @@ export const PERSONALITY: Map = {
   },
   "5": {
     theme: "First impression of energy, restlessness, and open curiosity",
-    traits: [
+    strengths: [
       "Appearing adventurous or changeable",
       "Social mask of freedom-loving wit",
       "Others may expect spontaneity",
@@ -558,7 +564,7 @@ export const PERSONALITY: Map = {
   },
   "6": {
     theme: "First impression of warmth, care, and aesthetic sense",
-    traits: [
+    strengths: [
       "Appearing nurturing or stylish",
       "Social mask of responsibility",
       "Others may expect you to host or help",
@@ -568,7 +574,7 @@ export const PERSONALITY: Map = {
   },
   "7": {
     theme: "First impression of mystery, intellect, or reserve",
-    traits: [
+    strengths: [
       "Appearing thoughtful or distant",
       "Social mask of privacy",
       "Others may expect depth—or misread aloofness",
@@ -578,7 +584,7 @@ export const PERSONALITY: Map = {
   },
   "8": {
     theme: "First impression of authority and competence",
-    traits: [
+    strengths: [
       "Appearing ambitious or polished",
       "Social mask of power",
       "Others may expect leadership or status cues",
@@ -588,7 +594,7 @@ export const PERSONALITY: Map = {
   },
   "9": {
     theme: "First impression of breadth, kindness, or worldliness",
-    traits: [
+    strengths: [
       "Appearing wise or artistic",
       "Social mask of generosity",
       "Others may expect counsel or idealism",
@@ -598,7 +604,7 @@ export const PERSONALITY: Map = {
   },
   "11": {
     theme: "First impression of intensity and inspired presence",
-    traits: [
+    strengths: [
       "Appearing magnetic or sensitive",
       "Social mask of visionary energy",
       "Others may expect insight on demand",
@@ -608,7 +614,7 @@ export const PERSONALITY: Map = {
   },
   "22": {
     theme: "First impression of capable ambition at scale",
-    traits: [
+    strengths: [
       "Appearing as a builder or organizer",
       "Social mask of big-picture practicality",
       "Others may expect you to “make it happen”",
@@ -618,7 +624,7 @@ export const PERSONALITY: Map = {
   },
   "33": {
     theme: "First impression of nurturing wisdom",
-    traits: [
+    strengths: [
       "Appearing as a natural counselor or teacher",
       "Social mask of elevated care",
       "Others may unload problems quickly",
@@ -632,7 +638,7 @@ export const PERSONALITY: Map = {
 export const MATURITY: Map = {
   "1": {
     theme: "Later-life emphasis on self-authored leadership",
-    traits: [
+    strengths: [
       "Maturity clarifying personal authority",
       "Less need for external permission",
       "Initiative refined by experience",
@@ -642,7 +648,7 @@ export const MATURITY: Map = {
   },
   "2": {
     theme: "Later-life emphasis on wise partnership",
-    traits: [
+    strengths: [
       "Maturity softening ego into alliance",
       "Diplomacy with clearer boundaries",
       "Patience that has earned its calm",
@@ -652,7 +658,7 @@ export const MATURITY: Map = {
   },
   "3": {
     theme: "Later-life emphasis on seasoned creative voice",
-    traits: [
+    strengths: [
       "Expression matured into craft",
       "Joy with less performance anxiety",
       "Communication used to uplift",
@@ -662,7 +668,7 @@ export const MATURITY: Map = {
   },
   "4": {
     theme: "Later-life emphasis on lasting systems and legacy structure",
-    traits: [
+    strengths: [
       "Foundations that outlive urgency",
       "Craftsmanship as identity",
       "Order serving loved ones’ security",
@@ -672,7 +678,7 @@ export const MATURITY: Map = {
   },
   "5": {
     theme: "Later-life emphasis on freedom with wisdom",
-    traits: [
+    strengths: [
       "Change chosen rather than chased",
       "Travel or learning as mature enrichment",
       "Adaptability without restless escape",
@@ -682,7 +688,7 @@ export const MATURITY: Map = {
   },
   "6": {
     theme: "Later-life emphasis on responsible love and stewardship of home",
-    traits: [
+    strengths: [
       "Care refined by experience",
       "Family or community elder roles",
       "Harmony with healthier limits",
@@ -692,7 +698,7 @@ export const MATURITY: Map = {
   },
   "7": {
     theme: "Later-life emphasis on distilled wisdom and quiet mastery",
-    traits: [
+    strengths: [
       "Insight less noisy, more useful",
       "Spiritual or intellectual harvest",
       "Solitude as chosen richness",
@@ -702,7 +708,7 @@ export const MATURITY: Map = {
   },
   "8": {
     theme: "Later-life emphasis on ethical power and resource legacy",
-    traits: [
+    strengths: [
       "Ambition tempered into stewardship",
       "Recognition earned through character",
       "Material mastery serving others",
@@ -712,7 +718,7 @@ export const MATURITY: Map = {
   },
   "9": {
     theme: "Later-life emphasis on completion and wide-hearted mentoring",
-    traits: [
+    strengths: [
       "Release of outdated identities",
       "Service as natural maturity",
       "Compassion with less attachment",
@@ -722,7 +728,7 @@ export const MATURITY: Map = {
   },
   "11": {
     theme: "Later-life emphasis on grounded inspiration",
-    traits: [
+    strengths: [
       "Intuition steadied by decades",
       "Teaching through presence",
       "Sensitivity managed with wisdom",
@@ -732,7 +738,7 @@ export const MATURITY: Map = {
   },
   "22": {
     theme: "Later-life emphasis on institutions and lasting builds",
-    traits: [
+    strengths: [
       "Vision finally resourced",
       "Practical idealism realized",
       "Legacy architecture",
@@ -742,7 +748,7 @@ export const MATURITY: Map = {
   },
   "33": {
     theme: "Later-life emphasis on masterful compassionate teaching",
-    traits: [
+    strengths: [
       "Care become curriculum",
       "Healing presence refined",
       "Service without self-erasure",
@@ -756,7 +762,7 @@ export const MATURITY: Map = {
 export const CHALDEAN_NAME: Map = {
   "1": {
     theme: "Chaldean name tone of solar initiative and selfhood",
-    traits: [
+    strengths: [
       "Name vibration leaning toward leadership",
       "Compound tones often amplify independence",
       "Presentation energy of the pioneer",
@@ -766,7 +772,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "2": {
     theme: "Chaldean name tone of lunar receptivity and tact",
-    traits: [
+    strengths: [
       "Name vibration favoring partnership",
       "Sensitivity encoded in the spelling",
       "Cooperative social frequency",
@@ -776,7 +782,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "3": {
     theme: "Chaldean name tone of Jupiterian expansion and expression",
-    traits: [
+    strengths: [
       "Name vibration of sociability and growth",
       "Optimism carried in the letters",
       "Creative speech frequency",
@@ -786,7 +792,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "4": {
     theme: "Chaldean name tone of Rahu-linked disruption and rebuilding",
-    traits: [
+    strengths: [
       "Name vibration that may feel unconventional",
       "Order learned through unusual paths",
       "Structure after upheaval themes",
@@ -796,7 +802,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "5": {
     theme: "Chaldean name tone of Mercury—commerce, wit, and motion",
-    traits: [
+    strengths: [
       "Name vibration of quick mind and exchange",
       "Adaptability in how the name is heard",
       "Persuasive, mobile letter frequency",
@@ -806,7 +812,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "6": {
     theme: "Chaldean name tone of Venusian harmony and attraction",
-    traits: [
+    strengths: [
       "Name vibration of beauty and care",
       "Relational magnetism in the spelling",
       "Responsibility woven with charm",
@@ -816,7 +822,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "7": {
     theme: "Chaldean name tone of Ketu-linked introspection",
-    traits: [
+    strengths: [
       "Name vibration of mystery and study",
       "Detachment or spiritual bent in letters",
       "Analytical social frequency",
@@ -826,7 +832,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "8": {
     theme: "Chaldean name tone of Saturnian duty and material gravity",
-    traits: [
+    strengths: [
       "Name vibration of ambition under pressure",
       "Authority earned slowly",
       "Serious competence frequency",
@@ -836,7 +842,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "9": {
     theme: "Chaldean name tone of Martian drive and completion fire",
-    traits: [
+    strengths: [
       "Name vibration of courage and push",
       "Broad or warrior-like letter energy",
       "Intensity in how the name lands",
@@ -846,7 +852,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "11": {
     theme: "Chaldean compound often read as intuitive voltage (reduces toward 2)",
-    traits: [
+    strengths: [
       "Heightened sensitivity in the name field",
       "Partnership themes under master flash",
       "Inspiration needing calm verification",
@@ -856,7 +862,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "22": {
     theme: "Chaldean compound of master building (reduces toward 4)",
-    traits: [
+    strengths: [
       "Name field aiming at large structures",
       "Practical vision in the spelling story",
       "Ambition requiring method",
@@ -866,7 +872,7 @@ export const CHALDEAN_NAME: Map = {
   },
   "33": {
     theme: "Chaldean compound of elevated care (reduces toward 6)",
-    traits: [
+    strengths: [
       "Name field of teaching love",
       "Responsibility amplified",
       "Service frequency in the letters",
@@ -880,7 +886,7 @@ export const CHALDEAN_NAME: Map = {
 export const VEDIC_PSYCHIC: Map = {
   "1": {
     theme: "Moolank temperament of Sun—self-will and bright initiative",
-    traits: [
+    strengths: [
       "Instinctive need to lead or stand out",
       "Day-to-day pride and drive",
       "Quick personal reactions of a solar type",
@@ -890,7 +896,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "2": {
     theme: "Moolank temperament of Moon—feeling, fluctuation, and care",
-    traits: [
+    strengths: [
       "Instinctive emotional responsiveness",
       "Day-to-day mood sensitivity",
       "Need for reassurance and soft pacing",
@@ -900,7 +906,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "3": {
     theme: "Moolank temperament of Jupiter—optimism, teaching, and growth",
-    traits: [
+    strengths: [
       "Instinctive expansiveness",
       "Day-to-day advice-giving impulse",
       "Cheer and philosophical bent",
@@ -910,7 +916,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "4": {
     theme: "Moolank temperament of Rahu—unconventional drive and restlessness",
-    traits: [
+    strengths: [
       "Instinctive urge to break molds",
       "Day-to-day intensity or unusual tastes",
       "Ambition via non-traditional routes",
@@ -920,7 +926,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "5": {
     theme: "Moolank temperament of Mercury (Budh)—quick mind, speech, and trade",
-    traits: [
+    strengths: [
       "Instinctive curiosity and verbal agility",
       "Day-to-day need for mental stimulation",
       "Restless intellect more than lifelong “freedom path” framing",
@@ -930,7 +936,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "6": {
     theme: "Moolank temperament of Venus—comfort, beauty, and relationship focus",
-    traits: [
+    strengths: [
       "Instinctive pull toward harmony and pleasure",
       "Day-to-day aesthetic or romantic sensitivity",
       "Caretaking as temperament, not only duty",
@@ -940,7 +946,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "7": {
     theme: "Moolank temperament of Ketu—inwardness, detachment, and insight",
-    traits: [
+    strengths: [
       "Instinctive pull toward solitude or mysticism",
       "Day-to-day analytical or spiritual bent",
       "Disinterest in shallow social loops",
@@ -950,7 +956,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "8": {
     theme: "Moolank temperament of Saturn—discipline, delay, and seriousness",
-    traits: [
+    strengths: [
       "Instinctive caution and endurance",
       "Day-to-day duty consciousness",
       "Slow-burn ambition under pressure",
@@ -960,7 +966,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "9": {
     theme: "Moolank temperament of Mars—heat, courage, and reactive drive",
-    traits: [
+    strengths: [
       "Instinctive assertion or impatience",
       "Day-to-day competitive or protective energy",
       "Action-first emotional style",
@@ -970,7 +976,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "11": {
     theme: "Often reduced in Vedic practice; held here as heightened lunar sensitivity",
-    traits: [
+    strengths: [
       "Psychic intensity beyond ordinary 2",
       "Strong intuitive day-reactions",
       "Need for grounding rituals",
@@ -980,7 +986,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "22": {
     theme: "Often reduced in Vedic practice; held here as heavy Rahu-scale drive",
-    traits: [
+    strengths: [
       "Oversized unconventional ambition",
       "Pressure to build strangely and largely",
       "Temperament of restless construction",
@@ -990,7 +996,7 @@ export const VEDIC_PSYCHIC: Map = {
   },
   "33": {
     theme: "Often reduced in Vedic practice; held here as elevated Venusian care",
-    traits: [
+    strengths: [
       "Temperament of intense nurture",
       "Day-to-day teacher-healer impulse",
       "Emotional labor risk",
@@ -1004,7 +1010,7 @@ export const VEDIC_PSYCHIC: Map = {
 export const VEDIC_DESTINY: Map = {
   "1": {
     theme: "Bhagyank path of Sun—authority, recognition, and self-made direction",
-    traits: [
+    strengths: [
       "Outer life themes of leadership",
       "Destiny flavor of visibility",
       "Path asking for honest self-rule",
@@ -1014,7 +1020,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "2": {
     theme: "Bhagyank path of Moon—alliances, public mood, and supportive roles",
-    traits: [
+    strengths: [
       "Outer life themes of partnership",
       "Destiny flavor of care and diplomacy",
       "Path through people and timing",
@@ -1024,7 +1030,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "3": {
     theme: "Bhagyank path of Jupiter—growth, teaching, and expansive fortune themes",
-    traits: [
+    strengths: [
       "Outer life themes of learning and guidance",
       "Destiny flavor of optimism and counsel",
       "Path through wisdom shared",
@@ -1034,7 +1040,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "4": {
     theme: "Bhagyank path of Rahu—unconventional success and foreign or novel arenas",
-    traits: [
+    strengths: [
       "Outer life themes outside the expected script",
       "Destiny flavor of disruption then establishment",
       "Path through unusual industries or places",
@@ -1044,7 +1050,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "5": {
     theme: "Bhagyank path of Mercury—commerce, networking, and skilled exchange",
-    traits: [
+    strengths: [
       "Outer life themes of trade, media, or mobility",
       "Destiny flavor of wit applied to livelihood",
       "Path through adaptable professional networks",
@@ -1054,7 +1060,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "6": {
     theme: "Bhagyank path of Venus—arts, comfort industries, and relational success",
-    traits: [
+    strengths: [
       "Outer life themes of beauty, care, or luxury service",
       "Destiny flavor of harmony and attraction",
       "Path through cultivated taste and bonds",
@@ -1064,7 +1070,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "7": {
     theme: "Bhagyank path of Ketu—research, spirituality, and specialized mastery",
-    traits: [
+    strengths: [
       "Outer life themes of expertise or detachment from fame",
       "Destiny flavor of inward achievement",
       "Path through niche knowledge",
@@ -1074,7 +1080,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "8": {
     theme: "Bhagyank path of Saturn—long labor, authority, and hard-won status",
-    traits: [
+    strengths: [
       "Outer life themes of duty and endurance",
       "Destiny flavor of delayed but solid gains",
       "Path through responsibility under pressure",
@@ -1084,7 +1090,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "9": {
     theme: "Bhagyank path of Mars—courageous action, competition, and bold service",
-    traits: [
+    strengths: [
       "Outer life themes of drive and protection",
       "Destiny flavor of pioneering struggle then victory",
       "Path through assertive missions",
@@ -1094,7 +1100,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "11": {
     theme: "Often reduced in Vedic practice; held as intensified lunar destiny",
-    traits: [
+    strengths: [
       "Outer path with strong intuitive calling",
       "Public sensitivity",
       "Partnership destiny amplified",
@@ -1104,7 +1110,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "22": {
     theme: "Often reduced in Vedic practice; held as monumental Rahu-scale destiny",
-    traits: [
+    strengths: [
       "Outer path aiming at large unusual builds",
       "Heavy responsibility themes",
       "Destiny pressure to materialize vision",
@@ -1114,7 +1120,7 @@ export const VEDIC_DESTINY: Map = {
   },
   "33": {
     theme: "Often reduced in Vedic practice; held as destiny of elevated care",
-    traits: [
+    strengths: [
       "Outer path of teaching or healing influence",
       "Service destiny with weight",
       "Public nurture roles",
@@ -1128,7 +1134,7 @@ export const VEDIC_DESTINY: Map = {
 export const VEDIC_NAME: Map = {
   "1": {
     theme: "Namank of Sun—name frequency of authority and clarity",
-    traits: [
+    strengths: [
       "Spelling vibration toward leadership",
       "Name heard as confident",
       "Solar branding in introductions",
@@ -1138,7 +1144,7 @@ export const VEDIC_NAME: Map = {
   },
   "2": {
     theme: "Namank of Moon—name frequency of softness and receptivity",
-    traits: [
+    strengths: [
       "Spelling vibration toward approachability",
       "Name heard as gentle or artistic",
       "Lunar branding in relationships",
@@ -1148,7 +1154,7 @@ export const VEDIC_NAME: Map = {
   },
   "3": {
     theme: "Namank of Jupiter—name frequency of wisdom and expansion",
-    traits: [
+    strengths: [
       "Spelling vibration toward teaching or counsel",
       "Name heard as optimistic",
       "Growth-oriented branding",
@@ -1158,7 +1164,7 @@ export const VEDIC_NAME: Map = {
   },
   "4": {
     theme: "Namank of Rahu—name frequency of novelty and edge",
-    traits: [
+    strengths: [
       "Spelling vibration that may feel modern or unusual",
       "Name heard as distinctive",
       "Unconventional personal brand",
@@ -1168,7 +1174,7 @@ export const VEDIC_NAME: Map = {
   },
   "5": {
     theme: "Namank of Mercury—name frequency of wit, trade, and messages",
-    traits: [
+    strengths: [
       "Spelling vibration favoring communication brands",
       "Name heard as clever or mobile",
       "Mercurial networking tone—not the same as Moolank temperament alone",
@@ -1178,7 +1184,7 @@ export const VEDIC_NAME: Map = {
   },
   "6": {
     theme: "Namank of Venus—name frequency of charm and harmony",
-    traits: [
+    strengths: [
       "Spelling vibration of attractiveness and care",
       "Name heard as pleasant or artistic",
       "Relational branding",
@@ -1188,7 +1194,7 @@ export const VEDIC_NAME: Map = {
   },
   "7": {
     theme: "Namank of Ketu—name frequency of mystery and expertise",
-    traits: [
+    strengths: [
       "Spelling vibration of depth or rarity",
       "Name heard as private or scholarly",
       "Specialist branding",
@@ -1198,7 +1204,7 @@ export const VEDIC_NAME: Map = {
   },
   "8": {
     theme: "Namank of Saturn—name frequency of gravitas and duty",
-    traits: [
+    strengths: [
       "Spelling vibration of seriousness",
       "Name heard as authoritative or heavy",
       "Endurance branding",
@@ -1208,7 +1214,7 @@ export const VEDIC_NAME: Map = {
   },
   "9": {
     theme: "Namank of Mars—name frequency of drive and bold presence",
-    traits: [
+    strengths: [
       "Spelling vibration of force and courage",
       "Name heard as strong or intense",
       "Action branding",
@@ -1218,7 +1224,7 @@ export const VEDIC_NAME: Map = {
   },
   "11": {
     theme: "Elevated name frequency often read with lunar/2 undertones",
-    traits: [
+    strengths: [
       "Name field of inspired sensitivity",
       "Brand of intuition",
       "Partnership undertones",
@@ -1228,7 +1234,7 @@ export const VEDIC_NAME: Map = {
   },
   "22": {
     theme: "Elevated name frequency of builder ambition",
-    traits: [
+    strengths: [
       "Name field aiming at scale",
       "Brand of practical vision",
       "Institutional undertones",
@@ -1238,7 +1244,7 @@ export const VEDIC_NAME: Map = {
   },
   "33": {
     theme: "Elevated name frequency of teaching care",
-    traits: [
+    strengths: [
       "Name field of guidance",
       "Brand of compassionate authority",
       "Service undertones",
@@ -1252,7 +1258,7 @@ export const VEDIC_NAME: Map = {
 export const PERSONAL_CYCLE: Map = {
   "1": {
     theme: "A cycle of beginnings and self-directed planting",
-    traits: [
+    strengths: [
       "Timing for initiative",
       "Fresh identity experiments",
       "Less waiting, more starting",
@@ -1262,7 +1268,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "2": {
     theme: "A cycle of patience, alliance, and quiet progress",
-    traits: [
+    strengths: [
       "Timing for collaboration",
       "Emotional attunement windows",
       "Slower visible results",
@@ -1272,7 +1278,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "3": {
     theme: "A cycle of expression, learning, and social exchange",
-    traits: [
+    strengths: [
       "Timing for creative output",
       "Networking and study",
       "Lighter, more vocal months/years",
@@ -1282,7 +1288,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "4": {
     theme: "A cycle of foundations, routines, and practical building",
-    traits: [
+    strengths: [
       "Timing for systems and health habits",
       "Work-before-reward pacing",
       "Simplifying commitments",
@@ -1292,7 +1298,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "5": {
     theme: "A cycle of change, movement, and experimentation",
-    traits: [
+    strengths: [
       "Timing for travel, pivots, and trials",
       "Freedom themes in the calendar",
       "Less tolerance for stagnation",
@@ -1302,7 +1308,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "6": {
     theme: "A cycle of home, care, and relationship harmony",
-    traits: [
+    strengths: [
       "Timing for family and duty",
       "Aesthetic or domestic focus",
       "Service requests increase",
@@ -1312,7 +1318,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "7": {
     theme: "A cycle of reflection, skill refinement, and inner clarity",
-    traits: [
+    strengths: [
       "Timing for study and assessment",
       "Quieter social appetite",
       "Quality over quantity",
@@ -1322,7 +1328,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "8": {
     theme: "A cycle of recognition, stewardship, and measurable progress",
-    traits: [
+    strengths: [
       "Timing for business and authority themes",
       "Results come into view",
       "Resource decisions matter more",
@@ -1332,7 +1338,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "9": {
     theme: "A cycle of completion, generosity, and release",
-    traits: [
+    strengths: [
       "Timing for endings and clear-outs",
       "Mentoring or giving back",
       "Space-making before the next 1",
@@ -1342,7 +1348,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "11": {
     theme: "A heightened inspirational cycle (often lived with 2 undertones)",
-    traits: [
+    strengths: [
       "Timing for insight and visibility of ideas",
       "Nervous-system sensitivity up",
       "Inspiration needing rest",
@@ -1352,7 +1358,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "22": {
     theme: "A practical visionary cycle (often lived with 4 undertones)",
-    traits: [
+    strengths: [
       "Timing for large yet grounded builds",
       "Coordination of many parts",
       "Patience with scale",
@@ -1362,7 +1368,7 @@ export const PERSONAL_CYCLE: Map = {
   },
   "33": {
     theme: "A compassionate teaching cycle (often lived with 6 undertones)",
-    traits: [
+    strengths: [
       "Timing for guidance and care roles",
       "Emotional labor themes",
       "Service opportunities",
@@ -1395,5 +1401,12 @@ export function blurbForTopic(
 ): NumberBlurb | null {
   if (!(topic in TOPIC_MAP)) return null;
   const map = TOPIC_MAP[topic as NumberGuideTopic];
-  return map[value] ?? null;
+  const base = map[value];
+  if (!base) return null;
+  return {
+    theme: base.theme,
+    strengths: base.strengths,
+    watchouts: watchoutsFor(topic, value),
+    practice: base.practice,
+  };
 }

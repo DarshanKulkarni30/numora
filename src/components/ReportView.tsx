@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
+import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -42,7 +44,36 @@ function Accordion({
         <span className="text-lg text-ink">{title}</span>
         <span className="text-ink-soft">{open ? "−" : "+"}</span>
       </button>
-      {open ? <div className="border-t border-[var(--line)] px-5 py-4">{children}</div> : null}
+      {open ? (
+        <div className="border-t border-[var(--line)] px-5 py-4">{children}</div>
+      ) : null}
+    </div>
+  );
+}
+
+function MoreDetail({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  const lead = text.split(/\n\n/)[0] ?? text;
+  const hasMore = text.length > lead.length + 40;
+  return (
+    <div className="space-y-3 text-ink-soft">
+      <p className="leading-7">{lead}</p>
+      {hasMore ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="text-sm text-gold-deep underline decoration-gold/50 underline-offset-2 hover:text-ink"
+          >
+            {open ? "Hide detail" : "More detail"}
+          </button>
+          {open ? (
+            <div className="whitespace-pre-wrap leading-7 text-sm opacity-90">
+              {text.slice(lead.length).trim()}
+            </div>
+          ) : null}
+        </>
+      ) : null}
     </div>
   );
 }
@@ -81,30 +112,68 @@ export function ReportView({ report, watermarkEmail }: Props) {
     { label: "Birth Day", topic: "birth-day", value: snap.birth_day },
     { label: "Expression", topic: "expression", value: snap.expression_number },
     { label: "Soul Urge", topic: "soul-urge", value: snap.soul_urge_number },
-    { label: "Personality", topic: "personality", value: snap.personality_number },
+    {
+      label: "Personality",
+      topic: "personality",
+      value: snap.personality_number,
+    },
     { label: "Maturity", topic: "maturity", value: snap.maturity_number },
-    { label: "Chaldean Name", topic: "chaldean-name", value: snap.chaldean_name_number },
+    {
+      label: "Chaldean Name",
+      topic: "chaldean-name",
+      value: snap.chaldean_name_number,
+    },
     { label: "Vedic Psychic", topic: "vedic-psychic", value: snap.vedic_psychic },
-    { label: "Vedic Destiny", topic: "vedic-destiny", value: snap.vedic_destiny },
+    {
+      label: "Vedic Destiny",
+      topic: "vedic-destiny",
+      value: snap.vedic_destiny,
+    },
     { label: "Vedic Name", topic: "vedic-name", value: snap.vedic_name },
-    { label: "Personal Year", topic: "personal-year", value: snap.personal_year },
-    { label: "Personal Month", topic: "personal-month", value: snap.personal_month },
+    {
+      label: "Personal Year",
+      topic: "personal-year",
+      value: snap.personal_year,
+    },
+    {
+      label: "Personal Month",
+      topic: "personal-month",
+      value: snap.personal_month,
+    },
   ];
 
   const chartItems = [
     { label: "Life Path", topic: "life-path" as const, value: snap.life_path },
-    { label: "Expression", topic: "expression" as const, value: snap.expression_number },
-    { label: "Soul Urge", topic: "soul-urge" as const, value: snap.soul_urge_number },
-    { label: "Personality", topic: "personality" as const, value: snap.personality_number },
-    { label: "Maturity", topic: "maturity" as const, value: snap.maturity_number },
+    {
+      label: "Expression",
+      topic: "expression" as const,
+      value: snap.expression_number,
+    },
+    {
+      label: "Soul Urge",
+      topic: "soul-urge" as const,
+      value: snap.soul_urge_number,
+    },
+    {
+      label: "Personality",
+      topic: "personality" as const,
+      value: snap.personality_number,
+    },
+    {
+      label: "Maturity",
+      topic: "maturity" as const,
+      value: snap.maturity_number,
+    },
   ];
 
   const summary = report.sections.find((s) => s.id === "executive-summary");
+  const closing = report.sections.find((s) => s.id === "closing");
   const detailSections = report.sections.filter(
     (s) =>
       s.id !== "executive-summary" &&
       s.id !== "snapshot" &&
-      s.id !== "compatibility",
+      s.id !== "compatibility" &&
+      s.id !== "closing",
   );
 
   return (
@@ -130,6 +199,18 @@ export function ReportView({ report, watermarkEmail }: Props) {
           <h1 className="mt-2 text-4xl text-ink md:text-5xl">
             {person.preferred_name || person.full_name}
           </h1>
+          {snap.sun_sign && snap.sun_sign_label ? (
+            <p className="mt-3 text-lg text-ink-soft">
+              Sun sign{" "}
+              <GuideNumberLink
+                topic="sun-sign"
+                value={snap.sun_sign}
+                label="Sun sign"
+                display={snap.sun_sign_label}
+                className="brand text-xl text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
+              />
+            </p>
+          ) : null}
         </header>
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -220,6 +301,33 @@ export function ReportView({ report, watermarkEmail }: Props) {
                     >
                       {snap.compound_number}
                     </td>
+                    {snap.sun_sign && snap.sun_sign_label ? (
+                      <>
+                        <td className="px-3 py-2 text-ink">Sun sign</td>
+                        <td className="px-3 py-2">
+                          <GuideNumberLink
+                            topic="sun-sign"
+                            value={snap.sun_sign}
+                            label="Sun sign"
+                            display={snap.sun_sign_label}
+                          />
+                        </td>
+                      </>
+                    ) : (
+                      <td className="px-3 py-2" colSpan={2} />
+                    )}
+                  </tr>
+                ) : snap.sun_sign && snap.sun_sign_label ? (
+                  <tr>
+                    <td className="px-3 py-2 text-ink">Sun sign</td>
+                    <td className="px-3 py-2">
+                      <GuideNumberLink
+                        topic="sun-sign"
+                        value={snap.sun_sign}
+                        label="Sun sign"
+                        display={snap.sun_sign_label}
+                      />
+                    </td>
                     <td className="px-3 py-2" colSpan={2} />
                   </tr>
                 ) : null}
@@ -283,28 +391,56 @@ export function ReportView({ report, watermarkEmail }: Props) {
         {summary ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h2 className="text-xl text-ink">Executive summary</h2>
-            <div className="mt-3 whitespace-pre-wrap leading-8 text-ink-soft">
-              {summary.body}
+            <div className="mt-3">
+              <MoreDetail text={summary.body} />
             </div>
+          </section>
+        ) : null}
+
+        {report.growth_areas?.length ? (
+          <section>
+            <h2 className="text-xl text-ink">Areas to work on</h2>
+            <p className="mt-1 text-sm text-ink-soft">
+              Suggestions drawn from Lo Shu gaps, core numbers, Vedic contrast,
+              and name letters.
+            </p>
+            <div className="mt-4">
+              <GrowthAreasPanel areas={report.growth_areas} />
+            </div>
+          </section>
+        ) : null}
+
+        {report.strengths.length ? (
+          <section>
+            <h2 className="text-xl text-ink">Strengths at a glance</h2>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {report.strengths.slice(0, 8).map((s) => (
+                <li
+                  key={s}
+                  className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-sm text-ink"
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
           </section>
         ) : null}
 
         <section className="space-y-3">
           <h2 className="text-xl text-ink">Detailed reading</h2>
           <p className="text-sm text-ink-soft">
-            Expand a section when you want the fuller narrative.
+            Skim visuals above first—expand a section only when you want fuller
+            narrative.
           </p>
-          {detailSections.map((section, i) => (
+          {detailSections.map((section) => (
             <Accordion
               key={section.id}
               title={section.title}
-              defaultOpen={i === 0 || section.id === "recommendations"}
+              defaultOpen={section.id === "recommendations"}
             >
               {section.id === "career" && report.career_suggestions ? (
                 <div className="space-y-4">
-                  <div className="whitespace-pre-wrap leading-8 text-ink-soft">
-                    {report.personality.career_style}
-                  </div>
+                  <MoreDetail text={report.personality.career_style} />
                   <div>
                     <h3 className="text-ink">
                       {person.report_type === "child"
@@ -324,9 +460,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
                   </div>
                 </div>
               ) : (
-                <div className="whitespace-pre-wrap leading-8 text-ink-soft">
-                  {section.body}
-                </div>
+                <MoreDetail text={section.body} />
               )}
             </Accordion>
           ))}
@@ -334,7 +468,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
 
         {report.compatibility ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <h2 className="text-xl text-ink">Compatibility matrix</h2>
+            <h2 className="text-xl text-ink">Compatibility radar</h2>
             <div className="mt-4">
               <CompatibilityMatrix
                 pythagorean={{
@@ -387,6 +521,16 @@ export function ReportView({ report, watermarkEmail }: Props) {
         ) : null}
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Reflective associations</h2>
+          <div className="mt-4">
+            <AssociationsPanel
+              lifePath={snap.life_path}
+              vedicPsychic={snap.vedic_psychic}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Trivia · similar numbers</h2>
           <div className="mt-4">
             <TriviaPanel
@@ -404,6 +548,9 @@ export function ReportView({ report, watermarkEmail }: Props) {
               About this reading · reflective guidance notes
             </summary>
             <div className="mt-3 space-y-2 text-xs leading-5 text-ink-soft/75">
+              {closing ? (
+                <p className="whitespace-pre-wrap">{closing.body}</p>
+              ) : null}
               <p>{report.disclaimer}</p>
               {(report.safety_notices ?? []).map((notice) => (
                 <p key={notice.slice(0, 40)}>{notice}</p>

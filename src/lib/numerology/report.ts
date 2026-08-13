@@ -1,3 +1,4 @@
+import { sunSignFromDob } from "@/lib/astrology/sunSign";
 import { calculateChaldean } from "./chaldean";
 import { personalMonth, personalYear } from "./cycles";
 import { calculateLoShu } from "./loShu";
@@ -20,6 +21,7 @@ import {
   COMPAT_DISCLAIMER,
   buildCompatibilityMatrix,
 } from "./compatibility";
+import { synthesizeGrowthAreas } from "./growthAreas";
 import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
@@ -276,7 +278,9 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         isMinor
           ? `${n}'s Numora reading weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from name and birth date for supportive reflection by a parent/guardian or teen—with care.`
           : `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
-        `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, and Personal Year ${snap.personal_year}.`,
+        `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, Personal Year ${snap.personal_year}${
+          snap.sun_sign_label ? `, and Sun sign ${snap.sun_sign_label}` : ""
+        }.`,
         `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing.`,
         report.personality.core_personality,
       ].join("\n\n"),
@@ -657,6 +661,32 @@ export function generateReport(
   );
 
   const safety_notices = safetyNoticesFor(report_type);
+  const sun = sunSignFromDob(input.dateOfBirth.trim());
+
+  const snapshot = {
+    life_path: String(pyth.lifePath),
+    birth_day: String(pyth.birthDay),
+    expression_number: String(pyth.expression),
+    soul_urge_number: String(pyth.soulUrge),
+    personality_number: String(pyth.personality),
+    maturity_number: String(pyth.maturity),
+    chaldean_name_number: String(chald.nameNumber),
+    compound_number: String(chald.compound),
+    vedic_psychic: String(vedic.psychic),
+    vedic_destiny: String(vedic.destiny),
+    vedic_name: String(vedic.nameNumber),
+    personal_year: String(py),
+    personal_month: String(pm),
+    sun_sign: sun?.id,
+    sun_sign_label: sun?.name,
+  };
+
+  const growth_areas = synthesizeGrowthAreas({
+    snap: snapshot,
+    loShu,
+    fullName,
+    growthBank: growth_opportunities,
+  });
 
   const base: Omit<NumerologyReport, "sections"> = {
     person: {
@@ -668,21 +698,7 @@ export function generateReport(
       gender: input.gender?.trim() || "",
       purpose: input.purpose?.trim() || "",
     },
-    numerology_snapshot: {
-      life_path: String(pyth.lifePath),
-      birth_day: String(pyth.birthDay),
-      expression_number: String(pyth.expression),
-      soul_urge_number: String(pyth.soulUrge),
-      personality_number: String(pyth.personality),
-      maturity_number: String(pyth.maturity),
-      chaldean_name_number: String(chald.nameNumber),
-      compound_number: String(chald.compound),
-      vedic_psychic: String(vedic.psychic),
-      vedic_destiny: String(vedic.destiny),
-      vedic_name: String(vedic.nameNumber),
-      personal_year: String(py),
-      personal_month: String(pm),
-    },
+    numerology_snapshot: snapshot,
     pythagorean: {
       life_path: { number: pyth.lifePath, meaning: meaningFor(pyth.lifePath) },
       birth_day: { number: pyth.birthDay, meaning: meaningFor(pyth.birthDay) },
@@ -732,6 +748,7 @@ export function generateReport(
     compatibility,
     strengths,
     growth_opportunities,
+    growth_areas,
     age_guidance,
     personal_year: {
       number: String(py),

@@ -27,6 +27,9 @@ export type NumerologySnapshot = {
   vedic_name: string;
   personal_year: string;
   personal_month: string;
+  /** Tropical sun sign id (aries…pisces), from DOB month/day */
+  sun_sign?: string;
+  sun_sign_label?: string;
 };
 
 export type LoShuResult = {
@@ -152,6 +155,13 @@ export type NumerologyReport = {
   };
   strengths: string[];
   growth_opportunities: string[];
+  /** Multi-chart synthesis cards for visual “areas to work on” */
+  growth_areas?: {
+    id: string;
+    title: string;
+    suggestion: string;
+    sources: string[];
+  }[];
   age_guidance: {
     category: string;
     guidance: string;

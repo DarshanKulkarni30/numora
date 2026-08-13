@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { CompatRadar } from "@/components/report/CompatRadar";
+import { PlanetIcon } from "@/components/report/PlanetIcon";
 import {
   CHANNEL_HINT,
   TONE_HINT,
@@ -13,7 +15,6 @@ import {
 } from "@/lib/numerology/dateNumbers";
 import { planetForVedic } from "@/lib/numerology/planets";
 import { VEDIC_COMPAT_NOTE } from "@/lib/numerology/vedicCompatibility";
-import { PlanetIcon } from "@/components/report/PlanetIcon";
 
 type Row = {
   partnerLifePath: number;
@@ -79,7 +80,7 @@ function TonePill({ tone }: { tone: string }) {
   );
 }
 
-function MatrixTable({
+function PartnerRadarView({
   systemLabel,
   numberLabel,
   rawNumber,
@@ -95,12 +96,26 @@ function MatrixTable({
   showPlanet?: boolean;
 }) {
   const raw = Number(rawNumber);
-  const reduced = Number.isFinite(raw) ? reduceToSingleDigit(raw) : rawNumber;
+  const reduced = Number.isFinite(raw) ? reduceToSingleDigit(raw) : Number(rawNumber);
   const masterNote = masterNumberNote(rawNumber);
   const planet =
-    showPlanet && Number.isFinite(Number(reduced))
-      ? planetForVedic(Number(reduced))
+    showPlanet && Number.isFinite(reduced)
+      ? planetForVedic(reduced)
       : null;
+
+  const defaultPartner =
+    matrix.find((r) => r.partnerLifePath === reduced)?.partnerLifePath ??
+    matrix[0]?.partnerLifePath ??
+    1;
+  const [partner, setPartner] = useState(defaultPartner);
+
+  const row =
+    matrix.find((r) => r.partnerLifePath === partner) ?? matrix[0] ?? {
+      partnerLifePath: partner,
+      romantic: "—",
+      business: "—",
+      friendship: "—",
+    };
 
   return (
     <div className="space-y-4">
@@ -110,12 +125,11 @@ function MatrixTable({
         {masterNote ? (
           <>
             {" "}
-            → traced as <span className="brand text-ink">{reduced}</span> in
-            this 1–9 table
+            → traced as <span className="brand text-ink">{reduced}</span> for
+            1–9 pairing
           </>
         ) : null}
-        . Tones: Amazing · Favourable · Neutral · Challenging. Hover a pill for
-        a short note.
+        . Select a partner digit to update the radar.
       </p>
       {planet ? (
         <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
@@ -129,90 +143,84 @@ function MatrixTable({
         </p>
       ) : null}
 
-      <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-xs leading-5 text-ink-soft">
-        <p className="font-medium text-ink">What the columns mean</p>
-        <ul className="mt-2 space-y-1.5">
-          {!hideRomantic ? (
-            <li>
-              <strong className="text-ink">Romantic</strong> —{" "}
-              {CHANNEL_HINT.romantic}
-            </li>
-          ) : null}
-          <li>
-            <strong className="text-ink">
-              {hideRomantic ? "Team / class" : "Business"}
-            </strong>{" "}
-            — {hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
-          </li>
-          <li>
-            <strong className="text-ink">Friendship</strong> —{" "}
-            {CHANNEL_HINT.friendship}
-          </li>
-        </ul>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Partner number">
+        {matrix.map((r) => (
+          <button
+            key={r.partnerLifePath}
+            type="button"
+            onClick={() => setPartner(r.partnerLifePath)}
+            className={`min-w-[2.25rem] rounded-full border px-2.5 py-1.5 text-sm transition ${
+              partner === r.partnerLifePath
+                ? "border-ink bg-ink text-paper"
+                : "border-[var(--line)] bg-white/70 text-ink hover:border-gold"
+            } ${
+              r.partnerLifePath === reduced ? "ring-1 ring-gold-deep/40" : ""
+            }`}
+          >
+            {r.partnerLifePath}
+            {r.partnerLifePath === reduced ? (
+              <span className="sr-only"> (you)</span>
+            ) : null}
+          </button>
+        ))}
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
-        <table className="w-full min-w-[28rem] text-left text-sm">
-          <thead className="bg-mist/60 text-ink-soft">
-            <tr>
-              <th className="px-3 py-2 font-medium">Partner #</th>
+      <div className="grid gap-4 md:grid-cols-2 md:items-start">
+        <CompatRadar
+          romantic={row.romantic}
+          business={row.business}
+          friendship={row.friendship}
+          hideRomantic={hideRomantic}
+        />
+        <div className="space-y-3">
+          <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-xs leading-5 text-ink-soft">
+            <p className="font-medium text-ink">
+              Partner {row.partnerLifePath}
+              {row.partnerLifePath === reduced ? " · you" : ""}
+            </p>
+            <ul className="mt-2 space-y-1.5">
               {!hideRomantic ? (
-                <th className="px-3 py-2 font-medium">Romantic</th>
+                <li className="flex flex-wrap items-center gap-2">
+                  <strong className="text-ink">Romantic</strong>
+                  <TonePill tone={row.romantic} />
+                  <span>— {CHANNEL_HINT.romantic}</span>
+                </li>
               ) : null}
-              <th className="px-3 py-2 font-medium">
-                {hideRomantic ? "Team / class" : "Business"}
-              </th>
-              <th className="px-3 py-2 font-medium">Friendship</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matrix.map((row) => (
-              <tr
-                key={row.partnerLifePath}
-                className={`border-t border-[var(--line)] ${
-                  row.partnerLifePath === Number(reduced) ? "bg-gold/10" : ""
-                }`}
-              >
-                <td className="px-3 py-2">
-                  <span className="brand text-lg text-ink">
-                    {row.partnerLifePath}
-                  </span>
-                  {row.partnerLifePath === Number(reduced) ? (
-                    <span className="ml-2 text-[10px] uppercase tracking-wider text-gold-deep">
-                      you
-                    </span>
-                  ) : null}
-                </td>
-                {!hideRomantic ? (
-                  <td className="px-3 py-2">
-                    <TonePill tone={row.romantic} />
-                  </td>
-                ) : null}
-                <td className="px-3 py-2">
-                  <TonePill tone={row.business} />
-                </td>
-                <td className="px-3 py-2">
-                  <TonePill tone={row.friendship} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              <li className="flex flex-wrap items-center gap-2">
+                <strong className="text-ink">
+                  {hideRomantic ? "Team / class" : "Business"}
+                </strong>
+                <TonePill tone={row.business} />
+                <span>
+                  — {hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
+                </span>
+              </li>
+              <li className="flex flex-wrap items-center gap-2">
+                <strong className="text-ink">Friendship</strong>
+                <TonePill tone={row.friendship} />
+                <span>— {CHANNEL_HINT.friendship}</span>
+              </li>
+            </ul>
+          </div>
+          <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
+            <p className="font-medium text-ink">Tone scale</p>
+            <ul className="mt-2 space-y-2">
+              {(
+                [
+                  "Amazing",
+                  "Favourable",
+                  "Neutral",
+                  "Challenging",
+                ] as CompatTone[]
+              ).map((t) => (
+                <li key={t}>
+                  <strong className="text-ink">{t}</strong> — {TONE_HINT[t]}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
-
-      <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-        <p className="font-medium text-ink">What the tones mean</p>
-        <ul className="mt-2 space-y-2">
-          {(
-            ["Amazing", "Favourable", "Neutral", "Challenging"] as CompatTone[]
-          ).map((t) => (
-            <li key={t}>
-              <strong className="text-ink">{t}</strong> — {TONE_HINT[t]}
-            </li>
-          ))}
-        </ul>
-      </div>
-
     </div>
   );
 }
@@ -310,7 +318,7 @@ export function CompatibilityMatrix({
       </div>
 
       {tab === "pythagorean" ? (
-        <MatrixTable
+        <PartnerRadarView
           systemLabel="Pythagorean"
           numberLabel="Life Path"
           rawNumber={pythagorean.rawNumber}
@@ -358,7 +366,8 @@ export function CompatibilityMatrix({
             </p>
           ) : null}
 
-          <MatrixTable
+          <PartnerRadarView
+            key={`vedic-${vedicLayer}-${activeVedic.rawNumber}`}
             systemLabel="Vedic"
             numberLabel={
               layers.mode === "layered"
