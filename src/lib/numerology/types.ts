@@ -27,9 +27,9 @@ export type NumerologySnapshot = {
   vedic_name: string;
   /** Compound before reduction for Chaldean-aligned Vedic name */
   vedic_name_compound?: string;
-  /** Johari Unit System name number (dual with vedic_name) */
-  johari_name?: string;
-  johari_name_compound?: string;
+  /** Unit System name number (dual with vedic_name) */
+  unit_name?: string;
+  unit_name_compound?: string;
   personal_year: string;
   personal_month: string;
   /** Tropical sun sign id (aries…pisces), from DOB month/day */
@@ -84,12 +84,12 @@ export type NumerologyReport = {
     psychic_number: NumberMeaning;
     destiny_number: NumberMeaning;
     name_number: NumberMeaning;
-    johari_name_number?: NumberMeaning;
-    johari_name_compound?: string;
+    unit_name_number?: NumberMeaning;
+    unit_name_compound?: string;
     ruling_planet: string;
     destiny_ruling_planet: string;
     analysis: string;
-    johari?: {
+    unitSystem?: {
       birth_day_note: string;
       birth_day_exalted: boolean;
       temperament_summary: string;

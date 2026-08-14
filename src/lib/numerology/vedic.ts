@@ -1,13 +1,13 @@
 import {
   birthDayCompoundInsight,
-  johariNameNumber,
+  unitSystemNameNumber,
   temperamentChips,
   triadHarmony,
   zeroInDobInsight,
-  JOHARI_NUMBER_META,
+  UNIT_NUMBER_META,
   type HarmonyTone,
   type Dosha,
-} from "./johariVedic";
+} from "./vedicUnitSystem";
 import { VEDIC_NAME, sumMappedLetters } from "./mappings";
 import { planetForVedic, planetLabel } from "./planets";
 import { parseDob, reduceNumber, reduceWithCompound } from "./reduce";
@@ -18,9 +18,9 @@ export type VedicResult = {
   /** Current Numora Vedic/Chaldean-aligned name number */
   nameNumber: number;
   nameCompound: number;
-  /** Johari Unit System name number (dual display) */
-  johariNameNumber: number;
-  johariNameCompound: number;
+  /** Unit System name number (dual display) */
+  unitSystemNameNumber: number;
+  unitSystemNameCompound: number;
   rulingPlanet: string;
   destinyRulingPlanet: string;
   birthDay: {
@@ -36,8 +36,8 @@ export type VedicResult = {
     detail: string;
     set369: boolean;
   };
-  psychicMeta: (typeof JOHARI_NUMBER_META)[number];
-  destinyMeta: (typeof JOHARI_NUMBER_META)[number];
+  psychicMeta: (typeof UNIT_NUMBER_META)[number];
+  destinyMeta: (typeof UNIT_NUMBER_META)[number];
   zeroNote: string | null;
 };
 
@@ -50,7 +50,7 @@ export function calculateVedic(fullName: string, dob: string): VedicResult {
     [],
   );
   const nameNumber = reduced === 0 ? 9 : reduced;
-  const johari = johariNameNumber(fullName);
+  const unitSystem = unitSystemNameNumber(fullName);
   const dayInsight = birthDayCompoundInsight(dob);
   const rulingPlanet = planetLabel(planetForVedic(psychic));
   const destinyRulingPlanet = planetLabel(planetForVedic(destiny));
@@ -60,8 +60,8 @@ export function calculateVedic(fullName: string, dob: string): VedicResult {
     destiny,
     nameNumber,
     nameCompound: compound,
-    johariNameNumber: johari.reduced,
-    johariNameCompound: johari.compound,
+    unitSystemNameNumber: unitSystem.reduced,
+    unitSystemNameCompound: unitSystem.compound,
     rulingPlanet,
     destinyRulingPlanet,
     birthDay: {
@@ -71,9 +71,9 @@ export function calculateVedic(fullName: string, dob: string): VedicResult {
       leadingDigit: dayInsight.leadingDigit,
     },
     temperament: temperamentChips(day, psychic),
-    harmony: triadHarmony(psychic, destiny, johari.reduced),
-    psychicMeta: JOHARI_NUMBER_META[psychic] ?? JOHARI_NUMBER_META[1],
-    destinyMeta: JOHARI_NUMBER_META[destiny] ?? JOHARI_NUMBER_META[1],
+    harmony: triadHarmony(psychic, destiny, unitSystem.reduced),
+    psychicMeta: UNIT_NUMBER_META[psychic] ?? UNIT_NUMBER_META[1],
+    destinyMeta: UNIT_NUMBER_META[destiny] ?? UNIT_NUMBER_META[1],
     zeroNote: zeroInDobInsight(dob),
   };
 }

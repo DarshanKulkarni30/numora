@@ -5,7 +5,7 @@ import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
 
-type JohariBits = {
+type UnitSystemBits = {
   birth_day_note: string;
   birth_day_exalted: boolean;
   temperament_summary: string;
@@ -25,12 +25,12 @@ type Props = {
   psychic: string;
   destiny: string;
   nameNumber: string;
-  johariName?: string;
-  johariCompound?: string;
+  unitName?: string;
+  unitCompound?: string;
   nameCompound?: string;
   rulingPlanet: string;
   destinyRulingPlanet?: string;
-  johari?: JohariBits | null;
+  unitSystem?: UnitSystemBits | null;
 };
 
 const EASE_LABEL: Record<string, string> = {
@@ -49,10 +49,10 @@ export function VedicPanel({
   psychic,
   destiny,
   nameNumber,
-  johariName,
-  johariCompound,
+  unitName,
+  unitCompound,
   nameCompound,
-  johari,
+  unitSystem,
 }: Props) {
   const cards = [
     { label: "Psychic", topic: "vedic-psychic" as const, value: psychic },
@@ -98,7 +98,7 @@ export function VedicPanel({
         })}
       </div>
 
-      {johariName ? (
+      {unitName ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
           <p className="text-[10px] uppercase tracking-wider text-sand">
             Dual name numbers
@@ -111,12 +111,12 @@ export function VedicPanel({
             ) : null}
           </p>
           <p className="mt-1 text-paper/90">
-            Johari Unit System name{" "}
-            <span className="brand text-lg text-sand">{johariName}</span>
-            {johariCompound ? (
+            Unit System name{" "}
+            <span className="brand text-lg text-sand">{unitName}</span>
+            {unitCompound ? (
               <span className="text-paper/60">
                 {" "}
-                (compound {johariCompound})
+                (compound {unitCompound})
               </span>
             ) : null}
           </p>
@@ -127,15 +127,15 @@ export function VedicPanel({
         </div>
       ) : null}
 
-      {johari ? (
+      {unitSystem ? (
         <div className="mt-5 space-y-3 text-sm text-paper/85">
           <div
             className={`rounded-xl border px-3 py-2 ${
-              TONE_STYLE[johari.harmony_tone] ?? TONE_STYLE.mixed
+              TONE_STYLE[unitSystem.harmony_tone] ?? TONE_STYLE.mixed
             }`}
           >
-            <p className="font-medium">{johari.harmony_label}</p>
-            <p className="mt-1 text-xs opacity-90">{johari.harmony_detail}</p>
+            <p className="font-medium">{unitSystem.harmony_label}</p>
+            <p className="mt-1 text-xs opacity-90">{unitSystem.harmony_detail}</p>
           </div>
 
           <div className="grid gap-2 sm:grid-cols-2">
@@ -144,27 +144,27 @@ export function VedicPanel({
                 Psychic ease
               </p>
               <p className="mt-1 text-paper">
-                {EASE_LABEL[johari.psychic_ease] ?? johari.psychic_ease}
+                {EASE_LABEL[unitSystem.psychic_ease] ?? unitSystem.psychic_ease}
               </p>
-              <p className="mt-1 text-xs text-paper/70">{johari.psychic_note}</p>
+              <p className="mt-1 text-xs text-paper/70">{unitSystem.psychic_note}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
               <p className="text-[10px] uppercase tracking-wider text-sand">
                 Destiny ease
               </p>
               <p className="mt-1 text-paper">
-                {EASE_LABEL[johari.destiny_ease] ?? johari.destiny_ease}
+                {EASE_LABEL[unitSystem.destiny_ease] ?? unitSystem.destiny_ease}
               </p>
-              <p className="mt-1 text-xs text-paper/70">{johari.destiny_note}</p>
+              <p className="mt-1 text-xs text-paper/70">{unitSystem.destiny_note}</p>
             </div>
           </div>
 
           <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
             <p className="text-[10px] uppercase tracking-wider text-sand">
               Birth-day compound
-              {johari.birth_day_exalted ? " · exaltation-style" : ""}
+              {unitSystem.birth_day_exalted ? " · exaltation-style" : ""}
             </p>
-            <p className="mt-1 text-xs leading-5">{johari.birth_day_note}</p>
+            <p className="mt-1 text-xs leading-5">{unitSystem.birth_day_note}</p>
           </div>
 
           <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
@@ -172,7 +172,7 @@ export function VedicPanel({
               Temperament chips
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {johari.doshas.map((d) => (
+              {unitSystem.doshas.map((d) => (
                 <span
                   key={d}
                   className="rounded-full border border-sand/40 bg-sand/10 px-2.5 py-0.5 text-xs text-sand"
@@ -182,14 +182,14 @@ export function VedicPanel({
               ))}
             </div>
             <p className="mt-2 text-xs text-paper/70">
-              {johari.temperament_summary}
+              {unitSystem.temperament_summary}
             </p>
           </div>
 
-          {johari.zero_note ? (
-            <p className="text-xs text-paper/65">{johari.zero_note}</p>
+          {unitSystem.zero_note ? (
+            <p className="text-xs text-paper/65">{unitSystem.zero_note}</p>
           ) : null}
-          <p className="text-xs text-paper/60">{johari.compat_note}</p>
+          <p className="text-xs text-paper/60">{unitSystem.compat_note}</p>
         </div>
       ) : null}
 

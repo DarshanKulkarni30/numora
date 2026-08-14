@@ -1,5 +1,5 @@
 /**
- * Johari-style Vedic numerology reference (Numora rewrite).
+ * Unit System Vedic numerology reference (Numora rewrite).
  * Used for enrichment + dual name number; does not replace medical advice.
  */
 
@@ -7,7 +7,7 @@ import { sumMappedLetters } from "./mappings";
 import { parseDob, reduceNumber, reduceWithCompound } from "./reduce";
 
 /** Book “Unit System” for Vedic name letters (differs from Chaldean). */
-export const JOHARI_NAME_MAP: Record<string, number> = {
+export const UNIT_SYSTEM_NAME_MAP: Record<string, number> = {
   A: 1,
   I: 1,
   J: 1,
@@ -40,7 +40,7 @@ export type Dosha = "Pitta" | "Kapha" | "Vata";
 export type Guna = "Sattva" | "Rajas" | "Tamas";
 export type Ease = "easier" | "mixed" | "more_demanding";
 
-export type JohariNumberMeta = {
+export type UnitNumberMeta = {
   planet: string;
   traits: string[];
   guna: Guna;
@@ -53,7 +53,7 @@ export type JohariNumberMeta = {
   destinyNote: string;
 };
 
-export const JOHARI_NUMBER_META: Record<number, JohariNumberMeta> = {
+export const UNIT_NUMBER_META: Record<number, UnitNumberMeta> = {
   1: {
     planet: "Sun",
     traits: ["Authoritative", "Original", "Disciplined", "Royal presence"],
@@ -170,7 +170,7 @@ export const JOHARI_NUMBER_META: Record<number, JohariNumberMeta> = {
   },
 };
 
-/** Compound birth-day → reduced psychic with Johari-style flavor notes. */
+/** Compound birth-day → reduced psychic with Unit System flavor notes. */
 export const BIRTH_DAY_COMPOUND_NOTES: Record<
   number,
   { psychic: number; note: string }
@@ -297,7 +297,7 @@ export const BIRTH_DAY_COMPOUND_NOTES: Record<
   },
 };
 
-/** Exalted-style compounds (Johari “numbers of exaltation”). */
+/** Exalted-style compounds (Unit System “numbers of exaltation”). */
 export const EXALTATION_COMPOUNDS: Record<number, number[]> = {
   1: [28],
   2: [29],
@@ -317,12 +317,12 @@ export function isExaltedCompound(
   return (EXALTATION_COMPOUNDS[reduced] ?? []).includes(compound);
 }
 
-export function johariNameNumber(fullName: string): {
+export function unitSystemNameNumber(fullName: string): {
   compound: number;
   reduced: number;
 } {
   const { compound, reduced } = reduceWithCompound(
-    sumMappedLetters(fullName, JOHARI_NAME_MAP),
+    sumMappedLetters(fullName, UNIT_SYSTEM_NAME_MAP),
     [],
   );
   return { compound, reduced: reduced === 0 ? 9 : reduced };
@@ -353,7 +353,7 @@ export function birthDayCompoundInsight(dob: string): {
 
 export type HarmonyTone = "supportive" | "mixed" | "stretch";
 
-/** Soft Johari-style triad harmony among psychic, destiny, name. */
+/** Soft Unit System triad harmony among psychic, destiny, name. */
 export function triadHarmony(
   psychic: number,
   destiny: number,
@@ -411,7 +411,7 @@ export function temperamentChips(
   day: number,
   psychic: number,
 ): { doshas: Dosha[]; summary: string } {
-  const primary = JOHARI_NUMBER_META[psychic]?.dosha ?? "Vata";
+  const primary = UNIT_NUMBER_META[psychic]?.dosha ?? "Vata";
   if (day < 10) {
     return {
       doshas: [primary],
@@ -420,8 +420,8 @@ export function temperamentChips(
   }
   const a = Math.floor(day / 10);
   const b = day % 10 || 9;
-  const dA = JOHARI_NUMBER_META[a]?.dosha;
-  const dB = JOHARI_NUMBER_META[b]?.dosha;
+  const dA = UNIT_NUMBER_META[a]?.dosha;
+  const dB = UNIT_NUMBER_META[b]?.dosha;
   const doshas = [primary];
   if (dA && !doshas.includes(dA)) doshas.push(dA);
   if (dB && !doshas.includes(dB)) doshas.push(dB);
@@ -436,6 +436,6 @@ export function zeroInDobInsight(dob: string): string | null {
   return "A zero appears in the birth date digits—traditionally read as an effort overlay that can mute or slow the material expression of nearby numbers (reflective only).";
 }
 
-export function johariCompatNote(): string {
-  return "Johari-style note: 3–6–9 often read as mutually friendly; harmony among Psychic, Destiny, and Name supports social ease. Number 6 is treated as a universal friend. Enemy pairings can still catalyze growth through alertness.";
+export function unitSystemCompatNote(): string {
+  return "Unit System note: 3–6–9 often read as mutually friendly; harmony among Psychic, Destiny, and Name supports social ease. Number 6 is treated as a universal friend. Enemy pairings can still catalyze growth through alertness.";
 }

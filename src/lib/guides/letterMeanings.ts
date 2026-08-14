@@ -1,13 +1,13 @@
 /** A–Z letter meanings (Pythagorean value + Chaldean note). Original Numora copy. */
 
-import { JOHARI_NAME_MAP } from "@/lib/numerology/johariVedic";
+import { UNIT_SYSTEM_NAME_MAP } from "@/lib/numerology/vedicUnitSystem";
 import { CHALDEAN, PYTHAGOREAN } from "@/lib/numerology/mappings";
 
 export type LetterMeaning = {
   letter: string;
   pythagorean: number;
   chaldean: number | null;
-  johari: number | null;
+  unitSystem: number | null;
   theme: string;
   strengths: string[];
   watchouts: string[];
@@ -16,7 +16,7 @@ export type LetterMeaning = {
 
 const DATA: Omit<
   LetterMeaning,
-  "letter" | "pythagorean" | "chaldean" | "johari"
+  "letter" | "pythagorean" | "chaldean" | "unitSystem"
 >[] = [
   {
     theme: "Independent drive and purposeful starts",
@@ -187,7 +187,7 @@ export const LETTER_MEANINGS: Record<string, LetterMeaning> = Object.fromEntries
         letter,
         pythagorean: PYTHAGOREAN[letter] ?? ((i % 9) + 1),
         chaldean: CHALDEAN[letter] ?? null,
-        johari: JOHARI_NAME_MAP[letter] ?? null,
+        unitSystem: UNIT_SYSTEM_NAME_MAP[letter] ?? null,
         ...row,
       },
     ];

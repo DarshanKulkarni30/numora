@@ -363,15 +363,15 @@ export function ReportView({ report, watermarkEmail }: Props) {
               psychic={snap.vedic_psychic}
               destiny={snap.vedic_destiny}
               nameNumber={snap.vedic_name}
-              johariName={snap.johari_name}
-              johariCompound={snap.johari_name_compound}
+              unitName={snap.unit_name}
+              unitCompound={snap.unit_name_compound}
               nameCompound={snap.vedic_name_compound}
               rulingPlanet={report.vedic.ruling_planet}
               destinyRulingPlanet={
                 report.vedic.destiny_ruling_planet ||
                 report.vedic.ruling_planet
               }
-              johari={report.vedic.johari}
+              unitSystem={report.vedic.unitSystem}
             />
           </div>
         </section>
