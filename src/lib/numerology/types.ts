@@ -25,6 +25,11 @@ export type NumerologySnapshot = {
   vedic_psychic: string;
   vedic_destiny: string;
   vedic_name: string;
+  /** Compound before reduction for Chaldean-aligned Vedic name */
+  vedic_name_compound?: string;
+  /** Johari Unit System name number (dual with vedic_name) */
+  johari_name?: string;
+  johari_name_compound?: string;
   personal_year: string;
   personal_month: string;
   /** Tropical sun sign id (aries…pisces), from DOB month/day */
@@ -79,9 +84,26 @@ export type NumerologyReport = {
     psychic_number: NumberMeaning;
     destiny_number: NumberMeaning;
     name_number: NumberMeaning;
+    johari_name_number?: NumberMeaning;
+    johari_name_compound?: string;
     ruling_planet: string;
     destiny_ruling_planet: string;
     analysis: string;
+    johari?: {
+      birth_day_note: string;
+      birth_day_exalted: boolean;
+      temperament_summary: string;
+      doshas: string[];
+      harmony_label: string;
+      harmony_detail: string;
+      harmony_tone: string;
+      psychic_ease: string;
+      destiny_ease: string;
+      psychic_note: string;
+      destiny_note: string;
+      zero_note: string | null;
+      compat_note: string;
+    };
   };
   lo_shu: LoShuResult;
   personality: {

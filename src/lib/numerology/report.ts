@@ -30,6 +30,7 @@ import {
   buildVedicCompatibilityMatrix,
   VEDIC_COMPAT_NOTE,
 } from "./vedicCompatibility";
+import { johariCompatNote } from "./johariVedic";
 import { assertSafeCopy, assertSafeList } from "./safety";
 import type {
   NumerologyReport,
@@ -617,12 +618,20 @@ export function generateReport(
   const vedicAnalysis = assertSafeCopy(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
-      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) reflects the name spelling used in this reading.`,
-    `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}. According to tradition these may indicate stylistic tendencies.`,
-    meaningFor(vedic.psychic),
-    meaningFor(vedic.destiny),
-    "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
-    ].join(" "),
+      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses Numora’s Chaldean-aligned Vedic map; Johari Unit System name is ${vedic.johariNameNumber} (compound ${vedic.johariNameCompound})—shown side by side because letter maps differ.`,
+      vedic.birthDay.note,
+      vedic.psychicMeta.psychicNote,
+      vedic.destinyMeta.destinyNote,
+      vedic.harmony.detail,
+      vedic.temperament.summary,
+      `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}.`,
+      meaningFor(vedic.psychic),
+      meaningFor(vedic.destiny),
+      johariCompatNote(),
+      "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
+    ]
+      .filter(Boolean)
+      .join(" "),
     "vedic",
   );
 
@@ -675,6 +684,9 @@ export function generateReport(
     vedic_psychic: String(vedic.psychic),
     vedic_destiny: String(vedic.destiny),
     vedic_name: String(vedic.nameNumber),
+    vedic_name_compound: String(vedic.nameCompound),
+    johari_name: String(vedic.johariNameNumber),
+    johari_name_compound: String(vedic.johariNameCompound),
     personal_year: String(py),
     personal_month: String(pm),
     sun_sign: sun?.id,
@@ -733,9 +745,29 @@ export function generateReport(
         number: vedic.nameNumber,
         meaning: meaningFor(vedic.nameNumber),
       },
+      johari_name_number: {
+        number: vedic.johariNameNumber,
+        meaning: meaningFor(vedic.johariNameNumber),
+      },
+      johari_name_compound: String(vedic.johariNameCompound),
       ruling_planet: vedic.rulingPlanet,
       destiny_ruling_planet: vedic.destinyRulingPlanet,
       analysis: vedicAnalysis,
+      johari: {
+        birth_day_note: vedic.birthDay.note,
+        birth_day_exalted: vedic.birthDay.exalted,
+        temperament_summary: vedic.temperament.summary,
+        doshas: vedic.temperament.doshas,
+        harmony_label: vedic.harmony.label,
+        harmony_detail: vedic.harmony.detail,
+        harmony_tone: vedic.harmony.tone,
+        psychic_ease: vedic.psychicMeta.psychicEase,
+        destiny_ease: vedic.destinyMeta.destinyEase,
+        psychic_note: vedic.psychicMeta.psychicNote,
+        destiny_note: vedic.destinyMeta.destinyNote,
+        zero_note: vedic.zeroNote,
+        compat_note: johariCompatNote(),
+      },
     },
     lo_shu: loShu,
     personality: {

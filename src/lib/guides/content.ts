@@ -9,6 +9,7 @@ import {
 } from "@/lib/guides/planets";
 import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
 import { GROUP_BLURBS } from "@/lib/numerology/nameBookends";
+import { JOHARI_NUMBER_META } from "@/lib/numerology/johariVedic";
 import { planetForVedic } from "@/lib/numerology/planets";
 
 export type GuideTopic =
@@ -416,8 +417,12 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       facts: [
         { label: "Pythagorean value", value: String(lm.pythagorean) },
         {
-          label: "Chaldean value",
+          label: "Chaldean / Numora Vedic map",
           value: lm.chaldean != null ? String(lm.chaldean) : "—",
+        },
+        {
+          label: "Johari Unit System",
+          value: lm.johari != null ? String(lm.johari) : "—",
         },
       ],
       bullets: [`Theme: ${lm.theme}`],
@@ -449,17 +454,60 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
   const blurb = blurbForTopic(topic, value);
   if (!lens || !blurb) return null;
 
+  const n = Number(value);
+  const johari =
+    (topic === "vedic-psychic" ||
+      topic === "vedic-destiny" ||
+      topic === "vedic-name") &&
+    Number.isFinite(n) &&
+    n >= 1 &&
+    n <= 9
+      ? JOHARI_NUMBER_META[n]
+      : null;
+
+  const paragraphs = [
+    lens.focus,
+    `In the ${lens.system} reading of ${lens.aspect.toLowerCase()} ${value}, traditions associate this aspect with ${blurb.theme.toLowerCase()}.`,
+  ];
+  if (johari) {
+    paragraphs.push(
+      `Planet link (Hindu/Vedic framing): ${johari.planet}. Traits often listed: ${johari.traits.join(", ")}.`,
+    );
+    if (topic === "vedic-psychic") {
+      paragraphs.push(johari.psychicNote);
+      paragraphs.push(
+        `Reflective temperament framing: ${johari.dosha}; polarity ${johari.polarity}.`,
+      );
+    }
+    if (topic === "vedic-destiny") {
+      paragraphs.push(johari.destinyNote);
+    }
+    if (topic === "vedic-name") {
+      paragraphs.push(
+        "Numora shows two name maps side by side: Chaldean-aligned Vedic letters, and Johari Unit System letters (they disagree on some letters such as C and H).",
+      );
+    }
+  }
+  paragraphs.push(
+    `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
+  );
+
   return {
     title: `${lens.aspect} ${value}`,
     subtitle: `${lens.system} · ${blurb.theme}`,
-    paragraphs: [
-      lens.focus,
-      `In the ${lens.system} reading of ${lens.aspect.toLowerCase()} ${value}, traditions associate this aspect with ${blurb.theme.toLowerCase()}.`,
-      `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
-    ],
+    paragraphs,
     strengths: blurb.strengths,
     watchouts: blurb.watchouts,
-    bullets: [`${lens.system} aspect: ${lens.aspect}`],
+    bullets: [
+      `${lens.system} aspect: ${lens.aspect}`,
+      ...(johari
+        ? [
+            `Planet: ${johari.planet}`,
+            `Dosha theme: ${johari.dosha}`,
+            `Guna: ${johari.guna}`,
+          ]
+        : []),
+    ],
   };
 }
 
