@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
+import { oppositesForReport } from "@/lib/numerology/vedicSquare";
 
 type UnitSystemBits = {
   birth_day_note: string;
@@ -60,6 +62,8 @@ export function VedicPanel({
     { label: "Name", topic: "vedic-name" as const, value: nameNumber },
   ];
 
+  const oppositePairs = oppositesForReport(psychic, destiny, nameNumber);
+
   return (
     <div className="rounded-2xl border border-[var(--line)] bg-gradient-to-br from-ink via-[#1e293b] to-[#0f172a] p-6 text-paper">
       <p className="text-sm uppercase tracking-[0.2em] text-sand">Vedic numbers</p>
@@ -97,6 +101,43 @@ export function VedicPanel({
           );
         })}
       </div>
+
+      {oppositePairs.length > 0 ? (
+        <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+          <p className="text-[10px] uppercase tracking-wider text-sand">
+            Play of opposites
+          </p>
+          <p className="mt-1 text-xs text-paper/65">
+            Mirror pairs from the Vedic Square that touch your Psychic, Destiny,
+            or Name digits.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {oppositePairs.map((pair) => {
+              const tags = [
+                pair.inPsychic ? "Psychic" : null,
+                pair.inDestiny ? "Destiny" : null,
+                pair.inName ? "Name" : null,
+              ].filter(Boolean);
+              return (
+                <Link
+                  key={`${pair.a}-${pair.b}`}
+                  href={`/guide/vedic-square/${pair.a}`}
+                  className="btn-tactile max-w-full rounded-xl border border-sand/35 bg-sand/10 px-3 py-2 text-left transition hover:bg-sand/20"
+                  title={pair.theme}
+                >
+                  <span className="font-medium text-sand">
+                    {pair.a} ↔ {pair.b}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] text-paper/70">
+                    {pair.planets}
+                    {tags.length ? ` · ${tags.join(" · ")}` : ""}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       {unitName ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">

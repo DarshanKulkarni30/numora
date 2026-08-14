@@ -10,6 +10,11 @@ import {
 import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
 import { GROUP_BLURBS } from "@/lib/numerology/nameBookends";
 import { UNIT_NUMBER_META } from "@/lib/numerology/vedicUnitSystem";
+import {
+  NINE_NOTE,
+  REDUCTION_TIP,
+  squareDigitGuide,
+} from "@/lib/numerology/vedicSquare";
 import { planetForVedic } from "@/lib/numerology/planets";
 
 export type GuideTopic =
@@ -27,6 +32,7 @@ export type GuideTopic =
   | "personal-month"
   | "lo-shu-arrow"
   | "lo-shu-number"
+  | "vedic-square"
   | "planet"
   | "name-cornerstone"
   | "name-first-vowel"
@@ -48,6 +54,7 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "personal-month", title: "Personal Month" },
   { topic: "lo-shu-arrow", title: "Lo Shu Arrow" },
   { topic: "lo-shu-number", title: "Lo Shu Number" },
+  { topic: "vedic-square", title: "Vedic Square" },
   { topic: "planet", title: "Planet" },
   { topic: "name-cornerstone", title: "Name Letter Group" },
   { topic: "name-first-vowel", title: "First Vowel" },
@@ -57,6 +64,7 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
 
 const NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
 const LO_SHU_NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const VEDIC_SQUARE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const NAME_CORNERSTONE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const FIRST_VOWEL_KEYS = ["A", "E", "I", "O", "U", "Y"];
 const LETTER_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -73,6 +81,7 @@ const TOPIC_LENSES: Record<
     GuideTopic,
     | "lo-shu-arrow"
     | "lo-shu-number"
+    | "vedic-square"
     | "planet"
     | "name-cornerstone"
     | "name-first-vowel"
@@ -273,6 +282,7 @@ export function topicLabel(topic: GuideTopic): string {
 export function isValidGuideValue(topic: GuideTopic, value: string): boolean {
   if (topic === "lo-shu-arrow") return value in LO_SHU_ARROW_GUIDES;
   if (topic === "lo-shu-number") return LO_SHU_NUMBER_KEYS.includes(value);
+  if (topic === "vedic-square") return VEDIC_SQUARE_KEYS.includes(value);
   if (topic === "planet") return parsePlanetGuideValue(value) != null;
   if (topic === "name-cornerstone")
     return NAME_CORNERSTONE_KEYS.includes(value);
@@ -325,6 +335,35 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
         `Core trait: ${meta.trait}`,
         `Vedic nickname: ${meta.vedic}`,
         `Theme: ${meta.theme}`,
+      ],
+    };
+  }
+
+  if (topic === "vedic-square") {
+    const n = Number(value);
+    if (!VEDIC_SQUARE_KEYS.includes(value)) return null;
+    const guide = squareDigitGuide(n);
+    const oppLine = guide.opposite
+      ? `In the play of opposites, ${guide.opposite.a} mirrors ${guide.opposite.b} (${guide.opposite.planets}): ${guide.opposite.theme}`
+      : NINE_NOTE;
+    return {
+      title: `Vedic Square · ${value}`,
+      subtitle: `${guide.theme} · appears ${guide.count} times`,
+      paragraphs: [
+        `In Numora’s Vedic Square, digit ${value} is the digital root of products on a 9×9 multiplication grid. It appears ${guide.count} times when you highlight that tone.`,
+        `${guide.theme}.`,
+        oppLine,
+        REDUCTION_TIP,
+        `A practical focus with ${value}: ${guide.practice}`,
+      ],
+      strengths: guide.strengths,
+      watchouts: guide.watchouts,
+      bullets: [
+        `Count in square: ${guide.count}`,
+        guide.opposite
+          ? `Opposite: ${guide.opposite.a} ↔ ${guide.opposite.b}`
+          : "Opposite: none (9 stands alone)",
+        guide.opposite ? `Planets: ${guide.opposite.planets}` : "Rim tone: persistent 9",
       ],
     };
   }
@@ -520,6 +559,10 @@ export function allGuideParams(): { topic: string; value: string }[] {
       }
     } else if (topic === "lo-shu-number") {
       for (const value of LO_SHU_NUMBER_KEYS) {
+        params.push({ topic, value });
+      }
+    } else if (topic === "vedic-square") {
+      for (const value of VEDIC_SQUARE_KEYS) {
         params.push({ topic, value });
       }
     } else if (topic === "planet") {

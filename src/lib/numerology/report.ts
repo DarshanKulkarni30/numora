@@ -31,6 +31,11 @@ import {
   VEDIC_COMPAT_NOTE,
 } from "./vedicCompatibility";
 import { unitSystemCompatNote } from "./vedicUnitSystem";
+import {
+  NINE_NOTE,
+  oppositesForReport,
+  REDUCTION_TIP,
+} from "./vedicSquare";
 import { assertSafeCopy, assertSafeList } from "./safety";
 import type {
   NumerologyReport,
@@ -615,6 +620,18 @@ export function generateReport(
     "chaldean",
   );
 
+  const oppositePairs = oppositesForReport(
+    vedic.psychic,
+    vedic.destiny,
+    vedic.nameNumber,
+  );
+  const oppositeLine =
+    oppositePairs.length > 0
+      ? `Vedic Square opposites in your triad: ${oppositePairs
+          .map((p) => `${p.a}↔${p.b} (${p.planets})`)
+          .join("; ")}.`
+      : NINE_NOTE;
+
   const vedicAnalysis = assertSafeCopy(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
@@ -628,6 +645,8 @@ export function generateReport(
       meaningFor(vedic.psychic),
       meaningFor(vedic.destiny),
       unitSystemCompatNote(),
+      REDUCTION_TIP,
+      oppositeLine,
       "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
     ]
       .filter(Boolean)

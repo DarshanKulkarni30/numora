@@ -5,9 +5,10 @@ import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameBookendsPanel } from "@/components/report/NameBookendsPanel";
 import { PythagoreanBirthTable } from "@/components/report/PythagoreanBirthTable";
 import { VedicBirthChart } from "@/components/report/VedicBirthChart";
+import { VedicSquarePanel } from "@/components/report/VedicSquarePanel";
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 
-type Tab = "lo-shu" | "pythagorean" | "vedic" | "name-letters";
+type Tab = "lo-shu" | "pythagorean" | "vedic" | "vedic-square" | "name-letters";
 
 type Props = {
   loShu: LoShuResult;
@@ -20,6 +21,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "lo-shu", label: "Lo Shu" },
   { id: "pythagorean", label: "Pythagorean birth table" },
   { id: "vedic", label: "Vedic birth chart" },
+  { id: "vedic-square", label: "Vedic Square" },
   { id: "name-letters", label: "Name letters" },
 ];
 
@@ -39,7 +41,7 @@ export function BirthChartsPanel({
             key={t.id}
             type="button"
             onClick={() => setTab(t.id)}
-            className={`flex-1 rounded-full px-3 py-2 text-sm ${
+            className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm transition ${
               tab === t.id
                 ? "bg-ink text-paper"
                 : "text-ink-soft hover:text-ink"
@@ -59,6 +61,14 @@ export function BirthChartsPanel({
           psychic={snap.vedic_psychic}
           destiny={snap.vedic_destiny}
           nameNumber={snap.vedic_name}
+        />
+      ) : null}
+      {tab === "vedic-square" ? (
+        <VedicSquarePanel
+          psychic={snap.vedic_psychic}
+          destiny={snap.vedic_destiny}
+          nameNumber={snap.vedic_name}
+          unitName={snap.unit_name}
         />
       ) : null}
       {tab === "name-letters" ? (
