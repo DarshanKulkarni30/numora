@@ -15,6 +15,10 @@ import {
 } from "@/lib/numerology/dateNumbers";
 import { planetForVedic } from "@/lib/numerology/planets";
 import { VEDIC_COMPAT_NOTE } from "@/lib/numerology/vedicCompatibility";
+import {
+  PSYCHIC_INTERACTION_NOTE,
+  psychicInteraction,
+} from "@/lib/numerology/vedicPsychicInteractions";
 
 type Row = {
   partnerLifePath: number;
@@ -87,6 +91,7 @@ function PartnerRadarView({
   matrix,
   hideRomantic,
   showPlanet = false,
+  showPsychicPhrases = false,
 }: {
   systemLabel: string;
   numberLabel: string;
@@ -94,6 +99,7 @@ function PartnerRadarView({
   matrix: Row[];
   hideRomantic: boolean;
   showPlanet?: boolean;
+  showPsychicPhrases?: boolean;
 }) {
   const raw = Number(rawNumber);
   const reduced = Number.isFinite(raw) ? reduceToSingleDigit(raw) : Number(rawNumber);
@@ -116,6 +122,12 @@ function PartnerRadarView({
       business: "—",
       friendship: "—",
     };
+
+  const interaction = showPsychicPhrases
+    ? psychicInteraction(reduced, row.partnerLifePath)
+    : null;
+
+  const [showGrid, setShowGrid] = useState(false);
 
   return (
     <div className="space-y-4">
@@ -178,6 +190,14 @@ function PartnerRadarView({
               Partner {row.partnerLifePath}
               {row.partnerLifePath === reduced ? " · you" : ""}
             </p>
+            {interaction ? (
+              <p className="mt-2 rounded-lg border border-[var(--line)] bg-white/70 px-2.5 py-2 text-ink">
+                <span className="text-[10px] uppercase tracking-wider text-ink-soft">
+                  Psychic interaction · {interaction.tone}
+                </span>
+                <span className="mt-1 block">{interaction.phrase}</span>
+              </p>
+            ) : null}
             <ul className="mt-2 space-y-1.5">
               {!hideRomantic ? (
                 <li className="flex flex-wrap items-center gap-2">
@@ -202,6 +222,66 @@ function PartnerRadarView({
               </li>
             </ul>
           </div>
+          {showPsychicPhrases ? (
+            <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
+              <button
+                type="button"
+                className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
+                onClick={() => setShowGrid((v) => !v)}
+              >
+                {showGrid ? "Hide" : "View"} full Psychic grid
+              </button>
+              {showGrid ? (
+                <div className="mt-3 overflow-x-auto">
+                  <table className="w-full min-w-[18rem] border-collapse text-left">
+                    <thead>
+                      <tr>
+                        <th className="border-b border-[var(--line)] p-1 font-medium text-ink">
+                          You ↓ / them →
+                        </th>
+                        {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
+                          <th
+                            key={n}
+                            className="border-b border-[var(--line)] p-1 text-center font-medium text-ink"
+                          >
+                            {n}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border-b border-[var(--line)] p-1 font-medium text-ink">
+                          {reduced}
+                        </td>
+                        {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => {
+                          const cell = psychicInteraction(reduced, n);
+                          return (
+                            <td
+                              key={n}
+                              title={cell.phrase}
+                              className={`border-b border-[var(--line)] p-1 text-center ${
+                                n === partner ? "bg-ink/5 font-medium text-ink" : ""
+                              }`}
+                            >
+                              {cell.tone === "supportive"
+                                ? "↑"
+                                : cell.tone === "stretch"
+                                  ? "↓"
+                                  : "·"}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
+                </div>
+              ) : (
+                <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
+              )}
+            </div>
+          ) : null}
           <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
             <p className="font-medium text-ink">Tone scale</p>
             <ul className="mt-2 space-y-2">
@@ -378,6 +458,9 @@ export function CompatibilityMatrix({
             matrix={activeVedic.matrix}
             hideRomantic={hideRomantic}
             showPlanet
+            showPsychicPhrases={
+              layers.mode !== "layered" || vedicLayer === "moolank"
+            }
           />
         </div>
       )}

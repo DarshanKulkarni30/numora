@@ -15,6 +15,14 @@ import {
   REDUCTION_TIP,
   squareDigitGuide,
 } from "@/lib/numerology/vedicSquare";
+import {
+  PROJECTED_YEAR_METHOD_NOTE,
+  PROJECTED_YEAR_META,
+} from "@/lib/numerology/vedicYearNumber";
+import {
+  UNIT_AFFINITY_NOTE,
+  vedicNumberProfile,
+} from "@/lib/numerology/vedicNumberProfile";
 import { planetForVedic } from "@/lib/numerology/planets";
 
 export type GuideTopic =
@@ -33,6 +41,7 @@ export type GuideTopic =
   | "lo-shu-arrow"
   | "lo-shu-number"
   | "vedic-square"
+  | "projected-year"
   | "planet"
   | "name-cornerstone"
   | "name-first-vowel"
@@ -55,6 +64,7 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
   { topic: "lo-shu-arrow", title: "Lo Shu Arrow" },
   { topic: "lo-shu-number", title: "Lo Shu Number" },
   { topic: "vedic-square", title: "Vedic Square" },
+  { topic: "projected-year", title: "Projected Year" },
   { topic: "planet", title: "Planet" },
   { topic: "name-cornerstone", title: "Name Letter Group" },
   { topic: "name-first-vowel", title: "First Vowel" },
@@ -65,6 +75,7 @@ export const GUIDE_TOPICS: { topic: GuideTopic; title: string }[] = [
 const NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
 const LO_SHU_NUMBER_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const VEDIC_SQUARE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const PROJECTED_YEAR_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const NAME_CORNERSTONE_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const FIRST_VOWEL_KEYS = ["A", "E", "I", "O", "U", "Y"];
 const LETTER_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -82,6 +93,7 @@ const TOPIC_LENSES: Record<
     | "lo-shu-arrow"
     | "lo-shu-number"
     | "vedic-square"
+    | "projected-year"
     | "planet"
     | "name-cornerstone"
     | "name-first-vowel"
@@ -283,6 +295,7 @@ export function isValidGuideValue(topic: GuideTopic, value: string): boolean {
   if (topic === "lo-shu-arrow") return value in LO_SHU_ARROW_GUIDES;
   if (topic === "lo-shu-number") return LO_SHU_NUMBER_KEYS.includes(value);
   if (topic === "vedic-square") return VEDIC_SQUARE_KEYS.includes(value);
+  if (topic === "projected-year") return PROJECTED_YEAR_KEYS.includes(value);
   if (topic === "planet") return parsePlanetGuideValue(value) != null;
   if (topic === "name-cornerstone")
     return NAME_CORNERSTONE_KEYS.includes(value);
@@ -364,6 +377,27 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
           ? `Opposite: ${guide.opposite.a} ↔ ${guide.opposite.b}`
           : "Opposite: none (9 stands alone)",
         guide.opposite ? `Planets: ${guide.opposite.planets}` : "Rim tone: persistent 9",
+      ],
+    };
+  }
+
+  if (topic === "projected-year") {
+    const n = Number(value);
+    const meta = PROJECTED_YEAR_META[n];
+    if (!meta) return null;
+    return {
+      title: `Projected Year · ${value}`,
+      subtitle: `${meta.planet} tone`,
+      paragraphs: [
+        meta.theme,
+        PROJECTED_YEAR_METHOD_NOTE,
+        `A practical focus: ${meta.practice}`,
+      ],
+      strengths: meta.strengths,
+      watchouts: meta.watchouts,
+      bullets: [
+        `Planet tone: ${meta.planet}`,
+        `Digit: ${value}`,
       ],
     };
   }
@@ -527,6 +561,18 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       );
     }
   }
+  if (
+    (topic === "vedic-psychic" || topic === "vedic-destiny") &&
+    Number.isFinite(n) &&
+    n >= 1 &&
+    n <= 9
+  ) {
+    const profile = vedicNumberProfile(n);
+    paragraphs.push(
+      `Unit System affinity notes: friendly ${profile.friendly.join(", ") || "—"}; more demanding ${profile.challenging.join(", ") || "—"}; neutral ${profile.neutral.join(", ") || "—"}. Study tones often linked: ${profile.color}, ${profile.gem}, ${profile.weekday}. Lesson theme: ${profile.karmicLesson}.`,
+    );
+    paragraphs.push(UNIT_AFFINITY_NOTE);
+  }
   paragraphs.push(
     `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
   );
@@ -563,6 +609,10 @@ export function allGuideParams(): { topic: string; value: string }[] {
       }
     } else if (topic === "vedic-square") {
       for (const value of VEDIC_SQUARE_KEYS) {
+        params.push({ topic, value });
+      }
+    } else if (topic === "projected-year") {
+      for (const value of PROJECTED_YEAR_KEYS) {
         params.push({ topic, value });
       }
     } else if (topic === "planet") {

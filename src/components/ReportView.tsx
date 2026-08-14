@@ -7,6 +7,7 @@ import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
+import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -373,6 +374,17 @@ export function ReportView({ report, watermarkEmail }: Props) {
               }
               unitSystem={report.vedic.unitSystem}
             />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">Projected Year</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Unit System–style year tone (month + day + YY + weekday digit). Sits
+            beside Western Personal Year—not a fixed forecast.
+          </p>
+          <div className="mt-4">
+            <ProjectedYearPanel dateOfBirth={person.date_of_birth} />
           </div>
         </section>
 

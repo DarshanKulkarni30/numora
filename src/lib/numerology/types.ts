@@ -32,6 +32,9 @@ export type NumerologySnapshot = {
   unit_name_compound?: string;
   personal_year: string;
   personal_month: string;
+  /** Unit System–style projected year digit for the report calendar year */
+  projected_year?: string;
+  projected_year_calendar?: string;
   /** Tropical sun sign id (aries…pisces), from DOB month/day */
   sun_sign?: string;
   sun_sign_label?: string;
@@ -192,6 +195,14 @@ export type NumerologyReport = {
     number: string;
     theme: string;
     advice: string;
+  };
+  projected_year?: {
+    number: string;
+    calendar_year: string;
+    planet: string;
+    theme: string;
+    advice: string;
+    method_note: string;
   };
   personal_month: {
     number: string;

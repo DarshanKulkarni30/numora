@@ -5,6 +5,10 @@ import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
+import {
+  UNIT_AFFINITY_NOTE,
+  vedicNumberProfile,
+} from "@/lib/numerology/vedicNumberProfile";
 import { oppositesForReport } from "@/lib/numerology/vedicSquare";
 
 type UnitSystemBits = {
@@ -63,6 +67,8 @@ export function VedicPanel({
   ];
 
   const oppositePairs = oppositesForReport(psychic, destiny, nameNumber);
+  const psychicProfile = vedicNumberProfile(psychic);
+  const destinyProfile = vedicNumberProfile(destiny);
 
   return (
     <div className="rounded-2xl border border-[var(--line)] bg-gradient-to-br from-ink via-[#1e293b] to-[#0f172a] p-6 text-paper">
@@ -138,6 +144,45 @@ export function VedicPanel({
           </div>
         </div>
       ) : null}
+
+      <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+        <p className="text-[10px] uppercase tracking-wider text-sand">
+          Unit System affinity · Psychic {psychic}
+        </p>
+        <p className="mt-2 text-xs text-paper/70">
+          {psychicProfile.color} · {psychicProfile.gem} · {psychicProfile.weekday} ·{" "}
+          {psychicProfile.direction}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {psychicProfile.friendly.map((n) => (
+            <span
+              key={`f-${n}`}
+              className="rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-100"
+            >
+              Friendly {n}
+            </span>
+          ))}
+          {psychicProfile.challenging.map((n) => (
+            <span
+              key={`c-${n}`}
+              className="rounded-full border border-rose-300/35 bg-rose-500/15 px-2 py-0.5 text-xs text-rose-100"
+            >
+              Stretch {n}
+            </span>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-paper/65">
+          {psychicProfile.behavior}. Lesson tone: {psychicProfile.karmicLesson}.
+        </p>
+        <p className="mt-3 text-[10px] uppercase tracking-wider text-sand">
+          Destiny {destiny} · thinner strip
+        </p>
+        <p className="mt-1 text-xs text-paper/65">
+          {destinyProfile.color} · {destinyProfile.gem} · roles often studied:{" "}
+          {destinyProfile.professionsHint.slice(0, 3).join(", ")}
+        </p>
+        <p className="mt-2 text-[11px] text-paper/55">{UNIT_AFFINITY_NOTE}</p>
+      </div>
 
       {unitName ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
