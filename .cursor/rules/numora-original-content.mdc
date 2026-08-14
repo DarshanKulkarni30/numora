@@ -1,0 +1,33 @@
+---
+description: Copyright-safe original Numora numerology content (synthesize, never paste sources)
+alwaysApply: true
+---
+
+# Numora original content doctrine
+
+Numora is a **specialty numerology product** with its own flavor. External books, sites, and teachers are research inputs only.
+
+## Required workflow for any meanings / guides / report copy
+
+1. **Analyze** source themes (traits, +/−, methods, maps).
+2. **Summarize** into short Numora-native points.
+3. **Merge** with existing Numora systems (Pythagorean, Chaldean, Vedic, Lo Shu, Unit System, etc.).
+4. **Rewrite** in Numora’s reflective voice — never paste or lightly paraphrase source prose.
+
+## Hard bans
+
+- Do **not** display third-party text “as is.”
+- Do **not** brand UI, code identifiers, comments, or commits with **author names**, book titles, or “per X / as in X.”
+- Do **not** invent medical, legal, financial, or fixed-outcome claims.
+- Label methods by **system** (e.g. Unit System, Chaldean-aligned Vedic), not by person.
+
+## Good vs bad
+
+```text
+❌ BAD: Paste a Life Path 5 blurb from a website; label a panel “Johari numbers.”
+✅ GOOD: Merge freedom/versatility themes into Expression vs Psychic vs Destiny maps; call it “Unit System name.”
+```
+
+## When dual maps differ
+
+Show both with clear method labels and a one-line note that letter maps differ — still Numora wording only.
