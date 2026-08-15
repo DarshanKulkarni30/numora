@@ -201,6 +201,14 @@ export function VedicPanel({
               Often easy · {n}
             </span>
           ))}
+          {psychicProfile.neutral.map((n) => (
+            <span
+              key={`n-${n}`}
+              className="rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-xs text-paper/85"
+            >
+              Neutral · {n}
+            </span>
+          ))}
           {psychicProfile.challenging.map((n) => (
             <span
               key={`c-${n}`}
@@ -211,7 +219,8 @@ export function VedicPanel({
           ))}
         </div>
         <p className="mt-2 text-xs text-paper/60">
-          Destiny {destiny}: {destinyProfileOneLiner(destiny)}
+          Destiny {destiny}: study tones often linked — {destinyProfileOneLiner(destiny)}{" "}
+          (atmosphere cue, not a purchase advice).
         </p>
       </div>
 

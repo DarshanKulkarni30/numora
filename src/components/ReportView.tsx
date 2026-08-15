@@ -10,6 +10,7 @@ import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
+import { NameWhatIfPanel } from "@/components/report/NameWhatIfPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -665,12 +666,26 @@ export function ReportView({ report, watermarkEmail }: Props) {
         </section>
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Name what-if</h2>
+          <div className="mt-4">
+            <NameWhatIfPanel
+              dateOfBirth={person.date_of_birth}
+              currentFullName={person.full_name}
+              vedicPsychic={snap.vedic_psychic}
+              vedicDestiny={snap.vedic_destiny}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Trivia · similar numbers</h2>
           <div className="mt-4">
             <TriviaPanel
               lifePath={snap.life_path}
               destiny={snap.vedic_destiny}
               psychic={snap.vedic_psychic}
+              expression={snap.expression_number}
+              vedicName={snap.vedic_name}
               dateOfBirth={person.date_of_birth}
             />
           </div>

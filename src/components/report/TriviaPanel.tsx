@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
 import {
+  matchCities,
   matchCountries,
   matchPeople,
   matchPeopleByDayMonth,
@@ -13,6 +14,8 @@ type Props = {
   lifePath: string;
   destiny: string;
   psychic: string;
+  expression: string;
+  vedicName: string;
   dateOfBirth: string;
 };
 
@@ -20,6 +23,8 @@ export function TriviaPanel({
   lifePath,
   destiny,
   psychic,
+  expression,
+  vedicName,
   dateOfBirth,
 }: Props) {
   const people = matchPeople({ lifePath, destiny, psychic, limit: 5 });
@@ -31,14 +36,22 @@ export function TriviaPanel({
     limit: 1,
   });
   const topCountry = countries[0];
+  const cities = matchCities({
+    lifePath,
+    destiny,
+    psychic,
+    expression,
+    vedicName,
+    limit: 5,
+  });
 
   return (
     <div className="space-y-8">
       <p className="text-sm text-ink-soft">
-        Light trivia only: countries and personalities ranked by Life Path,
-        Destiny, and Psychic (prefer all three; then closest on unmatched
-        numbers), plus people born on the same day and month. Not predictions
-        or endorsements.{" "}
+        Light trivia only: countries, cities, and personalities ranked against
+        your core numbers (Life Path, Destiny, Psychic; cities also use
+        Expression and Vedic name), plus people born on the same day and month.
+        Not predictions or endorsements.{" "}
         <Link
           href="/trivia"
           className="text-gold-deep underline underline-offset-2 hover:text-ink"
@@ -174,6 +187,44 @@ export function TriviaPanel({
         ) : (
           <p className="mt-2 text-sm text-ink-soft">
             No close country match in the bank.
+          </p>
+        )}
+      </div>
+
+      <div>
+        <h3 className="text-lg text-ink">Top 5 compatible cities</h3>
+        <p className="mt-1 text-xs text-ink-soft">
+          City name numbers (Pythagorean letter map) matched to your Life Path,
+          Destiny, Psychic, Expression, and Vedic name—reflective geography
+          trivia, not relocation advice.
+        </p>
+        {cities.length ? (
+          <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
+            <table className="w-full min-w-[28rem] text-left text-sm">
+              <thead className="bg-mist/60 text-ink-soft">
+                <tr>
+                  <th className="px-3 py-2 font-medium">City</th>
+                  <th className="px-3 py-2 font-medium">Country</th>
+                  <th className="px-3 py-2 font-medium">Name number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cities.map((c) => (
+                  <tr
+                    key={`${c.name}|${c.country}`}
+                    className="border-t border-[var(--line)]"
+                  >
+                    <td className="px-3 py-2 text-ink">{c.name}</td>
+                    <td className="px-3 py-2 text-ink-soft">{c.country}</td>
+                    <td className="brand px-3 py-2 text-ink">{c.nameNumber}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-2 text-sm text-ink-soft">
+            No close city matches in the bank.
           </p>
         )}
       </div>

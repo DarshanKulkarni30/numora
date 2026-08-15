@@ -7,15 +7,19 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
+import { calculatePythagorean } from "@/lib/numerology/pythagorean";
+import { calculateVedic } from "@/lib/numerology/vedic";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
 import {
+  matchCities,
   matchCountries,
   matchPeople,
   matchPeopleByDayMonth,
 } from "@/lib/trivia/match";
+import { TRIVIA_CITIES } from "@/lib/trivia/cities";
 import { TRIVIA_COUNTRIES } from "@/lib/trivia/countries";
 import { TRIVIA_PEOPLE } from "@/lib/trivia/people";
 
@@ -24,9 +28,10 @@ type Props = {
 };
 
 type Tab = "browse" | "match";
-type BrowseKind = "people" | "countries";
+type BrowseKind = "people" | "countries" | "cities";
 
 const NUMBER_FILTERS = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "22", "33"];
+const CITY_NUMBER_FILTERS = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 function personLabel(p: PersonRecord) {
   const name = p.preferred_name || p.full_name || "Unnamed";
@@ -39,6 +44,7 @@ export function TriviaExplorer({ people }: Props) {
   const [filterLp, setFilterLp] = useState("");
   const [filterDestiny, setFilterDestiny] = useState("");
   const [filterPsychic, setFilterPsychic] = useState("");
+  const [filterCityNumber, setFilterCityNumber] = useState("");
   const [query, setQuery] = useState("");
 
   const selectable = useMemo(
@@ -66,6 +72,14 @@ export function TriviaExplorer({ people }: Props) {
   const matchPsychic = selected
     ? vedicPsychicFromDob(selected.date_of_birth)
     : null;
+  const nameLayers = selected
+    ? (() => {
+        const full = selected.full_name || selected.preferred_name || "";
+        const pyth = calculatePythagorean(full, selected.date_of_birth);
+        const vedic = calculateVedic(full, selected.date_of_birth);
+        return { expression: pyth.expression, vedicName: vedic.nameNumber };
+      })()
+    : null;
 
   const matchedPeople =
     matchLp != null && matchDestiny != null && matchPsychic != null
@@ -85,6 +99,20 @@ export function TriviaExplorer({ people }: Props) {
           lifePath: matchLp,
           destiny: matchDestiny,
           psychic: matchPsychic,
+          limit: 10,
+        })
+      : [];
+  const matchedCities =
+    matchLp != null &&
+    matchDestiny != null &&
+    matchPsychic != null &&
+    nameLayers != null
+      ? matchCities({
+          lifePath: matchLp,
+          destiny: matchDestiny,
+          psychic: matchPsychic,
+          expression: nameLayers.expression,
+          vedicName: nameLayers.vedicName,
           limit: 10,
         })
       : [];
@@ -110,6 +138,17 @@ export function TriviaExplorer({ people }: Props) {
       return true;
     });
   }, [filterLp, filterDestiny, filterPsychic, query]);
+
+  const filteredCities = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return TRIVIA_CITIES.filter((c) => {
+      if (filterCityNumber && String(c.nameNumber) !== filterCityNumber)
+        return false;
+      if (q && !`${c.name} ${c.country}`.toLowerCase().includes(q))
+        return false;
+      return true;
+    });
+  }, [filterCityNumber, query]);
 
   return (
     <div className="space-y-6">
@@ -173,9 +212,22 @@ export function TriviaExplorer({ people }: Props) {
                     Matching on Life Path{" "}
                     <span className="brand text-ink">{matchLp}</span>, Destiny{" "}
                     <span className="brand text-ink">{matchDestiny}</span>, and
-                    Psychic <span className="brand text-ink">{matchPsychic}</span>{" "}
-                    (from {selected.date_of_birth}). Rank prefers all three
-                    exact matches, then closest unmatched numbers.
+                    Psychic <span className="brand text-ink">{matchPsychic}</span>
+                    {nameLayers ? (
+                      <>
+                        ; cities also use Expression{" "}
+                        <span className="brand text-ink">
+                          {nameLayers.expression}
+                        </span>{" "}
+                        and Vedic name{" "}
+                        <span className="brand text-ink">
+                          {nameLayers.vedicName}
+                        </span>
+                      </>
+                    ) : null}{" "}
+                    (from {selected.date_of_birth}
+                    {selected.full_name ? ` · ${selected.full_name}` : ""}).
+                    Rank prefers exact digit overlaps, then closest numbers.
                   </p>
                 ) : null}
               </div>
@@ -203,6 +255,15 @@ export function TriviaExplorer({ people }: Props) {
                 <h2 className="text-xl text-ink">Top 10 countries</h2>
                 <CountryCards rows={matchedCountries} />
               </section>
+
+              <section>
+                <h2 className="text-xl text-ink">Top 10 cities</h2>
+                <p className="mt-1 text-sm text-ink-soft">
+                  City name numbers matched to your core digits—reflective
+                  trivia, not relocation advice.
+                </p>
+                <CityTable rows={matchedCities} />
+              </section>
             </>
           )}
         </div>
@@ -212,10 +273,10 @@ export function TriviaExplorer({ people }: Props) {
             <button
               type="button"
               onClick={() => setBrowseKind("people")}
-              className={`rounded-full px-4 py-2 text-sm ${
+              className={`rounded-full px-4 py-2 text-sm transition-all duration-150 ${
                 browseKind === "people"
-                  ? "bg-ink text-paper"
-                  : "border border-[var(--line)] bg-white/60 text-ink-soft"
+                  ? "bg-ink text-paper shadow-sm"
+                  : "border border-[var(--line)] bg-white/60 text-ink-soft hover:-translate-y-px hover:bg-white hover:shadow-sm active:translate-y-0 active:shadow-none"
               }`}
             >
               Personalities ({TRIVIA_PEOPLE.length})
@@ -223,55 +284,92 @@ export function TriviaExplorer({ people }: Props) {
             <button
               type="button"
               onClick={() => setBrowseKind("countries")}
-              className={`rounded-full px-4 py-2 text-sm ${
+              className={`rounded-full px-4 py-2 text-sm transition-all duration-150 ${
                 browseKind === "countries"
-                  ? "bg-ink text-paper"
-                  : "border border-[var(--line)] bg-white/60 text-ink-soft"
+                  ? "bg-ink text-paper shadow-sm"
+                  : "border border-[var(--line)] bg-white/60 text-ink-soft hover:-translate-y-px hover:bg-white hover:shadow-sm active:translate-y-0 active:shadow-none"
               }`}
             >
               Countries ({TRIVIA_COUNTRIES.length})
             </button>
+            <button
+              type="button"
+              onClick={() => setBrowseKind("cities")}
+              className={`rounded-full px-4 py-2 text-sm transition-all duration-150 ${
+                browseKind === "cities"
+                  ? "bg-ink text-paper shadow-sm"
+                  : "border border-[var(--line)] bg-white/60 text-ink-soft hover:-translate-y-px hover:bg-white hover:shadow-sm active:translate-y-0 active:shadow-none"
+              }`}
+            >
+              Cities ({TRIVIA_CITIES.length})
+            </button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <FilterSelect
-              label="Life Path"
-              value={filterLp}
-              onChange={setFilterLp}
-            />
-            <FilterSelect
-              label="Destiny"
-              value={filterDestiny}
-              onChange={setFilterDestiny}
-            />
-            <FilterSelect
-              label="Psychic"
-              value={filterPsychic}
-              onChange={setFilterPsychic}
-            />
-            <div>
-              <label className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
-                Search
-              </label>
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Name…"
-                className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-sm outline-none ring-gold focus:ring-2"
+          {browseKind === "cities" ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <FilterSelect
+                label="Name number"
+                value={filterCityNumber}
+                onChange={setFilterCityNumber}
+                options={CITY_NUMBER_FILTERS}
               />
+              <div className="sm:col-span-2 lg:col-span-3">
+                <label className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
+                  Search
+                </label>
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="City or country…"
+                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-sm outline-none ring-gold focus:ring-2"
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <FilterSelect
+                label="Life Path"
+                value={filterLp}
+                onChange={setFilterLp}
+              />
+              <FilterSelect
+                label="Destiny"
+                value={filterDestiny}
+                onChange={setFilterDestiny}
+              />
+              <FilterSelect
+                label="Psychic"
+                value={filterPsychic}
+                onChange={setFilterPsychic}
+              />
+              <div>
+                <label className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
+                  Search
+                </label>
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Name…"
+                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-sm outline-none ring-gold focus:ring-2"
+                />
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-ink-soft">
               Showing{" "}
               {browseKind === "people"
                 ? filteredPeople.length
-                : filteredCountries.length}{" "}
+                : browseKind === "countries"
+                  ? filteredCountries.length
+                  : filteredCities.length}{" "}
               of{" "}
               {browseKind === "people"
                 ? TRIVIA_PEOPLE.length
-                : TRIVIA_COUNTRIES.length}
+                : browseKind === "countries"
+                  ? TRIVIA_COUNTRIES.length
+                  : TRIVIA_CITIES.length}
             </p>
             <button
               type="button"
@@ -279,12 +377,17 @@ export function TriviaExplorer({ people }: Props) {
                 setFilterLp("");
                 setFilterDestiny("");
                 setFilterPsychic("");
+                setFilterCityNumber("");
                 setQuery("");
               }}
               disabled={
-                !filterLp && !filterDestiny && !filterPsychic && !query.trim()
+                !filterLp &&
+                !filterDestiny &&
+                !filterPsychic &&
+                !filterCityNumber &&
+                !query.trim()
               }
-              className="rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink hover:bg-mist/80 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink transition-all duration-150 hover:-translate-y-px hover:bg-mist/80 hover:shadow-sm active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none"
             >
               Clear filters
             </button>
@@ -292,8 +395,10 @@ export function TriviaExplorer({ people }: Props) {
 
           {browseKind === "people" ? (
             <PeopleTable rows={filteredPeople} />
-          ) : (
+          ) : browseKind === "countries" ? (
             <CountryCards rows={filteredCountries} />
+          ) : (
+            <CityTable rows={filteredCities} />
           )}
         </div>
       )}
@@ -305,10 +410,12 @@ function FilterSelect({
   label,
   value,
   onChange,
+  options = NUMBER_FILTERS,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  options?: string[];
 }) {
   return (
     <div>
@@ -321,7 +428,7 @@ function FilterSelect({
         className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-sm outline-none ring-gold focus:ring-2"
       >
         <option value="">Any</option>
-        {NUMBER_FILTERS.filter(Boolean).map((n) => (
+        {options.filter(Boolean).map((n) => (
           <option key={n} value={n}>
             {n}
           </option>
@@ -442,5 +549,42 @@ function CountryCards({
         </li>
       ))}
     </ul>
+  );
+}
+
+function CityTable({
+  rows,
+}: {
+  rows: { name: string; country: string; nameNumber: number }[];
+}) {
+  if (!rows.length) {
+    return (
+      <p className="mt-2 text-sm text-ink-soft">No cities match these filters.</p>
+    );
+  }
+  return (
+    <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
+      <table className="w-full min-w-[28rem] text-left text-sm">
+        <thead className="bg-mist/60 text-ink-soft">
+          <tr>
+            <th className="px-3 py-2 font-medium">City</th>
+            <th className="px-3 py-2 font-medium">Country</th>
+            <th className="px-3 py-2 font-medium">Name number</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((c) => (
+            <tr
+              key={`${c.name}|${c.country}`}
+              className="border-t border-[var(--line)]"
+            >
+              <td className="px-3 py-2 text-ink">{c.name}</td>
+              <td className="px-3 py-2 text-ink-soft">{c.country}</td>
+              <td className="brand px-3 py-2 text-ink">{c.nameNumber}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

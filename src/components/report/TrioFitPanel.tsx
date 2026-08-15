@@ -3,6 +3,8 @@
 import { useState } from "react";
 import {
   TRIO_BAND_HINT,
+  TRIO_BAND_ICON,
+  TRIO_BAND_TAGS,
   TRIO_NOTE,
   chaldeanTableForBirth,
   chaldeanTrio,
@@ -185,9 +187,51 @@ export function TrioFitPanel({
 
       {tab === "pythagorean" ? (
         <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-ink-soft">
-          <p className="font-medium text-ink">{pyth.patternLabel}</p>
+          <p className="font-medium text-ink">
+            Pythagorean name fit (no Destiny×Name grid)
+          </p>
+          <p className="mt-1 text-xs">
+            Vedic and Chaldean use a Birth×Destiny×Name table. Pythagorean here
+            uses odd/even birth+path mix plus birth-day → Expression
+            alignment—same five-band scale, different method.
+          </p>
+          <p className="mt-3 font-medium text-ink">{pyth.patternLabel}</p>
           <p className="mt-1">{pyth.patternEffect}</p>
           <p className="mt-2">{pyth.alignNote}</p>
+          <div className="mt-3 overflow-x-auto">
+            <p className="mb-2 text-xs">
+              Expression digits 1–9 for Birth day {pBirth.core} (your Expression{" "}
+              {pName.core} outlined)
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => {
+                const easy = pyth.favNames.includes(n);
+                const care = pyth.unfavNames.includes(n);
+                const isYou = n === pName.core;
+                return (
+                  <span
+                    key={n}
+                    title={
+                      easy
+                        ? `Often easier Expression ${n}`
+                        : care
+                          ? `Needs care Expression ${n}`
+                          : `Expression ${n}`
+                    }
+                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium ${
+                      easy
+                        ? "border-emerald-300 bg-emerald-50 text-emerald-950"
+                        : care
+                          ? "border-rose-300 bg-rose-50 text-rose-950"
+                          : "border-[var(--line)] bg-white text-ink-soft"
+                    } ${isYou ? "ring-2 ring-ink ring-inset" : ""}`}
+                  >
+                    {n}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {pyth.favNames.map((n) => (
               <span
@@ -227,7 +271,8 @@ export function TrioFitPanel({
           {showGrid && table ? (
             <div className="mt-3 overflow-x-auto">
               <p className="mb-2 text-xs text-ink-soft">
-                Rows = Destiny · columns = Name. Your cell is outlined.
+                Rows = Destiny · columns = Name. Icons = five-band scale (hover
+                for traditional tag). Your cell is outlined.
               </p>
               <table className="w-full min-w-[22rem] border-collapse text-center text-[11px]">
                 <thead>
@@ -252,7 +297,11 @@ export function TrioFitPanel({
                     const destinyN = di + 1;
                     return (
                       <tr key={destinyN}>
-                        <td className="border-b border-[var(--line)] p-1 text-left font-medium text-ink">
+                        <td
+                          className={`border-b border-[var(--line)] p-1 text-left font-medium text-ink ${
+                            destinyN === highlight.d ? "bg-ink/5" : ""
+                          }`}
+                        >
                           {destinyN}
                         </td>
                         {row.map((code, ni) => {
@@ -260,15 +309,19 @@ export function TrioFitPanel({
                           const isYou =
                             destinyN === highlight.d && nameN === highlight.n;
                           const band = trioCodeBand(code);
+                          const label = trioCodeLabel(code);
+                          const tip = `${label} → ${BAND_WORD[band]}: ${TRIO_BAND_HINT[band]}`;
                           return (
                             <td
                               key={nameN}
-                              title={trioCodeLabel(code)}
+                              title={tip}
                               className={`border-b border-[var(--line)] p-1 ${BAND_CELL[band]} ${
-                                isYou ? "ring-2 ring-ink ring-inset font-semibold" : ""
+                                isYou
+                                  ? "ring-2 ring-ink ring-inset font-semibold"
+                                  : ""
                               }`}
                             >
-                              {trioCodeLabel(code).slice(0, 3)}
+                              <span aria-label={tip}>{TRIO_BAND_ICON[band]}</span>
                             </td>
                           );
                         })}
@@ -283,12 +336,18 @@ export function TrioFitPanel({
       )}
 
       <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-        <p className="font-medium text-ink">Five-band scale</p>
+        <p className="font-medium text-ink">Five-band scale (best → heavier)</p>
         <ul className="mt-2 space-y-1.5">
           {(Object.keys(TRIO_BAND_HINT) as TrioBand[]).map((b) => (
             <li key={b}>
+              <span className="mr-1.5 inline-block min-w-[1.5rem] text-center font-medium text-ink">
+                {TRIO_BAND_ICON[b]}
+              </span>
               <strong className="text-ink">{BAND_WORD[b]}</strong> —{" "}
-              {TRIO_BAND_HINT[b]}
+              {TRIO_BAND_HINT[b]}{" "}
+              <span className="opacity-80">
+                (tags: {TRIO_BAND_TAGS[b].join(", ")})
+              </span>
             </li>
           ))}
         </ul>

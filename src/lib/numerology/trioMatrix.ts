@@ -549,5 +549,22 @@ export function trioCodeLabel(code: string): string {
   return LABEL_FROM_CODE[code] ?? code;
 }
 
+/** Traditional tags that fold into each reflective band. */
+export const TRIO_BAND_TAGS: Record<TrioBand, string[]> = {
+  amazing: ["Superb", "Master"],
+  favourable: ["Great", "Good", "Favourable", "Growth"],
+  neutral: ["Average", "Steady", "Quiet", "Slow", "Neutral"],
+  friction: ["Clash", "Volatile", "Obstacle"],
+  block: ["Defeat", "Severe", "Struggle", "Heavy"],
+};
+
+export const TRIO_BAND_ICON: Record<TrioBand, string> = {
+  amazing: "★★",
+  favourable: "↑",
+  neutral: "·",
+  friction: "!",
+  block: "↓",
+};
+
 export const TRIO_NOTE =
   "This is a traditional Birth × Destiny × Name lookup for reflection only. It describes how three digits are often read together—not a prediction of money, health, relationships, or fate. Partner compatibility stays in the radar section.";

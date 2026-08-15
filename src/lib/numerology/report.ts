@@ -25,6 +25,7 @@ import { synthesizeGrowthAreas } from "./growthAreas";
 import { planetForPythagorean, planetLabel } from "./planets";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateAge } from "./reduce";
+import { reduceToSingleDigit } from "./dateNumbers";
 import { bookendsAnalysisLines } from "./nameBookends";
 import {
   buildVedicCompatibilityMatrix,
@@ -262,6 +263,177 @@ function recommendationsFor(
   ];
 }
 
+function digitCore(n: string | number): number {
+  const v = Number(n);
+  return Number.isFinite(v) ? reduceToSingleDigit(v) : 1;
+}
+
+/** Common echoes and contrasts across Pythagorean, Chaldean, Vedic, Lo Shu. */
+function executiveCrossMethodNotes(
+  report: Omit<NumerologyReport, "sections">,
+): { common: string; contrast: string } {
+  const snap = report.numerology_snapshot;
+  const lo = report.lo_shu;
+
+  type Tagged = { label: string; system: string; digit: number };
+  const tags: Tagged[] = [
+    { label: "Life Path", system: "Pythagorean", digit: digitCore(snap.life_path) },
+    {
+      label: "Birth Day",
+      system: "Pythagorean",
+      digit: digitCore(snap.birth_day),
+    },
+    {
+      label: "Expression",
+      system: "Pythagorean",
+      digit: digitCore(snap.expression_number),
+    },
+    {
+      label: "Soul Urge",
+      system: "Pythagorean",
+      digit: digitCore(snap.soul_urge_number),
+    },
+    {
+      label: "Personality",
+      system: "Pythagorean",
+      digit: digitCore(snap.personality_number),
+    },
+    {
+      label: "Maturity",
+      system: "Pythagorean",
+      digit: digitCore(snap.maturity_number),
+    },
+    {
+      label: "Chaldean Name",
+      system: "Chaldean",
+      digit: digitCore(snap.chaldean_name_number),
+    },
+    {
+      label: "Psychic",
+      system: "Vedic",
+      digit: digitCore(snap.vedic_psychic),
+    },
+    {
+      label: "Destiny",
+      system: "Vedic",
+      digit: digitCore(snap.vedic_destiny),
+    },
+    {
+      label: "Vedic Name",
+      system: "Vedic",
+      digit: digitCore(snap.vedic_name),
+    },
+  ];
+  if (snap.unit_name) {
+    tags.push({
+      label: "Unit name",
+      system: "Vedic",
+      digit: digitCore(snap.unit_name),
+    });
+  }
+  if (snap.personal_year) {
+    tags.push({
+      label: "Personal Year",
+      system: "Timing",
+      digit: digitCore(snap.personal_year),
+    });
+  }
+
+  const byDigit = new Map<number, Tagged[]>();
+  for (const t of tags) {
+    const list = byDigit.get(t.digit) ?? [];
+    list.push(t);
+    byDigit.set(t.digit, list);
+  }
+
+  const repeats = [...byDigit.entries()]
+    .filter(([, list]) => list.length >= 2)
+    .sort((a, b) => b[1].length - a[1].length);
+
+  const commonParts: string[] = [];
+  for (const [digit, list] of repeats.slice(0, 3)) {
+    const systems = [...new Set(list.map((x) => x.system))];
+    const labels = list.map((x) => x.label).slice(0, 5);
+    const more = list.length > 5 ? ` (+${list.length - 5} more)` : "";
+    commonParts.push(
+      `${digit} (${coreTraitFor(digit).toLowerCase()}) shows up in ${labels.join(", ")}${more}${
+        systems.length > 1 ? ` across ${systems.join(" · ")}` : ""
+      }`,
+    );
+  }
+
+  if (lo.present_numbers?.length) {
+    const topPresent = lo.present_numbers.slice(0, 4).join(", ");
+    commonParts.push(
+      `Lo Shu grid emphasizes present ${topPresent}${
+        lo.missing_numbers?.length
+          ? `; quieter/missing ${lo.missing_numbers.slice(0, 4).join(", ")}`
+          : ""
+      }`,
+    );
+  }
+
+  const contrasts: string[] = [];
+  const lp = digitCore(snap.life_path);
+  const destiny = digitCore(snap.vedic_destiny);
+  if (lp !== destiny) {
+    contrasts.push(
+      `Life Path ${lp} and Vedic Destiny ${destiny} differ—outer path tone vs full-date destiny lens`,
+    );
+  } else if (!repeats.some(([d]) => d === lp && (byDigit.get(lp)?.length ?? 0) >= 2)) {
+    commonParts.push(
+      `Life Path and Vedic Destiny both reduce to ${lp}—date-based themes align`,
+    );
+  }
+
+  const expr = digitCore(snap.expression_number);
+  const chal = digitCore(snap.chaldean_name_number);
+  const vName = digitCore(snap.vedic_name);
+  if (expr !== chal || expr !== vName || chal !== vName) {
+    contrasts.push(
+      `Name layers differ: Expression ${expr} · Chaldean name ${chal} · Vedic name ${vName}${
+        snap.unit_name ? ` · Unit name ${digitCore(snap.unit_name)}` : ""
+      }—same spelling, different letter maps/roles`,
+    );
+  }
+
+  const psychic = digitCore(snap.vedic_psychic);
+  if (psychic !== destiny) {
+    contrasts.push(
+      `Psychic ${psychic} (birth day) vs Destiny ${destiny} (full date)—day temperament vs longer path`,
+    );
+  }
+
+  const soul = digitCore(snap.soul_urge_number);
+  const pers = digitCore(snap.personality_number);
+  if (soul !== pers) {
+    contrasts.push(
+      `Soul Urge ${soul} vs Personality ${pers}—inner want vs first impression may not match`,
+    );
+  }
+
+  if (lo.missing_numbers?.length && repeats[0]) {
+    const dominant = repeats[0][0];
+    if (lo.missing_numbers.includes(dominant)) {
+      contrasts.push(
+        `Digit ${dominant} is strong in core numbers but missing on the Lo Shu grid—practice that tone consciously`,
+      );
+    }
+  }
+
+  const common =
+    commonParts.length > 0
+      ? `Common themes across methods: ${commonParts.join(". ")}.`
+      : "Common themes across methods: each system highlights different digits—compare the snapshot groups rather than forcing one story.";
+
+  const contrast =
+    contrasts.length > 0
+      ? `Where methods diverge: ${contrasts.slice(0, 4).join("; ")}.`
+      : "Where methods diverge: the main digits largely agree—use the detailed sections for nuance rather than conflict.";
+
+  return { common, contrast };
+}
+
 function buildSections(report: Omit<NumerologyReport, "sections">): ReportSection[] {
   const n = displayName({
     fullName: report.person.full_name,
@@ -282,6 +454,8 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       ? "11. Family & Friendship Style"
       : "11. Relationship Style";
 
+  const cross = executiveCrossMethodNotes(report);
+
   const sections: ReportSection[] = [
     {
       id: "executive-summary",
@@ -293,7 +467,8 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, Personal Year ${snap.personal_year}${
           snap.sun_sign_label ? `, and Sun sign ${snap.sun_sign_label}` : ""
         }.`,
-        `According to numerology traditions, these patterns may indicate tendencies in motivation, communication, and pacing.`,
+        cross.common,
+        cross.contrast,
         report.personality.core_personality,
       ].join("\n\n"),
     },

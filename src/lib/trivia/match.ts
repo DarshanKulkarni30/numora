@@ -1,4 +1,5 @@
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
+import { TRIVIA_CITIES, type TriviaCity } from "./cities";
 import { TRIVIA_COUNTRIES, type TriviaCountry } from "./countries";
 import { TRIVIA_PEOPLE, type TriviaPerson } from "./people";
 
@@ -138,4 +139,58 @@ export function matchCountries(opts: {
     (c) => c.name,
     opts.limit ?? 8,
   );
+}
+
+function personDigits(opts: {
+  lifePath: number | string;
+  destiny: number | string;
+  psychic?: number | string;
+  expression?: number | string;
+  vedicName?: number | string;
+}): number[] {
+  const out: number[] = [];
+  const push = (v: number | string | undefined) => {
+    if (v == null || v === "") return;
+    const n = Number(v);
+    if (!Number.isFinite(n)) return;
+    out.push(reduceToSingleDigit(n));
+  };
+  push(opts.lifePath);
+  push(opts.destiny);
+  push(opts.psychic);
+  push(opts.expression);
+  push(opts.vedicName);
+  return [...new Set(out)];
+}
+
+/**
+ * Rank cities by how often the city name number lands on the person's
+ * core digits (Life Path, Destiny, Psychic, Expression, Vedic name).
+ */
+export function matchCities(opts: {
+  lifePath: number | string;
+  destiny: number | string;
+  psychic?: number | string;
+  expression?: number | string;
+  vedicName?: number | string;
+  limit?: number;
+}): TriviaCity[] {
+  const targets = personDigits(opts);
+  if (!targets.length) return [];
+
+  return TRIVIA_CITIES.map((city) => {
+    const n = reduceToSingleDigit(city.nameNumber);
+    const exact = targets.includes(n) ? 1 : 0;
+    const closeness = exact
+      ? 0
+      : Math.min(...targets.map((t) => digitDistance(t, n)));
+    return { city, exact, closeness, name: city.name };
+  })
+    .sort((a, b) => {
+      if (b.exact !== a.exact) return b.exact - a.exact;
+      if (a.closeness !== b.closeness) return a.closeness - b.closeness;
+      return a.name.localeCompare(b.name);
+    })
+    .slice(0, opts.limit ?? 5)
+    .map((x) => x.city);
 }
