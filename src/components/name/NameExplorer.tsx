@@ -125,6 +125,7 @@ export function NameExplorer({ people }: Props) {
   });
   const [trial, setTrial] = useState("");
   const [tab, setTab] = useState<TrioSystem>("vedic");
+  const [letterFilter, setLetterFilter] = useState<string>("All");
 
   const selected = selectable.find(
     (p) => `${p.sort_order}-${p.full_name}` === selectedKey,
@@ -236,12 +237,30 @@ export function NameExplorer({ people }: Props) {
         };
       })
       .filter((s) => s.name.toLowerCase() !== currentFirst)
+      .filter((s) => s.band === "amazing" || s.band === "favourable")
       .sort((a, b) => {
         if (b.rank !== a.rank) return b.rank - a.rank;
         return a.name.localeCompare(b.name);
-      })
-      .slice(0, 12);
+      });
   }, [psychic, destiny, selected, dob, currentName]);
+
+  const suggestionLetters = useMemo(() => {
+    const set = new Set(
+      suggestions.map((s) => s.name.charAt(0).toUpperCase()).filter(Boolean),
+    );
+    return ["All", ...[...set].sort((a, b) => a.localeCompare(b))];
+  }, [suggestions]);
+
+  const filteredSuggestions = useMemo(() => {
+    const letter =
+      letterFilter === "All" || suggestionLetters.includes(letterFilter)
+        ? letterFilter
+        : "All";
+    if (letter === "All") return suggestions;
+    return suggestions.filter(
+      (s) => s.name.charAt(0).toUpperCase() === letter,
+    );
+  }, [suggestions, letterFilter, suggestionLetters]);
 
   const summaries = useMemo(() => {
     if (!activeLayers || psychic == null || destiny == null || lifePath == null)
@@ -321,6 +340,7 @@ export function NameExplorer({ people }: Props) {
                 onChange={(e) => {
                   setSelectedKey(e.target.value);
                   setTrial("");
+                  setLetterFilter("All");
                 }}
                 className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
               >
@@ -597,64 +617,104 @@ export function NameExplorer({ people }: Props) {
           <section>
             <h2 className="text-xl text-ink">Suggested first names</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              Curated bank filtered by profile gender, ranked by Vedic
-              Birth×Destiny×Name band for this DOB. Reflective ideas only—not
+              All Amazing and Favourable matches from the curated bank (gender
+              filtered), ranked by Vedic Birth×Destiny×Name band. Use the letter
+              strip to browse—not only the A’s. Reflective ideas only—not
               baby-naming or legal advice.
             </p>
             {suggestions.length ? (
-              <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
-                <table className="w-full min-w-[28rem] text-left text-sm">
-                  <thead className="bg-mist/60 text-ink-soft">
-                    <tr>
-                      <th className="px-3 py-2 font-medium">Name</th>
-                      <th className="px-3 py-2 font-medium">Gender</th>
-                      <th className="px-3 py-2 font-medium">Vedic name #</th>
-                      <th className="px-3 py-2 font-medium">Band</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {suggestions.map((s) => (
-                      <tr
-                        key={s.name}
-                        className="border-t border-[var(--line)]"
+              <>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {suggestionLetters.map((letter) => {
+                    const active = letterFilter === letter;
+                    const count =
+                      letter === "All"
+                        ? suggestions.length
+                        : suggestions.filter(
+                            (s) => s.name.charAt(0).toUpperCase() === letter,
+                          ).length;
+                    return (
+                      <button
+                        key={letter}
+                        type="button"
+                        onClick={() => setLetterFilter(letter)}
+                        className={`rounded-full border px-2.5 py-1 text-xs transition-all duration-150 ${
+                          active
+                            ? "border-ink bg-ink text-paper shadow-sm"
+                            : "border-[var(--line)] bg-white/70 text-ink-soft hover:-translate-y-px hover:bg-white hover:text-ink hover:shadow-sm active:translate-y-0 active:shadow-none"
+                        }`}
                       >
-                        <td className="px-3 py-2 text-ink">
-                          <button
-                            type="button"
-                            className="text-gold-deep underline underline-offset-2 transition hover:text-ink"
-                            onClick={() => {
-                              const last = currentName
-                                .split(/\s+/)
-                                .slice(1)
-                                .join(" ");
-                              setTrial(last ? `${s.name} ${last}` : s.name);
-                            }}
-                          >
-                            {s.name}
-                          </button>
-                        </td>
-                        <td className="px-3 py-2 capitalize text-ink-soft">
-                          {s.gender}
-                        </td>
-                        <td className="brand px-3 py-2 text-ink">
-                          {s.nameNumber}
-                        </td>
-                        <td className="px-3 py-2">
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${BAND_STYLE[s.band]}`}
-                          >
-                            {TRIO_BAND_ICON[s.band]} {BAND_WORD[s.band]} ·{" "}
-                            {s.label}
-                          </span>
-                        </td>
+                        {letter}
+                        <span className="ml-1 opacity-70">{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-xs text-ink-soft">
+                  Showing {filteredSuggestions.length} of {suggestions.length}{" "}
+                  good matches
+                  {letterFilter !== "All" ? ` · letter ${letterFilter}` : ""}.
+                </p>
+                <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
+                  <table className="w-full min-w-[28rem] text-left text-sm">
+                    <thead className="bg-mist/60 text-ink-soft">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Name</th>
+                        <th className="px-3 py-2 font-medium">Gender</th>
+                        <th className="px-3 py-2 font-medium">Vedic name #</th>
+                        <th className="px-3 py-2 font-medium">Band</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {filteredSuggestions.map((s) => (
+                        <tr
+                          key={s.name}
+                          className="border-t border-[var(--line)]"
+                        >
+                          <td className="px-3 py-2 text-ink">
+                            <button
+                              type="button"
+                              className="text-gold-deep underline underline-offset-2 transition hover:text-ink"
+                              onClick={() => {
+                                const last = currentName
+                                  .split(/\s+/)
+                                  .slice(1)
+                                  .join(" ");
+                                setTrial(last ? `${s.name} ${last}` : s.name);
+                              }}
+                            >
+                              {s.name}
+                            </button>
+                          </td>
+                          <td className="px-3 py-2 capitalize text-ink-soft">
+                            {s.gender}
+                          </td>
+                          <td className="brand px-3 py-2 text-ink">
+                            {s.nameNumber}
+                          </td>
+                          <td className="px-3 py-2">
+                            <span
+                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${BAND_STYLE[s.band]}`}
+                            >
+                              {TRIO_BAND_ICON[s.band]} {BAND_WORD[s.band]} ·{" "}
+                              {s.label}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {filteredSuggestions.length === 0 ? (
+                  <p className="mt-2 text-sm text-ink-soft">
+                    No good matches for letter {letterFilter}. Pick another
+                    letter or All.
+                  </p>
+                ) : null}
+              </>
             ) : (
               <p className="mt-2 text-sm text-ink-soft">
-                No suggestions for this profile yet.
+                No Amazing/Favourable names in the bank for this chart yet.
               </p>
             )}
           </section>
