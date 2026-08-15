@@ -316,34 +316,56 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       id: "pythagorean",
       title: "3. Pythagorean Analysis",
       body: [
-        `Life Path ${py.life_path.number}: ${py.life_path.meaning}`,
-        `Birth Day ${py.birth_day.number}: ${py.birth_day.meaning}`,
-        `Expression ${py.expression.number}: ${py.expression.meaning}`,
-        `Soul Urge ${py.soul_urge.number}: ${py.soul_urge.meaning}`,
-        `Personality ${py.personality.number}: ${py.personality.meaning}`,
-        `Maturity ${py.maturity.number}: ${py.maturity.meaning}`,
-        "Together, these Pythagorean numbers may describe optional reflective themes—not ranked worth or fixed fate.",
-      ].join("\n\n"),
+        `Life Path ${py.life_path.number} · Birth Day ${py.birth_day.number} · Expression ${py.expression.number} · Soul Urge ${py.soul_urge.number} · Personality ${py.personality.number} · Maturity ${py.maturity.number}`,
+        `• Life Path: ${py.life_path.meaning}`,
+        `• Expression: ${py.expression.meaning}`,
+        `• Soul Urge: ${py.soul_urge.meaning}`,
+        `• Personality: ${py.personality.meaning}`,
+      ].join("\n"),
     },
     {
       id: "chaldean",
       title: "4. Chaldean Analysis",
-      body: report.chaldean.analysis,
+      body: [
+        `Name ${report.chaldean.name_number} · before reduce ${report.chaldean.compound_number}`,
+        `• ${report.chaldean.analysis.split(/(?<=\.)\s+/).slice(0, 3).join(" ")}`,
+      ].join("\n"),
     },
     {
       id: "vedic",
       title: "5. Vedic Numerology Analysis",
-      body: report.vedic.analysis,
+      body: [
+        `Psychic ${snap.vedic_psychic} (birth day) · Destiny ${snap.vedic_destiny} (full date) · Name ${snap.vedic_name}`,
+        `• Psychic: ${report.vedic.psychic_number.meaning}`,
+        `• Destiny: ${report.vedic.destiny_number.meaning}`,
+        report.vedic.unitSystem
+          ? `• Fit of the three: ${report.vedic.unitSystem.harmony_label} — ${report.vedic.unitSystem.harmony_detail}`
+          : null,
+        "• See the Vedic panel above for balancing pairs and easy/careful number notes.",
+      ]
+        .filter(Boolean)
+        .join("\n"),
     },
     {
       id: "lo-shu",
       title: "6. Lo Shu Analysis",
-      body: report.lo_shu.analysis,
+      body: [
+        `Present: ${report.lo_shu.present_numbers.join(", ") || "—"} · Missing: ${report.lo_shu.missing_numbers.join(", ") || "—"}`,
+        ...report.lo_shu.analysis
+          .split(/(?<=\.)\s+/)
+          .slice(0, 4)
+          .map((s) => `• ${s.trim()}`),
+      ].join("\n"),
     },
     {
       id: "core-personality",
       title: "7. Core Personality",
-      body: report.personality.core_personality,
+      body: report.personality.core_personality
+        .replace(
+          /\s*These are reflective possibilities—not judgments of worth, intelligence, morality, or destiny\.\s*/i,
+          " ",
+        )
+        .trim(),
     },
     {
       id: "strengths",
@@ -353,11 +375,7 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     {
       id: "growth",
       title: "9. Growth Opportunities",
-      body: [
-        ...report.growth_opportunities.map((s) => `• ${s}`),
-        "",
-        "These are conscious improvement areas—invitations for practice, not judgments, deficits, or fixed limits.",
-      ].join("\n"),
+      body: report.growth_opportunities.map((s) => `• ${s}`).join("\n"),
     },
     {
       id: "career",
@@ -388,49 +406,51 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     },
     {
       id: "personal-year",
-      title: "14. Personal Year Analysis",
+      title: "14. Personal Year",
       body: [
-        `Personal Year ${report.personal_year.number}: ${report.personal_year.theme}`,
-        report.personal_year.advice,
-      ].join("\n\n"),
+        `Personal Year ${report.personal_year.number}`,
+        `• Theme: ${report.personal_year.theme}`,
+        `• ${report.personal_year.advice}`,
+        "• See timing numbers in the snapshot above.",
+      ].join("\n"),
     },
     {
       id: "projected-year",
-      title: "14b. Projected Year (Unit System)",
+      title: "14b. Year outlook (calendar year)",
       body: report.projected_year
         ? [
-            `Projected Year ${report.projected_year.number} for ${report.projected_year.calendar_year} (${report.projected_year.planet}): ${report.projected_year.theme}`,
-            report.projected_year.advice,
-            report.projected_year.method_note,
-          ].join("\n\n")
-        : "Projected Year not available for this report.",
+            `Year outlook ${report.projected_year.number} for ${report.projected_year.calendar_year} (${report.projected_year.planet})`,
+            `• ${report.projected_year.theme}`,
+            `• Practice: ${report.projected_year.advice}`,
+            "• See the Year outlook panel above for the step-by-step calculation.",
+          ].join("\n")
+        : "Year outlook not available for this report.",
     },
     {
       id: "personal-month",
-      title: "15. Personal Month Analysis",
+      title: "15. Personal Month",
       body: [
-        `Personal Month ${report.personal_month.number}: ${report.personal_month.theme}`,
-        report.personal_month.advice,
-      ].join("\n\n"),
+        `Personal Month ${report.personal_month.number}`,
+        `• Theme: ${report.personal_month.theme}`,
+        `• ${report.personal_month.advice}`,
+      ].join("\n"),
     },
     {
       id: "current-month",
       title: "16. Current Month Guidance",
       body: [
         report.person.report_type === "adult"
-          ? `Career: ${report.monthly_guidance.career}`
-          : `Learning & interests: ${report.monthly_guidance.career}`,
-        `Study: ${report.monthly_guidance.learning}`,
-        `Relationships: ${report.monthly_guidance.relationships}`,
-        `Communication: lean into clarity and kindness; pause before reacting when emotions run high.`,
-        `Personal Growth: ${report.monthly_guidance.wellbeing}`,
-        `Money Awareness: ${report.monthly_guidance.finances}`,
-        `Emotional Focus: notice what restores calm and schedule gentle recovery time.`,
+          ? `• Career: ${report.monthly_guidance.career}`
+          : `• Learning & interests: ${report.monthly_guidance.career}`,
+        `• Study: ${report.monthly_guidance.learning}`,
+        `• Relationships: ${report.monthly_guidance.relationships}`,
+        `• Wellbeing: ${report.monthly_guidance.wellbeing}`,
+        `• Money awareness: ${report.monthly_guidance.finances}`,
         "",
-        "Recommended focus areas (optional):",
+        "Focus:",
         ...report.monthly_guidance.focus_areas.map((f) => `• ${f}`),
         "",
-        "Helpful to de-emphasize:",
+        "Ease off:",
         ...report.monthly_guidance.avoid.map((f) => `• ${f}`),
       ].join("\n"),
     },
@@ -512,7 +532,6 @@ export function generateReport(
       `At the center of this reading, Life Path ${pyth.lifePath} and Expression ${pyth.expression} may describe how ${name} moves through goals and self-expression.`,
       meaningFor(pyth.lifePath),
       `Soul Urge ${pyth.soulUrge} may point to inner motivations, while Personality ${pyth.personality} may color first impressions. Maturity ${pyth.maturity} could suggest themes that deepen with experience.`,
-      "These are reflective possibilities—not judgments of worth, intelligence, morality, or destiny.",
     ].join(" "),
     "core",
   );

@@ -5,10 +5,7 @@ import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
-import {
-  UNIT_AFFINITY_NOTE,
-  vedicNumberProfile,
-} from "@/lib/numerology/vedicNumberProfile";
+import { vedicNumberProfile } from "@/lib/numerology/vedicNumberProfile";
 import { oppositesForReport } from "@/lib/numerology/vedicSquare";
 
 type UnitSystemBits = {
@@ -40,15 +37,21 @@ type Props = {
 };
 
 const EASE_LABEL: Record<string, string> = {
-  easier: "Often easier",
-  mixed: "Mixed",
-  more_demanding: "More demanding",
+  easier: "Often easier day-to-day",
+  mixed: "Mixed day-to-day",
+  more_demanding: "More demanding day-to-day",
 };
 
 const TONE_STYLE: Record<string, string> = {
   supportive: "border-emerald-400/40 bg-emerald-500/15 text-emerald-100",
   mixed: "border-amber-300/40 bg-amber-400/15 text-amber-50",
   stretch: "border-rose-300/40 bg-rose-500/15 text-rose-50",
+};
+
+const CARD_SUB: Record<string, string> = {
+  Psychic: "From your birth day",
+  Destiny: "From your full birth date",
+  Name: "From your name letters",
 };
 
 export function VedicPanel({
@@ -68,14 +71,15 @@ export function VedicPanel({
 
   const oppositePairs = oppositesForReport(psychic, destiny, nameNumber);
   const psychicProfile = vedicNumberProfile(psychic);
-  const destinyProfile = vedicNumberProfile(destiny);
 
   return (
-    <div className="rounded-2xl border border-[var(--line)] bg-gradient-to-br from-ink via-[#1e293b] to-[#0f172a] p-6 text-paper">
-      <p className="text-sm uppercase tracking-[0.2em] text-sand">Vedic numbers</p>
+    <div className="rounded-2xl border border-[var(--sys-vedic-border)] bg-gradient-to-br from-ink via-[#1e293b] to-[#0f172a] p-6 text-paper">
+      <p className="text-sm uppercase tracking-[0.2em] text-sand">
+        Vedic numbers
+      </p>
       <p className="mt-2 text-sm text-paper/75">
-        Reflective panel (not a full kundli). Hover a number or planet · click
-        opens a guide in a new tab.
+        Three core digits from day, full date, and name. Click a number for a
+        short guide.
       </p>
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => {
@@ -84,10 +88,13 @@ export function VedicPanel({
             <div
               key={c.topic}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center"
-              title={`Vedic ${c.label} ${c.value} · ${planet.name}`}
+              title={`${c.label} ${c.value} · ${planet.name}`}
             >
               <p className="text-[10px] uppercase tracking-wider text-sand">
                 {c.label}
+              </p>
+              <p className="mt-0.5 text-[10px] text-paper/55">
+                {CARD_SUB[c.label]}
               </p>
               <GuideNumberLink
                 topic={c.topic}
@@ -108,14 +115,28 @@ export function VedicPanel({
         })}
       </div>
 
+      {unitSystem ? (
+        <div
+          className={`mt-5 rounded-xl border px-3 py-2 ${
+            TONE_STYLE[unitSystem.harmony_tone] ?? TONE_STYLE.mixed
+          }`}
+        >
+          <p className="text-[10px] uppercase tracking-wider opacity-80">
+            How your three Vedic numbers fit
+          </p>
+          <p className="mt-1 font-medium">{unitSystem.harmony_label}</p>
+          <p className="mt-1 text-xs opacity-90">{unitSystem.harmony_detail}</p>
+        </div>
+      ) : null}
+
       {oppositePairs.length > 0 ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
           <p className="text-[10px] uppercase tracking-wider text-sand">
-            Play of opposites
+            Balancing pairs
           </p>
           <p className="mt-1 text-xs text-paper/65">
-            Mirror pairs from the Vedic Square that touch your Psychic, Destiny,
-            or Name digits.
+            Number pairs that often pull in opposite directions—useful to
+            notice, not a judgment.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {oppositePairs.map((pair) => {
@@ -147,11 +168,11 @@ export function VedicPanel({
 
       <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
         <p className="text-[10px] uppercase tracking-wider text-sand">
-          Unit System affinity · Psychic {psychic}
+          Easy / careful with other numbers
         </p>
-        <p className="mt-2 text-xs text-paper/70">
-          {psychicProfile.color} · {psychicProfile.gem} · {psychicProfile.weekday} ·{" "}
-          {psychicProfile.direction}
+        <p className="mt-1 text-xs text-paper/65">
+          Based on Psychic {psychic}—who you may find easier or harder to
+          sync with day to day.
         </p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {psychicProfile.friendly.map((n) => (
@@ -159,7 +180,7 @@ export function VedicPanel({
               key={`f-${n}`}
               className="rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-100"
             >
-              Friendly {n}
+              Often easy · {n}
             </span>
           ))}
           {psychicProfile.challenging.map((n) => (
@@ -167,121 +188,92 @@ export function VedicPanel({
               key={`c-${n}`}
               className="rounded-full border border-rose-300/35 bg-rose-500/15 px-2 py-0.5 text-xs text-rose-100"
             >
-              Stretch {n}
+              Needs care · {n}
             </span>
           ))}
         </div>
-        <p className="mt-2 text-xs text-paper/65">
-          {psychicProfile.behavior}. Lesson tone: {psychicProfile.karmicLesson}.
+        <p className="mt-2 text-xs text-paper/60">
+          Destiny {destiny}: {destinyProfileOneLiner(destiny)}
         </p>
-        <p className="mt-3 text-[10px] uppercase tracking-wider text-sand">
-          Destiny {destiny} · thinner strip
-        </p>
-        <p className="mt-1 text-xs text-paper/65">
-          {destinyProfile.color} · {destinyProfile.gem} · roles often studied:{" "}
-          {destinyProfile.professionsHint.slice(0, 3).join(", ")}
-        </p>
-        <p className="mt-2 text-[11px] text-paper/55">{UNIT_AFFINITY_NOTE}</p>
       </div>
 
       {unitName ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
           <p className="text-[10px] uppercase tracking-wider text-sand">
-            Dual name numbers
+            Two name counts
+          </p>
+          <p className="mt-1 text-xs text-paper/65">
+            Same name, two letter maps—shown together so you can compare.
           </p>
           <p className="mt-2 text-paper/90">
-            Chaldean-aligned Vedic name{" "}
+            Map A{" "}
             <span className="brand text-lg text-paper">{nameNumber}</span>
             {nameCompound ? (
-              <span className="text-paper/60"> (compound {nameCompound})</span>
+              <span className="text-paper/60"> (before reduce {nameCompound})</span>
             ) : null}
           </p>
           <p className="mt-1 text-paper/90">
-            Unit System name{" "}
+            Map B{" "}
             <span className="brand text-lg text-sand">{unitName}</span>
             {unitCompound ? (
               <span className="text-paper/60">
                 {" "}
-                (compound {unitCompound})
+                (before reduce {unitCompound})
               </span>
             ) : null}
-          </p>
-          <p className="mt-2 text-xs text-paper/65">
-            Letter maps differ (e.g. C and H). Both are shown so you can compare
-            systems without mixing their rules.
           </p>
         </div>
       ) : null}
 
       {unitSystem ? (
-        <div className="mt-5 space-y-3 text-sm text-paper/85">
-          <div
-            className={`rounded-xl border px-3 py-2 ${
-              TONE_STYLE[unitSystem.harmony_tone] ?? TONE_STYLE.mixed
-            }`}
-          >
-            <p className="font-medium">{unitSystem.harmony_label}</p>
-            <p className="mt-1 text-xs opacity-90">{unitSystem.harmony_detail}</p>
-          </div>
-
-          <div className="grid gap-2 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-wider text-sand">
-                Psychic ease
-              </p>
-              <p className="mt-1 text-paper">
-                {EASE_LABEL[unitSystem.psychic_ease] ?? unitSystem.psychic_ease}
-              </p>
-              <p className="mt-1 text-xs text-paper/70">{unitSystem.psychic_note}</p>
+        <details className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+          <summary className="cursor-pointer text-sand">More detail</summary>
+          <div className="mt-3 space-y-3 text-paper/85">
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-sand">
+                  Birth-day rhythm
+                </p>
+                <p className="mt-1 text-xs">
+                  {EASE_LABEL[unitSystem.psychic_ease] ?? unitSystem.psychic_ease}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-sand">
+                  Life-path rhythm
+                </p>
+                <p className="mt-1 text-xs">
+                  {EASE_LABEL[unitSystem.destiny_ease] ??
+                    unitSystem.destiny_ease}
+                </p>
+              </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-wider text-sand">
-                Destiny ease
-              </p>
-              <p className="mt-1 text-paper">
-                {EASE_LABEL[unitSystem.destiny_ease] ?? unitSystem.destiny_ease}
-              </p>
-              <p className="mt-1 text-xs text-paper/70">{unitSystem.destiny_note}</p>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-sand">
-              Birth-day compound
-              {unitSystem.birth_day_exalted ? " · exaltation-style" : ""}
-            </p>
-            <p className="mt-1 text-xs leading-5">{unitSystem.birth_day_note}</p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-sand">
-              Temperament chips
-            </p>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {unitSystem.doshas.map((d) => (
-                <span
-                  key={d}
-                  className="rounded-full border border-sand/40 bg-sand/10 px-2.5 py-0.5 text-xs text-sand"
-                >
-                  {d}
-                </span>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-paper/70">
+            <p className="text-xs leading-5">{unitSystem.birth_day_note}</p>
+            {unitSystem.doshas.length ? (
+              <div className="flex flex-wrap gap-1.5">
+                {unitSystem.doshas.map((d) => (
+                  <span
+                    key={d}
+                    className="rounded-full border border-sand/40 bg-sand/10 px-2.5 py-0.5 text-xs text-sand"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <p className="text-xs text-paper/70">
               {unitSystem.temperament_summary}
             </p>
+            {unitSystem.zero_note ? (
+              <p className="text-xs text-paper/65">{unitSystem.zero_note}</p>
+            ) : null}
           </div>
-
-          {unitSystem.zero_note ? (
-            <p className="text-xs text-paper/65">{unitSystem.zero_note}</p>
-          ) : null}
-          <p className="text-xs text-paper/60">{unitSystem.compat_note}</p>
-        </div>
+        </details>
       ) : null}
 
-      <div className="mt-5 space-y-2 text-sm text-paper/80">
+      <div className="mt-5 flex flex-wrap gap-4 text-sm text-paper/80">
         <p className="flex flex-wrap items-center gap-2">
-          <span>Psychic ruling planet:</span>
+          <span>Birth-day planet:</span>
           <PlanetIcon
             planet={planetForVedic(psychic)}
             size="sm"
@@ -290,7 +282,7 @@ export function VedicPanel({
           />
         </p>
         <p className="flex flex-wrap items-center gap-2">
-          <span>Destiny ruling planet:</span>
+          <span>Full-date planet:</span>
           <PlanetIcon
             planet={planetForVedic(destiny)}
             size="sm"
@@ -301,4 +293,9 @@ export function VedicPanel({
       </div>
     </div>
   );
+}
+
+function destinyProfileOneLiner(destiny: string): string {
+  const p = vedicNumberProfile(destiny);
+  return `${p.color} · ${p.gem}`;
 }

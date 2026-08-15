@@ -3,49 +3,87 @@
 import Link from "next/link";
 import { guideHref, type GuideTopic } from "@/lib/guides/content";
 import { coreTraitFor } from "@/lib/numerology/meanings";
+import type { NumerologySystem } from "@/components/report/SnapshotBySystem";
 
 type Item = {
   label: string;
   topic: GuideTopic;
   value: string;
+  system?: NumerologySystem;
+  subtitle?: string;
 };
 
 type Props = {
   items: Item[];
+  intro?: string;
 };
 
-/** Visual map of calculated core numbers — not strength, intensity, or ranking. */
-export function CoreNumbersChart({ items }: Props) {
+const SYS_CLASS: Record<NumerologySystem, string> = {
+  pythagorean: "sys-pyth",
+  chaldean: "sys-chal",
+  vedic: "sys-vedic",
+  timing: "sys-timing",
+  astro: "sys-astro",
+};
+
+const SYS_LABEL: Record<NumerologySystem, string> = {
+  pythagorean: "Pythagorean",
+  chaldean: "Chaldean",
+  vedic: "Vedic",
+  timing: "Timing",
+  astro: "Astrology",
+};
+
+/** Visual map of calculated core numbers by system. */
+export function CoreNumbersChart({ items, intro }: Props) {
   return (
     <div>
       <p className="text-sm leading-6 text-ink-soft">
-        These tiles show your <span className="text-ink">calculated core numbers</span>{" "}
-        (Life Path, Expression, etc.). The figure is the number itself —{" "}
-        <span className="text-ink">not</span> intensity, strength, progress, or a
-        score out of 100. A short core trait sits under each number. Hover a
-        tile and click to open a short guide.
+        {intro ??
+          "Your main calculated numbers at a glance. Click a tile for a short guide."}
       </p>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
         {items.map((item) => {
+          const system = item.system ?? "pythagorean";
           const tip = `${item.label} ${item.value}: ${coreTraitFor(item.value)}. Click for guide.`;
+          const dark = system === "vedic";
           return (
             <Link
-              key={item.topic}
+              key={`${item.topic}-${item.value}`}
               href={guideHref(item.topic, item.value)}
               target="_blank"
               rel="noopener noreferrer"
               title={tip}
               aria-label={tip}
-              className="rounded-xl border border-[var(--line)] bg-mist/60 px-3 py-4 text-center transition hover:border-gold/40 hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className={`btn-tactile rounded-xl border px-3 py-4 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${SYS_CLASS[system]}`}
             >
-              <p className="text-[11px] uppercase tracking-wider text-ink-soft">
+              <p
+                className={`text-[10px] uppercase tracking-wider ${
+                  dark ? "sys-muted" : "opacity-70"
+                }`}
+              >
+                {SYS_LABEL[system]}
+              </p>
+              <p
+                className={`mt-1 text-[11px] uppercase tracking-wider ${
+                  dark ? "text-sand" : "opacity-80"
+                }`}
+              >
                 {item.label}
               </p>
-              <p className="brand mt-2 text-3xl leading-none text-ink">
+              <p
+                className={`brand mt-2 text-3xl leading-none ${
+                  dark ? "text-paper" : ""
+                }`}
+              >
                 {item.value}
               </p>
-              <p className="mt-2 text-[11px] leading-snug text-ink-soft">
-                {coreTraitFor(item.value)}
+              <p
+                className={`mt-2 text-[11px] leading-snug ${
+                  dark ? "sys-muted" : "opacity-80"
+                }`}
+              >
+                {item.subtitle ?? coreTraitFor(item.value)}
               </p>
             </Link>
           );

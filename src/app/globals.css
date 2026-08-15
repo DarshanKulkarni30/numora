@@ -14,6 +14,24 @@
   --glow: rgba(245, 158, 11, 0.16);
   --background: var(--paper);
   --foreground: var(--ink);
+
+  /* Numerology system chrome */
+  --sys-pyth-bg: rgba(15, 23, 42, 0.06);
+  --sys-pyth-border: rgba(15, 23, 42, 0.2);
+  --sys-pyth-fg: #0f172a;
+  --sys-chal-bg: rgba(245, 158, 11, 0.12);
+  --sys-chal-border: rgba(217, 119, 6, 0.35);
+  --sys-chal-fg: #92400e;
+  --sys-vedic-bg: #0f172a;
+  --sys-vedic-border: rgba(245, 158, 11, 0.35);
+  --sys-vedic-fg: #f8fafc;
+  --sys-vedic-muted: rgba(248, 250, 252, 0.72);
+  --sys-timing-bg: rgba(14, 116, 144, 0.1);
+  --sys-timing-border: rgba(14, 116, 144, 0.28);
+  --sys-timing-fg: #155e75;
+  --sys-astro-bg: rgba(100, 116, 139, 0.1);
+  --sys-astro-border: rgba(100, 116, 139, 0.28);
+  --sys-astro-fg: #334155;
 }
 
 @theme inline {
@@ -220,4 +238,34 @@ a.rounded-full:active {
   a.rounded-full:hover {
     transform: none !important;
   }
+}
+
+/* System-colored report chrome */
+.sys-pyth {
+  background: var(--sys-pyth-bg);
+  border-color: var(--sys-pyth-border);
+  color: var(--sys-pyth-fg);
+}
+.sys-chal {
+  background: var(--sys-chal-bg);
+  border-color: var(--sys-chal-border);
+  color: var(--sys-chal-fg);
+}
+.sys-vedic {
+  background: var(--sys-vedic-bg);
+  border-color: var(--sys-vedic-border);
+  color: var(--sys-vedic-fg);
+}
+.sys-vedic .sys-muted {
+  color: var(--sys-vedic-muted);
+}
+.sys-timing {
+  background: var(--sys-timing-bg);
+  border-color: var(--sys-timing-border);
+  color: var(--sys-timing-fg);
+}
+.sys-astro {
+  background: var(--sys-astro-bg);
+  border-color: var(--sys-astro-border);
+  color: var(--sys-astro-fg);
 }

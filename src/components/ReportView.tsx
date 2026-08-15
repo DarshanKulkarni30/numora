@@ -9,20 +9,14 @@ import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
+import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
-import type { GuideTopic } from "@/lib/guides/content";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
 type Props = {
   report: NumerologyReport;
   watermarkEmail?: string;
-};
-
-type SnapshotRow = {
-  label: string;
-  topic: GuideTopic;
-  value: string;
 };
 
 function Accordion({
@@ -52,13 +46,50 @@ function Accordion({
   );
 }
 
-function MoreDetail({ text }: { text: string }) {
+function SectionBody({ text }: { text: string }) {
   const [open, setOpen] = useState(false);
+  const lines = text.split("\n").filter((l) => l.trim().length > 0);
+  const isListHeavy =
+    lines.filter((l) => /^[•\-\d]/.test(l.trim()) || l.includes(" · ")).length >=
+    Math.max(2, Math.floor(lines.length * 0.4));
+
+  if (isListHeavy) {
+    const preview = lines.slice(0, 6);
+    const rest = lines.slice(6);
+    return (
+      <div className="space-y-2 text-sm leading-7 text-ink-soft">
+        <ul className="space-y-1.5">
+          {preview.map((line) => (
+            <li key={line}>{line.replace(/^•\s*/, "")}</li>
+          ))}
+        </ul>
+        {rest.length ? (
+          <>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="text-sm text-gold-deep underline decoration-gold/50 underline-offset-2 hover:text-ink"
+            >
+              {open ? "Hide detail" : "More detail"}
+            </button>
+            {open ? (
+              <ul className="space-y-1.5">
+                {rest.map((line) => (
+                  <li key={line}>{line.replace(/^•\s*/, "")}</li>
+                ))}
+              </ul>
+            ) : null}
+          </>
+        ) : null}
+      </div>
+    );
+  }
+
   const lead = text.split(/\n\n/)[0] ?? text;
   const hasMore = text.length > lead.length + 40;
   return (
     <div className="space-y-3 text-ink-soft">
-      <p className="leading-7">{lead}</p>
+      <p className="leading-7 whitespace-pre-wrap">{lead}</p>
       {hasMore ? (
         <>
           <button
@@ -69,7 +100,7 @@ function MoreDetail({ text }: { text: string }) {
             {open ? "Hide detail" : "More detail"}
           </button>
           {open ? (
-            <div className="whitespace-pre-wrap leading-7 text-sm opacity-90">
+            <div className="whitespace-pre-wrap text-sm leading-7 opacity-90">
               {text.slice(lead.length).trim()}
             </div>
           ) : null}
@@ -77,6 +108,10 @@ function MoreDetail({ text }: { text: string }) {
       ) : null}
     </div>
   );
+}
+
+function MoreDetail({ text }: { text: string }) {
+  return <SectionBody text={text} />;
 }
 
 export function ReportView({ report, watermarkEmail }: Props) {
@@ -108,62 +143,186 @@ export function ReportView({ report, watermarkEmail }: Props) {
   const snap = report.numerology_snapshot;
   const person = report.person;
 
-  const rows: SnapshotRow[] = [
-    { label: "Life Path", topic: "life-path", value: snap.life_path },
-    { label: "Birth Day", topic: "birth-day", value: snap.birth_day },
-    { label: "Expression", topic: "expression", value: snap.expression_number },
-    { label: "Soul Urge", topic: "soul-urge", value: snap.soul_urge_number },
+  const snapshotGroups = [
     {
-      label: "Personality",
-      topic: "personality",
-      value: snap.personality_number,
+      system: "pythagorean" as const,
+      title: "Pythagorean",
+      blurb: "From your full name and birth date (Western-style core map).",
+      rows: [
+        { label: "Life Path", topic: "life-path" as const, value: snap.life_path },
+        { label: "Birth Day", topic: "birth-day" as const, value: snap.birth_day },
+        {
+          label: "Expression",
+          topic: "expression" as const,
+          value: snap.expression_number,
+        },
+        {
+          label: "Soul Urge",
+          topic: "soul-urge" as const,
+          value: snap.soul_urge_number,
+        },
+        {
+          label: "Personality",
+          topic: "personality" as const,
+          value: snap.personality_number,
+        },
+        {
+          label: "Maturity",
+          topic: "maturity" as const,
+          value: snap.maturity_number,
+        },
+      ],
     },
-    { label: "Maturity", topic: "maturity", value: snap.maturity_number },
     {
-      label: "Chaldean Name",
-      topic: "chaldean-name",
-      value: snap.chaldean_name_number,
+      system: "chaldean" as const,
+      title: "Chaldean",
+      blurb: "Name vibration using the Chaldean letter map.",
+      rows: [
+        {
+          label: "Name number",
+          topic: "chaldean-name" as const,
+          value: snap.chaldean_name_number,
+        },
+        {
+          label: "Before reduce",
+          value: snap.compound_number,
+          hint: "Total before reducing to a single digit",
+        },
+      ],
     },
-    { label: "Vedic Psychic", topic: "vedic-psychic", value: snap.vedic_psychic },
     {
-      label: "Vedic Destiny",
-      topic: "vedic-destiny",
-      value: snap.vedic_destiny,
+      system: "vedic" as const,
+      title: "Vedic",
+      blurb: "Day temperament, full-date path, and name tone.",
+      rows: [
+        {
+          label: "Psychic (birth day)",
+          topic: "vedic-psychic" as const,
+          value: snap.vedic_psychic,
+        },
+        {
+          label: "Destiny (full date)",
+          topic: "vedic-destiny" as const,
+          value: snap.vedic_destiny,
+        },
+        {
+          label: "Name",
+          topic: "vedic-name" as const,
+          value: snap.vedic_name,
+        },
+        ...(snap.unit_name
+          ? [
+              {
+                label: "Name (second map)",
+                value: snap.unit_name,
+                hint: "Alternate letter map for the same name",
+              },
+            ]
+          : []),
+      ],
     },
-    { label: "Vedic Name", topic: "vedic-name", value: snap.vedic_name },
     {
-      label: "Personal Year",
-      topic: "personal-year",
-      value: snap.personal_year,
+      system: "timing" as const,
+      title: "This year timing",
+      blurb: "How this calendar year and month may feel to pace.",
+      rows: [
+        {
+          label: "Personal Year",
+          topic: "personal-year" as const,
+          value: snap.personal_year,
+        },
+        {
+          label: "Personal Month",
+          topic: "personal-month" as const,
+          value: snap.personal_month,
+        },
+        ...(snap.projected_year
+          ? [
+              {
+                label: "Year outlook",
+                topic: "projected-year" as const,
+                value: snap.projected_year,
+                hint: snap.projected_year_calendar
+                  ? `For calendar year ${snap.projected_year_calendar}`
+                  : undefined,
+              },
+            ]
+          : []),
+      ],
     },
-    {
-      label: "Personal Month",
-      topic: "personal-month",
-      value: snap.personal_month,
-    },
+    ...(snap.sun_sign && snap.sun_sign_label
+      ? [
+          {
+            system: "astro" as const,
+            title: "Sun sign",
+            blurb: "Tropical sun sign from month and day of birth.",
+            rows: [
+              {
+                label: "Sun sign",
+                topic: "sun-sign" as const,
+                value: snap.sun_sign,
+                display: snap.sun_sign_label,
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
   const chartItems = [
-    { label: "Life Path", topic: "life-path" as const, value: snap.life_path },
+    {
+      label: "Life Path",
+      topic: "life-path" as const,
+      value: snap.life_path,
+      system: "pythagorean" as const,
+    },
     {
       label: "Expression",
       topic: "expression" as const,
       value: snap.expression_number,
+      system: "pythagorean" as const,
     },
     {
       label: "Soul Urge",
       topic: "soul-urge" as const,
       value: snap.soul_urge_number,
+      system: "pythagorean" as const,
     },
     {
       label: "Personality",
       topic: "personality" as const,
       value: snap.personality_number,
+      system: "pythagorean" as const,
     },
     {
       label: "Maturity",
       topic: "maturity" as const,
       value: snap.maturity_number,
+      system: "pythagorean" as const,
+    },
+  ];
+
+  const vedicChartItems = [
+    {
+      label: "Psychic",
+      topic: "vedic-psychic" as const,
+      value: snap.vedic_psychic,
+      system: "vedic" as const,
+      subtitle: "Birth day",
+    },
+    {
+      label: "Destiny",
+      topic: "vedic-destiny" as const,
+      value: snap.vedic_destiny,
+      system: "vedic" as const,
+      subtitle: "Full date",
+    },
+    {
+      label: "Name",
+      topic: "vedic-name" as const,
+      value: snap.vedic_name,
+      system: "vedic" as const,
+      subtitle: "Name letters",
     },
   ];
 
@@ -237,110 +396,26 @@ export function ReportView({ report, watermarkEmail }: Props) {
         <section>
           <h2 className="text-xl text-ink">Numerology snapshot</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Hover a number for a tip · click to open its guide in a new tab.
+            Grouped by system · hover a number · click opens its guide.
           </p>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-[var(--line)] bg-white/55">
-            <table className="w-full min-w-[22rem] text-left text-sm">
-              <thead className="border-b border-[var(--line)] bg-mist/50 text-ink-soft">
-                <tr>
-                  <th className="px-3 py-2 font-medium">Aspect</th>
-                  <th className="px-3 py-2 font-medium">No.</th>
-                  <th className="px-3 py-2 font-medium">Aspect</th>
-                  <th className="px-3 py-2 font-medium">No.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: Math.ceil(rows.length / 2) }, (_, i) => {
-                  const left = rows[i * 2];
-                  const right = rows[i * 2 + 1];
-                  return (
-                    <tr
-                      key={left.topic}
-                      className="border-b border-[var(--line)] last:border-0"
-                    >
-                      <td className="px-3 py-2 text-ink">{left.label}</td>
-                      <td className="px-3 py-2">
-                        <GuideNumberLink
-                          topic={left.topic}
-                          value={left.value}
-                          label={left.label}
-                        />
-                      </td>
-                      {right ? (
-                        <>
-                          <td className="px-3 py-2 text-ink">{right.label}</td>
-                          <td className="px-3 py-2">
-                            <GuideNumberLink
-                              topic={right.topic}
-                              value={right.value}
-                              label={right.label}
-                            />
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="px-3 py-2 text-ink">
-                            Chaldean compound
-                          </td>
-                          <td
-                            className="px-3 py-2 text-ink"
-                            title="Compound total before reduction"
-                          >
-                            {snap.compound_number}
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  );
-                })}
-                {rows.length % 2 === 0 ? (
-                  <tr>
-                    <td className="px-3 py-2 text-ink">Chaldean compound</td>
-                    <td
-                      className="px-3 py-2 text-ink"
-                      title="Compound total before reduction"
-                    >
-                      {snap.compound_number}
-                    </td>
-                    {snap.sun_sign && snap.sun_sign_label ? (
-                      <>
-                        <td className="px-3 py-2 text-ink">Sun sign</td>
-                        <td className="px-3 py-2">
-                          <GuideNumberLink
-                            topic="sun-sign"
-                            value={snap.sun_sign}
-                            label="Sun sign"
-                            display={snap.sun_sign_label}
-                          />
-                        </td>
-                      </>
-                    ) : (
-                      <td className="px-3 py-2" colSpan={2} />
-                    )}
-                  </tr>
-                ) : snap.sun_sign && snap.sun_sign_label ? (
-                  <tr>
-                    <td className="px-3 py-2 text-ink">Sun sign</td>
-                    <td className="px-3 py-2">
-                      <GuideNumberLink
-                        topic="sun-sign"
-                        value={snap.sun_sign}
-                        label="Sun sign"
-                        display={snap.sun_sign_label}
-                      />
-                    </td>
-                    <td className="px-3 py-2" colSpan={2} />
-                  </tr>
-                ) : null}
-              </tbody>
-            </table>
+          <div className="mt-4">
+            <SnapshotBySystem groups={snapshotGroups} />
           </div>
         </section>
 
         <section>
           <h2 className="text-xl text-ink">Core numbers at a glance</h2>
-          <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <div className="mt-4 space-y-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <CoreNumbersChart items={chartItems} />
+            <div>
+              <p className="text-sm font-medium text-ink">Vedic trio</p>
+              <div className="mt-3">
+                <CoreNumbersChart
+                  items={vedicChartItems}
+                  intro="Day, full date, and name digits from the Vedic layer."
+                />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -378,10 +453,10 @@ export function ReportView({ report, watermarkEmail }: Props) {
         </section>
 
         <section>
-          <h2 className="text-xl text-ink">Projected Year</h2>
+          <h2 className="text-xl text-ink">Year outlook by calendar year</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Unit System–style year tone (month + day + YY + weekday digit). Sits
-            beside Western Personal Year—not a fixed forecast.
+            Pick any year to see the tone number and the exact addition used.
+            This sits beside Personal Year—not instead of it.
           </p>
           <div className="mt-4">
             <ProjectedYearPanel dateOfBirth={person.date_of_birth} />
@@ -416,10 +491,6 @@ export function ReportView({ report, watermarkEmail }: Props) {
         {report.growth_areas?.length ? (
           <section>
             <h2 className="text-xl text-ink">Areas to work on</h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              Suggestions drawn from Lo Shu gaps, core numbers, Vedic contrast,
-              and name letters.
-            </p>
             <div className="mt-4">
               <GrowthAreasPanel areas={report.growth_areas} />
             </div>
@@ -444,9 +515,20 @@ export function ReportView({ report, watermarkEmail }: Props) {
 
         <section className="space-y-3">
           <h2 className="text-xl text-ink">Detailed reading</h2>
+          <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm leading-6 text-amber-950">
+            <p className="font-medium text-ink">Before you read</p>
+            <p className="mt-1">{report.disclaimer}</p>
+            {report.safety_notices?.length ? (
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                {report.safety_notices.map((n) => (
+                  <li key={n.slice(0, 48)}>{n}</li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
           <p className="text-sm text-ink-soft">
-            Skim visuals above first—expand a section only when you want fuller
-            narrative.
+            Skim the visuals above first—open a section only when you want more
+            detail. Section text does not repeat the disclaimer.
           </p>
           {detailSections.map((section) => (
             <Accordion

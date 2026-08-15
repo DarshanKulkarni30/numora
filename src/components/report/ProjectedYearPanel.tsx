@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
-  PROJECTED_YEAR_METHOD_NOTE,
   projectedYearBreakdown,
   projectedYearMeta,
 } from "@/lib/numerology/vedicYearNumber";
@@ -27,20 +26,21 @@ export function ProjectedYearPanel({
   const meta = projectedYearMeta(breakdown.number);
 
   return (
-    <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5 sm:p-6">
+    <div className="sys-timing rounded-2xl border p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-            Projected Year
+          <p className="text-sm font-medium tracking-wide">
+            Year outlook by calendar year
           </p>
-          <p className="mt-1 text-sm text-ink-soft">
-            Unit System–style year tone beside Western Personal Year.
+          <p className="mt-1 text-sm opacity-80">
+            A second way to read a year’s tone beside Personal Year. Pick a
+            year to see the number and the real sum used.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm"
+            className="btn-tactile rounded-full border border-[var(--sys-timing-border)] bg-white/80 px-3 py-1.5 text-sm text-ink"
             onClick={() => setYear((y) => y - 1)}
             aria-label="Previous year"
           >
@@ -51,7 +51,7 @@ export function ProjectedYearPanel({
           </span>
           <button
             type="button"
-            className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm"
+            className="btn-tactile rounded-full border border-[var(--sys-timing-border)] bg-white/80 px-3 py-1.5 text-sm text-ink"
             onClick={() => setYear((y) => y + 1)}
             aria-label="Next year"
           >
@@ -62,8 +62,8 @@ export function ProjectedYearPanel({
 
       <div className="mt-4 flex flex-wrap items-end gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-            Year number
+          <p className="text-[10px] uppercase tracking-wider opacity-70">
+            Year number for {year}
           </p>
           <Link
             href={`/guide/projected-year/${breakdown.number}`}
@@ -72,27 +72,60 @@ export function ProjectedYearPanel({
             {breakdown.number}
           </Link>
         </div>
-        <div className="text-sm text-ink-soft">
-          <p>
-            Planet tone: <span className="text-ink">{meta.planet}</span>
-          </p>
-          <p className="mt-1 text-xs">
-            {breakdown.month}+{breakdown.day}+{breakdown.yearDigits}+
-            {breakdown.weekdayDigit} ({breakdown.weekdayLabel}) →{" "}
-            {breakdown.compound} → {breakdown.number}
-          </p>
-        </div>
+        <p className="text-sm opacity-80">
+          Planet tone: <span className="text-ink">{meta.planet}</span>
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-[var(--sys-timing-border)] bg-white/70 px-4 py-3 text-sm text-ink">
+        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+          Calculation for {year}
+        </p>
+        <ol className="mt-2 space-y-1.5 text-ink-soft">
+          <li>
+            1. Birth month{" "}
+            <span className="font-medium text-ink">{breakdown.month}</span> +
+            birth day{" "}
+            <span className="font-medium text-ink">{breakdown.day}</span>
+          </li>
+          <li>
+            2. Last two digits of {year}:{" "}
+            <span className="font-medium text-ink">{breakdown.yearDigits}</span>
+          </li>
+          <li>
+            3. Weekday of your birthday in {year}:{" "}
+            <span className="font-medium text-ink">
+              {breakdown.weekdayLabel}
+            </span>{" "}
+            → number{" "}
+            <span className="font-medium text-ink">
+              {breakdown.weekdayDigit}
+            </span>
+          </li>
+          <li>
+            4. Add them:{" "}
+            <span className="font-medium text-ink">
+              {breakdown.month} + {breakdown.day} + {breakdown.yearDigits} +{" "}
+              {breakdown.weekdayDigit} = {breakdown.compound}
+            </span>
+          </li>
+          <li>
+            5. Reduce to one digit:{" "}
+            <span className="font-medium text-ink">{breakdown.number}</span>
+          </li>
+        </ol>
       </div>
 
       <p className="mt-4 text-sm leading-6 text-ink">{meta.theme}</p>
-      <ul className="mt-3 space-y-1 text-sm text-ink-soft">
+      <ul className="mt-3 space-y-1 text-sm opacity-80">
         {meta.strengths.slice(0, 2).map((s) => (
           <li key={s}>· {s}</li>
         ))}
         <li>· Practice: {meta.practice}</li>
       </ul>
-      <p className="mt-4 text-xs leading-5 text-ink-soft">
-        {PROJECTED_YEAR_METHOD_NOTE}
+      <p className="mt-4 text-xs leading-5 opacity-75">
+        Reflective pacing theme for the selected calendar year—not a prediction
+        of specific events.
       </p>
     </div>
   );
