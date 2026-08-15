@@ -47,10 +47,10 @@ export default async function TriviaPage() {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">Trivia explorer</h1>
           <p className="mt-3 text-ink-soft">
-            Browse personalities, countries, and ~1000 world cities (with name
-            numbers), filter by digit, or pick someone from your profile for
-            top-10 matches—including compatible cities. Reflective fun only—not
-            destiny, endorsement, or relocation advice.
+            Browse personalities, countries, and ~140 well-known world cities
+            (with name numbers), filter by digit, or pick someone from your
+            profile for top matches—including compatible cities. Reflective fun
+            only—not destiny, endorsement, or relocation advice.
           </p>
         </div>
         <div className="mt-10">

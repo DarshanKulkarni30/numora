@@ -184,12 +184,14 @@ export function matchCities(opts: {
     const closeness = exact
       ? 0
       : Math.min(...targets.map((t) => digitDistance(t, n)));
-    return { city, exact, closeness, name: city.name };
+    return { city, exact, closeness, rank: city.rank ?? 9999 };
   })
     .sort((a, b) => {
       if (b.exact !== a.exact) return b.exact - a.exact;
       if (a.closeness !== b.closeness) return a.closeness - b.closeness;
-      return a.name.localeCompare(b.name);
+      // Prefer well-known cities over alphabetical obscure ties
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return a.city.name.localeCompare(b.city.name);
     })
     .slice(0, opts.limit ?? 5)
     .map((x) => x.city);
