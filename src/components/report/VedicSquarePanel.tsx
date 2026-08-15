@@ -5,9 +5,11 @@ import { useMemo, useState } from "react";
 import {
   countInSquare,
   digitalRoot,
+  frequencyBand,
+  layerContextLine,
   NINE_NOTE,
-  oppositeOf,
   REDUCTION_TIP,
+  squareDigitGuide,
   VEDIC_SQUARE,
 } from "@/lib/numerology/vedicSquare";
 
@@ -44,8 +46,11 @@ export function VedicSquarePanel({
   }, [source, manual, psychic, destiny, nameNumber, unitName]);
 
   const digit = digitalRoot(highlight || 1);
-  const opp = oppositeOf(digit);
   const count = countInSquare(digit);
+  const guide = squareDigitGuide(digit);
+  const freq = frequencyBand(count);
+  const layerLine = layerContextLine(source, digit);
+  const opp = guide.opposite;
 
   const presets: { id: HighlightSource; label: string; value?: string }[] = [
     { id: "psychic", label: "Psychic", value: psychic },
@@ -64,7 +69,8 @@ export function VedicSquarePanel({
       </p>
       <p className="mt-2 max-w-2xl text-sm text-ink-soft">
         A 9×9 multiplication table reduced to digital roots (1–9). Highlight a
-        core number to see where it repeats in the square.
+        core number to see where it repeats, what that footprint often means,
+        and a short reflective practice.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -144,35 +150,94 @@ export function VedicSquarePanel({
         </div>
       </div>
 
-      <div className="mt-5 space-y-2 text-sm text-ink-soft">
-        <p>
-          Highlighting{" "}
-          <Link
-            href={`/guide/vedic-square/${digit}`}
-            className="font-medium text-ink underline-offset-2 hover:underline"
-          >
-            {digit}
-          </Link>
-          : appears <span className="text-ink">{count}</span> times in the
-          square
-          {opp != null ? (
-            <>
-              {" "}
-              · opposite{" "}
-              <Link
-                href={`/guide/vedic-square/${opp}`}
-                className="font-medium text-ink underline-offset-2 hover:underline"
-              >
-                {opp}
-              </Link>
-            </>
-          ) : (
-            <> · no opposite (9 stands alone)</>
-          )}
-          .
-        </p>
-        <p className="text-xs leading-5">{NINE_NOTE}</p>
-        <p className="text-xs leading-5">{REDUCTION_TIP}</p>
+      <div className="mt-5 space-y-4">
+        <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
+          <p className="text-sm text-ink">
+            Highlighting{" "}
+            <Link
+              href={`/guide/vedic-square/${digit}`}
+              className="font-medium text-gold-deep underline underline-offset-2 hover:text-ink"
+            >
+              {digit}
+            </Link>
+            : appears <span className="brand text-ink">{count}</span> times ·{" "}
+            <span className="text-ink">{freq.label}</span>
+            {opp != null ? (
+              <>
+                {" "}
+                · opposite{" "}
+                <Link
+                  href={`/guide/vedic-square/${opp.a === digit ? opp.b : opp.a}`}
+                  className="font-medium text-gold-deep underline underline-offset-2 hover:text-ink"
+                >
+                  {opp.a === digit ? opp.b : opp.a}
+                </Link>
+              </>
+            ) : (
+              <> · no opposite (9 stands alone)</>
+            )}
+          </p>
+          {layerLine ? (
+            <p className="mt-2 text-xs leading-5 text-ink-soft">{layerLine}</p>
+          ) : null}
+          <p className="mt-2 text-sm leading-6 text-ink-soft">{freq.meaning}</p>
+        </div>
+
+        <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+            Generic impact of digit {digit}
+          </p>
+          <p className="mt-1 text-sm font-medium text-ink">{guide.theme}</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-soft">
+                Often supports
+              </p>
+              <ul className="mt-1 space-y-1 text-sm text-ink">
+                {guide.strengths.map((s) => (
+                  <li key={s}>· {s}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-soft">
+                Watch for
+              </p>
+              <ul className="mt-1 space-y-1 text-sm text-ink">
+                {guide.watchouts.map((s) => (
+                  <li key={s}>· {s}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          {opp ? (
+            <p className="mt-3 text-xs leading-5 text-ink-soft">
+              Opposite play {opp.a}↔{opp.b} ({opp.planets}): {opp.theme}{" "}
+              Practice: {opp.practice}
+            </p>
+          ) : null}
+          <p className="mt-3 rounded-lg border border-[var(--line)] bg-mist/40 px-3 py-2 text-sm text-ink">
+            <span className="text-xs uppercase tracking-wider text-ink-soft">
+              Practice
+            </span>
+            <br />
+            {guide.practice}
+          </p>
+          <p className="mt-2 text-xs text-ink-soft">
+            Reflective pattern notes only—not medical, legal, or destiny claims.{" "}
+            <Link
+              href={`/guide/vedic-square/${digit}`}
+              className="text-gold-deep underline underline-offset-2 hover:text-ink"
+            >
+              Open full digit guide
+            </Link>
+          </p>
+        </div>
+
+        {digit === 9 ? (
+          <p className="text-xs leading-5 text-ink-soft">{NINE_NOTE}</p>
+        ) : null}
+        <p className="text-xs leading-5 text-ink-soft">{REDUCTION_TIP}</p>
       </div>
     </div>
   );

@@ -99,6 +99,52 @@ export const REDUCTION_TIP =
 export const NINE_NOTE =
   "In the Vedic Square, 9 is persistent—multiples of 9 stay 9, and the outer rim is lined with 9s. Digits 1–8 shift as they multiply; 9 keeps its identity.";
 
+/** How often each digit appears in the fixed 9×9 square (1→6 … 9→21). */
+export function frequencyBand(count: number): {
+  label: string;
+  meaning: string;
+} {
+  if (count >= 18) {
+    return {
+      label: "Highest footprint",
+      meaning:
+        "This digit saturates the square more than any other. Traditions often read that as persistence, completion pressure, or a tone that “won’t leave the rim”—useful as emphasis, not as fate.",
+    };
+  }
+  if (count >= 10) {
+    return {
+      label: "High footprint",
+      meaning:
+        "This digit repeats often in the grid’s weave. That usually reads as a familiar rhythm you may notice in expression or relationships—still reflective, not a prediction.",
+    };
+  }
+  return {
+    label: "Moderate footprint",
+    meaning:
+      "This digit appears less often than 3, 6, or 9. A thinner footprint can mean the tone is clearer when it shows up—spot it, then practice it deliberately rather than assuming it dominates.",
+  };
+}
+
+export function layerContextLine(
+  source: "psychic" | "destiny" | "name" | "unit" | "manual",
+  digit: number,
+): string | null {
+  const d = digitalRoot(digit);
+  if (source === "psychic") {
+    return `You’re highlighting Psychic ${d} (birth day)—how this tone may show in temperament and first reactions.`;
+  }
+  if (source === "destiny") {
+    return `You’re highlighting Destiny ${d} (full birth date)—how this tone may color longer-arc direction.`;
+  }
+  if (source === "name") {
+    return `You’re highlighting Vedic Name ${d}—how the written name may echo this tone beside day and destiny.`;
+  }
+  if (source === "unit") {
+    return `You’re highlighting Unit-map Name ${d}—a second letter map of the same name for comparison, not a replacement.`;
+  }
+  return `You’re browsing digit ${d} on the square—generic pattern notes only until you tie it to Psychic, Destiny, or Name.`;
+}
+
 export type ReportOpposite = OppositePair & {
   inPsychic: boolean;
   inDestiny: boolean;
