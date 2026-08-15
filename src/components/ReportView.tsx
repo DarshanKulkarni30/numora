@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
@@ -10,7 +11,6 @@ import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
-import { NameWhatIfPanel } from "@/components/report/NameWhatIfPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -373,19 +373,20 @@ export function ReportView({ report, watermarkEmail }: Props) {
               />
             </p>
           ) : null}
-          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-soft">
-            <a
-              href="#name-what-if"
-              className="text-gold-deep underline underline-offset-2 hover:text-ink"
-            >
-              Try another name
-            </a>
+          <p className="mt-4 text-sm text-ink-soft">
             <a
               href="#trivia-cities"
               className="text-gold-deep underline underline-offset-2 hover:text-ink"
             >
               City name-number matrix
             </a>
+            {" · "}
+            <Link
+              href="/name"
+              className="text-gold-deep underline underline-offset-2 hover:text-ink"
+            >
+              What&apos;s my name
+            </Link>
           </p>
         </header>
 
@@ -479,26 +480,6 @@ export function ReportView({ report, watermarkEmail }: Props) {
               pythBirth={snap.birth_day}
               pythDestiny={snap.life_path}
               pythName={snap.expression_number}
-            />
-          </div>
-        </section>
-
-        <section
-          id="name-what-if"
-          className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5"
-        >
-          <h2 className="text-xl text-ink">Try another name</h2>
-          <p className="mt-1 text-sm text-ink-soft">
-            Compare a trial spelling against your current name numbers (same
-            birth date). This is the name experiment tool—there is no separate
-            “what is my name” page yet.
-          </p>
-          <div className="mt-4">
-            <NameWhatIfPanel
-              dateOfBirth={person.date_of_birth}
-              currentFullName={person.full_name}
-              vedicPsychic={snap.vedic_psychic}
-              vedicDestiny={snap.vedic_destiny}
             />
           </div>
         </section>
