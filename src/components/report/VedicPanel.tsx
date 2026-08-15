@@ -79,8 +79,8 @@ export function VedicPanel({
         Vedic numbers
       </p>
       <p className="mt-2 text-sm text-paper/75">
-        Three core digits from day, full date, and name. Click a number for a
-        short guide.
+        Three core digits from day, full date, and name. Tap a number for its
+        character guide (planet, easy/careful with others, tone).
       </p>
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => {
@@ -103,7 +103,10 @@ export function VedicPanel({
                 label={`Vedic ${c.label}`}
                 className="brand mt-2 inline-block text-3xl text-paper hover:text-sand"
               />
-              <div className="mt-3 flex justify-center">
+              <p className="mt-2 text-[10px] text-paper/50">
+                Tap for character
+              </p>
+              <div className="mt-2 flex justify-center">
                 <PlanetIcon
                   planet={planet}
                   size="sm"

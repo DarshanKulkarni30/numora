@@ -21,7 +21,7 @@ import {
 } from "@/lib/numerology/vedicYearNumber";
 import {
   UNIT_AFFINITY_NOTE,
-  vedicNumberProfile,
+  numberCharacterGuide,
 } from "@/lib/numerology/vedicNumberProfile";
 import { planetForVedic } from "@/lib/numerology/planets";
 
@@ -562,16 +562,51 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
     }
   }
   if (
-    (topic === "vedic-psychic" || topic === "vedic-destiny") &&
+    (topic === "vedic-psychic" ||
+      topic === "vedic-destiny" ||
+      topic === "vedic-name") &&
     Number.isFinite(n) &&
     n >= 1 &&
     n <= 9
   ) {
-    const profile = vedicNumberProfile(n);
-    paragraphs.push(
-      `Unit System affinity notes: friendly ${profile.friendly.join(", ") || "—"}; more demanding ${profile.challenging.join(", ") || "—"}; neutral ${profile.neutral.join(", ") || "—"}. Study tones often linked: ${profile.color}, ${profile.gem}, ${profile.weekday}. Lesson theme: ${profile.karmicLesson}.`,
-    );
+    const role =
+      topic === "vedic-psychic"
+        ? ("psychic" as const)
+        : topic === "vedic-destiny"
+          ? ("destiny" as const)
+          : ("name" as const);
+    const character = numberCharacterGuide(n, role);
+    paragraphs.push(character.roleLens);
+    paragraphs.push(...character.paragraphs);
     paragraphs.push(UNIT_AFFINITY_NOTE);
+    paragraphs.push(
+      `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,
+    );
+
+    return {
+      title: `${lens.aspect} ${value}`,
+      subtitle: `${lens.system} · Character of number ${value}`,
+      paragraphs,
+      strengths: [...(blurb.strengths ?? []), ...character.strengths].slice(
+        0,
+        6,
+      ),
+      watchouts: [...(blurb.watchouts ?? []), ...character.watchouts].slice(
+        0,
+        5,
+      ),
+      facts: character.facts,
+      bullets: [
+        `${lens.system} aspect: ${lens.aspect}`,
+        ...character.bullets,
+        ...(unitSystem
+          ? [
+              `Temperament theme: ${unitSystem.dosha}`,
+              `Guna: ${unitSystem.guna}`,
+            ]
+          : []),
+      ],
+    };
   }
   paragraphs.push(
     `A constructive practice with ${lens.aspect.toLowerCase()} ${value}: ${blurb.practice}`,

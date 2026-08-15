@@ -208,5 +208,69 @@ export function vedicNumberProfile(n: number | string): VedicNumberProfile {
   return VEDIC_NUMBER_PROFILES[d] ?? VEDIC_NUMBER_PROFILES[1];
 }
 
+export type NumberCharacterRole = "psychic" | "destiny" | "name";
+
+const ROLE_LENS: Record<NumberCharacterRole, string> = {
+  psychic:
+    "Shown here as your Psychic number (Moolank)—from your birth day. Traditional “character of the number” tables are usually written for this role.",
+  destiny:
+    "Shown here as your Destiny number (Bhagyank)—from your full birth date. The character notes below describe this digit; they are the same number qualities often listed for Moolank, read through a longer life-path lens.",
+  name: "Shown here as your Name number—from your name letters. Same digit character, applied as name vibration rather than birth-day temperament.",
+};
+
+/** Plain-language character pack for guide pages (click-through from report cards). */
+export function numberCharacterGuide(
+  n: number | string,
+  role: NumberCharacterRole,
+): {
+  roleLens: string;
+  paragraphs: string[];
+  facts: { label: string; value: string }[];
+  bullets: string[];
+  strengths: string[];
+  watchouts: string[];
+} {
+  const profile = vedicNumberProfile(n);
+  const digit = Math.abs(Math.trunc(Number(n))) % 9 || 9;
+  return {
+    roleLens: ROLE_LENS[role],
+    paragraphs: [
+      `Character of number ${digit}: planet tone ${profile.planet}. Everyday style often reads as “${profile.behavior.toLowerCase()}.”`,
+      `Outlook: ${profile.outlook}. Growth theme: ${profile.karmicLesson}.`,
+      `With other people, digits often easier to sync with: ${profile.friendly.join(", ") || "—"}. Digits that may need more care: ${profile.challenging.join(", ") || "—"}. More neutral: ${profile.neutral.join(", ") || "—"}.`,
+      `Dates sometimes studied with this tone: ${profile.favorableDates.join(", ")} (reflective association only). Roles people explore: ${profile.professionsHint.join("; ")}.`,
+    ],
+    facts: [
+      { label: "Planet", value: profile.planet },
+      { label: "Color", value: profile.color },
+      { label: "Gem (traditional study)", value: profile.gem },
+      { label: "Weekday", value: profile.weekday },
+      { label: "Direction", value: profile.direction },
+      {
+        label: "Compound often linked",
+        value: String(profile.exaltationCompound),
+      },
+    ],
+    bullets: [
+      `Often easy with: ${profile.friendly.join(", ") || "—"}`,
+      `Needs care with: ${profile.challenging.join(", ") || "—"}`,
+      `Neutral with: ${profile.neutral.join(", ") || "—"}`,
+      `Behavior: ${profile.behavior}`,
+      `Lesson theme: ${profile.karmicLesson}`,
+    ],
+    strengths: [
+      profile.behavior,
+      `Often easy with ${profile.friendly.join(", ") || "similar tones"}`,
+      ...profile.professionsHint.slice(0, 2),
+    ],
+    watchouts: [
+      profile.challenging.length
+        ? `More care with ${profile.challenging.join(", ")}`
+        : "Notice when drive outruns rest",
+      profile.karmicLesson,
+    ],
+  };
+}
+
 export const UNIT_AFFINITY_NOTE =
-  "Unit System affinity notes (friendly / challenging / neutral) are a reflective overlay. Compatibility Matrix tiers use a separate traditional pairing table—treat differences as nuance, not conflict.";
+  "Number character notes (often easy / needs care / neutral) are a reflective overlay. Compatibility Matrix tiers use a separate pairing table—treat differences as nuance, not conflict.";
