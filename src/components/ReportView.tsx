@@ -373,6 +373,20 @@ export function ReportView({ report, watermarkEmail }: Props) {
               />
             </p>
           ) : null}
+          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-soft">
+            <a
+              href="#name-what-if"
+              className="text-gold-deep underline underline-offset-2 hover:text-ink"
+            >
+              Try another name
+            </a>
+            <a
+              href="#trivia-cities"
+              className="text-gold-deep underline underline-offset-2 hover:text-ink"
+            >
+              City name-number matrix
+            </a>
+          </p>
         </header>
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -465,6 +479,26 @@ export function ReportView({ report, watermarkEmail }: Props) {
               pythBirth={snap.birth_day}
               pythDestiny={snap.life_path}
               pythName={snap.expression_number}
+            />
+          </div>
+        </section>
+
+        <section
+          id="name-what-if"
+          className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5"
+        >
+          <h2 className="text-xl text-ink">Try another name</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Compare a trial spelling against your current name numbers (same
+            birth date). This is the name experiment tool—there is no separate
+            “what is my name” page yet.
+          </p>
+          <div className="mt-4">
+            <NameWhatIfPanel
+              dateOfBirth={person.date_of_birth}
+              currentFullName={person.full_name}
+              vedicPsychic={snap.vedic_psychic}
+              vedicDestiny={snap.vedic_destiny}
             />
           </div>
         </section>
@@ -665,19 +699,10 @@ export function ReportView({ report, watermarkEmail }: Props) {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-          <h2 className="text-xl text-ink">Name what-if</h2>
-          <div className="mt-4">
-            <NameWhatIfPanel
-              dateOfBirth={person.date_of_birth}
-              currentFullName={person.full_name}
-              vedicPsychic={snap.vedic_psychic}
-              vedicDestiny={snap.vedic_destiny}
-            />
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+        <section
+          id="trivia-cities"
+          className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5"
+        >
           <h2 className="text-xl text-ink">Trivia · similar numbers</h2>
           <div className="mt-4">
             <TriviaPanel
