@@ -11,6 +11,7 @@ import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
+import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
@@ -448,6 +449,21 @@ export function ReportView({ report, watermarkEmail }: Props) {
                 report.vedic.ruling_planet
               }
               unitSystem={report.vedic.unitSystem}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Birth × Destiny × Name fit</h2>
+          <div className="mt-4">
+            <TrioFitPanel
+              vedicBirth={snap.vedic_psychic}
+              vedicDestiny={snap.vedic_destiny}
+              vedicName={snap.vedic_name}
+              chaldeanName={snap.chaldean_name_number}
+              pythBirth={snap.birth_day}
+              pythDestiny={snap.life_path}
+              pythName={snap.expression_number}
             />
           </div>
         </section>

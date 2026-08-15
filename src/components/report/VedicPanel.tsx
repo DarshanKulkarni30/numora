@@ -7,6 +7,7 @@ import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
 import { vedicNumberProfile } from "@/lib/numerology/vedicNumberProfile";
 import { oppositesForReport } from "@/lib/numerology/vedicSquare";
+import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 
 type UnitSystemBits = {
   birth_day_note: string;
@@ -113,6 +114,20 @@ export function VedicPanel({
             </div>
           );
         })}
+      </div>
+
+      <div className="mt-5">
+        <TrioFitPanel
+          compactVedicOnly
+          variant="dark"
+          vedicBirth={psychic}
+          vedicDestiny={destiny}
+          vedicName={nameNumber}
+          chaldeanName={nameNumber}
+          pythBirth={psychic}
+          pythDestiny={destiny}
+          pythName={nameNumber}
+        />
       </div>
 
       {unitSystem ? (
