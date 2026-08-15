@@ -36,6 +36,13 @@ export function ProjectedYearPanel({
             A second way to read a year’s tone beside Personal Year. Pick a
             year to see the number and the real sum used.
           </p>
+          <p className="mt-2 text-xs leading-5 opacity-80">
+            <span className="font-medium text-ink">Personal Year</span> =
+            birth month + birth day + full calendar year → one digit (Western
+            pacing theme).{" "}
+            <span className="font-medium text-ink">Year outlook</span> below
+            also folds in the weekday of that year’s birthday.
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button

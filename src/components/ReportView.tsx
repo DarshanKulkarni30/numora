@@ -472,7 +472,27 @@ export function ReportView({ report, watermarkEmail }: Props) {
           <h2 className="text-xl text-ink">Year outlook by calendar year</h2>
           <p className="mt-1 text-sm text-ink-soft">
             Pick any year to see the tone number and the exact addition used.
-            This sits beside Personal Year—not instead of it.
+            This sits beside{" "}
+            <span
+              className="text-ink"
+              title="Personal Year = birth month + birth day + the full calendar year, reduced to 1–9 (masters sometimes kept). A Western-style pacing theme for the year."
+            >
+              Personal Year
+            </span>
+            —not instead of it.
+          </p>
+          <p className="mt-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
+            <span className="font-medium text-ink">Personal Year</span> (shown
+            in your snapshot
+            {snap.personal_year ? (
+              <>
+                {" "}
+                as{" "}
+                <span className="brand text-ink">{snap.personal_year}</span>
+              </>
+            ) : null}
+            ): birth month + birth day + the full calendar year, then reduced to
+            one digit. It is a reflective “weather” theme for pacing the year.
           </p>
           <div className="mt-4">
             <ProjectedYearPanel dateOfBirth={person.date_of_birth} />
