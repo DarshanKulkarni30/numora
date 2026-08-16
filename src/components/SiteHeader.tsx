@@ -43,7 +43,7 @@ export function SiteHeader({ email }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <Image
-            src="/numora-mark.png"
+            src="/nw-mark.png"
             alt={BRAND_NAME}
             width={36}
             height={36}
@@ -56,7 +56,7 @@ export function SiteHeader({ email }: Props) {
         {!email ? (
           <Link
             href="/login"
-            className="rounded-full bg-ink px-4 py-2 text-sm text-paper transition hover:bg-sea-deep"
+            className="rounded-full bg-sea px-4 py-2 text-sm text-paper transition hover:bg-sea-deep"
           >
             Sign in
           </Link>

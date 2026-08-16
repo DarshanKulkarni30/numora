@@ -1,37 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #0f172a;
-  --ink-soft: #334155;
-  --mist: #f1f5f9;
-  --paper: #f8fafc;
-  --sea: #0f172a;
-  --sea-deep: #020617;
-  --sand: #f59e0b;
-  --gold: #f59e0b;
-  --gold-deep: #d97706;
-  --line: rgba(15, 23, 42, 0.12);
-  --glow: rgba(245, 158, 11, 0.16);
+  /* Bold NumoraWisdom palette — navy (not near-black) · gold · emerald */
+  --ink: #1e3f73;
+  --ink-soft: #3d5a80;
+  --mist: #e8f0fa;
+  --paper: #f5f8fc;
+  --sea: #2b5aa8;
+  --sea-deep: #1f4a8f;
+  --sand: #e8a317;
+  --gold: #e8a317;
+  --gold-deep: #c4840a;
+  --emerald: #0d9f6e;
+  --emerald-deep: #0a7d57;
+  --line: rgba(43, 90, 168, 0.18);
+  --glow: rgba(232, 163, 23, 0.22);
+  --glow-emerald: rgba(13, 159, 110, 0.16);
   --background: var(--paper);
   --foreground: var(--ink);
 
   /* Numerology system chrome */
-  --sys-pyth-bg: rgba(15, 23, 42, 0.06);
-  --sys-pyth-border: rgba(15, 23, 42, 0.2);
-  --sys-pyth-fg: #0f172a;
-  --sys-chal-bg: rgba(245, 158, 11, 0.12);
-  --sys-chal-border: rgba(217, 119, 6, 0.35);
+  --sys-pyth-bg: rgba(43, 90, 168, 0.08);
+  --sys-pyth-border: rgba(43, 90, 168, 0.28);
+  --sys-pyth-fg: #1e3f73;
+  --sys-chal-bg: rgba(232, 163, 23, 0.16);
+  --sys-chal-border: rgba(196, 132, 10, 0.4);
   --sys-chal-fg: #92400e;
-  --sys-vedic-bg: #0f172a;
-  --sys-vedic-border: rgba(245, 158, 11, 0.35);
+  --sys-vedic-bg: #2b5aa8;
+  --sys-vedic-border: rgba(232, 163, 23, 0.45);
   --sys-vedic-fg: #f8fafc;
-  --sys-vedic-muted: rgba(248, 250, 252, 0.72);
-  --sys-timing-bg: rgba(14, 116, 144, 0.1);
-  --sys-timing-border: rgba(14, 116, 144, 0.28);
-  --sys-timing-fg: #155e75;
-  --sys-astro-bg: rgba(100, 116, 139, 0.1);
-  --sys-astro-border: rgba(100, 116, 139, 0.28);
-  --sys-astro-fg: #334155;
+  --sys-vedic-muted: rgba(248, 250, 252, 0.78);
+  --sys-timing-bg: rgba(13, 159, 110, 0.12);
+  --sys-timing-border: rgba(13, 159, 110, 0.32);
+  --sys-timing-fg: #0a7d57;
+  --sys-astro-bg: rgba(61, 90, 128, 0.1);
+  --sys-astro-border: rgba(61, 90, 128, 0.28);
+  --sys-astro-fg: #3d5a80;
 }
 
 @theme inline {
@@ -46,15 +50,18 @@
   --color-sand: var(--sand);
   --color-gold: var(--gold);
   --color-gold-deep: var(--gold-deep);
+  --color-emerald: var(--emerald);
+  --color-emerald-deep: var(--emerald-deep);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
 }
 
 body {
   background:
-    radial-gradient(1100px 560px at 8% -12%, rgba(245, 158, 11, 0.14), transparent 55%),
-    radial-gradient(900px 480px at 92% 0%, rgba(15, 23, 42, 0.08), transparent 50%),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 55%, #eef2f7 100%);
+    radial-gradient(1100px 560px at 8% -12%, rgba(232, 163, 23, 0.2), transparent 55%),
+    radial-gradient(900px 520px at 92% 4%, rgba(13, 159, 110, 0.14), transparent 52%),
+    radial-gradient(800px 420px at 50% 100%, rgba(43, 90, 168, 0.12), transparent 55%),
+    linear-gradient(180deg, #f5f8fc 0%, #e8f0fa 50%, #e2eef5 100%);
   color: var(--foreground);
   font-family: var(--font-body), Georgia, serif;
   min-height: 100vh;
@@ -165,7 +172,7 @@ button:not(:disabled):not([aria-disabled="true"]):hover,
 [type="reset"]:not(:disabled):hover,
 .btn-tactile:not([aria-disabled="true"]):hover {
   filter: brightness(1.06);
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 3px 10px rgba(43, 90, 168, 0.16);
   transform: translateY(-1px);
 }
 
@@ -175,7 +182,7 @@ button:not(:disabled):not([aria-disabled="true"]):active,
 [type="reset"]:not(:disabled):active,
 .btn-tactile:not([aria-disabled="true"]):active {
   filter: brightness(0.97);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(43, 90, 168, 0.12);
   transform: translateY(0);
 }
 
@@ -212,13 +219,13 @@ a.rounded-full {
 
 a.rounded-full:hover {
   filter: brightness(1.05);
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 3px 10px rgba(43, 90, 168, 0.16);
   transform: translateY(-1px);
 }
 
 a.rounded-full:active {
   filter: brightness(0.98);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(43, 90, 168, 0.12);
   transform: translateY(0);
 }
 

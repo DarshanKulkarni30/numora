@@ -40,13 +40,13 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href={email ? "/report/new" : "/login?next=/report/new"}
-                className="rounded-full bg-ink px-6 py-3 text-paper transition hover:bg-sea-deep"
+                className="rounded-full bg-sea px-6 py-3 text-paper shadow-sm transition hover:bg-sea-deep"
               >
                 Begin a reading
               </Link>
               <Link
                 href={email ? "/dashboard" : "/login"}
-                className="rounded-full border border-[var(--line)] bg-white/60 px-6 py-3 text-ink transition hover:bg-white"
+                className="rounded-full border-2 border-emerald bg-white/70 px-6 py-3 text-ink transition hover:bg-emerald/10"
               >
                 {email ? "Your dashboard" : "Sign in with email"}
               </Link>
@@ -54,11 +54,12 @@ export default async function HomePage() {
           </div>
 
           <div className="animate-rise-delay relative flex items-center justify-center">
-            <div className="animate-drift absolute h-56 w-56 rounded-full bg-gold/20 blur-3xl" />
+            <div className="animate-drift absolute h-56 w-56 rounded-full bg-gold/25 blur-3xl" />
+            <div className="animate-drift absolute h-40 w-40 translate-x-10 translate-y-8 rounded-full bg-emerald/20 blur-3xl" />
             <div className="animate-ring relative">
               <Image
-                src="/numora-mark.png"
-                alt={`${BRAND_NAME} mark — NW initials with a hidden nine`}
+                src="/nw-mark.png"
+                alt={`${BRAND_NAME} mark — NW monogram`}
                 width={420}
                 height={420}
                 className="relative z-10 h-auto w-full max-w-md drop-shadow-sm"

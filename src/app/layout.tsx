@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "Personal numerology reports from Pythagorean, Chaldean, Vedic, and Lo Shu traditions. Belief-based insight for self-reflection.",
   icons: {
     icon: "/favicon.png",
-    apple: "/numora-mark.png",
+    apple: "/nw-mark.png",
   },
 };
 
