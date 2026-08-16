@@ -1,4 +1,4 @@
-/** Role-aware watch-outs (−) for guide numbers — Numora-original wording. */
+/** Role-aware watch-outs (−) for guide numbers — NumoraWisdom-original wording. */
 
 type Map = Record<string, string[]>;
 

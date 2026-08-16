@@ -159,7 +159,7 @@ export const PLANET_GUIDES: Record<PlanetId, PlanetGuide> = {
       "In astronomy, Rahu corresponds to the ascending lunar node—where Moon’s path crosses the ecliptic northward. It is a mathematical point, not a solid body.",
     pythagorean: {
       traits: ["Less emphasized in classic Pythagorean planet lists"],
-      note: "Western Pythagorean tables in Numora map 4 to Uranus instead of Rahu.",
+      note: "Western Pythagorean tables in NumoraWisdom map 4 to Uranus instead of Rahu.",
     },
     vedic: {
       traits: ["Desire amplification", "Unconventional paths", "Innovation hunger", "Shadow work"],
@@ -178,7 +178,7 @@ export const PLANET_GUIDES: Record<PlanetId, PlanetGuide> = {
       "Ketu corresponds to the descending lunar node—the south node of the Moon’s path. Like Rahu, it is a point in space, not a planet with a surface.",
     pythagorean: {
       traits: ["Less emphasized in classic Pythagorean planet lists"],
-      note: "Western Pythagorean tables in Numora map 7 to Neptune instead of Ketu.",
+      note: "Western Pythagorean tables in NumoraWisdom map 7 to Neptune instead of Ketu.",
     },
     vedic: {
       traits: ["Detachment", "Insight flashes", "Past-pattern release", "Spiritual curiosity"],
@@ -197,11 +197,11 @@ export const PLANET_GUIDES: Record<PlanetId, PlanetGuide> = {
       "An ice giant that rotates on its side; discovered in 1781, far beyond Saturn.",
     pythagorean: {
       traits: ["Innovation", "Freedom from habit", "Sudden insight", "Reform"],
-      note: "Often linked with 4 (and 22) in Numora’s Pythagorean table — original structure-breaking.",
+      note: "Often linked with 4 (and 22) in NumoraWisdom’s Pythagorean table — original structure-breaking.",
     },
     vedic: {
       traits: ["Not a classical Navagraha planet"],
-      note: "Modern Vedic practice sometimes discusses Uranus, but Numora’s Vedic number map uses Rahu for 4 instead.",
+      note: "Modern Vedic practice sometimes discusses Uranus, but NumoraWisdom’s Vedic number map uses Rahu for 4 instead.",
     },
   },
   neptune: {
@@ -215,11 +215,11 @@ export const PLANET_GUIDES: Record<PlanetId, PlanetGuide> = {
       "The outermost major planet in common lists—an ice giant with strong winds and a deep blue appearance.",
     pythagorean: {
       traits: ["Imagination", "Compassion", "Idealism", "Subtle perception"],
-      note: "Often linked with 7 in Numora’s Pythagorean table — inward vision and dreamlike sensing.",
+      note: "Often linked with 7 in NumoraWisdom’s Pythagorean table — inward vision and dreamlike sensing.",
     },
     vedic: {
       traits: ["Not a classical Navagraha planet"],
-      note: "Numora’s Vedic number map uses Ketu for 7 instead of Neptune.",
+      note: "NumoraWisdom’s Vedic number map uses Ketu for 7 instead of Neptune.",
     },
   },
 };

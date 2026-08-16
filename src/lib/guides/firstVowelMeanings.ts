@@ -1,4 +1,4 @@
-/** First vowel in the first name — Pythagorean inner-tone themes (Numora rewrite). */
+/** First vowel in the first name — Pythagorean inner-tone themes (NumoraWisdom rewrite). */
 
 export type FirstVowelMeaning = {
   vowel: string;

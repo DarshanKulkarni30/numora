@@ -1,4 +1,4 @@
-/** Traditional reflective planet associations used in Numora reports. */
+/** Traditional reflective planet associations used in NumoraWisdom reports. */
 
 export type PlanetId =
   | "sun"

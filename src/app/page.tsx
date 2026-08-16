@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { BRAND_NAME } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,9 @@ export default async function HomePage() {
       <main className="mx-auto max-w-6xl px-5 pb-24">
         <section className="relative grid min-h-[78vh] items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
           <div className="animate-rise">
-            <p className="brand text-5xl text-ink md:text-7xl">Numora</p>
+            <p className="brand text-4xl text-ink md:text-6xl lg:text-7xl">
+              {BRAND_NAME}
+            </p>
             <h1 className="mt-4 max-w-xl text-3xl leading-tight text-ink md:text-4xl">
               Discover the story hidden in your numbers.
             </h1>
@@ -55,7 +58,7 @@ export default async function HomePage() {
             <div className="animate-ring relative">
               <Image
                 src="/numora-mark.png"
-                alt="Numora mark — an elegant N with a hidden nine"
+                alt={`${BRAND_NAME} mark — NW initials with a hidden nine`}
                 width={420}
                 height={420}
                 className="relative z-10 h-auto w-full max-w-md drop-shadow-sm"

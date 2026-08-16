@@ -1,6 +1,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { LoginForm } from "@/components/LoginForm";
-import { getSiteUrl } from "@/lib/site";
+import { BRAND_NAME, getSiteUrl } from "@/lib/site";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export default async function LoginPage({ searchParams }: Props) {
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-10">
         <div className="mx-auto max-w-lg text-center">
-          <h1 className="text-4xl text-ink">Welcome to Numora</h1>
+          <h1 className="text-4xl text-ink">Welcome to {BRAND_NAME}</h1>
           <p className="mt-3 text-ink-soft">
             Sign in if you already have an account, or register if you&apos;re
             new. Use Google (your Chrome profile) or an email magic link.

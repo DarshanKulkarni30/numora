@@ -10,6 +10,7 @@ import {
 } from "@/lib/guides/content";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { BRAND_NAME } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export default async function GuidePage({ params }: Props) {
       <SiteHeader email={email} />
       <main className="mx-auto max-w-3xl px-5 pb-20 pt-6">
         <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
-          Numora guide · {topicLabel(topic)}
+          {BRAND_NAME} guide · {topicLabel(topic)}
         </p>
         <h1 className="mt-2 text-4xl text-ink md:text-5xl">{page.title}</h1>
         <p className="mt-3 text-lg text-ink-soft">{page.subtitle}</p>

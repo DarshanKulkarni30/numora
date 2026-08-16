@@ -1,5 +1,5 @@
 /**
- * Unit System number profile — Numora-synthesized affinity and association notes.
+ * Unit System number profile — NumoraWisdom-synthesized affinity and association notes.
  * Separate from AstroSage-style compatibility tiers in vedicCompatibility.ts.
  */
 

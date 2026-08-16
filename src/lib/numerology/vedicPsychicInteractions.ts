@@ -1,5 +1,5 @@
 /**
- * Psychic×Psychic interaction phrases — Numora-rewritten reflective one-liners.
+ * Psychic×Psychic interaction phrases — NumoraWisdom-rewritten reflective one-liners.
  * Complements AstroSage-style tiers; does not replace them.
  */
 

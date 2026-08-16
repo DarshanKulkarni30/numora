@@ -1,3 +1,6 @@
+/** Public product name (Chaldean brand total 50 → 5 Mercury). */
+export const BRAND_NAME = "NumoraWisdom";
+
 /** Canonical public site URL for auth redirects. */
 export function getSiteUrl(): string {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");

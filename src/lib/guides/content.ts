@@ -160,7 +160,7 @@ const TOPIC_LENSES: Record<
     system: "Vedic",
     aspect: "Name Number",
     focus:
-      "Vedic name number maps letters with Indian-style associations used in Numora. It is reflective name vibration within the Vedic panel—not a substitute for Psychic or Destiny.",
+      "Vedic name number maps letters with Indian-style associations used in NumoraWisdom. It is reflective name vibration within the Vedic panel—not a substitute for Psychic or Destiny.",
   },
   "personal-year": {
     system: "Pythagorean cycles",
@@ -363,7 +363,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       title: `Vedic Square · ${value}`,
       subtitle: `${guide.theme} · appears ${guide.count} times`,
       paragraphs: [
-        `In Numora’s Vedic Square, digit ${value} is the digital root of products on a 9×9 multiplication grid. It appears ${guide.count} times when you highlight that tone.`,
+        `In NumoraWisdom’s Vedic Square, digit ${value} is the digital root of products on a 9×9 multiplication grid. It appears ${guide.count} times when you highlight that tone.`,
         `${guide.theme}.`,
         oppLine,
         REDUCTION_TIP,
@@ -425,7 +425,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       paragraphs: [
         guide.astronomy,
         traits.note,
-        `In Numora, ${guide.name} is linked to numbers through ${systemLabel.toLowerCase()} tradition for reflective planet–number study.`,
+        `In NumoraWisdom, ${guide.name} is linked to numbers through ${systemLabel.toLowerCase()} tradition for reflective planet–number study.`,
       ],
       bullets: traits.traits,
     };
@@ -440,7 +440,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       title: `Name letter group ${value}`,
       subtitle: `${blurb.theme} · ${planet.name}`,
       paragraphs: [
-        "In Chaldean-style name traditions used in Numora, the first letter of the first name (Cornerstone), last letter (Capstone), and first vowel are read as bookends—how beginnings, completions, and inner drive may feel in reflective practice.",
+        "In Chaldean-style name traditions used in NumoraWisdom, the first letter of the first name (Cornerstone), last letter (Capstone), and first vowel are read as bookends—how beginnings, completions, and inner drive may feel in reflective practice.",
         `Letters in group ${value}: ${blurb.letters}.`,
         blurb.approach,
         blurb.growth,
@@ -482,7 +482,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       title: `Letter ${lm.letter}`,
       subtitle: `${lm.theme}`,
       paragraphs: [
-        "Alphabet letters carry traditional number values. Pythagorean and Chaldean maps differ—Numora shows both so you can compare systems without mixing their rules.",
+        "Alphabet letters carry traditional number values. Pythagorean and Chaldean maps differ—NumoraWisdom shows both so you can compare systems without mixing their rules.",
         `A constructive practice with ${lm.letter}: ${lm.practice}`,
       ],
       strengths: lm.strengths,
@@ -490,7 +490,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
       facts: [
         { label: "Pythagorean value", value: String(lm.pythagorean) },
         {
-          label: "Chaldean / Numora Vedic map",
+          label: "Chaldean / NumoraWisdom Vedic map",
           value: lm.chaldean != null ? String(lm.chaldean) : "—",
         },
         {
@@ -557,7 +557,7 @@ export function getGuidePage(topic: GuideTopic, value: string): GuidePage | null
     }
     if (topic === "vedic-name") {
       paragraphs.push(
-        "Numora shows two name maps side by side: Chaldean-aligned Vedic letters, and Unit System letters (they disagree on some letters such as C and H).",
+        "NumoraWisdom shows two name maps side by side: Chaldean-aligned Vedic letters, and Unit System letters (they disagree on some letters such as C and H).",
       );
     }
   }

@@ -88,7 +88,7 @@ h3,
     visibility: hidden !important;
   }
   body::before {
-    content: "Printing is disabled for free Numora reports.";
+    content: "Printing is disabled for free NumoraWisdom reports.";
     visibility: visible;
     display: block;
     padding: 2rem;
@@ -199,7 +199,7 @@ button:disabled,
   box-shadow: none;
 }
 
-/* Pill / filled CTA links (common Numora pattern) */
+/* Pill / filled CTA links (common NumoraWisdom pattern) */
 a.rounded-full {
   transition:
     background-color 0.18s ease,

@@ -452,7 +452,7 @@ export function BusinessExplorer({ people }: Props) {
                         Chaldean math breakdown
                       </p>
                       <p className="text-xs text-ink-soft">
-                        Letter values use Numora’s Chaldean map. Word compounds
+                        Letter values use NumoraWisdom’s Chaldean map. Word compounds
                         are added for a grand total (same style as a multi-word
                         brand).
                       </p>
@@ -652,7 +652,7 @@ export function BusinessExplorer({ people }: Props) {
 
           <p className="text-xs leading-5 text-ink-soft">
             Reflective experiment only—not telecom, legal, financial, or “lucky
-            number” guarantees. Domain preferences are Numora synthesis for
+            number” guarantees. Domain preferences are NumoraWisdom synthesis for
             branding reflection.
           </p>
         </>

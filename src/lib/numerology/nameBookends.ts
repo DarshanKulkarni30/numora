@@ -1,6 +1,6 @@
 /**
  * First-name bookends: Cornerstone, Capstone, First Vowel.
- * Chaldean 1–8 letter groups with Numora-native reflective copy.
+ * Chaldean 1–8 letter groups with NumoraWisdom-native reflective copy.
  */
 
 import { CHALDEAN } from "./mappings";
@@ -30,7 +30,7 @@ export type GroupBlurb = {
   letters: string;
 };
 
-/** Original Numora blurbs by Chaldean group (not third-party copy). */
+/** Original NumoraWisdom blurbs by Chaldean group (not third-party copy). */
 export const GROUP_BLURBS: Record<number, GroupBlurb> = {
   1: {
     theme: "Self-directed starts",

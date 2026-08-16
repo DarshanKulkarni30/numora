@@ -1,5 +1,5 @@
 /**
- * Unit System Vedic numerology reference (Numora rewrite).
+ * Unit System Vedic numerology reference (NumoraWisdom rewrite).
  * Used for enrichment + dual name number; does not replace medical advice.
  */
 

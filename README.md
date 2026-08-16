@@ -1,4 +1,4 @@
-# Numora
+# NumoraWisdom
 
 Reflective numerology web app: Pythagorean, Chaldean, Vedic, and Lo Shu readings from a full name and date of birth (DD/MM/YYYY).
 

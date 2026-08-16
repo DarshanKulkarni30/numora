@@ -1,5 +1,5 @@
 /**
- * Vedic Square helpers — Numora-original synthesis of traditional 9×9 digital-root patterns.
+ * Vedic Square helpers — NumoraWisdom-original synthesis of traditional 9×9 digital-root patterns.
  */
 
 /** Digital root 1–9 (multiples of 9 → 9). */
@@ -33,7 +33,7 @@ export type OppositePair = {
   practice: string;
 };
 
-/** Opposite pairs in the square’s mirror play (Numora wording). */
+/** Opposite pairs in the square’s mirror play (NumoraWisdom wording). */
 export const OPPOSITE_PAIRS: OppositePair[] = [
   {
     a: 1,
@@ -94,7 +94,7 @@ export function countInSquare(digit: number): number {
 }
 
 export const REDUCTION_TIP =
-  "Large totals reduce to 1–9 by adding digits (or skipping groups that already make 9). The single digit is the tone Numora uses in Vedic layers.";
+  "Large totals reduce to 1–9 by adding digits (or skipping groups that already make 9). The single digit is the tone NumoraWisdom uses in Vedic layers.";
 
 export const NINE_NOTE =
   "In the Vedic Square, 9 is persistent—multiples of 9 stay 9, and the outer rim is lined with 9s. Digits 1–8 shift as they multiply; 9 keeps its identity.";

@@ -1,6 +1,6 @@
 /**
  * Vedic (Anank-style) relationship tones from an AstroSage-style
- * Best / Friend / Average / Enemy table, mapped to Numora tones only.
+ * Best / Friend / Average / Enemy table, mapped to NumoraWisdom tones only.
  * Directional: tone(self → partner) may differ from tone(partner → self).
  */
 
@@ -46,7 +46,7 @@ function tierFor(self: number, partner: number): Tier {
   return "average";
 }
 
-/** Directional Vedic pair tone (self → partner), Numora labels only. */
+/** Directional Vedic pair tone (self → partner), NumoraWisdom labels only. */
 export function vedicPairTone(
   selfRaw: number,
   partnerRaw: number,

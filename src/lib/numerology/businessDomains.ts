@@ -1,6 +1,6 @@
 /**
  * Business-domain digit preferences for reflective company / mobile fit.
- * Numora-original synthesis—not legal, financial, or “lucky number” advice.
+ * NumoraWisdom-original synthesis—not legal, financial, or “lucky number” advice.
  */
 
 import { reduceToSingleDigit } from "./dateNumbers";

@@ -118,7 +118,7 @@ export const DISCLAIMER =
   "Numerology is a belief-based reflective practice and should not be treated as scientific, medical, legal, financial, educational, parenting, or psychological advice. It does not diagnose, treat, or predict outcomes.";
 
 export const RECOMMENDATIONS_DISCLAIMER =
-  "IMPORTANT — Recommendations disclaimer: The focus ideas below are optional reflective suggestions only. They are not instructions, prescriptions, or guarantees. They must not replace professional advice from qualified educators, clinicians, counselors, legal advisors, or other licensed professionals. Numora and its operators accept no liability for decisions made solely from this belief-based content.";
+  "IMPORTANT — Recommendations disclaimer: The focus ideas below are optional reflective suggestions only. They are not instructions, prescriptions, or guarantees. They must not replace professional advice from qualified educators, clinicians, counselors, legal advisors, or other licensed professionals. NumoraWisdom and its operators accept no liability for decisions made solely from this belief-based content.";
 
 export const CHILD_REPORT_DISCLAIMER =
   "CHILD / MINOR SAFETY NOTICE: This reading is for supportive reflection by a parent or guardian only. It is not a developmental assessment, school evaluation, behavioral diagnosis, or parenting directive. Children develop at different rates; do not use these themes to label, limit, compare, pressure, or discriminate against a child. If you have concerns about a child’s wellbeing, learning, or safety, consult qualified professionals. Nothing here predicts future success, setbacks, health, relationships, or character.";

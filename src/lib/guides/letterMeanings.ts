@@ -1,4 +1,4 @@
-/** A–Z letter meanings (Pythagorean value + Chaldean note). Original Numora copy. */
+/** A–Z letter meanings (Pythagorean value + Chaldean note). Original NumoraWisdom copy. */
 
 import { UNIT_SYSTEM_NAME_MAP } from "@/lib/numerology/vedicUnitSystem";
 import { CHALDEAN, PYTHAGOREAN } from "@/lib/numerology/mappings";

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
+import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
   email?: string | null;
@@ -43,13 +44,13 @@ export function SiteHeader({ email }: Props) {
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <Image
             src="/numora-mark.png"
-            alt="Numora"
+            alt={BRAND_NAME}
             width={36}
             height={36}
             className="h-9 w-9 shrink-0"
             priority
           />
-          <span className="brand text-2xl text-ink">Numora</span>
+          <span className="brand text-xl text-ink sm:text-2xl">{BRAND_NAME}</span>
         </Link>
 
         {!email ? (

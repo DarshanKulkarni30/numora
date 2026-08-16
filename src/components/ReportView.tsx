@@ -15,6 +15,7 @@ import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import type { NumerologyReport } from "@/lib/numerology/types";
+import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
   report: NumerologyReport;
@@ -347,7 +348,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
         >
           {Array.from({ length: 18 }).map((_, i) => (
             <span key={i} className="rotate-[-24deg] text-sm text-ink">
-              {watermarkEmail} · Numora
+              {watermarkEmail} · {BRAND_NAME}
             </span>
           ))}
         </div>

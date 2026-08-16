@@ -15,7 +15,7 @@ import { parseDob, reduceNumber, reduceWithCompound } from "./reduce";
 export type VedicResult = {
   psychic: number;
   destiny: number;
-  /** Current Numora Vedic/Chaldean-aligned name number */
+  /** Current NumoraWisdom Vedic/Chaldean-aligned name number */
   nameNumber: number;
   nameCompound: number;
   /** Unit System name number (dual display) */

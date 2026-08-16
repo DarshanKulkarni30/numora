@@ -462,8 +462,8 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       title: "1. Executive Summary",
       body: [
         isMinor
-          ? `${n}'s Numora reading weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from name and birth date for supportive reflection by a parent/guardian or teen—with care.`
-          : `${n}, this Numora report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
+          ? `${n}'s NumoraWisdom reading weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from name and birth date for supportive reflection by a parent/guardian or teen—with care.`
+          : `${n}, this NumoraWisdom report weaves Pythagorean, Chaldean, Vedic, and Lo Shu perspectives from your name and birth date.`,
         `Snapshot highlights Life Path ${snap.life_path}, Expression ${snap.expression_number}, Vedic Destiny ${snap.vedic_destiny}, Personal Year ${snap.personal_year}${
           snap.sun_sign_label ? `, and Sun sign ${snap.sun_sign_label}` : ""
         }.`,
@@ -853,7 +853,7 @@ export function generateReport(
   const vedicAnalysis = assertSafeCopy(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
-      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses Numora’s Chaldean-aligned Vedic map; Unit System name is ${vedic.unitSystemNameNumber} (compound ${vedic.unitSystemNameCompound})—shown side by side because letter maps differ.`,
+      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses NumoraWisdom’s Chaldean-aligned Vedic map; Unit System name is ${vedic.unitSystemNameNumber} (compound ${vedic.unitSystemNameCompound})—shown side by side because letter maps differ.`,
       vedic.birthDay.note,
       vedic.psychicMeta.psychicNote,
       vedic.destinyMeta.destinyNote,

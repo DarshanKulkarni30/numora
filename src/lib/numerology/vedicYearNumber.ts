@@ -1,5 +1,5 @@
 /**
- * Unit System–style Projected Year Number (Numora-original meanings).
+ * Unit System–style Projected Year Number (NumoraWisdom-original meanings).
  * Formula: month + day + (year % 100) + weekday planet digit → digital root 1–9.
  */
 
