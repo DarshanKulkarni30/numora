@@ -100,7 +100,7 @@ export default function WhatIsNumerologyPage() {
                   href={`/learning/${m.id}`}
                   className="text-gold-deep underline"
                 >
-                  Open {m.title} lessons
+                  Open {m.title} — lessons with try-it below each topic
                 </Link>
               </p>
             </li>
@@ -108,12 +108,13 @@ export default function WhatIsNumerologyPage() {
         </ul>
       </section>
 
-      <section className="space-y-3">
+      <section id="practice" className="scroll-mt-24 space-y-3">
         <h2 className="text-xl text-ink">Try the math yourself</h2>
         <p className="text-sm leading-7 text-ink-soft">
           Psychic uses the birth day; Destiny uses the full date—both reduced to
-          1–9 in the Indian-style map taught here. Enter a date to see each step,
-          then continue into method lessons with Previous / Next.
+          1–9 in the Indian-style map taught here. Practice on this page, then
+          open a method lesson where every concept has its calculator right
+          underneath.
         </p>
         <DobPsychicDestinyDemo />
       </section>

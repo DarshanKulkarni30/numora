@@ -294,7 +294,7 @@ export type LearningNavItem = {
   subtitle?: string;
 };
 
-/** Flat curriculum order for Previous / Next across Learning. */
+/** Flat curriculum order for Previous / Next (method pages include all lessons + interactives). */
 export function learningNavSequence(): LearningNavItem[] {
   const items: LearningNavItem[] = [
     { href: "/learning", title: "Learning home", subtitle: "Start here" },
@@ -303,11 +303,6 @@ export function learningNavSequence(): LearningNavItem[] {
       title: "What is numerology?",
       subtitle: "Introduction",
     },
-    {
-      href: "/learning/try/birth-destiny",
-      title: "Try: Psychic & Destiny",
-      subtitle: "Free calculator",
-    },
   ];
   for (const method of LEARNING_METHODS) {
     items.push({
@@ -315,13 +310,6 @@ export function learningNavSequence(): LearningNavItem[] {
       title: method.title,
       subtitle: method.subtitle,
     });
-    for (const concept of method.concepts) {
-      items.push({
-        href: learningHref(method.id, concept.slug),
-        title: concept.title,
-        subtitle: method.title,
-      });
-    }
   }
   return items;
 }
@@ -334,7 +322,12 @@ export function learningNeighbors(pathname: string): {
 } {
   const seq = learningNavSequence();
   const clean = pathname.replace(/\/$/, "") || "/learning";
-  const index = seq.findIndex((i) => i.href === clean);
+  // Concept URLs redirect to method#slug; treat bare method path for pager.
+  const methodOnly = clean.replace(
+    /^(\/learning\/(?:pythagorean|chaldean|vedic|lo-shu|timing))\/[^/]+$/,
+    "$1",
+  );
+  const index = seq.findIndex((i) => i.href === methodOnly || i.href === clean);
   if (index < 0) {
     return { prev: null, next: null, index: -1, total: seq.length };
   }
@@ -346,12 +339,13 @@ export function learningNeighbors(pathname: string): {
   };
 }
 
+/** Method hub, or method hub + #concept for deep-links from reports. */
 export function learningHref(
   method: LearningMethodId,
   concept?: string,
 ): string {
   if (!concept) return `/learning/${method}`;
-  return `/learning/${method}/${concept}`;
+  return `/learning/${method}#${concept}`;
 }
 
 export function getMethod(id: string): LearningMethod | undefined {

@@ -39,41 +39,31 @@ export default async function LearningHomePage() {
         <h1 className="text-4xl text-ink">Learning</h1>
         <p className="mt-3 text-sm leading-7 text-ink-soft">
           {BRAND_NAME} teaches how reflective numerology numbers are built—so
-          reports feel clearer, not mysterious. Start with the introduction,
-          try a free birth calculator, then walk method lessons with Previous /
-          Next. Admins and full plans unlock every concept page.
+          reports feel clearer, not mysterious. Each method page keeps the
+          lesson and its calculator together: read a concept, then try the math
+          immediately below. Use Previous / Next to walk methods.
         </p>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section>
         <Link
           href="/learning/what-is-numerology"
-          className="btn-tactile rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-5 text-left hover:-translate-y-px"
+          className="btn-tactile block max-w-2xl rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-5 text-left hover:-translate-y-px"
         >
           <p className="text-lg text-ink">What is numerology?</p>
           <p className="mt-2 text-sm leading-6 text-ink-soft">
-            Methods used in {BRAND_NAME}: Pythagorean, Chaldean, Vedic
-            (Indian-style), Lo Shu, and timing cycles—each with fuller teaching
-            copy.
-          </p>
-        </Link>
-        <Link
-          href="/learning/try/birth-destiny"
-          className="btn-tactile rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-5 text-left hover:-translate-y-px"
-        >
-          <p className="text-lg text-ink">Try: Psychic &amp; Destiny</p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">
-            Free interactive—enter a date of birth and see both numbers step by
-            step with keywords.
+            Origins, how the math works, and short notes on each method—then a
+            Psychic &amp; Destiny practice on that same page.
           </p>
         </Link>
       </section>
 
-      <section>
-        <h2 className="text-xl text-ink">Try it now</h2>
+      <section id="practice" className="scroll-mt-24">
+        <h2 className="text-xl text-ink">Practice: Psychic &amp; Destiny</h2>
         <p className="mt-1 text-sm leading-6 text-ink-soft">
-          Pick a date below. Results appear immediately after a valid birth
-          date.
+          Free interactive on this page—enter a date, see both numbers step by
+          step. Full method lessons (with a calculator under every concept) open
+          below when you have Learning access.
         </p>
         <div className="mt-4">
           <DobPsychicDestinyDemo />
@@ -81,11 +71,14 @@ export default async function LearningHomePage() {
       </section>
 
       <section>
-        <h2 className="text-xl text-ink">Methods</h2>
+        <h2 className="text-xl text-ink">Method lessons</h2>
+        <p className="mt-1 text-sm text-ink-soft">
+          Open a method to scroll every concept with its interactive right
+          underneath—no separate calculator page.
+        </p>
         {!full ? (
           <p className="mt-2 text-sm text-ink-soft">
-            Full concept pages and name master tables require a paid plan (or
-            admin access).{" "}
+            Full method lessons require a paid plan (or admin access).{" "}
             <Link href="/pricing" className="text-gold-deep underline">
               View plans
             </Link>
@@ -102,7 +95,10 @@ export default async function LearningHomePage() {
                   <p className="font-medium text-ink">{m.title}</p>
                   <p className="mt-1 text-xs text-ink-soft">{m.subtitle}</p>
                   <p className="mt-2 text-sm leading-6 text-ink-soft">
-                    {m.detail}
+                    {m.blurb}
+                  </p>
+                  <p className="mt-3 text-xs text-gold-deep">
+                    Lessons + try-it on one page
                   </p>
                 </Link>
               ) : (
@@ -110,7 +106,7 @@ export default async function LearningHomePage() {
                   <p className="font-medium text-ink">{m.title}</p>
                   <p className="mt-1 text-xs text-ink-soft">{m.subtitle}</p>
                   <p className="mt-2 text-sm leading-6 text-ink-soft">
-                    {m.detail}
+                    {m.blurb}
                   </p>
                   <p className="mt-3 text-xs text-gold-deep">
                     Included with full Learning
