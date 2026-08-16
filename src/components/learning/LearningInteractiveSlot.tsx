@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { DobLifePathDemo } from "@/components/learning/DobLifePathDemo";
 import { DobPsychicDestinyDemo } from "@/components/learning/DobPsychicDestinyDemo";
+import { LoShuDemo } from "@/components/learning/LoShuDemo";
 import { NameNumberDemo } from "@/components/learning/NameNumberDemo";
 import { PersonalYearDemo } from "@/components/learning/PersonalYearDemo";
 import type { LearningInteractive } from "@/lib/learning/curriculum";
@@ -19,6 +20,7 @@ export function LearningInteractiveSlot({
     return <NameNumberDemo mapId="pythagorean" />;
   if (kind === "name-chaldean") return <NameNumberDemo mapId="chaldean" />;
   if (kind === "personal-year") return <PersonalYearDemo />;
+  if (kind === "lo-shu-grid") return <LoShuDemo />;
   return null;
 }
 

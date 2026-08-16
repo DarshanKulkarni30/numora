@@ -163,12 +163,14 @@ export function LoShuChart({ loShu, intro, aspectLegend }: Props) {
     <div className="space-y-5">
       {intro ?? (
         <p className="text-sm text-ink-soft">
-          Rows are color-coded by plane (pastel cells so dotted arrows stay
-          readable). Arrows are soft{" "}
-          <span className="font-medium text-amber-800">thin dotted amber</span>{" "}
-          (present) or{" "}
-          <span className="font-medium text-slate-600">slate</span> (missing).
-          Hover a tile or arrow for meaning; click a tile for its Lo Shu guide.
+          Birth-date digits plus{" "}
+          <span className="font-medium text-ink">BN</span> (Psychic / birth
+          number
+          {loShu.birth_number != null ? ` ${loShu.birth_number}` : ""}) and{" "}
+          <span className="font-medium text-ink">DN</span> (Destiny
+          {loShu.destiny_number != null ? ` ${loShu.destiny_number}` : ""}) are
+          placed on the grid. Rows are color-coded by plane. Hover a tile or
+          arrow for meaning; click a tile for its Lo Shu guide.
         </p>
       )}
 
@@ -204,7 +206,15 @@ export function LoShuChart({ loShu, intro, aspectLegend }: Props) {
                 missing
                   ? "Missing in this birth grid — a growth invite, not a deficit."
                   : `Present ×${count} — core strength theme: ${meta.theme}.`,
-              ].join("\n");
+                loShu.birth_number === n
+                  ? `Includes BN (Psychic / birth number) ${loShu.birth_number}.`
+                  : null,
+                loShu.destiny_number === n
+                  ? `Includes DN (Destiny number) ${loShu.destiny_number}.`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join("\n");
               return (
                 <Link
                   key={n}
@@ -224,6 +234,13 @@ export function LoShuChart({ loShu, intro, aspectLegend }: Props) {
                   <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
                     {missing ? "miss" : `×${count}`}
                   </span>
+                  {(loShu.birth_number === n || loShu.destiny_number === n) &&
+                  !missing ? (
+                    <span className="mt-0.5 flex gap-0.5 text-[8px] font-semibold uppercase tracking-wide opacity-90">
+                      {loShu.birth_number === n ? <span>BN</span> : null}
+                      {loShu.destiny_number === n ? <span>DN</span> : null}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}

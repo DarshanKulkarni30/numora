@@ -51,6 +51,10 @@ export type LoShuResult = {
   missing_arrows: string[];
   analysis: string;
   grid: Record<number, number>;
+  /** Birth number / Psychic (Moolank) placed into the grid. */
+  birth_number?: number;
+  /** Destiny number (Bhagyank) placed into the grid. */
+  destiny_number?: number;
 };
 
 export type NumerologyReport = {

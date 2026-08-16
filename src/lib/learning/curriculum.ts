@@ -16,7 +16,8 @@ export type LearningInteractive =
   | "dob-life-path"
   | "name-pythagorean"
   | "name-chaldean"
-  | "personal-year";
+  | "personal-year"
+  | "lo-shu-grid";
 
 export type LearningConcept = {
   slug: string;
@@ -170,22 +171,23 @@ export const LEARNING_METHODS: LearningMethod[] = [
       {
         slug: "grid",
         title: "Lo Shu grid",
-        blurb: "How digits from the birth date fill the square.",
-        interactive: "none",
+        blurb:
+          "How digits from the birth date fill the square—plus BN (Psychic) and DN (Destiny).",
+        interactive: "lo-shu-grid",
         guideTopic: "lo-shu-number",
       },
       {
         slug: "arrows",
         title: "Arrows",
         blurb: "Lines of filled cells often read as emphasis themes.",
-        interactive: "none",
+        interactive: "lo-shu-grid",
         guideTopic: "lo-shu-arrow",
       },
       {
         slug: "missing",
         title: "Missing numbers",
         blurb: "Empty cells invite awareness—not defects.",
-        interactive: "none",
+        interactive: "lo-shu-grid",
         guideTopic: "lo-shu-number",
       },
     ],

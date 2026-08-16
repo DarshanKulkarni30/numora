@@ -1,6 +1,6 @@
 import { loShuEffectNotes } from "./loShuEffects";
 import type { LoShuResult } from "./types";
-import { parseDob } from "./reduce";
+import { parseDob, reduceNumber } from "./reduce";
 
 export type LoShuArrowDef = {
   name: string;
@@ -22,14 +22,28 @@ export const LO_SHU_ARROWS: LoShuArrowDef[] = [
 
 const ARROWS = LO_SHU_ARROWS;
 
+function emptyGrid(): Record<number, number> {
+  return { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+}
+
+function placeDigit(grid: Record<number, number>, raw: number) {
+  let n = Math.abs(Math.trunc(raw));
+  if (!Number.isFinite(n) || n <= 0) return;
+  while (n > 9) {
+    n = String(n)
+      .split("")
+      .reduce((s, d) => s + Number(d), 0);
+  }
+  if (n >= 1 && n <= 9) grid[n] += 1;
+}
+
 /** Build a Lo Shu-style result from digit counts (1–9). */
 export function loShuFromGrid(
   gridInput: Record<number, number>,
   analysisLead?: string,
+  extras?: { birth_number?: number; destiny_number?: number },
 ): LoShuResult {
-  const grid: Record<number, number> = {
-    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
-  };
+  const grid = emptyGrid();
   for (let n = 1; n <= 9; n++) {
     grid[n] = Math.max(0, Math.trunc(gridInput[n] ?? 0));
   }
@@ -100,6 +114,8 @@ export function loShuFromGrid(
     missing_arrows,
     analysis,
     grid,
+    birth_number: extras?.birth_number,
+    destiny_number: extras?.destiny_number,
   };
 }
 
@@ -108,22 +124,17 @@ export function loShuFromCoreNumbers(
   values: Array<number | string>,
   analysisLead?: string,
 ): LoShuResult {
-  const grid: Record<number, number> = {
-    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
-  };
+  const grid = emptyGrid();
   for (const raw of values) {
-    let n = Math.abs(Math.trunc(Number(raw)));
-    if (!Number.isFinite(n) || n <= 0) continue;
-    while (n > 9) {
-      n = String(n)
-        .split("")
-        .reduce((s, d) => s + Number(d), 0);
-    }
-    if (n >= 1 && n <= 9) grid[n] += 1;
+    placeDigit(grid, Number(raw));
   }
   return loShuFromGrid(grid, analysisLead);
 }
 
+/**
+ * Classic DOB digit grid, plus BN (Psychic / birth day reduced) and DN
+ * (Destiny / full-date reduced) as extra placements—common in Indian Lo Shu practice.
+ */
 export function calculateLoShu(dob: string): LoShuResult {
   const { day, month, year } = parseDob(dob);
   const digits = `${day}${month}${year}`
@@ -131,12 +142,24 @@ export function calculateLoShu(dob: string): LoShuResult {
     .map(Number)
     .filter((d) => d !== 0);
 
-  const grid: Record<number, number> = {
-    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
-  };
+  const birth_number = reduceNumber(day, []);
+  const destiny_number = reduceNumber(day + month + year, []);
+
+  const grid = emptyGrid();
   for (const d of digits) {
     if (d >= 1 && d <= 9) grid[d] += 1;
   }
+  placeDigit(grid, birth_number);
+  placeDigit(grid, destiny_number);
 
-  return loShuFromGrid(grid);
+  const present = Object.entries(grid)
+    .filter(([, c]) => c > 0)
+    .map(([n]) => n)
+    .join(", ");
+
+  return loShuFromGrid(
+    grid,
+    `Lo Shu grid from birth-date digits, plus BN (Psychic) ${birth_number} and DN (Destiny) ${destiny_number}. Present numbers (${present || "none"}) may indicate active traits in this pattern.`,
+    { birth_number, destiny_number },
+  );
 }
