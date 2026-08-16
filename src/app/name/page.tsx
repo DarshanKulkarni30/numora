@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { NameExplorer } from "@/components/name/NameExplorer";
+import { NamePageTabs } from "@/components/name/NamePageTabs";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -48,18 +48,20 @@ export default async function NamePage() {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">What&apos;s my name</h1>
           <p className="mt-3 text-ink-soft">
-            Pick someone from your profile, try a first name, and keep or edit
-            the last name. Scores and suggestions use first + last together.
-            Reflective only, not legal naming advice. For mobile and company
-            branding numbers, open{" "}
+            <span className="font-medium text-ink">My name</span> — try
+            first/last spellings for someone on your profile.{" "}
+            <span className="font-medium text-ink">Name compatibility</span> —
+            pair two people (profile or custom partner) with method matrices and
+            Amazing / Favourable summary tones. Reflective only, not legal naming
+            advice. For mobile and company branding, open{" "}
             <Link href="/business" className="text-gold-deep underline">
               Business numbers
             </Link>
             .
           </p>
         </div>
-        <div className="mt-10">
-          <NameExplorer people={people} />
+        <div className="mt-8">
+          <NamePageTabs people={people} />
         </div>
       </main>
     </div>
