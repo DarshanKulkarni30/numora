@@ -1,21 +1,20 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { NameExplorer } from "@/components/name/NameExplorer";
+import { MobileExplorer } from "@/components/mobile/MobileExplorer";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export const dynamic = "force-dynamic";
 
-export default async function NamePage() {
+export default async function MobilePage() {
   if (!isSupabaseConfigured()) redirect("/login");
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/name");
+  if (!user) redirect("/login?next=/mobile");
 
   const { data } = await supabase
     .from("people")
@@ -46,20 +45,16 @@ export default async function NamePage() {
       <SiteHeader email={user.email} />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">What&apos;s my name</h1>
+          <h1 className="text-4xl text-ink">Mobile number fit</h1>
           <p className="mt-3 text-ink-soft">
-            Pick someone from your profile, try another spelling, and read the
-            full Birth×Destiny×Name tables by method. Suggestions are ranked to
-            easier Vedic name digits for that birth date—reflective only, not
-            legal naming advice. For a phone number instead, open{" "}
-            <Link href="/mobile" className="text-gold-deep underline">
-              Mobile fit
-            </Link>
-            .
+            Pick someone from your profile and type a national mobile number
+            (no country code). The digits reduce to 1–9 and sit in the same
+            Birth×Destiny tables as a name—plus a Psychic pair-tone. Reflective
+            only, not telecom or legal advice.
           </p>
         </div>
         <div className="mt-10">
-          <NameExplorer people={people} />
+          <MobileExplorer people={people} />
         </div>
       </main>
     </div>

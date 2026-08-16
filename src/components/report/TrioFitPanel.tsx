@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import {
   TRIO_BAND_HINT,
@@ -144,7 +145,11 @@ export function TrioFitPanel({
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
         How Birth, Destiny, and Name sit together in each system. This is not
-        the partner radar.
+        the partner radar. To try a phone number against a profile, open{" "}
+        <Link href="/mobile" className="text-gold-deep underline">
+          Mobile fit
+        </Link>
+        .
       </p>
 
       <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
