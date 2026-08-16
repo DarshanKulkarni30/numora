@@ -300,29 +300,67 @@ export function MobileExplorer({ people }: Props) {
           </div>
 
           {mobile ? (
-            <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
-              <table className="w-full min-w-[20rem] text-left text-sm">
-                <thead className="bg-mist/60 text-ink-soft">
-                  <tr>
-                    <th className="px-3 py-2 font-medium">Layer</th>
-                    <th className="px-3 py-2 font-medium">Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t border-[var(--line)]">
-                    <td className="px-3 py-2 text-ink-soft">Digits used</td>
-                    <td className="brand px-3 py-2 text-ink">{mobile.digits}</td>
-                  </tr>
-                  <tr className="border-t border-[var(--line)]">
-                    <td className="px-3 py-2 text-ink-soft">Compound (sum)</td>
-                    <td className="brand px-3 py-2 text-ink">{mobile.compound}</td>
-                  </tr>
-                  <tr className="border-t border-[var(--line)]">
-                    <td className="px-3 py-2 text-ink-soft">Mobile core (1–9)</td>
-                    <td className="brand px-3 py-2 text-ink">{mobile.core}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="space-y-2">
+              <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
+                <table className="w-full min-w-[28rem] text-left text-sm">
+                  <thead className="bg-mist/60 text-ink-soft">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Part</th>
+                      <th className="px-3 py-2 font-medium">Digits</th>
+                      <th className="px-3 py-2 font-medium">Sum</th>
+                      <th className="px-3 py-2 font-medium">Core</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mobile.prefix ? (
+                      <tr className="border-t border-[var(--line)]">
+                        <td className="px-3 py-2 text-ink-soft">
+                          First {mobile.prefix.digits.length} (prefix)
+                        </td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.prefix.digits}
+                        </td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.prefix.compound}
+                        </td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.prefix.core}
+                        </td>
+                      </tr>
+                    ) : null}
+                    {mobile.last4 ? (
+                      <tr className="border-t border-[var(--line)]">
+                        <td className="px-3 py-2 text-ink-soft">Last 4</td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.last4.digits}
+                        </td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.last4.compound}
+                        </td>
+                        <td className="brand px-3 py-2 text-ink">
+                          {mobile.last4.core}
+                        </td>
+                      </tr>
+                    ) : null}
+                    <tr className="border-t border-[var(--line)]">
+                      <td className="px-3 py-2 text-ink-soft">Full number</td>
+                      <td className="brand px-3 py-2 text-ink">{mobile.digits}</td>
+                      <td className="brand px-3 py-2 text-ink">
+                        {mobile.compound}
+                      </td>
+                      <td className="brand px-3 py-2 text-ink">{mobile.core}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              {mobile.prefix && mobile.last4 ? (
+                <p className="text-xs text-ink-soft">
+                  Prefix sum {mobile.prefix.compound} + last-4 sum{" "}
+                  {mobile.last4.compound} = full sum {mobile.compound} → core{" "}
+                  {mobile.core}. Last-4 core {mobile.last4.core} is also read for
+                  everyday tone; full core drives Birth×Destiny tables below.
+                </p>
+              ) : null}
             </div>
           ) : null}
 

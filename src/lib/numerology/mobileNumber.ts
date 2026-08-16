@@ -3,11 +3,21 @@ import { reduceToSingleDigit } from "./dateNumbers";
 export const MOBILE_NOTE =
   "This is a traditional Birth × Destiny × mobile-digit lookup for reflection only. It describes how three digits are often read together—not a prediction of luck, money, call volume, or fate, and not telecom or legal advice.";
 
+export type MobileSegment = {
+  digits: string;
+  compound: number;
+  core: number;
+};
+
 export type MobileParseOk = {
   ok: true;
   digits: string;
   compound: number;
   core: number;
+  /** First (N − 4) digits when N ≥ 5. */
+  prefix: MobileSegment | null;
+  /** Last 4 digits when N ≥ 4. */
+  last4: MobileSegment | null;
 };
 
 export type MobileParseErr = {
@@ -19,6 +29,7 @@ export type MobileParse = MobileParseOk | MobileParseErr;
 
 const MIN_LEN = 8;
 const MAX_LEN = 12;
+const LAST4_LEN = 4;
 
 /** Digits only, after removing spaces and dashes. */
 export function stripMobileInput(raw: string): string {
@@ -31,6 +42,33 @@ export function mobileCompound(digits: string): number {
 
 export function mobileCore(compound: number): number {
   return reduceToSingleDigit(compound);
+}
+
+function segmentFromDigits(digits: string): MobileSegment {
+  const compound = mobileCompound(digits);
+  return {
+    digits,
+    compound,
+    core: mobileCore(compound || 9),
+  };
+}
+
+/**
+ * Split national digits into prefix (first N−4) and last 4.
+ * On a 10-digit number this is first 6 + last 4.
+ */
+export function mobileDigitSegments(digits: string): {
+  prefix: MobileSegment | null;
+  last4: MobileSegment | null;
+} {
+  if (digits.length < LAST4_LEN) {
+    return { prefix: null, last4: null };
+  }
+  const last4 = segmentFromDigits(digits.slice(-LAST4_LEN));
+  const prefixDigits = digits.slice(0, -LAST4_LEN);
+  const prefix =
+    prefixDigits.length > 0 ? segmentFromDigits(prefixDigits) : null;
+  return { prefix, last4 };
 }
 
 /**
@@ -79,10 +117,14 @@ export function parseMobile(raw: string): MobileParse {
     };
   }
 
+  const { prefix, last4 } = mobileDigitSegments(digits);
+
   return {
     ok: true,
     digits,
     compound,
     core: mobileCore(compound),
+    prefix,
+    last4,
   };
 }

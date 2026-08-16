@@ -18,7 +18,9 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
+import { analyzeCompanyNameChaldean } from "@/lib/numerology/companyNameBreakdown";
 import { parseMobile } from "@/lib/numerology/mobileNumber";
+import { planetForVedic } from "@/lib/numerology/planets";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -117,6 +119,12 @@ export function BusinessExplorer({ people }: Props) {
       chaldeanCore: reduceToSingleDigit(chald.nameNumber),
     };
   }, [companyRaw, dob]);
+
+  const companyBreakdown = useMemo(() => {
+    if (psychic == null || destiny == null || companyRaw.trim().length < 2)
+      return null;
+    return analyzeCompanyNameChaldean(companyRaw, psychic, destiny);
+  }, [companyRaw, psychic, destiny]);
 
   const companyTrio =
     psychic != null && destiny != null && companyLayers
@@ -246,25 +254,57 @@ export function BusinessExplorer({ people }: Props) {
               {mobile.ok && psychic != null && destiny != null ? (
                 <>
                   <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
-                    <table className="w-full min-w-[24rem] text-left text-sm">
+                    <table className="w-full min-w-[28rem] text-left text-sm">
+                      <thead className="bg-mist/60 text-ink-soft">
+                        <tr>
+                          <th className="px-3 py-2 font-medium">Part</th>
+                          <th className="px-3 py-2 font-medium">Digits</th>
+                          <th className="px-3 py-2 font-medium">Sum</th>
+                          <th className="px-3 py-2 font-medium">Core</th>
+                        </tr>
+                      </thead>
                       <tbody>
-                        <tr className="border-b border-[var(--line)]">
-                          <td className="px-3 py-2 text-ink-soft">Digits</td>
+                        {mobile.prefix ? (
+                          <tr className="border-t border-[var(--line)]">
+                            <td className="px-3 py-2 text-ink-soft">
+                              First {mobile.prefix.digits.length} (prefix)
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.prefix.digits}
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.prefix.compound}
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.prefix.core}
+                            </td>
+                          </tr>
+                        ) : null}
+                        {mobile.last4 ? (
+                          <tr className="border-t border-[var(--line)]">
+                            <td className="px-3 py-2 text-ink-soft">
+                              Last 4 (matters for day-to-day tone)
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.last4.digits}
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.last4.compound}
+                            </td>
+                            <td className="brand px-3 py-2 text-ink">
+                              {mobile.last4.core}
+                            </td>
+                          </tr>
+                        ) : null}
+                        <tr className="border-t border-[var(--line)]">
+                          <td className="px-3 py-2 text-ink-soft">
+                            Full number
+                          </td>
                           <td className="brand px-3 py-2 text-ink">
                             {mobile.digits}
                           </td>
-                        </tr>
-                        <tr className="border-b border-[var(--line)]">
-                          <td className="px-3 py-2 text-ink-soft">
-                            Compound sum
-                          </td>
                           <td className="brand px-3 py-2 text-ink">
                             {mobile.compound}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="px-3 py-2 text-ink-soft">
-                            Mobile core (1–9)
                           </td>
                           <td className="brand px-3 py-2 text-ink">
                             {mobile.core}
@@ -273,6 +313,18 @@ export function BusinessExplorer({ people }: Props) {
                       </tbody>
                     </table>
                   </div>
+                  {mobile.prefix && mobile.last4 ? (
+                    <p className="text-xs text-ink-soft">
+                      Check: prefix sum {mobile.prefix.compound} + last-4 sum{" "}
+                      {mobile.last4.compound} = {mobile.compound} → full core{" "}
+                      {mobile.core}. Last-4 core{" "}
+                      <span className="brand text-ink">{mobile.last4.core}</span>{" "}
+                      (
+                      {planetForVedic(mobile.last4.core).name}) is weighted for
+                      how the number “lands” in daily use; full core still drives
+                      Birth×Destiny fit below.
+                    </p>
+                  ) : null}
 
                   <div>
                     <p className="text-sm font-medium text-ink">
@@ -281,8 +333,14 @@ export function BusinessExplorer({ people }: Props) {
                     <div className="mt-2 flex flex-wrap gap-2">
                       <FitChip
                         fit={domainFit(mobile.core, domain, "mobile")}
-                        label={`domain · ${mobile.core}`}
+                        label={`full core · ${mobile.core}`}
                       />
+                      {mobile.last4 ? (
+                        <FitChip
+                          fit={domainFit(mobile.last4.core, domain, "mobile")}
+                          label={`last-4 · ${mobile.last4.core}`}
+                        />
+                      ) : null}
                       <FitChip
                         fit={coreDigitFit(mobile.core, psychic)}
                         label={`vs Psychic ${psychic}`}
@@ -295,6 +353,12 @@ export function BusinessExplorer({ people }: Props) {
                         <FitChip
                           fit={coreDigitFit(mobile.core, personalName)}
                           label={`vs Name ${personalName}`}
+                        />
+                      ) : null}
+                      {mobile.last4 && personalName != null ? (
+                        <FitChip
+                          fit={coreDigitFit(mobile.last4.core, personalName)}
+                          label={`last-4 vs Name ${personalName}`}
                         />
                       ) : null}
                     </div>
@@ -397,6 +461,56 @@ export function BusinessExplorer({ people }: Props) {
                       </tbody>
                     </table>
                   </div>
+
+                  {companyBreakdown ? (
+                    <div className="space-y-3 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
+                      <p className="text-sm font-medium text-ink">
+                        Chaldean math breakdown
+                      </p>
+                      <p className="text-xs text-ink-soft">
+                        Letter values use Numora’s Chaldean map. Word compounds
+                        are added for a grand total (same style as a multi-word
+                        brand).
+                      </p>
+                      <ul className="space-y-3 text-sm">
+                        {companyBreakdown.words.map((w) => (
+                          <li
+                            key={w.word}
+                            className="rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2"
+                          >
+                            <p className="font-medium text-ink">
+                              {w.word.toUpperCase()}
+                            </p>
+                            <p className="mt-1 font-mono text-xs leading-5 text-ink-soft">
+                              {w.equation} → {w.reduced}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-sm text-ink">
+                        Grand total{" "}
+                        <span className="brand">
+                          {companyBreakdown.words
+                            .map((w) => w.compound)
+                            .join(" + ")}{" "}
+                          = {companyBreakdown.grandCompound}
+                        </span>{" "}
+                        →{" "}
+                        <span className="brand">
+                          {companyBreakdown.grandReduced}
+                        </span>{" "}
+                        (
+                        {companyBreakdown.planet.symbol}{" "}
+                        {companyBreakdown.planet.name})
+                      </p>
+                      <p className="text-sm leading-6 text-ink-soft">
+                        {companyBreakdown.compoundNote}
+                      </p>
+                      <p className="text-sm leading-6 text-ink">
+                        {companyBreakdown.ownerBridge}
+                      </p>
+                    </div>
+                  ) : null}
 
                   {companyTrio ? (
                     <div
