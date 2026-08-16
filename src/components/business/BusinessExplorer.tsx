@@ -20,7 +20,7 @@ import {
 } from "@/lib/numerology/dateNumbers";
 import { analyzeCompanyNameChaldean } from "@/lib/numerology/companyNameBreakdown";
 import { parseMobile } from "@/lib/numerology/mobileNumber";
-import { planetForVedic } from "@/lib/numerology/planets";
+import { MobileDigitSplit } from "@/components/mobile/MobileDigitSplit";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -253,78 +253,7 @@ export function BusinessExplorer({ people }: Props) {
 
               {mobile.ok && psychic != null && destiny != null ? (
                 <>
-                  <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
-                    <table className="w-full min-w-[28rem] text-left text-sm">
-                      <thead className="bg-mist/60 text-ink-soft">
-                        <tr>
-                          <th className="px-3 py-2 font-medium">Part</th>
-                          <th className="px-3 py-2 font-medium">Digits</th>
-                          <th className="px-3 py-2 font-medium">Sum</th>
-                          <th className="px-3 py-2 font-medium">Core</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {mobile.prefix ? (
-                          <tr className="border-t border-[var(--line)]">
-                            <td className="px-3 py-2 text-ink-soft">
-                              First {mobile.prefix.digits.length} (prefix)
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.prefix.digits}
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.prefix.compound}
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.prefix.core}
-                            </td>
-                          </tr>
-                        ) : null}
-                        {mobile.last4 ? (
-                          <tr className="border-t border-[var(--line)]">
-                            <td className="px-3 py-2 text-ink-soft">
-                              Last 4 (matters for day-to-day tone)
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.last4.digits}
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.last4.compound}
-                            </td>
-                            <td className="brand px-3 py-2 text-ink">
-                              {mobile.last4.core}
-                            </td>
-                          </tr>
-                        ) : null}
-                        <tr className="border-t border-[var(--line)]">
-                          <td className="px-3 py-2 text-ink-soft">
-                            Full number
-                          </td>
-                          <td className="brand px-3 py-2 text-ink">
-                            {mobile.digits}
-                          </td>
-                          <td className="brand px-3 py-2 text-ink">
-                            {mobile.compound}
-                          </td>
-                          <td className="brand px-3 py-2 text-ink">
-                            {mobile.core}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  {mobile.prefix && mobile.last4 ? (
-                    <p className="text-xs text-ink-soft">
-                      Check: prefix sum {mobile.prefix.compound} + last-4 sum{" "}
-                      {mobile.last4.compound} = {mobile.compound} → full core{" "}
-                      {mobile.core}. Last-4 core{" "}
-                      <span className="brand text-ink">{mobile.last4.core}</span>{" "}
-                      (
-                      {planetForVedic(mobile.last4.core).name}) is weighted for
-                      how the number “lands” in daily use; full core still drives
-                      Birth×Destiny fit below.
-                    </p>
-                  ) : null}
+                  <MobileDigitSplit mobile={mobile} emphasizeLast4 />
 
                   <div>
                     <p className="text-sm font-medium text-ink">
