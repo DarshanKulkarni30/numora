@@ -2,40 +2,40 @@
 
 :root {
   /* Bold NumoraWisdom palette — navy (not near-black) · gold · emerald */
-  --ink: #1e3f73;
-  --ink-soft: #3d5a80;
-  --mist: #e8f0fa;
-  --paper: #f5f8fc;
-  --sea: #2b5aa8;
-  --sea-deep: #1f4a8f;
+  --ink: #183a6b;
+  --ink-soft: #355680;
+  --mist: #e4edf8;
+  --paper: #f4f7fc;
+  --sea: #234f96;
+  --sea-deep: #1a427e;
   --sand: #e8a317;
   --gold: #e8a317;
   --gold-deep: #c4840a;
   --emerald: #0d9f6e;
   --emerald-deep: #0a7d57;
-  --line: rgba(43, 90, 168, 0.18);
+  --line: rgba(35, 79, 150, 0.2);
   --glow: rgba(232, 163, 23, 0.22);
   --glow-emerald: rgba(13, 159, 110, 0.16);
   --background: var(--paper);
   --foreground: var(--ink);
 
   /* Numerology system chrome */
-  --sys-pyth-bg: rgba(43, 90, 168, 0.08);
-  --sys-pyth-border: rgba(43, 90, 168, 0.28);
-  --sys-pyth-fg: #1e3f73;
+  --sys-pyth-bg: rgba(35, 79, 150, 0.09);
+  --sys-pyth-border: rgba(35, 79, 150, 0.3);
+  --sys-pyth-fg: #183a6b;
   --sys-chal-bg: rgba(232, 163, 23, 0.16);
   --sys-chal-border: rgba(196, 132, 10, 0.4);
   --sys-chal-fg: #92400e;
-  --sys-vedic-bg: #2b5aa8;
+  --sys-vedic-bg: #234f96;
   --sys-vedic-border: rgba(232, 163, 23, 0.45);
   --sys-vedic-fg: #f8fafc;
   --sys-vedic-muted: rgba(248, 250, 252, 0.78);
   --sys-timing-bg: rgba(13, 159, 110, 0.12);
   --sys-timing-border: rgba(13, 159, 110, 0.32);
   --sys-timing-fg: #0a7d57;
-  --sys-astro-bg: rgba(61, 90, 128, 0.1);
-  --sys-astro-border: rgba(61, 90, 128, 0.28);
-  --sys-astro-fg: #3d5a80;
+  --sys-astro-bg: rgba(53, 86, 128, 0.1);
+  --sys-astro-border: rgba(53, 86, 128, 0.28);
+  --sys-astro-fg: #355680;
 }
 
 @theme inline {
@@ -60,8 +60,8 @@ body {
   background:
     radial-gradient(1100px 560px at 8% -12%, rgba(232, 163, 23, 0.2), transparent 55%),
     radial-gradient(900px 520px at 92% 4%, rgba(13, 159, 110, 0.14), transparent 52%),
-    radial-gradient(800px 420px at 50% 100%, rgba(43, 90, 168, 0.12), transparent 55%),
-    linear-gradient(180deg, #f5f8fc 0%, #e8f0fa 50%, #e2eef5 100%);
+    radial-gradient(800px 420px at 50% 100%, rgba(35, 79, 150, 0.14), transparent 55%),
+    linear-gradient(180deg, #f4f7fc 0%, #e4edf8 50%, #dde8f4 100%);
   color: var(--foreground);
   font-family: var(--font-body), Georgia, serif;
   min-height: 100vh;
@@ -172,7 +172,7 @@ button:not(:disabled):not([aria-disabled="true"]):hover,
 [type="reset"]:not(:disabled):hover,
 .btn-tactile:not([aria-disabled="true"]):hover {
   filter: brightness(1.06);
-  box-shadow: 0 3px 10px rgba(43, 90, 168, 0.16);
+  box-shadow: 0 3px 10px rgba(35, 79, 150, 0.18);
   transform: translateY(-1px);
 }
 
@@ -182,7 +182,7 @@ button:not(:disabled):not([aria-disabled="true"]):active,
 [type="reset"]:not(:disabled):active,
 .btn-tactile:not([aria-disabled="true"]):active {
   filter: brightness(0.97);
-  box-shadow: 0 1px 3px rgba(43, 90, 168, 0.12);
+  box-shadow: 0 1px 3px rgba(35, 79, 150, 0.14);
   transform: translateY(0);
 }
 
@@ -219,13 +219,13 @@ a.rounded-full {
 
 a.rounded-full:hover {
   filter: brightness(1.05);
-  box-shadow: 0 3px 10px rgba(43, 90, 168, 0.16);
+  box-shadow: 0 3px 10px rgba(35, 79, 150, 0.18);
   transform: translateY(-1px);
 }
 
 a.rounded-full:active {
   filter: brightness(0.98);
-  box-shadow: 0 1px 3px rgba(43, 90, 168, 0.12);
+  box-shadow: 0 1px 3px rgba(35, 79, 150, 0.14);
   transform: translateY(0);
 }
 

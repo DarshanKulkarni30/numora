@@ -43,7 +43,7 @@ export function SiteHeader({ email }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <Image
-            src="/nw-mark.png"
+            src="/nw-mark.png?v=2"
             alt={BRAND_NAME}
             width={36}
             height={36}
