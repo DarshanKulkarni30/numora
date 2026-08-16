@@ -14,7 +14,7 @@ import {
   WESTERN_YEAR_METHOD_NOTE,
   YEAR_PAGE_DISCLAIMER,
   westernYearCopy,
-  yearsFromBirthToAge70,
+  yearsFromBirthToAge90,
   type YearSystemTab,
 } from "@/lib/numerology/yearPage";
 import type { PersonRecord } from "@/lib/profile/options";
@@ -99,8 +99,17 @@ export function YearOutlookExplorer({
   const years = useMemo(() => {
     if (!selected || !dob) return [];
     const { year } = parseDob(dob);
-    return yearsFromBirthToAge70(year);
+    return yearsFromBirthToAge90(year);
   }, [selected, dob]);
+
+  const birthYear = useMemo(() => {
+    if (!dob) return null;
+    try {
+      return parseDob(dob).year;
+    } catch {
+      return null;
+    }
+  }, [dob]);
 
   const { pastYears, visibleYears } = useMemo(() => {
     const current = years.includes(nowYear) ? nowYear : null;
@@ -124,10 +133,12 @@ export function YearOutlookExplorer({
   const pastOpen = showPast || (expandedYear != null && pastYears.includes(expandedYear));
 
   function renderEntry(year: number) {
+    const age = birthYear != null ? year - birthYear : null;
     return (
       <YearEntry
         key={`${tab}-${year}`}
         year={year}
+        age={age}
         dob={dob}
         tab={tab}
         isOpen={year === expandedYear}
@@ -255,6 +266,7 @@ export function YearOutlookExplorer({
 
 function YearEntry({
   year,
+  age,
   dob,
   tab,
   isOpen,
@@ -262,6 +274,7 @@ function YearEntry({
   onToggle,
 }: {
   year: number;
+  age: number | null;
   dob: string;
   tab: YearSystemTab;
   isOpen: boolean;
@@ -274,6 +287,7 @@ function YearEntry({
     return (
       <YearRow
         year={year}
+        age={age}
         number={breakdown.number}
         tag={meta.tag}
         shortMeaning={meta.shortMeaning}
@@ -299,6 +313,7 @@ function YearEntry({
   return (
     <YearRow
       year={year}
+      age={age}
       number={breakdown.number}
       tag={copy.tag}
       shortMeaning={copy.shortMeaning}
@@ -352,6 +367,7 @@ function YearDetail({
 
 function YearRow({
   year,
+  age,
   number,
   tag,
   shortMeaning,
@@ -361,6 +377,7 @@ function YearRow({
   children,
 }: {
   year: number;
+  age: number | null;
   number: number;
   tag: YearTag;
   shortMeaning: string;
@@ -384,6 +401,11 @@ function YearRow({
         >
           {year}
         </span>
+        {age != null ? (
+          <span className="min-w-[3.25rem] text-sm text-ink-soft">
+            Age {age}
+          </span>
+        ) : null}
         <span className="brand text-xl text-ink">{number}</span>
         <span
           className={`rounded-full border px-2.5 py-0.5 text-xs ${TAG_STYLE[tag]}`}

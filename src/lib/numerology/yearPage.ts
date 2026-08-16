@@ -42,12 +42,17 @@ export const WESTERN_YEAR_TAG: Record<number, YearTag> = {
   33: "Neutral",
 };
 
-export function yearsFromBirthToAge70(birthYear: number): number[] {
+export function yearsFromBirthToAge90(birthYear: number): number[] {
   const start = Math.trunc(birthYear);
-  const end = start + 70;
+  const end = start + 90;
   const years: number[] = [];
   for (let y = start; y <= end; y += 1) years.push(y);
   return years;
+}
+
+/** @deprecated Use yearsFromBirthToAge90 */
+export function yearsFromBirthToAge70(birthYear: number): number[] {
+  return yearsFromBirthToAge90(birthYear);
 }
 
 export function defaultExpandedYear(years: number[], nowYear: number): number {
