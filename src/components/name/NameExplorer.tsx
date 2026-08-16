@@ -10,6 +10,10 @@ import {
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
 import {
+  joinGivenAndSurname,
+  splitGivenAndSurname,
+} from "@/lib/numerology/nameParts";
+import {
   gendersForProfile,
   SUGGESTED_NAMES,
 } from "@/lib/numerology/nameSuggestions";
@@ -123,7 +127,13 @@ export function NameExplorer({ people }: Props) {
     const first = self ?? selectable[0];
     return first ? `${first.sort_order}-${first.full_name}` : "";
   });
-  const [trial, setTrial] = useState("");
+  const [trialFirst, setTrialFirst] = useState("");
+  const [trialLast, setTrialLast] = useState(() => {
+    const self = selectable.find((p) => p.is_self);
+    const first = self ?? selectable[0];
+    return splitGivenAndSurname(first?.full_name || first?.preferred_name || "")
+      .surname;
+  });
   const [tab, setTab] = useState<TrioSystem>("vedic");
   const [letterFilter, setLetterFilter] = useState<string>("All");
 
@@ -143,11 +153,12 @@ export function NameExplorer({ people }: Props) {
     return nameLayers(currentName, dob);
   }, [selected, currentName, dob]);
 
+  const trialFullName = joinGivenAndSurname(trialFirst, trialLast);
+
   const trialSnap = useMemo(() => {
-    const name = trial.trim();
-    if (!selected || name.length < 2) return null;
-    return nameLayers(name, dob);
-  }, [trial, selected, dob]);
+    if (!selected || trialFirst.trim().length < 2) return null;
+    return nameLayers(trialFullName, dob);
+  }, [trialFirst, trialFullName, selected, dob]);
 
   const activeLayers = trialSnap ?? current;
 
@@ -225,11 +236,13 @@ export function NameExplorer({ people }: Props) {
 
     return SUGGESTED_NAMES.filter((s) => allowed.has(s.gender))
       .map((s) => {
-        const vedic = calculateVedic(s.name, dob);
+        const scored = joinGivenAndSurname(s.name, trialLast);
+        const vedic = calculateVedic(scored, dob);
         const n = reduceToSingleDigit(vedic.nameNumber);
         const hit = vedicTrio(psychic, destiny, n);
         return {
           ...s,
+          scoredName: scored,
           nameNumber: n,
           band: hit.band,
           label: hit.label,
@@ -242,7 +255,7 @@ export function NameExplorer({ people }: Props) {
         if (b.rank !== a.rank) return b.rank - a.rank;
         return a.name.localeCompare(b.name);
       });
-  }, [psychic, destiny, selected, dob, currentName]);
+  }, [psychic, destiny, selected, dob, currentName, trialLast]);
 
   const suggestionLetters = useMemo(() => {
     const set = new Set(
@@ -338,8 +351,16 @@ export function NameExplorer({ people }: Props) {
                 id="name-person"
                 value={selectedKey}
                 onChange={(e) => {
+                  const next = selectable.find(
+                    (p) => `${p.sort_order}-${p.full_name}` === e.target.value,
+                  );
                   setSelectedKey(e.target.value);
-                  setTrial("");
+                  setTrialFirst("");
+                  setTrialLast(
+                    splitGivenAndSurname(
+                      next?.full_name || next?.preferred_name || "",
+                    ).surname,
+                  );
                   setLetterFilter("All");
                 }}
                 className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
@@ -370,25 +391,54 @@ export function NameExplorer({ people }: Props) {
               ) : null}
             </div>
 
-            <div>
-              <label
-                htmlFor="name-trial"
-                className="mb-1 block text-sm text-ink-soft"
-              >
-                Trial full name
-              </label>
-              <input
-                id="name-trial"
-                type="text"
-                value={trial}
-                onChange={(e) => setTrial(e.target.value)}
-                placeholder="Type an alternate spelling or name"
-                className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
-                autoComplete="off"
-              />
-              <p className="mt-2 text-xs text-ink-soft">
-                Leave blank to score the current profile name. Reflective
-                experiment only—not legal naming advice.
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="name-trial-first"
+                  className="mb-1 block text-sm text-ink-soft"
+                >
+                  Trial first name
+                </label>
+                <input
+                  id="name-trial-first"
+                  type="text"
+                  value={trialFirst}
+                  onChange={(e) => setTrialFirst(e.target.value)}
+                  placeholder="Type a first name"
+                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
+                  autoComplete="off"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="name-trial-last"
+                  className="mb-1 block text-sm text-ink-soft"
+                >
+                  Last name
+                </label>
+                <input
+                  id="name-trial-last"
+                  type="text"
+                  value={trialLast}
+                  onChange={(e) => setTrialLast(e.target.value)}
+                  placeholder="Surname (editable)"
+                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
+                  autoComplete="off"
+                />
+              </div>
+              <p className="text-xs text-ink-soft sm:col-span-2">
+                Last name starts from the profile and is included in the score.
+                Change it for marriage or a legal surname. Leave first name
+                blank to score the current profile name. Reflective only—not
+                legal naming advice.
+                {trialFirst.trim().length >= 2 ? (
+                  <>
+                    {" "}
+                    Scoring{" "}
+                    <span className="font-medium text-ink">{trialFullName}</span>
+                    .
+                  </>
+                ) : null}
               </p>
             </div>
           </div>
@@ -615,12 +665,12 @@ export function NameExplorer({ people }: Props) {
           </div>
 
           <section>
-            <h2 className="text-xl text-ink">Suggested first names</h2>
+            <h2 className="text-xl text-ink">Suggested names</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              All Amazing and Favourable matches from the curated bank (gender
-              filtered), ranked by Vedic Birth×Destiny×Name band. Use the letter
-              strip to browse—not only the A’s. Reflective ideas only—not
-              baby-naming or legal advice.
+              First names from the curated bank, scored with the last name
+              above (gender filtered). Ranked by Vedic Birth×Destiny×Name.
+              Change the last name to see marriage or legal-surname options.
+              Reflective ideas only—not baby-naming or legal advice.
             </p>
             {suggestions.length ? (
               <>
@@ -675,15 +725,9 @@ export function NameExplorer({ people }: Props) {
                             <button
                               type="button"
                               className="text-gold-deep underline underline-offset-2 transition hover:text-ink"
-                              onClick={() => {
-                                const last = currentName
-                                  .split(/\s+/)
-                                  .slice(1)
-                                  .join(" ");
-                                setTrial(last ? `${s.name} ${last}` : s.name);
-                              }}
+                              onClick={() => setTrialFirst(s.name)}
                             >
-                              {s.name}
+                              {s.scoredName}
                             </button>
                           </td>
                           <td className="px-3 py-2 capitalize text-ink-soft">

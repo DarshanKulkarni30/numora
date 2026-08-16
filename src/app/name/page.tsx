@@ -48,10 +48,10 @@ export default async function NamePage() {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">What&apos;s my name</h1>
           <p className="mt-3 text-ink-soft">
-            Pick someone from your profile, try another spelling, and read the
-            full Birth×Destiny×Name tables by method. Suggestions are ranked to
-            easier Vedic name digits for that birth date—reflective only, not
-            legal naming advice. For mobile and company branding numbers, open{" "}
+            Pick someone from your profile, try a first name, and keep or edit
+            the last name. Scores and suggestions use first + last together.
+            Reflective only, not legal naming advice. For mobile and company
+            branding numbers, open{" "}
             <Link href="/business" className="text-gold-deep underline">
               Business numbers
             </Link>
