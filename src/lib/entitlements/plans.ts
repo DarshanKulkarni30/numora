@@ -94,11 +94,11 @@ export const PLANS: Record<PlanId, PlanDef> = {
   admin: {
     id: "admin",
     label: "Admin",
-    maxPeople: 12,
+    maxPeople: 32,
     identityEditLimit: null,
     features: { business: true, pdf: true, copy: true },
     priceUsd: null,
-    blurb: "Internal testing — up to 12 profiles, all features.",
+    blurb: "Internal testing — up to 32 profiles, all features.",
   },
   open_beta: {
     id: "open_beta",
