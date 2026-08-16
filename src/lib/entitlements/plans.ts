@@ -53,7 +53,7 @@ export const PLANS: Record<PlanId, PlanDef> = {
     features: { business: true, pdf: true, copy: true },
     priceUsd: 20,
     blurb:
-      "Family of 4 (including you) with full tools for 7 days, then back to Free. PDF when available.",
+      "Family of 4 (including you) with full tools for 7 days, then back to Free. Includes PDF export.",
   },
   pack_3mo: {
     id: "pack_3mo",

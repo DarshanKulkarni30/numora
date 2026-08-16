@@ -54,7 +54,7 @@ export default async function PricingPage() {
                   Up to {plan.maxPeople} profile
                   {plan.maxPeople === 1 ? "" : "s"}
                   {plan.features.business ? " · Business tools" : ""}
-                  {plan.features.pdf ? " · PDF when ready" : " · View-only"}
+                  {plan.features.pdf ? " · PDF export" : " · View-only"}
                 </p>
                 <p className="mt-4 text-sm leading-6 text-ink-soft">
                   {plan.blurb}

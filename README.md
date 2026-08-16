@@ -49,6 +49,6 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run build`| Production build     |
 | `npm run start`| Serve production     |
 
-## Copy protection
+## Copy protection / PDF
 
-Free reports discourage selection, copy shortcuts, context menu, and print. Determined users can still capture content; PDF export is reserved for paid plans when checkout ships.
+Free reports discourage selection, copy shortcuts, context menu, and print. Paid / open-beta entitlements can **Export PDF** (multi-page summary download via jsPDF). Soft launch with `ENTITLEMENTS_ENFORCE=false` includes PDF for testers.

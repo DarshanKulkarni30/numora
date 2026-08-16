@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
+import { ExportPdfButton } from "@/components/report/ExportPdfButton";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
@@ -375,14 +376,7 @@ export function ReportView({
             </div>
             <div className="flex flex-wrap gap-2">
               {allowPdf ? (
-                <button
-                  type="button"
-                  disabled
-                  title="PDF export ships with paid checkout"
-                  className="rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-sm text-ink-soft opacity-70"
-                >
-                  Export PDF (soon)
-                </button>
+                <ExportPdfButton report={report} />
               ) : (
                 <Link
                   href="/pricing"
@@ -752,9 +746,9 @@ export function ReportView({
                 <p>{report.compatibility.disclaimer}</p>
               ) : null}
               <p>
-                On-screen viewing only. Copying, downloading, and printing are
-                disabled on free reports. Guide links open standard reference
-                pages.
+                {allowPdf
+                  ? "PDF export is available on your plan. Guide links open standard reference pages."
+                  : "On-screen viewing only. Copying, downloading, and printing are disabled on free reports. Guide links open standard reference pages."}
               </p>
             </div>
           </details>
