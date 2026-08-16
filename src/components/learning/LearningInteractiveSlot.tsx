@@ -6,6 +6,7 @@ import { DobPsychicDestinyDemo } from "@/components/learning/DobPsychicDestinyDe
 import { LoShuDemo } from "@/components/learning/LoShuDemo";
 import { NameNumberDemo } from "@/components/learning/NameNumberDemo";
 import { PersonalYearDemo } from "@/components/learning/PersonalYearDemo";
+import { VedicNumberExploreGrid } from "@/components/learning/VedicNumberExploreGrid";
 import type { LearningInteractive } from "@/lib/learning/curriculum";
 
 export function LearningInteractiveSlot({
@@ -21,6 +22,7 @@ export function LearningInteractiveSlot({
   if (kind === "name-chaldean") return <NameNumberDemo mapId="chaldean" />;
   if (kind === "personal-year") return <PersonalYearDemo />;
   if (kind === "lo-shu-grid") return <LoShuDemo />;
+  if (kind === "vedic-explore") return <VedicNumberExploreGrid />;
   return null;
 }
 

@@ -122,28 +122,79 @@ const PERSONALITY: Map = {
 
 const VEDIC_PSYCHIC: Map = {
   "1": [
-    "Solar pride flaring in daily friction",
-    "Needing recognition before listening",
+    "Impatience when results arrive slowly",
+    "Over-controlling rooms that need collaboration",
+  ],
+  "2": [
+    "Taking criticism too personally",
+    "Quiet withdrawal instead of clear needs",
+  ],
+  "3": [
+    "Scattered ideas without finishing",
+    "Advice offered before consent",
+  ],
+  "4": [
+    "Rigidity when a flexible lane would work",
+    "Restlessness without a constructive project",
   ],
   "5": [
     "Mercurial mind jumping topics mid-conversation",
-    "Nervous speech without grounding",
     "Curiosity without completing messages or deals",
+  ],
+  "6": [
+    "Caretaking past healthy boundaries",
+    "Avoiding hard talks to keep the peace",
+  ],
+  "7": [
+    "Isolation mistaken for wisdom",
+    "Skepticism that pushes allies away",
   ],
   "8": [
     "Saturn heaviness in daily mood",
     "Harsh self-judgment for slow progress",
   ],
+  "9": [
+    "Impulse before reflection",
+    "Scattered focus across too many missions",
+  ],
 };
 
 const VEDIC_DESTINY: Map = {
-  "5": [
-    "Path restlessness when livelihood needs roots",
-    "Networking without deepening one trade",
+  "1": [
+    "Clashing with other strong wills for the same lead role",
+    "Visibility pursuits that skip fairness",
+  ],
+  "2": [
+    "Over-depending on partners for direction",
+    "Delaying decisions to keep harmony",
+  ],
+  "3": [
+    "Optimism without follow-through on path goals",
+    "Teaching others while skipping own practice",
   ],
   "4": [
     "Unconventional destiny creating instability if unfocused",
     "Fighting structure instead of inventing better structure",
+  ],
+  "5": [
+    "Path restlessness when livelihood needs roots",
+    "Networking without deepening one trade",
+  ],
+  "6": [
+    "Service path that erases personal needs",
+    "Comfort-seeking that avoids necessary change",
+  ],
+  "7": [
+    "Mastery path that becomes chronic withdrawal",
+    "Dismissing practical support as “shallow”",
+  ],
+  "8": [
+    "Grinding past recovery in pursuit of status",
+    "Measuring worth only by material milestones",
+  ],
+  "9": [
+    "Holding the past too tightly on a completion path",
+    "Starting new causes before finishing the last",
   ],
 };
 

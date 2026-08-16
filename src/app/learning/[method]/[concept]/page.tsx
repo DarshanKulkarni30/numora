@@ -69,12 +69,35 @@ export default async function LearningConceptPage({ params }: Props) {
 
       <section className="rounded-2xl border border-[var(--line)] bg-mist/30 px-4 py-4 text-sm leading-6 text-ink-soft">
         <p className="font-medium text-ink">How it is calculated</p>
-        <p className="mt-2">
-          Use the interactive below with your own date or name. Numbers in{" "}
-          {method.title} are teaching tools for reflection—compare them with
-          other methods in your report rather than treating any single digit as
-          destiny.
-        </p>
+        {concept.slug === "psychic" ? (
+          <p className="mt-2">
+            Psychic (Moolank) comes from the birth day only, reduced to 1–9.
+            Born on the 1st, 10th, 19th, or 28th → 1; 2nd, 11th, 20th, 29th → 2;
+            and so on. It is often read as day-to-day temperament—not a full life
+            forecast.
+          </p>
+        ) : concept.slug === "destiny" ? (
+          <p className="mt-2">
+            Destiny (Bhagyank / DN) adds day + month + year, then reduces to
+            1–9. It is often read as outer-path themes beside the Psychic
+            temperament digit—still reflective, not predictive.
+          </p>
+        ) : (
+          <p className="mt-2">
+            Use the interactive below with your own date or name. Numbers in{" "}
+            {method.title} are teaching tools for reflection—compare them with
+            other methods in your report rather than treating any single digit as
+            destiny.
+          </p>
+        )}
+        {(concept.slug === "psychic" || concept.slug === "destiny") && (
+          <p className="mt-2">
+            Shared 1–9 keywords used in NumoraWisdom: Leader, Harmony,
+            Creativity, Stability, Freedom, Care, Wisdom, Success, Humanity.
+            Explore the grid below, then open digit guides for fuller character
+            notes.
+          </p>
+        )}
         {concept.guideTopic ? (
           <p className="mt-2">
             Meaning pages for each digit:{" "}

@@ -43,6 +43,10 @@ import {
   projectedYearMeta,
 } from "./vedicYearNumber";
 import { UNIT_AFFINITY_NOTE, vedicNumberProfile } from "./vedicNumberProfile";
+import {
+  vedicDigitTheme,
+  vedicRoleMeaning,
+} from "./vedicNumberThemes";
 import { assertSafeCopy, assertSafeList } from "./safety";
 import type {
   NumerologyReport,
@@ -850,9 +854,14 @@ export function generateReport(
   const projected = projectedYearBreakdown(input.dateOfBirth, calendarYear);
   const projectedMeta = projectedYearMeta(projected.number);
 
+  const psychicTheme = vedicDigitTheme(vedic.psychic);
+  const destinyTheme = vedicDigitTheme(vedic.destiny);
+
   const vedicAnalysis = assertSafeCopy(
     [
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
+      `Psychic ${vedic.psychic} reads as ${psychicTheme.keyword} (${psychicTheme.planet}): ${psychicTheme.psychicFocus}`,
+      `Destiny ${vedic.destiny} reads as ${destinyTheme.keyword} (${destinyTheme.planet}): ${destinyTheme.destinyFocus}`,
       `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses NumoraWisdom’s Chaldean-aligned Vedic map; Unit System name is ${vedic.unitSystemNameNumber} (compound ${vedic.unitSystemNameCompound})—shown side by side because letter maps differ.`,
       vedic.birthDay.note,
       vedic.psychicMeta.psychicNote,
@@ -860,8 +869,8 @@ export function generateReport(
       vedic.harmony.detail,
       vedic.temperament.summary,
       `Ruling planet association for the Psychic Number: ${vedic.rulingPlanet}; for Destiny: ${vedic.destinyRulingPlanet}.`,
-      meaningFor(vedic.psychic),
-      meaningFor(vedic.destiny),
+      vedicRoleMeaning(vedic.psychic, "psychic"),
+      vedicRoleMeaning(vedic.destiny, "destiny"),
       unitSystemCompatNote(),
       REDUCTION_TIP,
       oppositeLine,
@@ -976,11 +985,11 @@ export function generateReport(
     vedic: {
       psychic_number: {
         number: vedic.psychic,
-        meaning: meaningFor(vedic.psychic),
+        meaning: vedicRoleMeaning(vedic.psychic, "psychic"),
       },
       destiny_number: {
         number: vedic.destiny,
-        meaning: meaningFor(vedic.destiny),
+        meaning: vedicRoleMeaning(vedic.destiny, "destiny"),
       },
       name_number: {
         number: vedic.nameNumber,

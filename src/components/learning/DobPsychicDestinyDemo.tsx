@@ -5,6 +5,7 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
+import { vedicDigitTheme } from "@/lib/numerology/vedicNumberThemes";
 import { parseDob } from "@/lib/numerology/reduce";
 import { isValidDob } from "@/lib/profile/date";
 
@@ -58,6 +59,13 @@ export function DobPsychicDestinyDemo() {
                 → <span className="brand text-ink">{steps.psychic}</span>
               </>
             )}
+            {" · "}
+            <span className="text-gold-deep">
+              {vedicDigitTheme(steps.psychic).keyword}
+            </span>
+          </p>
+          <p className="text-xs">
+            {vedicDigitTheme(steps.psychic).psychicFocus}
           </p>
           <p>
             <span className="font-medium text-ink">Destiny</span> = {steps.day} +{" "}
@@ -69,11 +77,24 @@ export function DobPsychicDestinyDemo() {
                 → reduce digits →{" "}
                 <span className="brand text-ink">{steps.destiny}</span>
               </>
-            ) : null}
+            ) : (
+              <>
+                {" "}
+                → <span className="brand text-ink">{steps.destiny}</span>
+              </>
+            )}
+            {" · "}
+            <span className="text-gold-deep">
+              {vedicDigitTheme(steps.destiny).keyword}
+            </span>
+          </p>
+          <p className="text-xs">
+            {vedicDigitTheme(steps.destiny).destinyFocus}
           </p>
           <p className="text-xs">
             Reflective Vedic (Indian-style) tradition only—not medical or
-            predictive advice.
+            predictive advice. Keywords: Leader, Harmony, Creativity, Stability,
+            Freedom, Care, Wisdom, Success, Humanity.
           </p>
         </div>
       ) : (

@@ -6,6 +6,7 @@ import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
 import { planetForVedic } from "@/lib/numerology/planets";
 import { vedicNumberProfile } from "@/lib/numerology/vedicNumberProfile";
+import { vedicDigitTheme } from "@/lib/numerology/vedicNumberThemes";
 import { oppositesForReport } from "@/lib/numerology/vedicSquare";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 
@@ -85,11 +86,17 @@ export function VedicPanel({
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => {
           const planet = planetForVedic(c.value);
+          const theme =
+            c.label === "Psychic" || c.label === "Destiny"
+              ? vedicDigitTheme(c.value)
+              : null;
           return (
             <div
               key={c.topic}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center"
-              title={`${c.label} ${c.value} · ${planet.name}`}
+              title={`${c.label} ${c.value} · ${planet.name}${
+                theme ? ` · ${theme.keyword}` : ""
+              }`}
             >
               <p className="text-[10px] uppercase tracking-wider text-sand">
                 {c.label}
@@ -103,6 +110,11 @@ export function VedicPanel({
                 label={`Vedic ${c.label}`}
                 className="brand mt-2 inline-block text-3xl text-paper hover:text-sand"
               />
+              {theme ? (
+                <p className="mt-1 text-xs font-medium text-sand">
+                  {theme.keyword}
+                </p>
+              ) : null}
               <p className="mt-2 text-[10px] text-paper/50">
                 Tap for character
               </p>
@@ -114,6 +126,42 @@ export function VedicPanel({
                   href={planetGuideHref("vedic", planet.id)}
                 />
               </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        {[
+          {
+            label: "Psychic",
+            value: psychic,
+            role: "psychic" as const,
+          },
+          {
+            label: "Destiny",
+            value: destiny,
+            role: "destiny" as const,
+          },
+        ].map(({ label, value, role }) => {
+          const t = vedicDigitTheme(value);
+          return (
+            <div
+              key={label}
+              className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm"
+            >
+              <p className="text-[10px] uppercase tracking-wider text-sand">
+                {label} · {t.keyword}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-paper/75">
+                {role === "psychic" ? t.psychicFocus : t.destinyFocus}
+              </p>
+              <p className="mt-2 text-[11px] text-paper/60">
+                Strengths: {t.strengths.slice(0, 2).join(" · ")}
+              </p>
+              <p className="mt-1 text-[11px] text-paper/60">
+                Watch: {t.watchouts[0]}
+              </p>
             </div>
           );
         })}

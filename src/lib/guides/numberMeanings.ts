@@ -885,94 +885,103 @@ export const CHALDEAN_NAME: Map = {
 /** Vedic Moolank — birth-day temperament (Psychic Number). */
 export const VEDIC_PSYCHIC: Map = {
   "1": {
-    theme: "Moolank temperament of Sun—self-will and bright initiative",
+    theme:
+      "Leader · Sun Moolank—day-to-day drive to start, stand out, and take the first move",
     strengths: [
-      "Instinctive need to lead or stand out",
-      "Day-to-day pride and drive",
-      "Quick personal reactions of a solar type",
+      "Confidence to begin when others hesitate",
+      "Clear personal standards",
+      "Creative problem-solving under pressure",
     ],
     practice:
-      "Channel solar Moolank into morning routines and honest self-leadership—not dominance in every room.",
+      "Lead with clarity, then leave space for others—solar warmth without scorched earth.",
   },
   "2": {
-    theme: "Moolank temperament of Moon—feeling, fluctuation, and care",
+    theme:
+      "Harmony · Moon Moolank—sensitivity, peacemaking, and reading the room’s emotional weather",
     strengths: [
-      "Instinctive emotional responsiveness",
-      "Day-to-day mood sensitivity",
-      "Need for reassurance and soft pacing",
+      "Emotional intelligence and patience",
+      "Ability to soothe conflict",
+      "Loyalty once trust is built",
     ],
     practice:
-      "Track mood cycles; lunar Psychic types benefit from sleep and water-like flexibility.",
+      "Protect soft pacing with firm boundaries—harmony includes your own rest.",
   },
   "3": {
-    theme: "Moolank temperament of Jupiter—optimism, teaching, and growth",
+    theme:
+      "Creativity · Jupiter Moolank—expressiveness, humor, and the urge to share ideas aloud",
     strengths: [
-      "Instinctive expansiveness",
-      "Day-to-day advice-giving impulse",
-      "Cheer and philosophical bent",
+      "Lively communication",
+      "Idea generation and storytelling",
+      "Social ease that opens doors",
     ],
     practice:
-      "Ask before advising—Jupiter Psychic warmth lands best with consent.",
+      "Ask before advising—creative warmth lands best with consent and follow-through.",
   },
   "4": {
-    theme: "Moolank temperament of Rahu—unconventional drive and restlessness",
+    theme:
+      "Stability · Rahu Moolank—building order, methods, and dependable lanes (sometimes via unusual routes)",
     strengths: [
-      "Instinctive urge to break molds",
-      "Day-to-day intensity or unusual tastes",
-      "Ambition via non-traditional routes",
+      "Patience with process",
+      "Reliability under repetition",
+      "Skill at turning chaos into systems",
     ],
     practice:
-      "Give Rahu Psychic energy a constructive “edge project” so restlessness has a lane.",
+      "Give restlessness one constructive “edge project” so structure has a living lane.",
   },
   "5": {
-    theme: "Moolank temperament of Mercury (Budh)—quick mind, speech, and trade",
+    theme:
+      "Freedom · Mercury Moolank—curiosity, speech, and a need for mental stimulation",
     strengths: [
-      "Instinctive curiosity and verbal agility",
-      "Day-to-day need for mental stimulation",
-      "Restless intellect more than lifelong “freedom path” framing",
+      "Verbal agility and quick learning",
+      "Adaptability in changing rooms",
+      "Trade and networking instincts",
     ],
     practice:
-      "For Psychic 5, prioritize clear communication habits and one deep study track—Mercury thrives on skill, not only novelty.",
+      "Pair novelty with one deep skill track—Mercury thrives on craft, not only motion.",
   },
   "6": {
-    theme: "Moolank temperament of Venus—comfort, beauty, and relationship focus",
+    theme:
+      "Care · Venus Moolank—comfort, beauty, and relationship focus as temperament",
     strengths: [
-      "Instinctive pull toward harmony and pleasure",
-      "Day-to-day aesthetic or romantic sensitivity",
-      "Caretaking as temperament, not only duty",
+      "Nurturing presence",
+      "Aesthetic and relational sensitivity",
+      "Desire to make spaces feel whole",
     ],
     practice:
-      "Venus Psychic types do well with beauty rituals and fair relationship agreements.",
+      "Beauty and caretaking work best with fair agreements—and rest for the caregiver.",
   },
   "7": {
-    theme: "Moolank temperament of Ketu—inwardness, detachment, and insight",
+    theme:
+      "Wisdom · Ketu Moolank—inwardness, analysis, and insight away from shallow loops",
     strengths: [
-      "Instinctive pull toward solitude or mysticism",
-      "Day-to-day analytical or spiritual bent",
-      "Disinterest in shallow social loops",
+      "Depth of thought",
+      "Comfort with solitude and study",
+      "Seeing patterns others skim past",
     ],
     practice:
-      "Schedule solitude; Ketu Psychic clarity fades when over-stimulated without retreat.",
+      "Schedule solitude on purpose; clarity fades when over-stimulated without retreat.",
   },
   "8": {
-    theme: "Moolank temperament of Saturn—discipline, delay, and seriousness",
+    theme:
+      "Success · Saturn Moolank—discipline, delay, and serious ambition under pressure",
     strengths: [
-      "Instinctive caution and endurance",
-      "Day-to-day duty consciousness",
-      "Slow-burn ambition under pressure",
+      "Endurance and duty consciousness",
+      "Long-game focus",
+      "Authority earned through labor",
     ],
     practice:
-      "Saturn Psychic types benefit from patient goals and kindness toward their own pace.",
+      "Honor slow timing with kindness toward your own pace—compound, don’t punish.",
   },
   "9": {
-    theme: "Moolank temperament of Mars—heat, courage, and reactive drive",
+    theme:
+      "Humanity · Mars Moolank—courage, compassion, and urgency to act for people or causes",
     strengths: [
-      "Instinctive assertion or impatience",
-      "Day-to-day competitive or protective energy",
-      "Action-first emotional style",
+      "Brave follow-through",
+      "Wide empathy with creative fire",
+      "Willingness to stand for others",
     ],
     practice:
-      "Cool Mars Psychic heat with sport, breath, or timed pauses before hard talks.",
+      "Aim the heat: one cause, one next step, then rest—impulse cooled into service.",
   },
   "11": {
     theme: "Often reduced in Vedic practice; held here as heightened lunar sensitivity",
@@ -1009,94 +1018,103 @@ export const VEDIC_PSYCHIC: Map = {
 /** Vedic Bhagyank — full-date destiny / outer path. */
 export const VEDIC_DESTINY: Map = {
   "1": {
-    theme: "Bhagyank path of Sun—authority, recognition, and self-made direction",
+    theme:
+      "Leader · Sun Bhagyank—outer path of pioneering, recognition, and self-directed authority",
     strengths: [
-      "Outer life themes of leadership",
-      "Destiny flavor of visibility",
-      "Path asking for honest self-rule",
+      "Visibility through honest self-rule",
+      "Capacity to originate rather than copy",
+      "Drive that creates its own momentum",
     ],
     practice:
-      "Build reputation through consistent solar virtue—clarity, courage, fairness.",
+      "Build reputation with clarity and fairness—lead the work, not every conversation.",
   },
   "2": {
-    theme: "Bhagyank path of Moon—alliances, public mood, and supportive roles",
+    theme:
+      "Harmony · Moon Bhagyank—path themes of partnership, diplomacy, and progress through people",
     strengths: [
-      "Outer life themes of partnership",
-      "Destiny flavor of care and diplomacy",
-      "Path through people and timing",
+      "Alliance-building and timing",
+      "Supportive public presence",
+      "Growth via right company",
     ],
     practice:
-      "Choose environments that respect sensitivity; destiny 2 grows via right company.",
+      "Choose environments that respect sensitivity; destiny Harmony thrives on mutual care.",
   },
   "3": {
-    theme: "Bhagyank path of Jupiter—growth, teaching, and expansive fortune themes",
+    theme:
+      "Creativity · Jupiter Bhagyank—growth through communication, learning, and optimistic expansion",
     strengths: [
-      "Outer life themes of learning and guidance",
-      "Destiny flavor of optimism and counsel",
-      "Path through wisdom shared",
+      "Teaching and guidance lanes",
+      "Story and counsel as livelihood fuel",
+      "Expansive fortune when ideas are shared",
     ],
     practice:
-      "Invest in education or mentoring lanes where Jupiter destiny naturally expands.",
+      "Invest in education or mentoring where Creativity destiny naturally compounds.",
   },
   "4": {
-    theme: "Bhagyank path of Rahu—unconventional success and foreign or novel arenas",
+    theme:
+      "Stability · Rahu Bhagyank—building lasting structure, sometimes in unconventional arenas",
     strengths: [
-      "Outer life themes outside the expected script",
-      "Destiny flavor of disruption then establishment",
-      "Path through unusual industries or places",
+      "Disruption that settles into systems",
+      "Patience for long construction",
+      "Reliability as an outer-life signature",
     ],
     practice:
-      "Commit to one unconventional lane long enough for Rahu destiny to stabilize.",
+      "Commit to one lane long enough for Stability to root—unusual is fine; unfinished is not.",
   },
   "5": {
-    theme: "Bhagyank path of Mercury—commerce, networking, and skilled exchange",
+    theme:
+      "Freedom · Mercury Bhagyank—commerce, mobility, and skilled exchange as path flavor",
     strengths: [
-      "Outer life themes of trade, media, or mobility",
-      "Destiny flavor of wit applied to livelihood",
-      "Path through adaptable professional networks",
+      "Networking and adaptable livelihood",
+      "Wit applied to trade or media",
+      "Change as a professional asset",
     ],
     practice:
-      "Destiny 5 favors careers of communication and exchange—build reputation for reliable information, not only novelty.",
+      "Earn Freedom destiny through reliable information and craft—not novelty alone.",
   },
   "6": {
-    theme: "Bhagyank path of Venus—arts, comfort industries, and relational success",
+    theme:
+      "Care · Venus Bhagyank—arts, comfort industries, and relational success on the outer path",
     strengths: [
-      "Outer life themes of beauty, care, or luxury service",
-      "Destiny flavor of harmony and attraction",
-      "Path through cultivated taste and bonds",
+      "Beauty and service as livelihood themes",
+      "Harmony that attracts opportunity",
+      "Bonds cultivated with taste and fairness",
     ],
     practice:
-      "Align livelihood with Venusian strengths while keeping fair contracts.",
+      "Align work with Care strengths while keeping contracts and rest boundaries clear.",
   },
   "7": {
-    theme: "Bhagyank path of Ketu—research, spirituality, and specialized mastery",
+    theme:
+      "Wisdom · Ketu Bhagyank—research, specialized mastery, and inward achievement",
     strengths: [
-      "Outer life themes of expertise or detachment from fame",
-      "Destiny flavor of inward achievement",
-      "Path through niche knowledge",
+      "Niche expertise over broad fame",
+      "Depth that becomes authority",
+      "Path through study and quiet excellence",
     ],
     practice:
-      "Let destiny 7 specialize deeply; public polish can be secondary to mastery.",
+      "Specialize deeply; let Wisdom destiny polish mastery before chasing spotlight.",
   },
   "8": {
-    theme: "Bhagyank path of Saturn—long labor, authority, and hard-won status",
+    theme:
+      "Success · Saturn Bhagyank—long labor, hard-won status, and delayed but solid gains",
     strengths: [
-      "Outer life themes of duty and endurance",
-      "Destiny flavor of delayed but solid gains",
-      "Path through responsibility under pressure",
+      "Endurance under responsibility",
+      "Authority earned through years",
+      "Material and organizational mastery themes",
     ],
     practice:
-      "Respect Saturn timing—steady years compound more than shortcuts.",
+      "Respect Saturn timing—steady years compound more than shortcuts to Success.",
   },
   "9": {
-    theme: "Bhagyank path of Mars—courageous action, competition, and bold service",
+    theme:
+      "Humanity · Mars Bhagyank—completion, generous fire, and service that closes cycles",
     strengths: [
-      "Outer life themes of drive and protection",
-      "Destiny flavor of pioneering struggle then victory",
-      "Path through assertive missions",
+      "Courageous action for causes",
+      "Protective drive channeled outward",
+      "Capacity to finish what others abandon",
     ],
     practice:
-      "Aim Mars destiny at worthy contests; finish campaigns before starting new wars.",
+      "Aim Humanity destiny at worthy missions; finish one campaign before lighting the next.",
   },
   "11": {
     theme: "Often reduced in Vedic practice; held as intensified lunar destiny",

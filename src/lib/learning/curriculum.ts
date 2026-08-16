@@ -17,7 +17,8 @@ export type LearningInteractive =
   | "name-pythagorean"
   | "name-chaldean"
   | "personal-year"
-  | "lo-shu-grid";
+  | "lo-shu-grid"
+  | "vedic-explore";
 
 export type LearningConcept = {
   slug: string;
@@ -121,15 +122,17 @@ export const LEARNING_METHODS: LearningMethod[] = [
       {
         slug: "psychic",
         title: "Psychic number",
-        blurb: "Reduce the birth day to 1–9—temperament themes.",
-        interactive: "dob-psychic-destiny",
+        blurb:
+          "Reduce the birth day to 1–9—temperament themes (Moolank). Explore Leader→Humanity keywords.",
+        interactive: "vedic-explore",
         guideTopic: "vedic-psychic",
       },
       {
         slug: "destiny",
         title: "Destiny number",
-        blurb: "Reduce the full birth date—outer-path themes in this tradition.",
-        interactive: "dob-psychic-destiny",
+        blurb:
+          "Reduce the full birth date—outer-path themes (Bhagyank / DN), same 1–9 keyword map.",
+        interactive: "vedic-explore",
         guideTopic: "vedic-destiny",
       },
       {

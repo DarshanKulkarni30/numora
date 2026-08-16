@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LearningPaywall } from "@/components/learning/LearningInteractiveSlot";
+import { VedicNumberExploreGrid } from "@/components/learning/VedicNumberExploreGrid";
 import {
   getMethod,
   learningHref,
@@ -54,6 +55,13 @@ export default async function LearningMethodPage({ params }: Props) {
         <h1 className="mt-1 text-4xl text-ink">{method.title}</h1>
         <p className="mt-3 text-ink-soft">{method.blurb}</p>
       </header>
+
+      {method.id === "vedic" ? (
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-5">
+          <VedicNumberExploreGrid />
+        </section>
+      ) : null}
+
       <ul className="grid gap-3 sm:grid-cols-2">
         {method.concepts.map((c) => (
           <li key={c.slug}>
