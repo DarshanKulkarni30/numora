@@ -18,6 +18,7 @@ const TOP_LINKS = [
 
 const EXPLORE_LINKS = [
   { href: "/name", label: "Name" },
+  { href: "/years", label: "Years" },
   { href: "/business", label: "Business" },
   { href: "/trivia", label: "Trivia" },
   { href: "/family", label: "Family" },

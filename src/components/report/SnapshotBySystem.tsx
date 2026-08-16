@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import type { GuideTopic } from "@/lib/guides/content";
 
@@ -23,6 +24,8 @@ type Group = {
   title: string;
   blurb: string;
   rows: SnapshotCell[];
+  actionHref?: string;
+  actionLabel?: string;
 };
 
 const SYS_CLASS: Record<NumerologySystem, string> = {
@@ -100,6 +103,16 @@ export function SnapshotBySystem({ groups }: Props) {
               </div>
             ))}
           </dl>
+          {g.actionHref && g.actionLabel ? (
+            <p className="mt-3">
+              <Link
+                href={g.actionHref}
+                className="btn-tactile inline-flex rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-sm text-ink"
+              >
+                {g.actionLabel}
+              </Link>
+            </p>
+          ) : null}
         </div>
       ))}
     </div>

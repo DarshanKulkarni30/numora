@@ -237,6 +237,8 @@ export function ReportView({
       system: "timing" as const,
       title: "This year timing",
       blurb: "How this calendar year and month may feel to pace.",
+      actionHref: "/years",
+      actionLabel: "View all years",
       rows: [
         {
           label: "Personal Year",

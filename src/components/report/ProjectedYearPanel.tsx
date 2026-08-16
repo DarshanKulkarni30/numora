@@ -43,6 +43,14 @@ export function ProjectedYearPanel({
             <span className="font-medium text-ink">Year outlook</span> below
             also folds in the weekday of that year’s birthday.
           </p>
+          <p className="mt-3">
+            <Link
+              href="/years?tab=vedic"
+              className="btn-tactile inline-flex rounded-full border border-[var(--sys-timing-border)] bg-white/80 px-3 py-1.5 text-sm text-ink"
+            >
+              View all years
+            </Link>
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
