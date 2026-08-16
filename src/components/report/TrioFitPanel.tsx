@@ -145,9 +145,9 @@ export function TrioFitPanel({
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
         How Birth, Destiny, and Name sit together in each system. This is not
-        the partner radar. To try a phone number against a profile, open{" "}
-        <Link href="/mobile" className="text-gold-deep underline">
-          Mobile fit
+        the partner radar. For mobile and company branding numbers, open{" "}
+        <Link href="/business" className="text-gold-deep underline">
+          Business numbers
         </Link>
         .
       </p>

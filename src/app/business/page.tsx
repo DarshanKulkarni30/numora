@@ -1,20 +1,20 @@
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { MobileExplorer } from "@/components/mobile/MobileExplorer";
+import { BusinessExplorer } from "@/components/business/BusinessExplorer";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export const dynamic = "force-dynamic";
 
-export default async function MobilePage() {
+export default async function BusinessPage() {
   if (!isSupabaseConfigured()) redirect("/login");
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/mobile");
+  if (!user) redirect("/login?next=/business");
 
   const { data } = await supabase
     .from("people")
@@ -45,21 +45,16 @@ export default async function MobilePage() {
       <SiteHeader email={user.email} />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">Mobile number fit</h1>
+          <h1 className="text-4xl text-ink">Business numbers</h1>
           <p className="mt-3 text-ink-soft">
-            Pick someone from your profile and type a national mobile number
-            (no country code). The digits reduce to 1–9 and sit in the same
-            Birth×Destiny tables as a name—plus a Psychic pair-tone. Reflective
-            only, not telecom or legal advice. For company name + domain +
-            mobile together, use{" "}
-            <a href="/business" className="text-gold-deep underline">
-              Business numbers
-            </a>
-            .
+            Score a national mobile number and a company or brand name against
+            the owner&apos;s Psychic, Destiny, and personal name—plus your area
+            of business. Company × mobile fit is domain-aware. Reflective
+            branding notes only, not legal or financial advice.
           </p>
         </div>
         <div className="mt-10">
-          <MobileExplorer people={people} />
+          <BusinessExplorer people={people} />
         </div>
       </main>
     </div>

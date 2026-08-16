@@ -51,9 +51,9 @@ export default async function NamePage() {
             Pick someone from your profile, try another spelling, and read the
             full Birth×Destiny×Name tables by method. Suggestions are ranked to
             easier Vedic name digits for that birth date—reflective only, not
-            legal naming advice. For a phone number instead, open{" "}
-            <Link href="/mobile" className="text-gold-deep underline">
-              Mobile fit
+            legal naming advice. For mobile and company branding numbers, open{" "}
+            <Link href="/business" className="text-gold-deep underline">
+              Business numbers
             </Link>
             .
           </p>
