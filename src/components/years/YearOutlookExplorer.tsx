@@ -24,6 +24,10 @@ import { parseDob } from "@/lib/numerology/reduce";
 type Props = {
   people: PersonRecord[];
   initialTab?: YearSystemTab;
+  /** From report deep-link (`?dob=`). */
+  initialDob?: string;
+  /** From report deep-link (`?name=`) — disambiguates shared DOBs. */
+  initialName?: string;
 };
 
 const TAG_STYLE: Record<YearTag, string> = {
@@ -41,9 +45,36 @@ function personKey(p: PersonRecord) {
   return `${p.sort_order}-${p.full_name}`;
 }
 
+function resolveInitialKey(
+  selectable: PersonRecord[],
+  initialDob?: string,
+  initialName?: string,
+): string {
+  const dob = initialDob?.trim();
+  const name = initialName?.trim().toLowerCase();
+  if (dob) {
+    const byDob = selectable.filter((p) => p.date_of_birth === dob);
+    if (byDob.length === 1) return personKey(byDob[0]);
+    if (byDob.length > 1 && name) {
+      const match = byDob.find(
+        (p) =>
+          p.full_name.trim().toLowerCase() === name ||
+          p.preferred_name.trim().toLowerCase() === name,
+      );
+      if (match) return personKey(match);
+    }
+    if (byDob[0]) return personKey(byDob[0]);
+  }
+  const self = selectable.find((p) => p.is_self);
+  const first = self ?? selectable[0];
+  return first ? personKey(first) : "";
+}
+
 export function YearOutlookExplorer({
   people,
   initialTab = "western",
+  initialDob,
+  initialName,
 }: Props) {
   const selectable = useMemo(
     () =>
@@ -53,12 +84,9 @@ export function YearOutlookExplorer({
     [people],
   );
 
-  const [selectedKey, setSelectedKey] = useState(() => {
-    const self = selectable.find((p) => p.is_self);
-    const first = self ?? selectable[0];
-    return first ? personKey(first) : "";
-  });
-  const [tab, setTab] = useState<YearSystemTab>(initialTab);
+  const [selectedKey, setSelectedKey] = useState(() =>
+    resolveInitialKey(selectable, initialDob, initialName),
+  );  const [tab, setTab] = useState<YearSystemTab>(initialTab);
   const nowYear = new Date().getFullYear();
   const [openYear, setOpenYear] = useState<number | "default" | null>(
     "default",

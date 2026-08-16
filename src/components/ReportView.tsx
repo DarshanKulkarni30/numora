@@ -16,6 +16,7 @@ import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import type { NumerologyReport } from "@/lib/numerology/types";
+import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
@@ -237,7 +238,10 @@ export function ReportView({
       system: "timing" as const,
       title: "This year timing",
       blurb: "How this calendar year and month may feel to pace.",
-      actionHref: "/years",
+      actionHref: yearsHrefForPerson({
+        dateOfBirth: person.date_of_birth,
+        fullName: person.full_name,
+      }),
       actionLabel: "View all years",
       rows: [
         {
@@ -539,7 +543,14 @@ export function ReportView({
             one digit. It is a reflective “weather” theme for pacing the year.
           </p>
           <div className="mt-4">
-            <ProjectedYearPanel dateOfBirth={person.date_of_birth} />
+            <ProjectedYearPanel
+              dateOfBirth={person.date_of_birth}
+              yearsHref={yearsHrefForPerson({
+                dateOfBirth: person.date_of_birth,
+                fullName: person.full_name,
+                tab: "vedic",
+              })}
+            />
           </div>
         </section>
 

@@ -10,7 +10,7 @@ import type { YearSystemTab } from "@/lib/numerology/yearPage";
 export const dynamic = "force-dynamic";
 
 type Props = {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; dob?: string; name?: string }>;
 };
 
 export default async function YearsPage({ searchParams }: Props) {
@@ -22,7 +22,7 @@ export default async function YearsPage({ searchParams }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/years");
 
-  const { tab } = await searchParams;
+  const { tab, dob, name } = await searchParams;
   const initialTab: YearSystemTab = tab === "vedic" ? "vedic" : "western";
 
   const { data } = await supabase
@@ -66,7 +66,12 @@ export default async function YearsPage({ searchParams }: Props) {
           </p>
         </div>
         <div className="mt-10">
-          <YearOutlookExplorer people={people} initialTab={initialTab} />
+          <YearOutlookExplorer
+            people={people}
+            initialTab={initialTab}
+            initialDob={dob}
+            initialName={name}
+          />
         </div>
       </main>
     </div>

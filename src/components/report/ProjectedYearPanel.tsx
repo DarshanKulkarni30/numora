@@ -11,11 +11,14 @@ type Props = {
   dateOfBirth: string;
   /** Initial calendar year (usually current). */
   initialYear?: number;
+  /** Deep-link to /years for this report person. */
+  yearsHref?: string;
 };
 
 export function ProjectedYearPanel({
   dateOfBirth,
   initialYear = new Date().getFullYear(),
+  yearsHref = "/years?tab=vedic",
 }: Props) {
   const [year, setYear] = useState(initialYear);
 
@@ -45,7 +48,7 @@ export function ProjectedYearPanel({
           </p>
           <p className="mt-3">
             <Link
-              href="/years?tab=vedic"
+              href={yearsHref}
               className="btn-tactile inline-flex rounded-full border border-[var(--sys-timing-border)] bg-white/80 px-3 py-1.5 text-sm text-ink"
             >
               View all years

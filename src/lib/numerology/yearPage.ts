@@ -4,6 +4,20 @@ import type { YearTag } from "./vedicYearNumber";
 
 export type YearSystemTab = "western" | "vedic";
 
+/** Deep-link from a report so /years opens that person, not Self by default. */
+export function yearsHrefForPerson(opts: {
+  dateOfBirth: string;
+  fullName?: string;
+  tab?: YearSystemTab;
+}): string {
+  const params = new URLSearchParams();
+  if (opts.tab === "vedic") params.set("tab", "vedic");
+  if (opts.dateOfBirth) params.set("dob", opts.dateOfBirth);
+  if (opts.fullName?.trim()) params.set("name", opts.fullName.trim());
+  const q = params.toString();
+  return q ? `/years?${q}` : "/years";
+}
+
 export const YEAR_PAGE_DISCLAIMER =
   "Numerology is a reflective tradition, not a forecast of events. Year numbers are pacing themes for how a calendar year may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
 
