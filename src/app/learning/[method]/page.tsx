@@ -1,16 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LearningPaywall } from "@/components/learning/LearningInteractiveSlot";
+import { LearningPager } from "@/components/learning/LearningPager";
 import { VedicNumberExploreGrid } from "@/components/learning/VedicNumberExploreGrid";
+import { hasLearningFullAccess } from "@/lib/learning/access";
 import {
   getMethod,
   learningHref,
   type LearningMethodId,
 } from "@/lib/learning/curriculum";
-import {
-  resolveEntitlements,
-  type EntitlementRow,
-} from "@/lib/entitlements";
+import { type EntitlementRow } from "@/lib/entitlements";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -42,18 +41,18 @@ export default async function LearningMethodPage({ params }: Props) {
       entitlementRow = null;
     }
   }
-  const entitlements = resolveEntitlements(user?.email, entitlementRow);
+  const full = await hasLearningFullAccess(user?.email, entitlementRow);
 
-  if (!entitlements.features.learningFull) {
+  if (!full) {
     return <LearningPaywall title={`${method.title} Learning`} />;
   }
 
   return (
     <div className="space-y-8">
-      <header className="max-w-2xl">
+      <header className="max-w-3xl">
         <p className="text-sm text-ink-soft">{method.subtitle}</p>
         <h1 className="mt-1 text-4xl text-ink">{method.title}</h1>
-        <p className="mt-3 text-ink-soft">{method.blurb}</p>
+        <p className="mt-3 text-sm leading-7 text-ink-soft">{method.detail}</p>
       </header>
 
       {method.id === "vedic" ? (
@@ -70,11 +69,13 @@ export default async function LearningMethodPage({ params }: Props) {
               className="btn-tactile block rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-4 hover:-translate-y-px"
             >
               <p className="font-medium text-ink">{c.title}</p>
-              <p className="mt-2 text-sm text-ink-soft">{c.blurb}</p>
+              <p className="mt-2 text-sm leading-6 text-ink-soft">{c.detail}</p>
             </Link>
           </li>
         ))}
       </ul>
+
+      <LearningPager pathname={learningHref(method.id as LearningMethodId)} />
     </div>
   );
 }

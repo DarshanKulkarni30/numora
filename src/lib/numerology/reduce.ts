@@ -30,13 +30,22 @@ export function reduceWithCompound(
 
 export function parseDob(dob: string): { day: number; month: number; year: number } {
   const trimmed = dob.trim();
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(trimmed);
-  if (!match) {
-    throw new Error("Date of birth must be in DD/MM/YYYY format.");
+  let day: number;
+  let month: number;
+  let year: number;
+  const slash = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(trimmed);
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+  if (slash) {
+    day = Number(slash[1]);
+    month = Number(slash[2]);
+    year = Number(slash[3]);
+  } else if (iso) {
+    year = Number(iso[1]);
+    month = Number(iso[2]);
+    day = Number(iso[3]);
+  } else {
+    throw new Error("Date of birth must be in DD/MM/YYYY or YYYY-MM-DD format.");
   }
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  const year = Number(match[3]);
   const date = new Date(year, month - 1, day);
   if (
     date.getFullYear() !== year ||

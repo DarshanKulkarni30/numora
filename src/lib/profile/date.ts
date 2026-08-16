@@ -6,8 +6,23 @@ export function formatDobInput(raw: string): string {
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 }
 
+/**
+ * Normalize DOB strings to DD/MM/YYYY.
+ * Accepts profile form style and HTML date inputs (YYYY-MM-DD).
+ */
+export function normalizeDobToSlash(value: string): string | null {
+  const trimmed = value.trim();
+  const slash = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(trimmed);
+  if (slash) return trimmed;
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+  if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  return null;
+}
+
 export function isValidDob(value: string): boolean {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
+  const normalized = normalizeDobToSlash(value);
+  if (!normalized) return false;
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(normalized);
   if (!match) return false;
   const day = Number(match[1]);
   const month = Number(match[2]);
@@ -26,7 +41,7 @@ export function isValidDob(value: string): boolean {
 
 export function dobError(value: string): string | null {
   if (!value.trim()) return "Date of birth is required.";
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value.trim())) {
+  if (!normalizeDobToSlash(value)) {
     return "Use DD/MM/YYYY format.";
   }
   if (!isValidDob(value)) return "Enter a valid calendar date.";

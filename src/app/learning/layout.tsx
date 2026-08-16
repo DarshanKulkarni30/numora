@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import {
-  resolveEntitlements,
-  type EntitlementRow,
-} from "@/lib/entitlements";
+import { hasLearningFullAccess } from "@/lib/learning/access";
+import { type EntitlementRow } from "@/lib/entitlements";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -34,7 +32,7 @@ export default async function LearningLayout({
   } catch {
     entitlementRow = null;
   }
-  const entitlements = resolveEntitlements(user.email, entitlementRow);
+  const full = await hasLearningFullAccess(user.email, entitlementRow);
 
   return (
     <div>
@@ -44,7 +42,7 @@ export default async function LearningLayout({
           <Link href="/learning" className="text-gold-deep underline">
             Learning
           </Link>
-          {!entitlements.features.learningFull ? (
+          {!full ? (
             <span className="ml-2 rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5 text-xs">
               Free intro
             </span>
