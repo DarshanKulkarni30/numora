@@ -5,7 +5,7 @@ import type { YearTag } from "./vedicYearNumber";
 export type YearSystemTab = "western" | "vedic";
 
 export const YEAR_PAGE_DISCLAIMER =
-  "Numerology is a reflective tradition, not a complete science and not a forecast of events. Year numbers are pacing themes for how a calendar year may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
+  "Numerology is a reflective tradition, not a forecast of events. Year numbers are pacing themes for how a calendar year may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
 
 export const WESTERN_YEAR_METHOD_NOTE =
   "Personal Year (Western) adds birth month, birth day, and the full calendar year, then reduces—keeping 11, 22, or 33 when they appear. It is a reflective weather theme for pacing, not a guarantee of specific events.";
