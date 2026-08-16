@@ -52,6 +52,10 @@ export default async function LearningMethodPage({ params }: Props) {
       <header className="max-w-3xl">
         <p className="text-sm text-ink-soft">{method.subtitle}</p>
         <h1 className="mt-1 text-4xl text-ink">{method.title}</h1>
+        <p className="mt-3 text-xs font-medium uppercase tracking-wider text-ink-soft">
+          Origins
+        </p>
+        <p className="mt-1 text-sm leading-7 text-ink-soft">{method.origin}</p>
         <p className="mt-3 text-sm leading-7 text-ink-soft">{method.detail}</p>
       </header>
 

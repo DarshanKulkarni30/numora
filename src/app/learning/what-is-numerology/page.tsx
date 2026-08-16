@@ -38,6 +38,27 @@ export default function WhatIsNumerologyPage() {
       </header>
 
       <section className="space-y-3">
+        <h2 className="text-xl text-ink">Origins in brief</h2>
+        <p className="text-sm leading-7 text-ink-soft">
+          Number mysticism is ancient and many-branched. Mesopotamian and
+          Egyptian cultures linked numbers with omen and order; India developed
+          date and planetary number lore beside astrology; China preserved the
+          Lo Shu magic square; Greek thought—especially the Pythagorean
+          school—tied number to harmony and character. Later Jewish Kabbalah,
+          Islamic occult science, and European Renaissance writers passed
+          related ideas forward.
+        </p>
+        <p className="text-sm leading-7 text-ink-soft">
+          What most people meet today as “Western numerology” was reshaped in
+          the modern era around Pythagorean letter charts and Life Path math.
+          Chaldean name maps and Indian-style Psychic/Destiny teaching stayed
+          alive in parallel. {BRAND_NAME} does not pick a single “true” origin
+          story—it teaches the maps people actually use, with clear reflective
+          language.
+        </p>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-xl text-ink">How the math usually works</h2>
         <p className="text-sm leading-7 text-ink-soft">
           For dates, you often reduce the day alone (a “birth” or Psychic-style
@@ -69,7 +90,11 @@ export default function WhatIsNumerologyPage() {
                   {m.subtitle}
                 </span>
               </p>
-              <p className="mt-2 text-sm leading-7 text-ink-soft">{m.detail}</p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-wider text-ink-soft">
+                Origins
+              </p>
+              <p className="mt-1 text-sm leading-7 text-ink-soft">{m.origin}</p>
+              <p className="mt-3 text-sm leading-7 text-ink-soft">{m.detail}</p>
               <p className="mt-3 text-xs">
                 <Link
                   href={`/learning/${m.id}`}

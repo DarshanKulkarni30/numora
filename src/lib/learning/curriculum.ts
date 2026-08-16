@@ -39,6 +39,8 @@ export type LearningMethod = {
   title: string;
   subtitle: string;
   blurb: string;
+  /** Short origin / history note for intro and method hubs. */
+  origin: string;
   /** Longer overview for hubs and “What is numerology?” (≈4–5 sentences). */
   detail: string;
   concepts: LearningConcept[];
@@ -51,6 +53,8 @@ export const LEARNING_METHODS: LearningMethod[] = [
     subtitle: "Western core map",
     blurb:
       "From full name and birth date: Life Path, Birth Day, Expression, Soul Urge, Personality, and Maturity.",
+    origin:
+      "Roots are often traced to the Greek philosopher Pythagoras (6th century BCE) and later Western revival. He did not invent all number mysticism, but his school popularized linking number, harmony, and character—today’s “modern” or Western chart usually follows this 1–9 letter map.",
     detail:
       "Pythagorean (Western) numerology maps letters A–Z to 1–9 and reduces birth-date parts into core themes. Life Path comes from the full date; Birth Day from the day alone. Expression uses the whole name, Soul Urge the vowels, and Personality the consonants. Maturity blends Life Path with Expression for later-life emphasis. Numbers usually reduce to 1–9, while 11, 22, and 33 may be kept as master tones. In NumoraWisdom this is a reflective chart beside other systems—not a forecast.",
     concepts: [
@@ -116,6 +120,8 @@ export const LEARNING_METHODS: LearningMethod[] = [
     subtitle: "Name vibration map",
     blurb:
       "Letter values 1–8 (no 9 for letters). Compound and reduced name numbers color how a spelling may feel.",
+    origin:
+      "Named for the Chaldeans of ancient Mesopotamia (Babylonia), this stream is often treated as one of the oldest surviving name-vibration maps. It reached later readers through Near Eastern and Mediterranean occult traditions and remains popular wherever compound name totals are prized.",
     detail:
       "Chaldean numerology is an older name-focused map. Letters take values from 1–8; nine is not assigned to letters in the classic chart. Readers often keep the compound total as well as the reduced digit for texture. In NumoraWisdom, Vedic name numbers use the same Chaldean-aligned letter map for consistency across panels. Use Chaldean to sense how a spelling may feel—then compare with Pythagorean Expression on the same name.",
     concepts: [
@@ -146,6 +152,8 @@ export const LEARNING_METHODS: LearningMethod[] = [
     subtitle: "Indian-style map",
     blurb:
       "Psychic (birth day), Destiny (full date), name on a Chaldean-aligned map, plus Unit System Map B and year outlook.",
+    origin:
+      "Indian-style practice grew beside Vedic astrology and folk number lore on the subcontinent—Moolank (birth day) and Bhagyank (full date) with planetary rulers. Modern “Vedic numerology” courses blend those date themes with name charts; NumoraWisdom uses an Indian-style teaching map for reflection, not a full kundli.",
     detail:
       "Indian-style (Vedic) teaching in NumoraWisdom centers on Psychic from the birth day (Moolank) and Destiny from the full date (Bhagyank), each reduced to 1–9 with planet and keyword themes such as Leader or Harmony. Name numbers use a Chaldean-aligned letter map; Unit System Map B is shown when letters disagree. Year outlook adds a calendar tone. Digits are mirrors for temperament and path themes—never medical or event predictions.",
     concepts: [
@@ -212,6 +220,8 @@ export const LEARNING_METHODS: LearningMethod[] = [
     subtitle: "Birth grid",
     blurb:
       "Place birth-date digits on a 3×3 grid. Arrows and missing numbers are read as reflective planes.",
+    origin:
+      "The Lo Shu square is a Chinese magic square of three—legend ties it to the Yellow River and early Chinese cosmology. Later East Asian and Western occult writers reused the 3×3 layout; modern “birth grid” numerology places date digits into those cells for reflective reading.",
     detail:
       "The Lo Shu square places non-zero digits from the birth date onto a fixed 3×3 layout. Filled lines (“arrows”) and empty cells (“missing numbers”) are read as emphasis or awareness themes. NumoraWisdom also overlays BN (Psychic) and DN (Destiny) so Vedic day/date themes sit beside the grid. Explore interactively—planes for reflection, not defects or fate.",
     concepts: [
@@ -251,6 +261,8 @@ export const LEARNING_METHODS: LearningMethod[] = [
     subtitle: "Year and month pacing",
     blurb:
       "Personal Year and Personal Month are temporary weather themes—not event forecasts.",
+    origin:
+      "Personal Year / Month pacing grew mainly inside modern Western (Pythagorean-style) practice in the 19th–20th centuries as a way to read calendar “seasons” without claiming fixed events. Related year-tone ideas also appear in Indian-style teaching; NumoraWisdom keeps both as weather metaphors only.",
     detail:
       "Timing cycles describe temporary pacing: Personal Year from birth month + day + calendar year; Personal Month from that year number plus the calendar month. They are weather metaphors for focus and tempo—starts, maintenance, completion—not predictions of specific events. Use them beside Life Path or Destiny for “what season am I in?” reflection only.",
     concepts: [
