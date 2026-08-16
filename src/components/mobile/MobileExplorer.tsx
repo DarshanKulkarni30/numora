@@ -128,17 +128,35 @@ export function MobileExplorer({ people }: Props) {
     psychic != null && destiny != null && mobile
       ? vedicTrio(psychic, destiny, mobile.core)
       : null;
+  const vedicHitLast4 =
+    psychic != null && destiny != null && mobile?.last4
+      ? vedicTrio(psychic, destiny, mobile.last4.core)
+      : null;
   const chaldeanHit =
     psychic != null && destiny != null && mobile
       ? chaldeanTrio(psychic, destiny, mobile.core)
+      : null;
+  const chaldeanHitLast4 =
+    psychic != null && destiny != null && mobile?.last4
+      ? chaldeanTrio(psychic, destiny, mobile.last4.core)
       : null;
   const pythHit =
     birthDay != null && lifePath != null && mobile
       ? pythagoreanTrio(birthDay, lifePath, mobile.core)
       : null;
+  const pythHitLast4 =
+    birthDay != null && lifePath != null && mobile?.last4
+      ? pythagoreanTrio(birthDay, lifePath, mobile.last4.core)
+      : null;
 
   const activeHit =
     tab === "vedic" ? vedicHit : tab === "chaldean" ? chaldeanHit : pythHit;
+  const activeHitLast4 =
+    tab === "vedic"
+      ? vedicHitLast4
+      : tab === "chaldean"
+        ? chaldeanHitLast4
+        : pythHitLast4;
 
   const table =
     psychic != null && (tab === "vedic" || tab === "chaldean")
@@ -168,17 +186,31 @@ export function MobileExplorer({ people }: Props) {
     .filter((d) => d.band === "amazing" || d.band === "favourable")
     .map((d) => d.n);
 
-  const psychicPair =
+  const psychicPairFull =
     psychic != null && mobile ? vedicPairTone(psychic, mobile.core) : null;
-  const destinyPair =
+  const destinyPairFull =
     destiny != null && mobile ? vedicPairTone(destiny, mobile.core) : null;
+  const psychicPairLast4 =
+    psychic != null && mobile?.last4
+      ? vedicPairTone(psychic, mobile.last4.core)
+      : null;
+  const destinyPairLast4 =
+    destiny != null && mobile?.last4
+      ? vedicPairTone(destiny, mobile.last4.core)
+      : null;
 
   const summaries = useMemo(() => {
     if (!mobile || psychic == null || destiny == null || lifePath == null || birthDay == null)
       return [];
+    const last4 = mobile.last4;
     const v = vedicTrio(psychic, destiny, mobile.core);
     const c = chaldeanTrio(psychic, destiny, mobile.core);
     const p = pythagoreanTrio(birthDay, lifePath, mobile.core);
+    const vL = last4 ? vedicTrio(psychic, destiny, last4.core) : null;
+    const cL = last4 ? chaldeanTrio(psychic, destiny, last4.core) : null;
+    const pL = last4
+      ? pythagoreanTrio(birthDay, lifePath, last4.core)
+      : null;
     const vFav = [1, 2, 3, 4, 5, 6, 7, 8, 9]
       .map((n) => ({ n, band: vedicTrio(psychic, destiny, n).band }))
       .filter((x) => x.band === "amazing" || x.band === "favourable")
@@ -187,36 +219,54 @@ export function MobileExplorer({ people }: Props) {
       .map((n) => ({ n, band: chaldeanTrio(psychic, destiny, n).band }))
       .filter((x) => x.band === "amazing" || x.band === "favourable")
       .map((x) => x.n);
+    const last4Note = (bandLabel: string) =>
+      last4
+        ? ` Full core ${mobile.core} · last-4 core ${last4.core} (${bandLabel}). Both matter for compatibility.`
+        : "";
     return [
       {
         system: "vedic" as const,
         title: "Vedic",
-        body: executiveFor(
-          "vedic",
-          v,
-          `Psychic ${psychic} · Destiny ${destiny} · Mobile ${mobile.core}`,
-          vFav,
-        ),
+        body:
+          executiveFor(
+            "vedic",
+            v,
+            `Psychic ${psychic} · Destiny ${destiny} · full mobile ${mobile.core}`,
+            vFav,
+          ) +
+          (vL
+            ? last4Note(
+                `${BAND_WORD[vL.band]} · ${vL.label}`,
+              )
+            : ""),
       },
       {
         system: "chaldean" as const,
         title: "Chaldean",
-        body: executiveFor(
-          "chaldean",
-          c,
-          `Birth ${psychic} · Destiny ${destiny} · Mobile ${mobile.core}`,
-          cFav,
-        ),
+        body:
+          executiveFor(
+            "chaldean",
+            c,
+            `Birth ${psychic} · Destiny ${destiny} · full mobile ${mobile.core}`,
+            cFav,
+          ) +
+          (cL
+            ? last4Note(`${BAND_WORD[cL.band]} · ${cL.label}`)
+            : ""),
       },
       {
         system: "pythagorean" as const,
         title: "Pythagorean",
-        body: executiveFor(
-          "pythagorean",
-          p,
-          `Birth day ${birthDay} · Life Path ${lifePath} · Mobile ${mobile.core}`,
-          p.favNames,
-        ),
+        body:
+          executiveFor(
+            "pythagorean",
+            p,
+            `Birth day ${birthDay} · Life Path ${lifePath} · full mobile ${mobile.core}`,
+            p.favNames,
+          ) +
+          (pL
+            ? last4Note(`${BAND_WORD[pL.band]} · ${pL.label}`)
+            : ""),
       },
     ];
   }, [mobile, psychic, destiny, lifePath, birthDay]);
@@ -302,38 +352,65 @@ export function MobileExplorer({ people }: Props) {
 
           {mobile ? <MobileDigitSplit mobile={mobile} emphasizeLast4 /> : null}
 
-          {psychicPair && destinyPair && mobile ? (
+          {psychicPairFull && destinyPairFull && mobile ? (
             <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
               <p className="text-sm font-medium text-ink">
-                Day-to-day pair tones
+                Day-to-day pair tones (full + last 4)
               </p>
               <p className="mt-1 text-xs text-ink-soft">
-                Separate from the three-way table: how the mobile core sits
-                next to Psychic (birth day) and Destiny.
+                Both the full-number core and the last-4 core are used for
+                compatibility—how each sits next to Psychic (birth day) and
+                Destiny.
               </p>
               <ul className="mt-3 space-y-2 text-sm">
                 <li className="flex flex-wrap items-center gap-2">
                   <span className="text-ink-soft">
-                    Psychic {psychic} → mobile {mobile.core}
+                    Psychic {psychic} → full {mobile.core}
                   </span>
                   <span
-                    className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[psychicPair]}`}
-                    title={TONE_HINT[psychicPair]}
+                    className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[psychicPairFull]}`}
+                    title={TONE_HINT[psychicPairFull]}
                   >
-                    {psychicPair}
+                    {psychicPairFull}
                   </span>
                 </li>
                 <li className="flex flex-wrap items-center gap-2">
                   <span className="text-ink-soft">
-                    Destiny {destiny} → mobile {mobile.core}
+                    Destiny {destiny} → full {mobile.core}
                   </span>
                   <span
-                    className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[destinyPair]}`}
-                    title={TONE_HINT[destinyPair]}
+                    className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[destinyPairFull]}`}
+                    title={TONE_HINT[destinyPairFull]}
                   >
-                    {destinyPair}
+                    {destinyPairFull}
                   </span>
                 </li>
+                {psychicPairLast4 && destinyPairLast4 && mobile.last4 ? (
+                  <>
+                    <li className="flex flex-wrap items-center gap-2">
+                      <span className="text-ink-soft">
+                        Psychic {psychic} → last-4 {mobile.last4.core}
+                      </span>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[psychicPairLast4]}`}
+                        title={TONE_HINT[psychicPairLast4]}
+                      >
+                        {psychicPairLast4}
+                      </span>
+                    </li>
+                    <li className="flex flex-wrap items-center gap-2">
+                      <span className="text-ink-soft">
+                        Destiny {destiny} → last-4 {mobile.last4.core}
+                      </span>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-xs ${TONE_STYLE[destinyPairLast4]}`}
+                        title={TONE_HINT[destinyPairLast4]}
+                      >
+                        {destinyPairLast4}
+                      </span>
+                    </li>
+                  </>
+                ) : null}
               </ul>
             </div>
           ) : null}
@@ -363,16 +440,33 @@ export function MobileExplorer({ people }: Props) {
             </div>
 
             {activeHit ? (
-              <div
-                className={`mt-4 rounded-xl border px-4 py-3 ${BAND_STYLE[activeHit.band]}`}
-              >
-                <p className="text-[10px] uppercase tracking-wider opacity-80">
-                  Mobile cell · {tab}
-                </p>
-                <p className="mt-1 font-medium">
-                  {BAND_WORD[activeHit.band]} · {activeHit.label}
-                </p>
-                <p className="mt-1 text-sm leading-6">{activeHit.summary}</p>
+              <div className="mt-4 space-y-3">
+                <div
+                  className={`rounded-xl border px-4 py-3 ${BAND_STYLE[activeHit.band]}`}
+                >
+                  <p className="text-[10px] uppercase tracking-wider opacity-80">
+                    Full total · {tab}
+                  </p>
+                  <p className="mt-1 font-medium">
+                    {BAND_WORD[activeHit.band]} · {activeHit.label}
+                  </p>
+                  <p className="mt-1 text-sm leading-6">{activeHit.summary}</p>
+                </div>
+                {activeHitLast4 && mobile?.last4 ? (
+                  <div
+                    className={`rounded-xl border px-4 py-3 ${BAND_STYLE[activeHitLast4.band]}`}
+                  >
+                    <p className="text-[10px] uppercase tracking-wider opacity-80">
+                      Last 4 · core {mobile.last4.core} · {tab}
+                    </p>
+                    <p className="mt-1 font-medium">
+                      {BAND_WORD[activeHitLast4.band]} · {activeHitLast4.label}
+                    </p>
+                    <p className="mt-1 text-sm leading-6">
+                      {activeHitLast4.summary}
+                    </p>
+                  </div>
+                ) : null}
               </div>
             ) : trial.trim() === "" ? (
               <p className="mt-4 text-sm text-ink-soft">

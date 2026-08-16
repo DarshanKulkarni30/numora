@@ -9,6 +9,12 @@ export type MobileSegment = {
   core: number;
 };
 
+export type ConsecutiveRun = {
+  digit: string;
+  start: number;
+  length: number;
+};
+
 export type MobileParseOk = {
   ok: true;
   digits: string;
@@ -18,6 +24,10 @@ export type MobileParseOk = {
   prefix: MobileSegment | null;
   /** Last 4 digits when N ≥ 4. */
   last4: MobileSegment | null;
+  /** Count of each digit 0–9 in the full number. */
+  digitCounts: number[];
+  /** Runs of the same digit length ≥ 3 (0-based start index). */
+  consecutiveRuns: ConsecutiveRun[];
 };
 
 export type MobileParseErr = {
@@ -51,6 +61,34 @@ function segmentFromDigits(digits: string): MobileSegment {
     compound,
     core: mobileCore(compound || 9),
   };
+}
+
+export function countDigits(digits: string): number[] {
+  const counts = Array.from({ length: 10 }, () => 0);
+  for (const ch of digits) {
+    const n = Number(ch);
+    if (n >= 0 && n <= 9) counts[n] += 1;
+  }
+  return counts;
+}
+
+/** Consecutive same-digit runs of length ≥ minLen. */
+export function findConsecutiveRuns(
+  digits: string,
+  minLen = 3,
+): ConsecutiveRun[] {
+  const runs: ConsecutiveRun[] = [];
+  if (!digits) return runs;
+  let start = 0;
+  for (let i = 1; i <= digits.length; i++) {
+    if (i < digits.length && digits[i] === digits[start]) continue;
+    const length = i - start;
+    if (length >= minLen) {
+      runs.push({ digit: digits[start], start, length });
+    }
+    start = i;
+  }
+  return runs;
 }
 
 /**
@@ -126,5 +164,7 @@ export function parseMobile(raw: string): MobileParse {
     core: mobileCore(compound),
     prefix,
     last4,
+    digitCounts: countDigits(digits),
+    consecutiveRuns: findConsecutiveRuns(digits, 3),
   };
 }

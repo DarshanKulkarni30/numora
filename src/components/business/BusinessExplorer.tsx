@@ -135,6 +135,14 @@ export function BusinessExplorer({ people }: Props) {
     companyLayers && mobileCore != null
       ? companyMobileHarmony(companyLayers.vedicCore, mobileCore, domain)
       : null;
+  const companyMobileLast4 =
+    companyLayers && mobile.ok && mobile.last4
+      ? companyMobileHarmony(
+          companyLayers.vedicCore,
+          mobile.last4.core,
+          domain,
+        )
+      : null;
 
   return (
     <div className="space-y-8">
@@ -257,38 +265,58 @@ export function BusinessExplorer({ people }: Props) {
 
                   <div>
                     <p className="text-sm font-medium text-ink">
-                      Fit for {domain.label}
+                      Compatibility (full total + last 4)
+                    </p>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      Both cores are scored against the owner and domain.
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <FitChip
                         fit={domainFit(mobile.core, domain, "mobile")}
-                        label={`full core · ${mobile.core}`}
+                        label={`full ${mobile.core} · domain`}
                       />
                       {mobile.last4 ? (
                         <FitChip
                           fit={domainFit(mobile.last4.core, domain, "mobile")}
-                          label={`last-4 · ${mobile.last4.core}`}
+                          label={`last-4 ${mobile.last4.core} · domain`}
                         />
                       ) : null}
                       <FitChip
                         fit={coreDigitFit(mobile.core, psychic)}
-                        label={`vs Psychic ${psychic}`}
+                        label={`full vs Psychic ${psychic}`}
                       />
-                      <FitChip
-                        fit={coreDigitFit(mobile.core, destiny)}
-                        label={`vs Destiny ${destiny}`}
-                      />
-                      {personalName != null ? (
+                      {mobile.last4 ? (
                         <FitChip
-                          fit={coreDigitFit(mobile.core, personalName)}
-                          label={`vs Name ${personalName}`}
+                          fit={coreDigitFit(mobile.last4.core, psychic)}
+                          label={`last-4 vs Psychic ${psychic}`}
                         />
                       ) : null}
-                      {mobile.last4 && personalName != null ? (
+                      <FitChip
+                        fit={coreDigitFit(mobile.core, destiny)}
+                        label={`full vs Destiny ${destiny}`}
+                      />
+                      {mobile.last4 ? (
                         <FitChip
-                          fit={coreDigitFit(mobile.last4.core, personalName)}
-                          label={`last-4 vs Name ${personalName}`}
+                          fit={coreDigitFit(mobile.last4.core, destiny)}
+                          label={`last-4 vs Destiny ${destiny}`}
                         />
+                      ) : null}
+                      {personalName != null ? (
+                        <>
+                          <FitChip
+                            fit={coreDigitFit(mobile.core, personalName)}
+                            label={`full vs Name ${personalName}`}
+                          />
+                          {mobile.last4 ? (
+                            <FitChip
+                              fit={coreDigitFit(
+                                mobile.last4.core,
+                                personalName,
+                              )}
+                              label={`last-4 vs Name ${personalName}`}
+                            />
+                          ) : null}
+                        </>
                       ) : null}
                     </div>
                     <p className="mt-2 text-xs text-ink-soft">
@@ -298,22 +326,49 @@ export function BusinessExplorer({ people }: Props) {
                     </p>
                   </div>
 
-                  <p className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-                    Birth×Destiny×mobile core{" "}
-                    <span className="text-ink">
-                      {BAND_WORD[vedicTrio(psychic, destiny, mobile.core).band]}
-                    </span>{" "}
-                    (
-                    {vedicTrio(psychic, destiny, mobile.core).label}
-                    ). For full method tables, see{" "}
-                    <Link
-                      href="/mobile"
-                      className="text-gold-deep underline underline-offset-2 hover:text-ink"
-                    >
-                      classic Mobile fit
-                    </Link>
-                    .
-                  </p>
+                  <div className="space-y-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
+                    <p>
+                      Birth×Destiny×
+                      <strong className="text-ink">full</strong> core{" "}
+                      <span className="text-ink">
+                        {
+                          BAND_WORD[
+                            vedicTrio(psychic, destiny, mobile.core).band
+                          ]
+                        }
+                      </span>{" "}
+                      ({vedicTrio(psychic, destiny, mobile.core).label})
+                    </p>
+                    {mobile.last4 ? (
+                      <p>
+                        Birth×Destiny×
+                        <strong className="text-ink">last-4</strong> core{" "}
+                        <span className="text-ink">
+                          {
+                            BAND_WORD[
+                              vedicTrio(psychic, destiny, mobile.last4.core)
+                                .band
+                            ]
+                          }
+                        </span>{" "}
+                        (
+                        {
+                          vedicTrio(psychic, destiny, mobile.last4.core).label
+                        }
+                        )
+                      </p>
+                    ) : null}
+                    <p className="text-xs">
+                      Full method tables:{" "}
+                      <Link
+                        href="/mobile"
+                        className="text-gold-deep underline underline-offset-2 hover:text-ink"
+                      >
+                        classic Mobile fit
+                      </Link>
+                      .
+                    </p>
+                  </div>
                 </>
               ) : (
                 <p className="text-sm text-ink-soft">
@@ -497,7 +552,16 @@ export function BusinessExplorer({ people }: Props) {
                             companyLayers.vedicCore,
                             mobileCore,
                           )}
-                          label={`vs mobile ${mobileCore}`}
+                          label={`vs full mobile ${mobileCore}`}
+                        />
+                      ) : null}
+                      {mobile.ok && mobile.last4 ? (
+                        <FitChip
+                          fit={coreDigitFit(
+                            companyLayers.vedicCore,
+                            mobile.last4.core,
+                          )}
+                          label={`vs last-4 ${mobile.last4.core}`}
                         />
                       ) : null}
                     </div>
@@ -509,19 +573,39 @@ export function BusinessExplorer({ people }: Props) {
                   </div>
 
                   {companyMobile ? (
-                    <div
-                      className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyMobile.band]}`}
-                    >
-                      <p className="text-[10px] uppercase tracking-wider opacity-80">
-                        Company × mobile · {domain.label}
-                      </p>
-                      <p className="mt-1 font-medium">
-                        {TRIO_BAND_ICON[companyMobile.band]}{" "}
-                        {BAND_WORD[companyMobile.band]} · {companyMobile.label}
-                      </p>
-                      <p className="mt-1 text-sm leading-6">
-                        {companyMobile.summary}
-                      </p>
+                    <div className="space-y-3">
+                      <div
+                        className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyMobile.band]}`}
+                      >
+                        <p className="text-[10px] uppercase tracking-wider opacity-80">
+                          Company × full mobile · {domain.label}
+                        </p>
+                        <p className="mt-1 font-medium">
+                          {TRIO_BAND_ICON[companyMobile.band]}{" "}
+                          {BAND_WORD[companyMobile.band]} · {companyMobile.label}
+                        </p>
+                        <p className="mt-1 text-sm leading-6">
+                          {companyMobile.summary}
+                        </p>
+                      </div>
+                      {companyMobileLast4 && mobile.ok && mobile.last4 ? (
+                        <div
+                          className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyMobileLast4.band]}`}
+                        >
+                          <p className="text-[10px] uppercase tracking-wider opacity-80">
+                            Company × last-4 ({mobile.last4.core}) ·{" "}
+                            {domain.label}
+                          </p>
+                          <p className="mt-1 font-medium">
+                            {TRIO_BAND_ICON[companyMobileLast4.band]}{" "}
+                            {BAND_WORD[companyMobileLast4.band]} ·{" "}
+                            {companyMobileLast4.label}
+                          </p>
+                          <p className="mt-1 text-sm leading-6">
+                            {companyMobileLast4.summary}
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
                   ) : (
                     <p className="text-sm text-ink-soft">
@@ -546,8 +630,12 @@ export function BusinessExplorer({ people }: Props) {
                         ? `, and the Vedic Birth×Destiny×name cell reads ${BAND_WORD[companyTrio.band]} (${companyTrio.label})`
                         : ""}
                       {companyMobile
-                        ? `. Versus mobile ${mobileCore}, the pair is ${BAND_WORD[companyMobile.band]}.`
-                        : "."}{" "}
+                        ? `. Versus full mobile ${mobileCore}, the pair is ${BAND_WORD[companyMobile.band]}`
+                        : ""}
+                      {companyMobileLast4 && mobile.ok && mobile.last4
+                        ? `; versus last-4 core ${mobile.last4.core}, ${BAND_WORD[companyMobileLast4.band]}`
+                        : ""}
+                      {companyMobile || companyMobileLast4 ? "." : "."}{" "}
                       Reflective branding notes only—not incorporation, trademark,
                       or financial advice.
                     </p>
