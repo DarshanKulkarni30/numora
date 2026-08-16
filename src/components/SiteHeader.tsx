@@ -24,11 +24,31 @@ const NAV_LINKS = [
 export function SiteHeader({ email }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const panelId = useId();
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!email) {
+      setIsAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/admin/me")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled) setIsAdmin(Boolean(d.admin));
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [email]);
 
   useEffect(() => {
     if (!open) return;
@@ -76,6 +96,11 @@ export function SiteHeader({ email }: Props) {
                   {link.label}
                 </Link>
               ))}
+              {isAdmin ? (
+                <Link href="/admin" className="hover:text-gold-deep">
+                  Admin
+                </Link>
+              ) : null}
               <form action="/auth/signout" method="post">
                 <button type="submit" className="hover:text-gold-deep">
                   Sign out
@@ -117,6 +142,17 @@ export function SiteHeader({ email }: Props) {
                 </Link>
               </li>
             ))}
+            {isAdmin ? (
+              <li>
+                <Link
+                  href="/admin"
+                  className="block rounded-xl px-3 py-3 text-ink-soft hover:bg-mist/60 hover:text-gold-deep"
+                  onClick={() => setOpen(false)}
+                >
+                  Admin
+                </Link>
+              </li>
+            ) : null}
             <li>
               <form action="/auth/signout" method="post">
                 <button

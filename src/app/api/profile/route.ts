@@ -306,5 +306,13 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  const { recordActivity } = await import("@/lib/admin/audit");
+  await recordActivity({
+    userId: user.id,
+    eventType: "profile_saved",
+    path: "/api/profile",
+    meta: { count: normalized.length },
+  });
+
   return NextResponse.json({ people: data, entitlements });
 }

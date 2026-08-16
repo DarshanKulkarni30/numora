@@ -48,11 +48,23 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { data: sessionData, error } =
+    await supabase.auth.exchangeCodeForSession(code);
   if (error) {
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(error.message)}`, site),
     );
+  }
+
+  try {
+    const { recordActivity } = await import("@/lib/admin/audit");
+    await recordActivity({
+      userId: sessionData.user?.id,
+      eventType: "login",
+      path: "/auth/callback",
+    });
+  } catch {
+    // non-fatal
   }
 
   return response;

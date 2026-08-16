@@ -65,6 +65,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const { recordActivity } = await import("@/lib/admin/audit");
+    await recordActivity({
+      userId: user.id,
+      eventType: "report_created",
+      path: "/api/reports",
+      meta: { reportId: data.id },
+    });
+
     return NextResponse.json({ id: data.id });
   } catch (err) {
     return NextResponse.json(

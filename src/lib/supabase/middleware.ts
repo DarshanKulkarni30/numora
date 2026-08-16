@@ -1,5 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+
+async function isUserBlocked(userId: string): Promise<boolean> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return false;
+  try {
+    const svc = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data } = await svc
+      .from("user_moderation")
+      .select("blocked_at")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return Boolean(data?.blocked_at);
+  } catch {
+    return false;
+  }
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -25,10 +45,8 @@ export async function updateSession(request: NextRequest) {
             ...options,
             path: options?.path ?? "/",
             sameSite: options?.sameSite ?? "lax",
-            // Keep sessions on direct navigation to protected pages.
             secure:
-              options?.secure ??
-              process.env.NODE_ENV === "production",
+              options?.secure ?? process.env.NODE_ENV === "production",
           }),
         );
       },
@@ -42,7 +60,6 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const code = request.nextUrl.searchParams.get("code");
 
-  // Supabase sometimes returns ?code= on Site URL (/) instead of /auth/callback
   if (code && path !== "/auth/callback") {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/auth/callback";
@@ -60,6 +77,7 @@ export async function updateSession(request: NextRequest) {
     "/name",
     "/business",
     "/mobile",
+    "/admin",
   ];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(`${p}/`),
@@ -70,6 +88,35 @@ export async function updateSession(request: NextRequest) {
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("next", path);
     return NextResponse.redirect(redirectUrl);
+  }
+
+  const appPaths = [
+    "/dashboard",
+    "/report",
+    "/profile",
+    "/trivia",
+    "/family",
+    "/name",
+    "/business",
+    "/mobile",
+    "/api/profile",
+    "/api/reports",
+  ];
+  const isAppPath = appPaths.some(
+    (p) => path === p || path.startsWith(`${p}/`),
+  );
+
+  if (
+    user &&
+    isAppPath &&
+    path !== "/account-restricted" &&
+    !path.startsWith("/admin")
+  ) {
+    if (await isUserBlocked(user.id)) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/account-restricted";
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   if (path === "/login" && user) {
