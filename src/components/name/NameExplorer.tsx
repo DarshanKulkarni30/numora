@@ -78,6 +78,27 @@ function personLabel(p: PersonRecord) {
   return p.is_self ? `${name} (You)` : `${name} · ${p.relationship || "Family"}`;
 }
 
+function SuggestionMethodCell({
+  number,
+  band,
+  label,
+}: {
+  number: number;
+  band: TrioBand;
+  label: string;
+}) {
+  return (
+    <div className="space-y-1">
+      <p className="brand text-ink">{number}</p>
+      <span
+        className={`inline-flex max-w-[11rem] items-center gap-1 rounded-full border px-2 py-0.5 text-xs leading-tight ${BAND_STYLE[band]}`}
+      >
+        {TRIO_BAND_ICON[band]} {BAND_WORD[band]} · {label}
+      </span>
+    </div>
+  );
+}
+
 function nameLayers(fullName: string, dob: string) {
   const pyth = calculatePythagorean(fullName, dob);
   const chald = calculateChaldean(fullName);
@@ -228,7 +249,8 @@ export function NameExplorer({ people }: Props) {
     .map((d) => d.n);
 
   const suggestions = useMemo(() => {
-    if (psychic == null || destiny == null || !selected) return [];
+    if (psychic == null || destiny == null || lifePath == null || !selected)
+      return [];
     const allowed = new Set(gendersForProfile(selected.gender || ""));
     const currentFirst = (selected.preferred_name || currentName)
       .split(/\s+/)[0]
@@ -237,16 +259,33 @@ export function NameExplorer({ people }: Props) {
     return SUGGESTED_NAMES.filter((s) => allowed.has(s.gender))
       .map((s) => {
         const scored = joinGivenAndSurname(s.name, trialLast);
-        const vedic = calculateVedic(scored, dob);
-        const n = reduceToSingleDigit(vedic.nameNumber);
-        const hit = vedicTrio(psychic, destiny, n);
+        const layers = nameLayers(scored, dob);
+        const vedicN = reduceToSingleDigit(layers.vedicName);
+        const chaldeanN = reduceToSingleDigit(layers.chaldean);
+        const expressionN = reduceToSingleDigit(layers.expression);
+        const vHit = vedicTrio(psychic, destiny, vedicN);
+        const cHit = chaldeanTrio(psychic, destiny, chaldeanN);
+        const pHit = pythagoreanTrio(
+          layers.birthDay,
+          lifePath,
+          expressionN,
+        );
         return {
           ...s,
           scoredName: scored,
-          nameNumber: n,
-          band: hit.band,
-          label: hit.label,
-          rank: BAND_RANK[hit.band],
+          vedicNumber: vedicN,
+          chaldeanNumber: chaldeanN,
+          expressionNumber: expressionN,
+          vedicBand: vHit.band,
+          vedicLabel: vHit.label,
+          chaldeanBand: cHit.band,
+          chaldeanLabel: cHit.label,
+          pythBand: pHit.band,
+          pythLabel: pHit.label,
+          /** Keep primary sort/filter on Vedic Birth×Destiny×Name. */
+          band: vHit.band,
+          label: vHit.label,
+          rank: BAND_RANK[vHit.band],
         };
       })
       .filter((s) => s.name.toLowerCase() !== currentFirst)
@@ -255,7 +294,7 @@ export function NameExplorer({ people }: Props) {
         if (b.rank !== a.rank) return b.rank - a.rank;
         return a.name.localeCompare(b.name);
       });
-  }, [psychic, destiny, selected, dob, currentName, trialLast]);
+  }, [psychic, destiny, lifePath, selected, dob, currentName, trialLast]);
 
   const suggestionLetters = useMemo(() => {
     const set = new Set(
@@ -297,6 +336,7 @@ export function NameExplorer({ people }: Props) {
       {
         system: "vedic" as const,
         title: "Vedic",
+        subtitle: "Indian-style map" as const,
         body: executiveFor(
           "vedic",
           v,
@@ -307,6 +347,7 @@ export function NameExplorer({ people }: Props) {
       {
         system: "chaldean" as const,
         title: "Chaldean",
+        subtitle: undefined as string | undefined,
         body: executiveFor(
           "chaldean",
           c,
@@ -317,6 +358,7 @@ export function NameExplorer({ people }: Props) {
       {
         system: "pythagorean" as const,
         title: "Pythagorean",
+        subtitle: undefined as string | undefined,
         body: executiveFor(
           "pythagorean",
           p,
@@ -668,7 +710,9 @@ export function NameExplorer({ people }: Props) {
             <h2 className="text-xl text-ink">Suggested names</h2>
             <p className="mt-1 text-sm text-ink-soft">
               First names from the curated bank, scored with the last name
-              above (gender filtered). Ranked by Vedic Birth×Destiny×Name.
+              above (gender filtered). Listed when Vedic Birth×Destiny×Name is
+              Amazing or Favourable; Chaldean and Pythagorean numbers and bands
+              are shown for comparison. Vedic uses an Indian-style letter map.
               Change the last name to see marriage or legal-surname options.
               Reflective ideas only—not baby-naming or legal advice.
             </p>
@@ -706,13 +750,19 @@ export function NameExplorer({ people }: Props) {
                   {letterFilter !== "All" ? ` · letter ${letterFilter}` : ""}.
                 </p>
                 <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
-                  <table className="w-full min-w-[28rem] text-left text-sm">
+                  <table className="w-full min-w-[40rem] text-left text-sm">
                     <thead className="bg-mist/60 text-ink-soft">
                       <tr>
                         <th className="px-3 py-2 font-medium">Name</th>
                         <th className="px-3 py-2 font-medium">Gender</th>
-                        <th className="px-3 py-2 font-medium">Vedic name #</th>
-                        <th className="px-3 py-2 font-medium">Band</th>
+                        <th className="px-3 py-2 font-medium">
+                          Vedic
+                          <span className="mt-0.5 block text-[0.65rem] font-normal opacity-80">
+                            Indian-style map
+                          </span>
+                        </th>
+                        <th className="px-3 py-2 font-medium">Chaldean</th>
+                        <th className="px-3 py-2 font-medium">Pythagorean</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -733,16 +783,26 @@ export function NameExplorer({ people }: Props) {
                           <td className="px-3 py-2 capitalize text-ink-soft">
                             {s.gender}
                           </td>
-                          <td className="brand px-3 py-2 text-ink">
-                            {s.nameNumber}
+                          <td className="px-3 py-2 align-top">
+                            <SuggestionMethodCell
+                              number={s.vedicNumber}
+                              band={s.vedicBand}
+                              label={s.vedicLabel}
+                            />
                           </td>
-                          <td className="px-3 py-2">
-                            <span
-                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${BAND_STYLE[s.band]}`}
-                            >
-                              {TRIO_BAND_ICON[s.band]} {BAND_WORD[s.band]} ·{" "}
-                              {s.label}
-                            </span>
+                          <td className="px-3 py-2 align-top">
+                            <SuggestionMethodCell
+                              number={s.chaldeanNumber}
+                              band={s.chaldeanBand}
+                              label={s.chaldeanLabel}
+                            />
+                          </td>
+                          <td className="px-3 py-2 align-top">
+                            <SuggestionMethodCell
+                              number={s.expressionNumber}
+                              band={s.pythBand}
+                              label={s.pythLabel}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -775,7 +835,14 @@ export function NameExplorer({ people }: Props) {
                   key={s.system}
                   className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
                 >
-                  <p className="text-sm font-medium text-ink">{s.title}</p>
+                  <p className="text-sm font-medium text-ink">
+                    {s.title}
+                    {s.subtitle ? (
+                      <span className="ml-2 text-xs font-normal text-ink-soft">
+                        ({s.subtitle})
+                      </span>
+                    ) : null}
+                  </p>
                   <p className="mt-1 text-sm leading-6 text-ink-soft">{s.body}</p>
                 </li>
               ))}
