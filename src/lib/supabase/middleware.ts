@@ -57,6 +57,9 @@ export async function updateSession(request: NextRequest) {
     "/profile",
     "/trivia",
     "/family",
+    "/name",
+    "/business",
+    "/mobile",
   ];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(`${p}/`),

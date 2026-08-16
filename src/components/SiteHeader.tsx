@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: "/business", label: "Business" },
   { href: "/trivia", label: "Trivia" },
   { href: "/family", label: "Family" },
+  { href: "/pricing", label: "Plans" },
   { href: "/report/new", label: "New report" },
 ] as const;
 

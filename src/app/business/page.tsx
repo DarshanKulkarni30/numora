@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { BusinessExplorer } from "@/components/business/BusinessExplorer";
+import {
+  resolveEntitlements,
+  type EntitlementRow,
+} from "@/lib/entitlements";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -15,6 +19,19 @@ export default async function BusinessPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business");
+
+  let entitlementRow: EntitlementRow | null = null;
+  try {
+    const { data: ent } = await supabase
+      .from("user_entitlements")
+      .select("plan_id, status, current_period_end")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    entitlementRow = (ent as EntitlementRow) ?? null;
+  } catch {
+    entitlementRow = null;
+  }
+  const entitlements = resolveEntitlements(user.email, entitlementRow);
 
   const { data } = await supabase
     .from("people")
@@ -54,7 +71,10 @@ export default async function BusinessPage() {
           </p>
         </div>
         <div className="mt-10">
-          <BusinessExplorer people={people} />
+          <BusinessExplorer
+            people={people}
+            canUseCompany={entitlements.features.business}
+          />
         </div>
       </main>
     </div>

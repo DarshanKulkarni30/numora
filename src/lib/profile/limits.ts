@@ -1,12 +1,12 @@
-const DEFAULT_MAX_FAMILY = 3;
-
-/** Per-account family-member caps (Self is not counted). */
-const ELEVATED_MAX_FAMILY: Record<string, number> = {
-  "darshan.kulkarni30@gmail.com": 10,
-};
+/**
+ * @deprecated Prefer resolveEntitlements(). Kept for gradual migration.
+ */
+import { resolveEntitlements } from "@/lib/entitlements";
 
 export function maxFamilyMembers(email?: string | null): number {
-  if (!email) return DEFAULT_MAX_FAMILY;
-  const key = email.trim().toLowerCase();
-  return ELEVATED_MAX_FAMILY[key] ?? DEFAULT_MAX_FAMILY;
+  return resolveEntitlements(email).maxFamily;
+}
+
+export function maxPeopleSlots(email?: string | null): number {
+  return resolveEntitlements(email).maxPeople;
 }

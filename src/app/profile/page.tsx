@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ProfileForm } from "@/components/ProfileForm";
+import { resolveEntitlements, type EntitlementRow } from "@/lib/entitlements";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -22,6 +23,20 @@ export default async function ProfilePage() {
     .eq("user_id", user.id)
     .order("sort_order", { ascending: true });
 
+  let entitlementRow: EntitlementRow | null = null;
+  try {
+    const { data: ent } = await supabase
+      .from("user_entitlements")
+      .select("plan_id, status, current_period_end")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    entitlementRow = (ent as EntitlementRow) ?? null;
+  } catch {
+    entitlementRow = null;
+  }
+
+  const entitlements = resolveEntitlements(user.email, entitlementRow);
+
   let people = (data ?? []) as PersonRecord[];
   if (!people.some((p) => p.is_self)) {
     const guessed = guessNameFromUser(user);
@@ -35,6 +50,7 @@ export default async function ProfilePage() {
         gender: "",
         purpose: "",
         sort_order: 0,
+        identity_edit_count: 0,
       },
       ...people,
     ];
@@ -47,12 +63,19 @@ export default async function ProfilePage() {
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-4xl text-ink">Profile settings</h1>
           <p className="mt-3 text-ink-soft">
-            Save yourself and up to three family members. Complete profiles can
-            be used for new readings.
+            Save yourself
+            {entitlements.maxFamily > 0
+              ? ` and up to ${entitlements.maxFamily} family member${entitlements.maxFamily === 1 ? "" : "s"}`
+              : ""}
+            . Complete profiles can be used for new readings.
           </p>
         </div>
         <div className="mt-10">
-          <ProfileForm email={user.email} initialPeople={people} />
+          <ProfileForm
+            email={user.email}
+            initialPeople={people}
+            initialEntitlements={entitlements}
+          />
         </div>
       </main>
     </div>

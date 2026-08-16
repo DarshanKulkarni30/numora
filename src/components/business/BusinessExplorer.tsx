@@ -21,6 +21,7 @@ import {
 import { analyzeCompanyNameChaldean } from "@/lib/numerology/companyNameBreakdown";
 import { parseMobile } from "@/lib/numerology/mobileNumber";
 import { MobileDigitSplit } from "@/components/mobile/MobileDigitSplit";
+import { UpgradeRequired } from "@/components/UpgradeRequired";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -33,6 +34,8 @@ import { isValidDob } from "@/lib/profile/date";
 
 type Props = {
   people: PersonRecord[];
+  /** Company-name tab (paid). Mobile tab stays available on Free. */
+  canUseCompany?: boolean;
 };
 
 type FeatureTab = "mobile" | "company";
@@ -68,7 +71,10 @@ function FitChip({ fit, label }: { fit: DomainFit; label: string }) {
   );
 }
 
-export function BusinessExplorer({ people }: Props) {
+export function BusinessExplorer({
+  people,
+  canUseCompany = true,
+}: Props) {
   const selectable = useMemo(
     () =>
       people.filter(
@@ -87,6 +93,8 @@ export function BusinessExplorer({ people }: Props) {
   const [mobileRaw, setMobileRaw] = useState("");
   const [companyRaw, setCompanyRaw] = useState("");
 
+  const showCompanyUpgrade = featureTab === "company" && !canUseCompany;
+  const tabHighlight: FeatureTab = featureTab;
   const selected = selectable.find(
     (p) => `${p.sort_order}-${p.full_name}` === selectedKey,
   );
@@ -231,17 +239,20 @@ export function BusinessExplorer({ people }: Props) {
                 type="button"
                 onClick={() => setFeatureTab(id)}
                 className={`flex-1 rounded-full px-3 py-2 text-sm transition-all duration-150 ${
-                  featureTab === id
+                  tabHighlight === id
                     ? "bg-ink text-paper shadow-sm"
                     : "text-ink-soft hover:-translate-y-px hover:text-ink hover:shadow-sm active:translate-y-0 active:shadow-none"
                 }`}
               >
                 {label}
+                {id === "company" && !canUseCompany ? " · Pro" : ""}
               </button>
             ))}
           </div>
 
-          {featureTab === "mobile" ? (
+          {showCompanyUpgrade ? (
+            <UpgradeRequired feature="Company / brand-name scoring" />
+          ) : featureTab === "mobile" ? (
             <section className="space-y-4">
               <label className="block text-sm text-ink">
                 Mobile number (national, no country code)

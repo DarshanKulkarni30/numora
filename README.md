@@ -8,8 +8,19 @@ Belief-based self-reflection only — not scientific, medical, legal, financial,
 
 - Next.js (App Router) + TypeScript + Tailwind
 - Traditional numerology calculation engines
-- Supabase Auth (email magic link) + Postgres for saved reports
-- Free tier: on-screen reports with best-effort copy protection (PDF later for paid)
+- Supabase Auth (email magic link / Google) + Postgres for saved reports and profiles
+- Entitlements layer prepared for Free / Week Pass / prepaid packs (Stripe not wired yet)
+
+## Plans (product)
+
+| Plan | Profiles | Highlights |
+|------|----------|------------|
+| Free | 1 (Self) | Report, name/family/trivia, mobile; view-only |
+| Week Pass ($20) | 4 | Full tools for 7 days |
+| Packs ($15 / $27 / $50 / $90) | 6 | 3 / 6 / 12 / 24 months |
+| Admin | 12 | Internal testing email |
+
+Set `ENTITLEMENTS_ENFORCE=true` to apply Free limits. Default `false` = open beta for testers.
 
 ## Setup
 
@@ -20,8 +31,8 @@ cp .env.local.example .env.local
 
 1. Create a Supabase project.
 2. Put URL + anon key in `.env.local`.
-3. Run `supabase/schema.sql` in the SQL editor.
-4. Auth → enable Email provider / magic link.
+3. Run `supabase/schema.sql` (and `supabase/migrations/20260816_entitlements.sql` if upgrading an existing DB).
+4. Auth → enable Email / Google.
 5. Add redirect URL: `http://localhost:3000/auth/callback` (and production URL later).
 
 ```bash
@@ -38,6 +49,6 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run build`| Production build     |
 | `npm run start`| Serve production     |
 
-## Note on copy protection
+## Copy protection
 
-Selection, copy shortcuts, context menu, and print are discouraged in the report UI. Determined users can still capture content; PDF export is reserved for a future paid plan.
+Free reports discourage selection, copy shortcuts, context menu, and print. Determined users can still capture content; PDF export is reserved for paid plans when checkout ships.

@@ -30,7 +30,7 @@ create policy "Users delete own reports"
   on public.reports for delete
   using (auth.uid() = user_id);
 
--- Saved people for readings (self + up to 3 family members)
+-- Saved people for readings (slot caps are plan-based in app code)
 create table if not exists public.people (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -42,6 +42,8 @@ create table if not exists public.people (
   gender text not null default '',
   purpose text not null default '',
   sort_order integer not null default 0,
+  identity_edit_count integer not null default 0,
+  identity_confirmed_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -66,4 +68,22 @@ create policy "Users update own people"
 
 create policy "Users delete own people"
   on public.people for delete
+  using (auth.uid() = user_id);
+
+-- Billing-ready entitlements (Stripe fields nullable until checkout ships)
+create table if not exists public.user_entitlements (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  plan_id text not null default 'free',
+  status text not null default 'active',
+  current_period_end timestamptz,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_entitlements enable row level security;
+
+create policy "Users read own entitlements"
+  on public.user_entitlements for select
   using (auth.uid() = user_id);

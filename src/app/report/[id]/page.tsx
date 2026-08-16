@@ -1,6 +1,10 @@
 import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ReportView } from "@/components/ReportView";
+import {
+  resolveEntitlements,
+  type EntitlementRow,
+} from "@/lib/entitlements";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -30,10 +34,30 @@ export default async function ReportPage({ params }: Props) {
 
   const report = data.report as NumerologyReport;
 
+  let entitlementRow: EntitlementRow | null = null;
+  if (user) {
+    try {
+      const { data: ent } = await supabase
+        .from("user_entitlements")
+        .select("plan_id, status, current_period_end")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      entitlementRow = (ent as EntitlementRow) ?? null;
+    } catch {
+      entitlementRow = null;
+    }
+  }
+  const entitlements = resolveEntitlements(user?.email, entitlementRow);
+
   return (
     <div>
       <SiteHeader email={user?.email} />
-      <ReportView report={report} watermarkEmail={user?.email ?? undefined} />
+      <ReportView
+        report={report}
+        watermarkEmail={user?.email ?? undefined}
+        allowCopy={entitlements.features.copy}
+        allowPdf={entitlements.features.pdf}
+      />
     </div>
   );
 }

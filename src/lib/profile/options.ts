@@ -36,6 +36,9 @@ export type PersonRecord = {
   gender: string;
   purpose: string;
   sort_order: number;
+  /** Changes to full_name / DOB after first confirm (server-managed). */
+  identity_edit_count?: number;
+  identity_confirmed_at?: string | null;
 };
 
 export function guessNameFromUser(user: {

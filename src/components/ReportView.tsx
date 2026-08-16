@@ -20,6 +20,8 @@ import { BRAND_NAME } from "@/lib/site";
 type Props = {
   report: NumerologyReport;
   watermarkEmail?: string;
+  allowCopy?: boolean;
+  allowPdf?: boolean;
 };
 
 function Accordion({
@@ -117,8 +119,14 @@ function MoreDetail({ text }: { text: string }) {
   return <SectionBody text={text} />;
 }
 
-export function ReportView({ report, watermarkEmail }: Props) {
+export function ReportView({
+  report,
+  watermarkEmail,
+  allowCopy = false,
+  allowPdf = false,
+}: Props) {
   useEffect(() => {
+    if (allowCopy) return;
     const block = (e: Event) => e.preventDefault();
     const keys = (e: KeyboardEvent) => {
       if (
@@ -141,7 +149,7 @@ export function ReportView({ report, watermarkEmail }: Props) {
       document.removeEventListener("dragstart", block);
       document.removeEventListener("keydown", keys);
     };
-  }, []);
+  }, [allowCopy]);
 
   const snap = report.numerology_snapshot;
   const person = report.person;
@@ -356,12 +364,35 @@ export function ReportView({ report, watermarkEmail }: Props) {
 
       <div className="relative z-10 space-y-10">
         <header>
-          <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
-            Private reading
-          </p>
-          <h1 className="mt-2 text-4xl text-ink md:text-5xl">
-            {person.preferred_name || person.full_name}
-          </h1>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-gold-deep">
+                Private reading
+              </p>
+              <h1 className="mt-2 text-4xl text-ink md:text-5xl">
+                {person.preferred_name || person.full_name}
+              </h1>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {allowPdf ? (
+                <button
+                  type="button"
+                  disabled
+                  title="PDF export ships with paid checkout"
+                  className="rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-sm text-ink-soft opacity-70"
+                >
+                  Export PDF (soon)
+                </button>
+              ) : (
+                <Link
+                  href="/pricing"
+                  className="rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink hover:bg-emerald/15"
+                >
+                  Unlock PDF
+                </Link>
+              )}
+            </div>
+          </div>
           {snap.sun_sign && snap.sun_sign_label ? (
             <p className="mt-3 text-lg text-ink-soft">
               Sun sign{" "}

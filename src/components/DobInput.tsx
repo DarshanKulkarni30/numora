@@ -9,6 +9,7 @@ type Props = {
   onChange: (value: string) => void;
   required?: boolean;
   label?: string;
+  disabled?: boolean;
 };
 
 export function DobInput({
@@ -18,6 +19,7 @@ export function DobInput({
   onChange,
   required = true,
   label = "Date of birth (DD/MM/YYYY)",
+  disabled = false,
 }: Props) {
   const error = value ? dobError(value) : required ? "Date of birth is required." : null;
   const showError = value.length > 0 && !isValidDob(value);
@@ -35,8 +37,9 @@ export function DobInput({
         autoComplete="bday"
         placeholder="DD/MM/YYYY"
         value={value}
+        disabled={disabled}
         onChange={(e) => onChange(formatDobInput(e.target.value))}
-        className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2"
+        className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none ring-gold focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
         aria-invalid={showError}
       />
       {showError ? (

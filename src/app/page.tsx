@@ -73,15 +73,15 @@ export default async function HomePage() {
           {[
             [
               "Four traditions",
-              "Pythagorean core numbers, Chaldean name vibration, Vedic psychic & destiny, and Lo Shu grid planes.",
+              "Pythagorean core numbers, Chaldean name vibration, Vedic psychic and destiny, and Lo Shu grid planes—side by side for reflection.",
             ],
             [
               "Saved privately",
-              "Magic-link sign-in keeps your readings in your account—ready when you return.",
+              "Sign in with Google or an email magic link. Your profiles and readings stay in your account.",
             ],
             [
-              "View-only free tier",
-              "On-screen reports with copy protection. PDF export is planned for a later paid plan.",
+              "Free to start",
+              "One Self profile, full personal report, name/family/trivia explorers, and mobile fit. Premium unlocks more family slots, business tools, and PDF export.",
             ],
           ].map(([title, copy]) => (
             <div key={title}>
