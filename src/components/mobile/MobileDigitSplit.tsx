@@ -5,6 +5,12 @@ type Props = {
   mobile: MobileParseOk;
   /** Extra emphasis line for last-4 (business panel). */
   emphasizeLast4?: boolean;
+  /**
+   * `split` — number split only (place results next).
+   * `detail` — core math + frequency (after results).
+   * `all` — both (legacy default).
+   */
+  part?: "all" | "split" | "detail";
 };
 
 function DigitsWithRuns({
@@ -39,55 +45,69 @@ function DigitsWithRuns({
   );
 }
 
-export function MobileDigitSplit({ mobile, emphasizeLast4 = true }: Props) {
-  const { prefix, last4, consecutiveRuns, digitCounts } = mobile;
+function SplitCard({ mobile }: { mobile: MobileParseOk }) {
+  const { prefix, last4, consecutiveRuns } = mobile;
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
+      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+        Number split
+      </p>
+      {prefix && last4 ? (
+        <p className="mt-2 flex flex-wrap items-center gap-2 font-mono text-lg tracking-wide text-ink">
+          <span
+            className="rounded-lg border border-teal-200 bg-teal-50 px-2.5 py-1 text-teal-950"
+            title={`First ${prefix.digits.length} digits`}
+          >
+            {prefix.digits}
+          </span>
+          <span className="text-ink-soft">+</span>
+          <span
+            className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-950"
+            title="Last 4 digits"
+          >
+            {last4.digits}
+          </span>
+          <span className="text-sm text-ink-soft">=</span>
+          <DigitsWithRuns digits={mobile.digits} runs={consecutiveRuns} />
+        </p>
+      ) : (
+        <div className="mt-2">
+          <DigitsWithRuns digits={mobile.digits} runs={consecutiveRuns} />
+        </div>
+      )}
+      {consecutiveRuns.length > 0 ? (
+        <p className="mt-2 text-xs text-rose-900">
+          Repeated pattern:{" "}
+          {consecutiveRuns
+            .map(
+              (r) =>
+                `${r.digit.repeat(r.length)} (${r.length}× digit ${r.digit})`,
+            )
+            .join(" · ")}
+        </p>
+      ) : (
+        <p className="mt-2 text-xs text-ink-soft">
+          No digit repeats 3+ times in a row.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function DetailCards({
+  mobile,
+  emphasizeLast4,
+}: {
+  mobile: MobileParseOk;
+  emphasizeLast4: boolean;
+}) {
+  const { prefix, last4, digitCounts } = mobile;
 
   return (
     <div className="space-y-3">
-      <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
-        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-          Number split
-        </p>
-        {prefix && last4 ? (
-          <p className="mt-2 flex flex-wrap items-center gap-2 font-mono text-lg tracking-wide text-ink">
-            <span
-              className="rounded-lg border border-teal-200 bg-teal-50 px-2.5 py-1 text-teal-950"
-              title={`First ${prefix.digits.length} digits`}
-            >
-              {prefix.digits}
-            </span>
-            <span className="text-ink-soft">+</span>
-            <span
-              className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-950"
-              title="Last 4 digits"
-            >
-              {last4.digits}
-            </span>
-            <span className="text-sm text-ink-soft">=</span>
-            <DigitsWithRuns digits={mobile.digits} runs={consecutiveRuns} />
-          </p>
-        ) : (
-          <div className="mt-2">
-            <DigitsWithRuns digits={mobile.digits} runs={consecutiveRuns} />
-          </div>
-        )}
-        {consecutiveRuns.length > 0 ? (
-          <p className="mt-2 text-xs text-rose-900">
-            Repeated pattern:{" "}
-            {consecutiveRuns
-              .map(
-                (r) =>
-                  `${r.digit.repeat(r.length)} (${r.length}× digit ${r.digit})`,
-              )
-              .join(" · ")}
-          </p>
-        ) : (
-          <p className="mt-2 text-xs text-ink-soft">
-            No digit repeats 3+ times in a row.
-          </p>
-        )}
-      </div>
-
+      <p className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+        How the cores are calculated
+      </p>
       {prefix && last4 ? (
         <>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -129,9 +149,7 @@ export function MobileDigitSplit({ mobile, emphasizeLast4 = true }: Props) {
               </p>
               <p className="mt-3 text-sm text-ink">
                 Sum{" "}
-                <span className="brand text-2xl text-ink">
-                  {last4.compound}
-                </span>
+                <span className="brand text-2xl text-ink">{last4.compound}</span>
               </p>
               <p className="mt-1 text-sm text-ink-soft">
                 → core{" "}
@@ -213,6 +231,27 @@ export function MobileDigitSplit({ mobile, emphasizeLast4 = true }: Props) {
           consecutive). Cells with 3+ total appearances are tinted.
         </p>
       </div>
+    </div>
+  );
+}
+
+export function MobileDigitSplit({
+  mobile,
+  emphasizeLast4 = true,
+  part = "all",
+}: Props) {
+  if (part === "split") {
+    return <SplitCard mobile={mobile} />;
+  }
+  if (part === "detail") {
+    return (
+      <DetailCards mobile={mobile} emphasizeLast4={emphasizeLast4} />
+    );
+  }
+  return (
+    <div className="space-y-3">
+      <SplitCard mobile={mobile} />
+      <DetailCards mobile={mobile} emphasizeLast4={emphasizeLast4} />
     </div>
   );
 }

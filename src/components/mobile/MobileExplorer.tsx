@@ -350,7 +350,84 @@ export function MobileExplorer({ people }: Props) {
             </div>
           </div>
 
-          {mobile ? <MobileDigitSplit mobile={mobile} emphasizeLast4 /> : null}
+          {mobile ? (
+            <MobileDigitSplit mobile={mobile} emphasizeLast4 part="split" />
+          ) : null}
+
+          <div>
+            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
+              {(
+                [
+                  ["vedic", "Vedic"],
+                  ["chaldean", "Chaldean"],
+                  ["pythagorean", "Pythagorean"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setTab(id)}
+                  className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                    tab === id
+                      ? "bg-ink text-paper shadow-sm"
+                      : "text-ink-soft hover:text-ink"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {activeHit ? (
+              <div className="mt-4 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+                  Result status
+                </p>
+                <div
+                  className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[activeHit.band]}`}
+                >
+                  <p className="text-[10px] uppercase tracking-wider opacity-80">
+                    Full total · core {mobile?.core} · {tab}
+                  </p>
+                  <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                    {TRIO_BAND_ICON[activeHit.band]}{" "}
+                    {BAND_WORD[activeHit.band]}
+                  </p>
+                  <p className="mt-1 text-base font-medium opacity-90">
+                    {activeHit.label}
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{activeHit.summary}</p>
+                  <p className="mt-2 text-xs opacity-80">
+                    {TRIO_BAND_HINT[activeHit.band]}
+                  </p>
+                </div>
+                {activeHitLast4 && mobile?.last4 ? (
+                  <div
+                    className={`rounded-2xl border px-5 py-4 ${BAND_STYLE[activeHitLast4.band]}`}
+                  >
+                    <p className="text-[10px] uppercase tracking-wider opacity-80">
+                      Last 4 · core {mobile.last4.core} · {tab}
+                    </p>
+                    <p className="mt-1 text-xl font-semibold">
+                      {TRIO_BAND_ICON[activeHitLast4.band]}{" "}
+                      {BAND_WORD[activeHitLast4.band]}
+                    </p>
+                    <p className="mt-1 text-sm font-medium opacity-90">
+                      {activeHitLast4.label}
+                    </p>
+                    <p className="mt-2 text-sm leading-6">
+                      {activeHitLast4.summary}
+                    </p>
+                  </div>
+                ) : null}
+              </div>
+            ) : trial.trim() === "" ? (
+              <p className="mt-4 text-sm text-ink-soft">
+                Type a national mobile number to see the Birth×Destiny×mobile
+                result status here.
+              </p>
+            ) : null}
+          </div>
 
           {psychicPairFull && destinyPairFull && mobile ? (
             <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
@@ -415,108 +492,53 @@ export function MobileExplorer({ people }: Props) {
             </div>
           ) : null}
 
-          <div>
-            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
-              {(
-                [
-                  ["vedic", "Vedic"],
-                  ["chaldean", "Chaldean"],
-                  ["pythagorean", "Pythagorean"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setTab(id)}
-                  className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
-                    tab === id
-                      ? "bg-ink text-paper shadow-sm"
-                      : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+          {mobile ? (
+            <MobileDigitSplit mobile={mobile} emphasizeLast4 part="detail" />
+          ) : null}
 
-            {activeHit ? (
-              <div className="mt-4 space-y-3">
-                <div
-                  className={`rounded-xl border px-4 py-3 ${BAND_STYLE[activeHit.band]}`}
-                >
-                  <p className="text-[10px] uppercase tracking-wider opacity-80">
-                    Full total · {tab}
-                  </p>
-                  <p className="mt-1 font-medium">
-                    {BAND_WORD[activeHit.band]} · {activeHit.label}
-                  </p>
-                  <p className="mt-1 text-sm leading-6">{activeHit.summary}</p>
-                </div>
-                {activeHitLast4 && mobile?.last4 ? (
-                  <div
-                    className={`rounded-xl border px-4 py-3 ${BAND_STYLE[activeHitLast4.band]}`}
-                  >
-                    <p className="text-[10px] uppercase tracking-wider opacity-80">
-                      Last 4 · core {mobile.last4.core} · {tab}
-                    </p>
-                    <p className="mt-1 font-medium">
-                      {BAND_WORD[activeHitLast4.band]} · {activeHitLast4.label}
-                    </p>
-                    <p className="mt-1 text-sm leading-6">
-                      {activeHitLast4.summary}
-                    </p>
-                  </div>
-                ) : null}
-              </div>
-            ) : trial.trim() === "" ? (
-              <p className="mt-4 text-sm text-ink-soft">
-                Type a national mobile number to see the Birth×Destiny×mobile
-                cell.
+          {psychic != null && destiny != null ? (
+            <div className="mt-4 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
+              <p className="text-sm font-medium text-ink">
+                Mobile cores 1–9 for this Birth × Destiny
               </p>
-            ) : null}
-
-            {psychic != null && destiny != null ? (
-              <div className="mt-4 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
-                <p className="text-sm font-medium text-ink">
-                  Mobile cores 1–9 for this Birth × Destiny
-                </p>
-                <p className="mt-1 text-xs text-ink-soft">
-                  If many look Heavy, that is the chart for this DOB—not a
-                  broken calculator.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {stripDigits.map(({ n, band, label }) => {
-                    const isYou = mobile?.core === n;
-                    return (
-                      <span
-                        key={n}
-                        title={`${label} → ${BAND_WORD[band]}`}
-                        className={`inline-flex min-w-[3.25rem] flex-col items-center rounded-lg border px-2 py-1.5 text-xs ${BAND_STYLE[band]} ${
-                          isYou ? "ring-2 ring-ink ring-inset" : ""
-                        }`}
-                      >
-                        <span className="font-medium">{n}</span>
-                        <span className="opacity-80">
-                          {TRIO_BAND_ICON[band]} {BAND_WORD[band]}
-                        </span>
+              <p className="mt-1 text-xs text-ink-soft">
+                If many look Heavy, that is the chart for this DOB—not a broken
+                calculator.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {stripDigits.map(({ n, band, label }) => {
+                  const isYou = mobile?.core === n;
+                  return (
+                    <span
+                      key={n}
+                      title={`${label} → ${BAND_WORD[band]}`}
+                      className={`inline-flex min-w-[3.25rem] flex-col items-center rounded-lg border px-2 py-1.5 text-xs ${BAND_STYLE[band]} ${
+                        isYou ? "ring-2 ring-ink ring-inset" : ""
+                      }`}
+                    >
+                      <span className="font-medium">{n}</span>
+                      <span className="opacity-80">
+                        {TRIO_BAND_ICON[band]} {BAND_WORD[band]}
                       </span>
-                    );
-                  })}
-                </div>
-                {favDigits.length ? (
-                  <p className="mt-3 text-sm text-ink">
-                    Often easier mobile cores:{" "}
-                    <span className="brand">{favDigits.join(", ")}</span>
-                  </p>
-                ) : (
-                  <p className="mt-3 text-sm text-ink-soft">
-                    Few “easier” digits on this chart—use Neutral/Friction with
-                    care, or compare methods below.
-                  </p>
-                )}
+                    </span>
+                  );
+                })}
               </div>
-            ) : null}
+              {favDigits.length ? (
+                <p className="mt-3 text-sm text-ink">
+                  Often easier mobile cores:{" "}
+                  <span className="brand">{favDigits.join(", ")}</span>
+                </p>
+              ) : (
+                <p className="mt-3 text-sm text-ink-soft">
+                  Few “easier” digits on this chart—use Neutral/Friction with
+                  care, or compare methods below.
+                </p>
+              )}
+            </div>
+          ) : null}
 
+          <div>
             {tab === "pythagorean" && pythHit ? (
               <div className="mt-4 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-ink-soft">
                 <p className="font-medium text-ink">

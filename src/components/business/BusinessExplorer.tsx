@@ -152,6 +152,15 @@ export function BusinessExplorer({
         )
       : null;
 
+  const mobileFullTrio =
+    mobile.ok && psychic != null && destiny != null
+      ? vedicTrio(psychic, destiny, mobile.core)
+      : null;
+  const mobileLast4Trio =
+    mobile.ok && mobile.last4 && psychic != null && destiny != null
+      ? vedicTrio(psychic, destiny, mobile.last4.core)
+      : null;
+
   return (
     <div className="space-y-8">
       {selectable.length === 0 ? (
@@ -272,104 +281,115 @@ export function BusinessExplorer({
 
               {mobile.ok && psychic != null && destiny != null ? (
                 <>
-                  <MobileDigitSplit mobile={mobile} emphasizeLast4 />
+                  <MobileDigitSplit
+                    mobile={mobile}
+                    emphasizeLast4
+                    part="split"
+                  />
 
-                  <div>
-                    <p className="text-sm font-medium text-ink">
-                      Compatibility (full total + last 4)
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+                      Result status
                     </p>
-                    <p className="mt-1 text-xs text-ink-soft">
-                      Both cores are scored against the owner and domain.
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <FitChip
-                        fit={domainFit(mobile.core, domain, "mobile")}
-                        label={`full ${mobile.core} · domain`}
-                      />
-                      {mobile.last4 ? (
-                        <FitChip
-                          fit={domainFit(mobile.last4.core, domain, "mobile")}
-                          label={`last-4 ${mobile.last4.core} · domain`}
-                        />
-                      ) : null}
-                      <FitChip
-                        fit={coreDigitFit(mobile.core, psychic)}
-                        label={`full vs Psychic ${psychic}`}
-                      />
-                      {mobile.last4 ? (
-                        <FitChip
-                          fit={coreDigitFit(mobile.last4.core, psychic)}
-                          label={`last-4 vs Psychic ${psychic}`}
-                        />
-                      ) : null}
-                      <FitChip
-                        fit={coreDigitFit(mobile.core, destiny)}
-                        label={`full vs Destiny ${destiny}`}
-                      />
-                      {mobile.last4 ? (
-                        <FitChip
-                          fit={coreDigitFit(mobile.last4.core, destiny)}
-                          label={`last-4 vs Destiny ${destiny}`}
-                        />
-                      ) : null}
-                      {personalName != null ? (
-                        <>
-                          <FitChip
-                            fit={coreDigitFit(mobile.core, personalName)}
-                            label={`full vs Name ${personalName}`}
-                          />
-                          {mobile.last4 ? (
-                            <FitChip
-                              fit={coreDigitFit(
-                                mobile.last4.core,
-                                personalName,
-                              )}
-                              label={`last-4 vs Name ${personalName}`}
-                            />
-                          ) : null}
-                        </>
-                      ) : null}
-                    </div>
-                    <p className="mt-2 text-xs text-ink-soft">
-                      Preferred mobile digits for this domain:{" "}
-                      {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
-                      {domain.carefulMobileDigits.join(", ") || "—"}.
-                    </p>
-                  </div>
-
-                  <div className="space-y-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-                    <p>
-                      Birth×Destiny×
-                      <strong className="text-ink">full</strong> core{" "}
-                      <span className="text-ink">
-                        {
-                          BAND_WORD[
-                            vedicTrio(psychic, destiny, mobile.core).band
-                          ]
-                        }
-                      </span>{" "}
-                      ({vedicTrio(psychic, destiny, mobile.core).label})
-                    </p>
-                    {mobile.last4 ? (
-                      <p>
-                        Birth×Destiny×
-                        <strong className="text-ink">last-4</strong> core{" "}
-                        <span className="text-ink">
-                          {
-                            BAND_WORD[
-                              vedicTrio(psychic, destiny, mobile.last4.core)
-                                .band
-                            ]
-                          }
-                        </span>{" "}
-                        (
-                        {
-                          vedicTrio(psychic, destiny, mobile.last4.core).label
-                        }
-                        )
-                      </p>
+                    {mobileFullTrio ? (
+                      <div
+                        className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[mobileFullTrio.band]}`}
+                      >
+                        <p className="text-[10px] uppercase tracking-wider opacity-80">
+                          Birth × Destiny × full core {mobile.core}
+                        </p>
+                        <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                          {TRIO_BAND_ICON[mobileFullTrio.band]}{" "}
+                          {BAND_WORD[mobileFullTrio.band]}
+                        </p>
+                        <p className="mt-1 text-base font-medium opacity-90">
+                          {mobileFullTrio.label}
+                        </p>
+                        <p className="mt-2 text-sm leading-6">
+                          {mobileFullTrio.summary}
+                        </p>
+                      </div>
                     ) : null}
-                    <p className="text-xs">
+                    {mobileLast4Trio && mobile.last4 ? (
+                      <div
+                        className={`rounded-2xl border px-5 py-4 ${BAND_STYLE[mobileLast4Trio.band]}`}
+                      >
+                        <p className="text-[10px] uppercase tracking-wider opacity-80">
+                          Birth × Destiny × last-4 core {mobile.last4.core}
+                        </p>
+                        <p className="mt-1 text-xl font-semibold">
+                          {TRIO_BAND_ICON[mobileLast4Trio.band]}{" "}
+                          {BAND_WORD[mobileLast4Trio.band]}
+                        </p>
+                        <p className="mt-1 text-sm font-medium opacity-90">
+                          {mobileLast4Trio.label}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <p className="text-sm font-medium text-ink">
+                        Compatibility chips (full + last 4)
+                      </p>
+                      <p className="mt-1 text-xs text-ink-soft">
+                        Both cores are scored against the owner and domain.
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <FitChip
+                          fit={domainFit(mobile.core, domain, "mobile")}
+                          label={`full ${mobile.core} · domain`}
+                        />
+                        {mobile.last4 ? (
+                          <FitChip
+                            fit={domainFit(mobile.last4.core, domain, "mobile")}
+                            label={`last-4 ${mobile.last4.core} · domain`}
+                          />
+                        ) : null}
+                        <FitChip
+                          fit={coreDigitFit(mobile.core, psychic)}
+                          label={`full vs Psychic ${psychic}`}
+                        />
+                        {mobile.last4 ? (
+                          <FitChip
+                            fit={coreDigitFit(mobile.last4.core, psychic)}
+                            label={`last-4 vs Psychic ${psychic}`}
+                          />
+                        ) : null}
+                        <FitChip
+                          fit={coreDigitFit(mobile.core, destiny)}
+                          label={`full vs Destiny ${destiny}`}
+                        />
+                        {mobile.last4 ? (
+                          <FitChip
+                            fit={coreDigitFit(mobile.last4.core, destiny)}
+                            label={`last-4 vs Destiny ${destiny}`}
+                          />
+                        ) : null}
+                        {personalName != null ? (
+                          <>
+                            <FitChip
+                              fit={coreDigitFit(mobile.core, personalName)}
+                              label={`full vs Name ${personalName}`}
+                            />
+                            {mobile.last4 ? (
+                              <FitChip
+                                fit={coreDigitFit(
+                                  mobile.last4.core,
+                                  personalName,
+                                )}
+                                label={`last-4 vs Name ${personalName}`}
+                              />
+                            ) : null}
+                          </>
+                        ) : null}
+                      </div>
+                      <p className="mt-2 text-xs text-ink-soft">
+                        Preferred mobile digits for this domain:{" "}
+                        {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
+                        {domain.carefulMobileDigits.join(", ") || "—"}.
+                      </p>
+                    </div>
+                    <p className="text-xs text-ink-soft">
                       Full method tables:{" "}
                       <Link
                         href="/mobile"
@@ -380,6 +400,12 @@ export function BusinessExplorer({
                       .
                     </p>
                   </div>
+
+                  <MobileDigitSplit
+                    mobile={mobile}
+                    emphasizeLast4
+                    part="detail"
+                  />
                 </>
               ) : (
                 <p className="text-sm text-ink-soft">
@@ -457,73 +483,77 @@ export function BusinessExplorer({
                     </table>
                   </div>
 
-                  {companyBreakdown ? (
-                    <div className="space-y-3 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
-                      <p className="text-sm font-medium text-ink">
-                        Chaldean math breakdown
-                      </p>
-                      <p className="text-xs text-ink-soft">
-                        Letter values use NumoraWisdom’s Chaldean map. Word compounds
-                        are added for a grand total (same style as a multi-word
-                        brand).
-                      </p>
-                      <ul className="space-y-3 text-sm">
-                        {companyBreakdown.words.map((w) => (
-                          <li
-                            key={w.word}
-                            className="rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2"
-                          >
-                            <p className="font-medium text-ink">
-                              {w.word.toUpperCase()}
-                            </p>
-                            <p className="mt-1 font-mono text-xs leading-5 text-ink-soft">
-                              {w.equation} → {w.reduced}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="text-sm text-ink">
-                        Grand total{" "}
-                        <span className="brand">
-                          {companyBreakdown.words
-                            .map((w) => w.compound)
-                            .join(" + ")}{" "}
-                          = {companyBreakdown.grandCompound}
-                        </span>{" "}
-                        →{" "}
-                        <span className="brand">
-                          {companyBreakdown.grandReduced}
-                        </span>{" "}
-                        (
-                        {companyBreakdown.planet.symbol}{" "}
-                        {companyBreakdown.planet.name})
-                      </p>
-                      <p className="text-sm leading-6 text-ink-soft">
-                        {companyBreakdown.compoundNote}
-                      </p>
-                      <p className="text-sm leading-6 text-ink">
-                        {companyBreakdown.ownerBridge}
-                      </p>
-                    </div>
-                  ) : null}
-
                   {companyTrio ? (
-                    <div
-                      className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyTrio.band]}`}
-                    >
-                      <p className="text-[10px] uppercase tracking-wider opacity-80">
-                        Birth × Destiny × company name
+                    <div className="space-y-3">
+                      <p className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+                        Result status
                       </p>
-                      <p className="mt-1 font-medium">
-                        {TRIO_BAND_ICON[companyTrio.band]}{" "}
-                        {BAND_WORD[companyTrio.band]} · {companyTrio.label}
-                      </p>
-                      <p className="mt-1 text-sm leading-6">
-                        {companyTrio.summary}
-                      </p>
-                      <p className="mt-1 text-xs opacity-80">
-                        {TRIO_BAND_HINT[companyTrio.band]}
-                      </p>
+                      <div
+                        className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[companyTrio.band]}`}
+                      >
+                        <p className="text-[10px] uppercase tracking-wider opacity-80">
+                          Birth × Destiny × company name
+                        </p>
+                        <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                          {TRIO_BAND_ICON[companyTrio.band]}{" "}
+                          {BAND_WORD[companyTrio.band]}
+                        </p>
+                        <p className="mt-1 text-base font-medium opacity-90">
+                          {companyTrio.label}
+                        </p>
+                        <p className="mt-2 text-sm leading-6">
+                          {companyTrio.summary}
+                        </p>
+                        <p className="mt-1 text-xs opacity-80">
+                          {TRIO_BAND_HINT[companyTrio.band]}
+                        </p>
+                      </div>
+                      {companyMobile ? (
+                        <>
+                          <div
+                            className={`rounded-2xl border px-5 py-4 ${BAND_STYLE[companyMobile.band]}`}
+                          >
+                            <p className="text-[10px] uppercase tracking-wider opacity-80">
+                              Company × full mobile · {domain.label}
+                            </p>
+                            <p className="mt-1 text-xl font-semibold">
+                              {TRIO_BAND_ICON[companyMobile.band]}{" "}
+                              {BAND_WORD[companyMobile.band]}
+                            </p>
+                            <p className="mt-1 text-sm font-medium opacity-90">
+                              {companyMobile.label}
+                            </p>
+                            <p className="mt-2 text-sm leading-6">
+                              {companyMobile.summary}
+                            </p>
+                          </div>
+                          {companyMobileLast4 && mobile.ok && mobile.last4 ? (
+                            <div
+                              className={`rounded-2xl border px-5 py-4 ${BAND_STYLE[companyMobileLast4.band]}`}
+                            >
+                              <p className="text-[10px] uppercase tracking-wider opacity-80">
+                                Company × last-4 ({mobile.last4.core}) ·{" "}
+                                {domain.label}
+                              </p>
+                              <p className="mt-1 text-xl font-semibold">
+                                {TRIO_BAND_ICON[companyMobileLast4.band]}{" "}
+                                {BAND_WORD[companyMobileLast4.band]}
+                              </p>
+                              <p className="mt-1 text-sm font-medium opacity-90">
+                                {companyMobileLast4.label}
+                              </p>
+                              <p className="mt-2 text-sm leading-6">
+                                {companyMobileLast4.summary}
+                              </p>
+                            </div>
+                          ) : null}
+                        </>
+                      ) : (
+                        <p className="text-sm text-ink-soft">
+                          Add a valid mobile number above to score company ×
+                          mobile for this domain.
+                        </p>
+                      )}
                     </div>
                   ) : null}
 
@@ -583,47 +613,55 @@ export function BusinessExplorer({
                     </p>
                   </div>
 
-                  {companyMobile ? (
-                    <div className="space-y-3">
-                      <div
-                        className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyMobile.band]}`}
-                      >
-                        <p className="text-[10px] uppercase tracking-wider opacity-80">
-                          Company × full mobile · {domain.label}
-                        </p>
-                        <p className="mt-1 font-medium">
-                          {TRIO_BAND_ICON[companyMobile.band]}{" "}
-                          {BAND_WORD[companyMobile.band]} · {companyMobile.label}
-                        </p>
-                        <p className="mt-1 text-sm leading-6">
-                          {companyMobile.summary}
-                        </p>
-                      </div>
-                      {companyMobileLast4 && mobile.ok && mobile.last4 ? (
-                        <div
-                          className={`rounded-xl border px-4 py-3 ${BAND_STYLE[companyMobileLast4.band]}`}
-                        >
-                          <p className="text-[10px] uppercase tracking-wider opacity-80">
-                            Company × last-4 ({mobile.last4.core}) ·{" "}
-                            {domain.label}
-                          </p>
-                          <p className="mt-1 font-medium">
-                            {TRIO_BAND_ICON[companyMobileLast4.band]}{" "}
-                            {BAND_WORD[companyMobileLast4.band]} ·{" "}
-                            {companyMobileLast4.label}
-                          </p>
-                          <p className="mt-1 text-sm leading-6">
-                            {companyMobileLast4.summary}
-                          </p>
-                        </div>
-                      ) : null}
+                  {companyBreakdown ? (
+                    <div className="space-y-3 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
+                      <p className="text-sm font-medium text-ink">
+                        Chaldean math breakdown
+                      </p>
+                      <p className="text-xs text-ink-soft">
+                        Letter values use NumoraWisdom’s Chaldean map. Word compounds
+                        are added for a grand total (same style as a multi-word
+                        brand).
+                      </p>
+                      <ul className="space-y-3 text-sm">
+                        {companyBreakdown.words.map((w) => (
+                          <li
+                            key={w.word}
+                            className="rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2"
+                          >
+                            <p className="font-medium text-ink">
+                              {w.word.toUpperCase()}
+                            </p>
+                            <p className="mt-1 font-mono text-xs leading-5 text-ink-soft">
+                              {w.equation} → {w.reduced}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-sm text-ink">
+                        Grand total{" "}
+                        <span className="brand">
+                          {companyBreakdown.words
+                            .map((w) => w.compound)
+                            .join(" + ")}{" "}
+                          = {companyBreakdown.grandCompound}
+                        </span>{" "}
+                        →{" "}
+                        <span className="brand">
+                          {companyBreakdown.grandReduced}
+                        </span>{" "}
+                        (
+                        {companyBreakdown.planet.symbol}{" "}
+                        {companyBreakdown.planet.name})
+                      </p>
+                      <p className="text-sm leading-6 text-ink-soft">
+                        {companyBreakdown.compoundNote}
+                      </p>
+                      <p className="text-sm leading-6 text-ink">
+                        {companyBreakdown.ownerBridge}
+                      </p>
                     </div>
-                  ) : (
-                    <p className="text-sm text-ink-soft">
-                      Add a valid mobile number above to score company × mobile
-                      for this domain.
-                    </p>
-                  )}
+                  ) : null}
 
                   <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-ink-soft">
                     <p className="font-medium text-ink">Executive summary</p>
