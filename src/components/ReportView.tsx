@@ -719,7 +719,8 @@ export function ReportView({
           <div className="mt-4">
             <AssociationsPanel
               lifePath={snap.life_path}
-              vedicPsychic={snap.vedic_psychic}
+              vedicDestiny={snap.vedic_destiny}
+              chaldeanName={snap.chaldean_name_number}
             />
           </div>
         </section>

@@ -2,12 +2,22 @@ import { associationsForNumber } from "@/lib/numerology/associations";
 
 type Props = {
   lifePath: string;
-  vedicPsychic: string;
+  vedicDestiny: string;
+  chaldeanName: string;
 };
 
-const SYS: Record<"pythagorean" | "vedic", string> = {
+type System = "pythagorean" | "vedic" | "chaldean";
+
+const SYS: Record<System, string> = {
   pythagorean: "sys-pyth",
   vedic: "sys-vedic",
+  chaldean: "sys-chal",
+};
+
+const SYS_LABEL: Record<System, string> = {
+  pythagorean: "Pythagorean",
+  vedic: "Vedic",
+  chaldean: "Chaldean",
 };
 
 function AssocBlock({
@@ -18,7 +28,7 @@ function AssocBlock({
 }: {
   label: string;
   number: string;
-  system: "pythagorean" | "vedic";
+  system: System;
   blurb: string;
 }) {
   const a = associationsForNumber(number);
@@ -26,7 +36,7 @@ function AssocBlock({
   return (
     <div className={`rounded-xl border p-4 ${SYS[system]}`}>
       <p className="text-[10px] uppercase tracking-wider opacity-70">
-        {system === "pythagorean" ? "Pythagorean" : "Vedic"}
+        {SYS_LABEL[system]}
       </p>
       <p className={`text-sm font-medium ${dark ? "text-paper" : "text-ink"}`}>
         {label} · {number}
@@ -109,113 +119,136 @@ function setOverlap(a: string[], b: string[]): {
   };
 }
 
-export function AssociationsPanel({ lifePath, vedicPsychic }: Props) {
-  const lp = associationsForNumber(lifePath);
-  const psy = associationsForNumber(vedicPsychic);
-  const showPsychic = lp.number !== psy.number || String(lifePath) !== String(vedicPsychic);
-
-  const colors = setOverlap(
-    lp.colors.map((c) => c.name),
-    psy.colors.map((c) => c.name),
+function fmtDiff(
+  label: string,
+  colors: ReturnType<typeof setOverlap>,
+  weekdays: ReturnType<typeof setOverlap>,
+  metals: ReturnType<typeof setOverlap>,
+  stones: ReturnType<typeof setOverlap>,
+  side: "onlyA" | "onlyB" | "shared",
+) {
+  const pick = (o: ReturnType<typeof setOverlap>, prefix?: string) => {
+    const list = o[side];
+    if (!list.length) return null;
+    return prefix ? `${prefix} ${list.join(", ")}` : list.join(", ");
+  };
+  const parts = [
+    pick(colors, side === "shared" ? "colors" : undefined),
+    pick(weekdays, "weekdays"),
+    pick(metals, "metals"),
+    pick(stones, "stones"),
+  ].filter(Boolean);
+  return (
+    <li>
+      <strong className="text-ink">{label}:</strong> {parts.join(" · ") || "—"}
+    </li>
   );
-  const weekdays = setOverlap(lp.weekdays, psy.weekdays);
-  const metals = setOverlap(lp.metals, psy.metals);
-  const stones = setOverlap(lp.stones, psy.stones);
+}
+
+export function AssociationsPanel({
+  lifePath,
+  vedicDestiny,
+  chaldeanName,
+}: Props) {
+  const lp = associationsForNumber(lifePath);
+  const dest = associationsForNumber(vedicDestiny);
+  const chal = associationsForNumber(chaldeanName);
+
+  const pathColors = setOverlap(
+    lp.colors.map((c) => c.name),
+    dest.colors.map((c) => c.name),
+  );
+  const pathWeekdays = setOverlap(lp.weekdays, dest.weekdays);
+  const pathMetals = setOverlap(lp.metals, dest.metals);
+  const pathStones = setOverlap(lp.stones, dest.stones);
+
+  const samePathDigit = lp.number === dest.number;
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
         Traditional reflective associations by number—colors, weekdays, and
-        stones as atmosphere cues, not prescriptions or purchases to make.
+        stones as atmosphere cues, not prescriptions or purchases to make. Life
+        Path and Destiny both come from the full birth date; Chaldean name is
+        the name vibration in this product.
       </p>
-      {showPsychic ? (
-        <p className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-          Two cards because <span className="text-ink">Life Path</span> (full
-          birth date, Pythagorean) and{" "}
-          <span className="text-ink">Vedic Psychic</span> (birth day) are
-          different digits here—{lifePath} vs {vedicPsychic}. Same association
-          table, two lead numbers.
-        </p>
-      ) : (
-        <p className="text-sm text-ink-soft">
-          Life Path and Vedic Psychic reduce to the same digit, so one
-          association card is enough.
-        </p>
-      )}
-      <div className="grid gap-4 md:grid-cols-2">
+      <p className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
+        {samePathDigit ? (
+          <>
+            Life Path and Vedic Destiny reduce to the same core digit (
+            {lp.number})
+            {String(lifePath) !== String(vedicDestiny)
+              ? ` (${lifePath} / ${vedicDestiny})`
+              : ""}
+            —path cards may look similar. Chaldean name{" "}
+            <span className="text-ink">{chaldeanName}</span> is shown for the
+            name layer.
+          </>
+        ) : (
+          <>
+            Path peers: <span className="text-ink">Life Path</span>{" "}
+            {lifePath} vs <span className="text-ink">Vedic Destiny</span>{" "}
+            {vedicDestiny}. Name layer:{" "}
+            <span className="text-ink">Chaldean name</span> {chaldeanName}.
+          </>
+        )}
+      </p>
+      <div className="grid gap-4 md:grid-cols-3">
         <AssocBlock
           label="Life Path"
           number={lifePath}
           system="pythagorean"
           blurb="From your full birth date (Pythagorean)."
         />
-        {showPsychic ? (
-          <AssocBlock
-            label="Vedic Psychic"
-            number={vedicPsychic}
-            system="vedic"
-            blurb="From your birth day (Vedic)."
-          />
-        ) : null}
+        <AssocBlock
+          label="Vedic Destiny"
+          number={vedicDestiny}
+          system="vedic"
+          blurb="From your full birth date (Vedic DN / Bhagyank)."
+        />
+        <AssocBlock
+          label="Chaldean name"
+          number={chaldeanName}
+          system="chaldean"
+          blurb="From your written name (Chaldean map)—not a birth-path digit."
+        />
       </div>
-      {showPsychic ? (
+      {!samePathDigit ? (
         <div className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-ink-soft">
-          <p className="font-medium text-ink">Common & different</p>
+          <p className="font-medium text-ink">
+            Life Path ↔ Destiny (birth-path peers)
+          </p>
           <ul className="mt-2 space-y-1.5 text-xs leading-5">
-            <li>
-              <strong className="text-ink">Shared:</strong>{" "}
-              {[
-                colors.shared.length
-                  ? `colors ${colors.shared.join(", ")}`
-                  : null,
-                weekdays.shared.length
-                  ? `weekdays ${weekdays.shared.join(", ")}`
-                  : null,
-                metals.shared.length
-                  ? `metals ${metals.shared.join(", ")}`
-                  : null,
-                stones.shared.length
-                  ? `stones ${stones.shared.join(", ")}`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(" · ") || "none in this bank"}
-            </li>
-            <li>
-              <strong className="text-ink">Only Life Path:</strong>{" "}
-              {[
-                colors.onlyA.length ? colors.onlyA.join(", ") : null,
-                weekdays.onlyA.length
-                  ? `weekdays ${weekdays.onlyA.join(", ")}`
-                  : null,
-                metals.onlyA.length
-                  ? `metals ${metals.onlyA.join(", ")}`
-                  : null,
-                stones.onlyA.length
-                  ? `stones ${stones.onlyA.join(", ")}`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(" · ") || "—"}
-            </li>
-            <li>
-              <strong className="text-ink">Only Psychic:</strong>{" "}
-              {[
-                colors.onlyB.length ? colors.onlyB.join(", ") : null,
-                weekdays.onlyB.length
-                  ? `weekdays ${weekdays.onlyB.join(", ")}`
-                  : null,
-                metals.onlyB.length
-                  ? `metals ${metals.onlyB.join(", ")}`
-                  : null,
-                stones.onlyB.length
-                  ? `stones ${stones.onlyB.join(", ")}`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(" · ") || "—"}
-            </li>
+            {fmtDiff(
+              "Shared",
+              pathColors,
+              pathWeekdays,
+              pathMetals,
+              pathStones,
+              "shared",
+            )}
+            {fmtDiff(
+              "Only Life Path",
+              pathColors,
+              pathWeekdays,
+              pathMetals,
+              pathStones,
+              "onlyA",
+            )}
+            {fmtDiff(
+              "Only Destiny",
+              pathColors,
+              pathWeekdays,
+              pathMetals,
+              pathStones,
+              "onlyB",
+            )}
           </ul>
+          <p className="mt-2 text-xs">
+            Chaldean associations (name {chal.number}) sit beside these as a
+            separate spelling layer—compare colors and stones by eye rather
+            than as a third birth-path digit.
+          </p>
         </div>
       ) : null}
     </div>
