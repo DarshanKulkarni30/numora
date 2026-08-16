@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSiteUrl } from "@/lib/site";
+import { CURRENT_TERMS_VERSION } from "@/lib/legal/terms";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -9,7 +10,6 @@ export async function GET(request: NextRequest) {
   if (!next.startsWith("/")) next = "/dashboard";
 
   const site = getSiteUrl();
-  const redirectTo = new URL(next, site);
 
   if (!code) {
     return NextResponse.redirect(new URL("/login?error=missing_code", site));
@@ -21,8 +21,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=config", site));
   }
 
-  // Build the redirect first, then attach auth cookies onto THAT response.
-  // Using cookies() alone often drops the session on redirect in App Router.
+  // Default post-login destination; may switch to Terms accept.
+  let redirectTo = new URL(next, site);
+
   let response = NextResponse.redirect(redirectTo);
 
   const supabase = createServerClient(url, key, {
@@ -65,6 +66,29 @@ export async function GET(request: NextRequest) {
     });
   } catch {
     // non-fatal
+  }
+
+  // If Terms not accepted, send to accept while keeping session cookies.
+  try {
+    const uid = sessionData.user?.id;
+    if (uid) {
+      const { data: terms } = await supabase
+        .from("user_terms_acceptance")
+        .select("terms_version")
+        .eq("user_id", uid)
+        .maybeSingle();
+      if (terms?.terms_version !== CURRENT_TERMS_VERSION) {
+        redirectTo = new URL("/legal/accept", site);
+        redirectTo.searchParams.set("next", next);
+        const cookies = response.cookies.getAll();
+        response = NextResponse.redirect(redirectTo);
+        cookies.forEach((c) => {
+          response.cookies.set(c.name, c.value);
+        });
+      }
+    }
+  } catch {
+    // Table missing — continue to app; run migration to enable gate.
   }
 
   return response;

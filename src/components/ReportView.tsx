@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AssociationsPanel } from "@/components/report/AssociationsPanel";
+import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { ExportPdfButton } from "@/components/report/ExportPdfButton";
@@ -527,7 +528,10 @@ export function ReportView({
             >
               Personal Year
             </span>
-            —not instead of it.
+            —not instead of it.{" "}
+            <LearningConceptLink conceptKey="personal-year" />
+            {" · "}
+            <LearningConceptLink conceptKey="projected-year" />
           </p>
           <p className="mt-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
             <span className="font-medium text-ink">Personal Year</span> (shown
@@ -558,7 +562,8 @@ export function ReportView({
           <h2 className="text-xl text-ink">Birth charts</h2>
           <p className="mt-1 text-sm text-ink-soft">
             Lo Shu grid, Pythagorean birth table, and Vedic number chart—same
-            hover tips and click-through guides. Not a full kundli.
+            hover tips and click-through guides. Not a full kundli.{" "}
+            <LearningConceptLink conceptKey="lo-shu" />
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <BirthChartsPanel

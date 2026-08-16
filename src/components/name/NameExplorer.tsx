@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { NameMathPanels } from "@/components/name/NameMathPanels";
 import { calculateChaldean } from "@/lib/numerology/chaldean";
 import {
   lifePathFromDob,
@@ -520,6 +521,14 @@ export function NameExplorer({ people }: Props) {
               </table>
             </div>
           ) : null}
+
+          <NameMathPanels
+            fullName={
+              trialSnap
+                ? trialFullName
+                : currentName || trialFullName
+            }
+          />
 
           <div>
             <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">

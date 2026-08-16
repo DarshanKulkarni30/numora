@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import type { GuideTopic } from "@/lib/guides/content";
 
@@ -60,46 +61,60 @@ export function SnapshotBySystem({ groups }: Props) {
             {g.rows.map((row) => (
               <div
                 key={`${row.label}-${row.value}`}
-                className={`flex items-baseline justify-between gap-3 rounded-xl border px-3 py-2 text-sm ${
+                className={`rounded-xl border px-3 py-2 text-sm ${
                   g.system === "vedic"
                     ? "border-white/10 bg-white/5"
                     : "border-black/5 bg-white/50"
                 }`}
               >
-                <dt
-                  className={
-                    g.system === "vedic" ? "sys-muted" : "text-ink-soft"
-                  }
-                  title={row.hint}
-                >
-                  {row.label}
-                </dt>
-                <dd>
-                  {row.topic ? (
-                    <GuideNumberLink
-                      topic={row.topic}
-                      value={row.value}
-                      label={row.label}
-                      display={row.display}
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt
+                    className={
+                      g.system === "vedic" ? "sys-muted" : "text-ink-soft"
+                    }
+                    title={row.hint}
+                  >
+                    {row.label}
+                  </dt>
+                  <dd>
+                    {row.topic ? (
+                      <GuideNumberLink
+                        topic={row.topic}
+                        value={row.value}
+                        label={row.label}
+                        display={row.display}
+                        className={
+                          g.system === "vedic"
+                            ? "brand text-base text-paper underline decoration-sand/50 underline-offset-2 hover:text-sand"
+                            : "brand text-base text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+                        }
+                      />
+                    ) : (
+                      <span
+                        className={
+                          g.system === "vedic"
+                            ? "brand text-base text-paper"
+                            : "brand text-base text-ink"
+                        }
+                        title={row.hint}
+                      >
+                        {row.display ?? row.value}
+                      </span>
+                    )}
+                  </dd>
+                </div>
+                {row.topic ? (
+                  <p className="mt-1.5">
+                    <LearningConceptLink
+                      conceptKey={row.topic}
                       className={
                         g.system === "vedic"
-                          ? "brand text-base text-paper underline decoration-sand/50 underline-offset-2 hover:text-sand"
-                          : "brand text-base text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+                          ? "text-xs text-sand/90 underline decoration-sand/40 underline-offset-2 hover:text-sand"
+                          : undefined
                       }
                     />
-                  ) : (
-                    <span
-                      className={
-                        g.system === "vedic"
-                          ? "brand text-base text-paper"
-                          : "brand text-base text-ink"
-                      }
-                      title={row.hint}
-                    >
-                      {row.display ?? row.value}
-                    </span>
-                  )}
-                </dd>
+                  </p>
+                ) : null}
               </div>
             ))}
           </dl>

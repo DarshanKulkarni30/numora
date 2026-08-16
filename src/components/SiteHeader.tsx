@@ -13,6 +13,7 @@ type Props = {
 const TOP_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/profile", label: "Profile" },
+  { href: "/learning", label: "Learning" },
   { href: "/pricing", label: "Plans" },
 ] as const;
 

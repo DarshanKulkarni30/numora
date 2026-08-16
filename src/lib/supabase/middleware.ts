@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import { CURRENT_TERMS_VERSION } from "@/lib/legal/terms";
 
 async function isUserBlocked(userId: string): Promise<boolean> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -18,6 +19,27 @@ async function isUserBlocked(userId: string): Promise<boolean> {
     return Boolean(data?.blocked_at);
   } catch {
     return false;
+  }
+}
+
+async function hasAcceptedCurrentTerms(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  userId: string,
+): Promise<boolean | "unknown"> {
+  try {
+    const { data, error } = await supabase
+      .from("user_terms_acceptance")
+      .select("terms_version")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error) {
+      // Table missing or RLS — do not lock the whole app before migration.
+      return "unknown";
+    }
+    return data?.terms_version === CURRENT_TERMS_VERSION;
+  } catch {
+    return "unknown";
   }
 }
 
@@ -78,6 +100,7 @@ export async function updateSession(request: NextRequest) {
     "/years",
     "/business",
     "/mobile",
+    "/learning",
     "/admin",
   ];
   const isProtected = protectedPaths.some(
@@ -101,6 +124,7 @@ export async function updateSession(request: NextRequest) {
     "/years",
     "/business",
     "/mobile",
+    "/learning",
     "/api/profile",
     "/api/reports",
   ];
@@ -119,11 +143,25 @@ export async function updateSession(request: NextRequest) {
       redirectUrl.pathname = "/account-restricted";
       return NextResponse.redirect(redirectUrl);
     }
+
+    const termsOk = await hasAcceptedCurrentTerms(supabase, user.id);
+    if (termsOk === false) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/legal/accept";
+      redirectUrl.searchParams.set("next", path);
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   if (path === "/login" && user) {
+    const termsOk = await hasAcceptedCurrentTerms(supabase, user.id);
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    if (termsOk === false) {
+      redirectUrl.pathname = "/legal/accept";
+      redirectUrl.searchParams.set("next", "/dashboard");
+    } else {
+      redirectUrl.pathname = "/dashboard";
+    }
     return NextResponse.redirect(redirectUrl);
   }
 
