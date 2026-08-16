@@ -63,6 +63,7 @@ export function YearOutlookExplorer({
   const [openYear, setOpenYear] = useState<number | "default" | null>(
     "default",
   );
+  const [showPast, setShowPast] = useState(false);
 
   const selected = selectable.find((p) => personKey(p) === selectedKey);
   const dob = selected?.date_of_birth ?? "";
@@ -73,11 +74,40 @@ export function YearOutlookExplorer({
     return yearsFromBirthToAge70(year);
   }, [selected, dob]);
 
+  const { pastYears, visibleYears } = useMemo(() => {
+    const current = years.includes(nowYear) ? nowYear : null;
+    const past = years.filter((y) => y < nowYear);
+    const future = years.filter((y) => y > nowYear);
+    const featured = current ?? future[0] ?? past[past.length - 1] ?? null;
+    const hiddenPast = past.filter((y) => y !== featured);
+    const visible = [
+      ...(featured != null && featured <= nowYear ? [featured] : []),
+      ...future,
+    ];
+    return { pastYears: hiddenPast, visibleYears: visible };
+  }, [years, nowYear]);
+
   const expandedYear = useMemo(() => {
     if (!years.length) return null;
     if (openYear === "default") return defaultExpandedYear(years, nowYear);
     return openYear;
   }, [years, openYear, nowYear]);
+
+  const pastOpen = showPast || (expandedYear != null && pastYears.includes(expandedYear));
+
+  function renderEntry(year: number) {
+    return (
+      <YearEntry
+        key={`${tab}-${year}`}
+        year={year}
+        dob={dob}
+        tab={tab}
+        isOpen={year === expandedYear}
+        isNow={year === nowYear}
+        onToggle={() => setOpenYear(year === expandedYear ? null : year)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -108,6 +138,7 @@ export function YearOutlookExplorer({
               onChange={(e) => {
                 setSelectedKey(e.target.value);
                 setOpenYear("default");
+                setShowPast(false);
               }}
               className="w-full max-w-md rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
             >
@@ -119,8 +150,9 @@ export function YearOutlookExplorer({
             </select>
             {selected ? (
               <p className="mt-2 text-sm text-ink-soft">
-                Years from birth ({parseDob(dob).year}) through age 70. Current
-                calendar year is highlighted.
+                Current year is open below. Click any other year for the same
+                collapsible reading. Earlier years stay hidden until you ask
+                for them.
               </p>
             ) : null}
           </div>
@@ -154,90 +186,139 @@ export function YearOutlookExplorer({
           </p>
 
           {selected && years.length > 0 ? (
-            <ol className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl border border-[var(--line)] bg-white/70">
-              {years.map((year) => {
-                const isOpen = year === expandedYear;
-                const isNow = year === nowYear;
-                if (tab === "vedic") {
-                  const breakdown = projectedYearBreakdown(dob, year);
-                  const meta = projectedYearMeta(breakdown.number);
-                  return (
-                    <YearRow
-                      key={`vedic-${year}`}
-                      year={year}
-                      number={breakdown.number}
-                      tag={meta.tag}
-                      shortMeaning={meta.shortMeaning}
-                      isOpen={isOpen}
-                      isNow={isNow}
-                      onToggle={() => setOpenYear(isOpen ? null : year)}
-                    >
-                      <p className="text-sm text-ink">
-                        Ruled by {meta.planet}. {meta.theme}
-                      </p>
-                      <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
-                        {meta.details.map((line) => (
-                          <li key={line}>· {line}</li>
-                        ))}
-                      </ul>
-                      <p className="mt-3 text-sm text-ink">
-                        Practice: {meta.practice}
-                      </p>
-                      <ol className="mt-4 space-y-1 text-xs text-ink-soft">
-                        <li>
-                          Month {breakdown.month} + day {breakdown.day} + last
-                          two digits {breakdown.yearDigits} + {breakdown.weekdayLabel}{" "}
-                          ({breakdown.weekdayDigit}) = {breakdown.compound}
-                        </li>
-                        <li>Reduce to {breakdown.number}.</li>
-                      </ol>
-                    </YearRow>
-                  );
-                }
+            <div className="space-y-3">
+              {pastYears.length > 0 ? (
+                <button
+                  type="button"
+                  aria-expanded={pastOpen}
+                  onClick={() => {
+                    const next = !pastOpen;
+                    setShowPast(next);
+                    if (!next && expandedYear != null && pastYears.includes(expandedYear)) {
+                      setOpenYear("default");
+                    }
+                  }}
+                  className="btn-tactile w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-left text-sm text-ink sm:w-auto"
+                >
+                  {pastOpen
+                    ? "Hide previous years"
+                    : `Show previous years (${pastYears.length})`}
+                </button>
+              ) : null}
 
-                const breakdown = personalYearBreakdown(dob, year);
-                const copy = westernYearCopy(breakdown.number);
-                return (
-                  <YearRow
-                    key={`western-${year}`}
-                    year={year}
-                    number={breakdown.number}
-                    tag={copy.tag}
-                    shortMeaning={copy.shortMeaning}
-                    isOpen={isOpen}
-                    isNow={isNow}
-                    onToggle={() => setOpenYear(isOpen ? null : year)}
-                  >
-                    <ul className="space-y-1.5 text-sm text-ink-soft">
-                      {copy.strengths.map((line) => (
-                        <li key={line}>· {line}</li>
-                      ))}
-                    </ul>
-                    {copy.watchouts.length > 0 ? (
-                      <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
-                        {copy.watchouts.map((line) => (
-                          <li key={line}>· Watch: {line}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                    <p className="mt-3 text-sm text-ink">
-                      Practice: {copy.practice}
-                    </p>
-                    <ol className="mt-4 space-y-1 text-xs text-ink-soft">
-                      <li>
-                        Month {breakdown.month} + day {breakdown.day} + {year} ={" "}
-                        {breakdown.compound}
-                      </li>
-                      <li>Reduce to {breakdown.number}.</li>
-                    </ol>
-                  </YearRow>
-                );
-              })}
-            </ol>
+              {pastOpen && pastYears.length > 0 ? (
+                <ol className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl border border-[var(--line)] bg-white/70">
+                  {pastYears.map(renderEntry)}
+                </ol>
+              ) : null}
+
+              {visibleYears.length > 0 ? (
+                <ol className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl border border-[var(--line)] bg-white/70">
+                  {visibleYears.map(renderEntry)}
+                </ol>
+              ) : null}
+            </div>
           ) : null}
         </>
       )}
     </div>
+  );
+}
+
+function YearEntry({
+  year,
+  dob,
+  tab,
+  isOpen,
+  isNow,
+  onToggle,
+}: {
+  year: number;
+  dob: string;
+  tab: YearSystemTab;
+  isOpen: boolean;
+  isNow: boolean;
+  onToggle: () => void;
+}) {
+  if (tab === "vedic") {
+    const breakdown = projectedYearBreakdown(dob, year);
+    const meta = projectedYearMeta(breakdown.number);
+    return (
+      <YearRow
+        year={year}
+        number={breakdown.number}
+        tag={meta.tag}
+        shortMeaning={meta.shortMeaning}
+        isOpen={isOpen}
+        isNow={isNow}
+        onToggle={onToggle}
+      >
+        <YearDetail
+          intro={`Ruled by ${meta.planet}. ${meta.theme}`}
+          points={meta.details}
+          practice={meta.practice}
+          calc={[
+            `Month ${breakdown.month} + day ${breakdown.day} + last two digits ${breakdown.yearDigits} + ${breakdown.weekdayLabel} (${breakdown.weekdayDigit}) = ${breakdown.compound}`,
+            `Reduce to ${breakdown.number}.`,
+          ]}
+        />
+      </YearRow>
+    );
+  }
+
+  const breakdown = personalYearBreakdown(dob, year);
+  const copy = westernYearCopy(breakdown.number);
+  return (
+    <YearRow
+      year={year}
+      number={breakdown.number}
+      tag={copy.tag}
+      shortMeaning={copy.shortMeaning}
+      isOpen={isOpen}
+      isNow={isNow}
+      onToggle={onToggle}
+    >
+      <YearDetail
+        points={[
+          ...copy.strengths,
+          ...copy.watchouts.map((line) => `Watch: ${line}`),
+        ]}
+        practice={copy.practice}
+        calc={[
+          `Month ${breakdown.month} + day ${breakdown.day} + ${year} = ${breakdown.compound}`,
+          `Reduce to ${breakdown.number}.`,
+        ]}
+      />
+    </YearRow>
+  );
+}
+
+function YearDetail({
+  intro,
+  points,
+  practice,
+  calc,
+}: {
+  intro?: string;
+  points: string[];
+  practice: string;
+  calc: string[];
+}) {
+  return (
+    <>
+      {intro ? <p className="text-sm text-ink">{intro}</p> : null}
+      <ul className={`${intro ? "mt-3" : ""} space-y-1.5 text-sm text-ink-soft`}>
+        {points.map((line) => (
+          <li key={line}>· {line}</li>
+        ))}
+      </ul>
+      <p className="mt-3 text-sm text-ink">Practice: {practice}</p>
+      <ol className="mt-4 space-y-1 text-xs text-ink-soft">
+        {calc.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ol>
+    </>
   );
 }
 
@@ -262,17 +343,19 @@ function YearRow({
 }) {
   return (
     <li className={isNow ? "bg-gold/10" : undefined}>
-      <div className="flex flex-wrap items-start gap-3 px-4 py-3 sm:items-center">
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={isOpen}
-          className={`brand min-w-[3.5rem] rounded-lg px-2 py-1 text-left text-lg text-ink underline-offset-4 hover:underline ${
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full flex-wrap items-start gap-3 px-4 py-3 text-left sm:items-center"
+      >
+        <span
+          className={`brand min-w-[3.5rem] rounded-lg px-2 py-1 text-lg text-ink ${
             isOpen ? "bg-white/80" : ""
           }`}
         >
           {year}
-        </button>
+        </span>
         <span className="brand text-xl text-ink">{number}</span>
         <span
           className={`rounded-full border px-2.5 py-0.5 text-xs ${TAG_STYLE[tag]}`}
@@ -284,10 +367,13 @@ function YearRow({
             Now
           </span>
         ) : null}
-        <p className="min-w-[12rem] flex-1 text-sm text-ink-soft">
+        <span className="min-w-[12rem] flex-1 text-sm text-ink-soft">
           {shortMeaning}
-        </p>
-      </div>
+        </span>
+        <span className="text-xs text-ink-soft" aria-hidden>
+          {isOpen ? "Hide" : "Show"}
+        </span>
+      </button>
       {isOpen ? (
         <div className="border-t border-[var(--line)] bg-white/60 px-4 py-4">
           {children}
