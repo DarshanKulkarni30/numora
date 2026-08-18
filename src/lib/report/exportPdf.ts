@@ -40,7 +40,7 @@ function wrapLines(doc: jsPDF, text: string, maxWidth: number): string[] {
 
 async function loadLogoDataUrl(): Promise<string | null> {
   try {
-    const res = await fetch("/nw-mark.png?v=3");
+    const res = await fetch("/nw-mark.png?v=4");
     if (!res.ok) return null;
     const blob = await res.blob();
     return await new Promise((resolve, reject) => {
