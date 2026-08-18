@@ -15,6 +15,13 @@ import {
   splitGivenAndSurname,
 } from "@/lib/numerology/nameParts";
 import {
+  resolveNameSpelling,
+  type NameSpellingMode,
+} from "@/lib/numerology/nameSpelling";
+import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
+import { AgeFocusNumberChips } from "@/components/AgeFocusNumberChips";
+import { NameSpellingModePicker } from "@/components/name/NameSpellingModePicker";
+import {
   gendersForProfile,
   SUGGESTED_NAMES,
 } from "@/lib/numerology/nameSuggestions";
@@ -156,6 +163,8 @@ export function NameExplorer({ people }: Props) {
     return splitGivenAndSurname(first?.full_name || first?.preferred_name || "")
       .surname;
   });
+  const [spellingMode, setSpellingMode] = useState<NameSpellingMode>("full");
+  const [nickname, setNickname] = useState("");
   const [tab, setTab] = useState<TrioSystem>("vedic");
   const [letterFilter, setLetterFilter] = useState<string>("All");
 
@@ -164,11 +173,28 @@ export function NameExplorer({ people }: Props) {
   );
 
   const dob = selected?.date_of_birth ?? "";
-  const currentName = selected?.full_name || selected?.preferred_name || "";
+  const profileFullName = selected?.full_name || selected?.preferred_name || "";
 
   const psychic = selected ? vedicPsychicFromDob(dob) : null;
   const destiny = selected ? vedicDestinyFromDob(dob) : null;
   const lifePath = selected ? lifePathFromDob(dob) : null;
+
+  const prominence =
+    selected && psychic != null && destiny != null
+      ? ownerProminenceFromDob(dob, psychic, destiny)
+      : null;
+
+  const profileResolved = useMemo(
+    () =>
+      resolveNameSpelling({
+        mode: spellingMode,
+        fullName: profileFullName,
+        nickname,
+      }),
+    [spellingMode, profileFullName, nickname],
+  );
+
+  const currentName = profileResolved.ready ? profileResolved.spelling : "";
 
   const current = useMemo(() => {
     if (!selected || !currentName) return null;
@@ -183,6 +209,9 @@ export function NameExplorer({ people }: Props) {
   }, [trialFirst, trialFullName, selected, dob]);
 
   const activeLayers = trialSnap ?? current;
+  const activeSpellingLabel = trialSnap
+    ? "Trial spelling"
+    : profileResolved.label;
 
   const vedicHit =
     psychic != null && destiny != null && activeLayers
@@ -417,24 +446,54 @@ export function NameExplorer({ people }: Props) {
                   </option>
                 ))}
               </select>
-              {selected && psychic != null && destiny != null ? (
-                <p className="mt-2 text-sm text-ink-soft">
-                  Fixed from DOB {selected.date_of_birth}: Psychic{" "}
-                  <span className="brand text-ink">{psychic}</span> · Destiny{" "}
-                  <span className="brand text-ink">{destiny}</span>
-                  {lifePath != null ? (
-                    <>
-                      {" "}
-                      · Life Path{" "}
-                      <span className="brand text-ink">{lifePath}</span>
-                    </>
-                  ) : null}
-                  . Only the name layers change when you type a trial name.
-                </p>
+              {selected && psychic != null && destiny != null && prominence ? (
+                <div className="mt-3 space-y-2">
+                  <AgeFocusNumberChips
+                    psychic={psychic}
+                    destiny={destiny}
+                    nameNumber={
+                      activeLayers
+                        ? reduceToSingleDigit(activeLayers.vedicName)
+                        : null
+                    }
+                    prominence={prominence}
+                  />
+                  <p className="text-sm text-ink-soft">
+                    Fixed from DOB {selected.date_of_birth}
+                    {lifePath != null ? (
+                      <>
+                        {" "}
+                        · Life Path{" "}
+                        <span className="brand text-ink">{lifePath}</span>
+                      </>
+                    ) : null}
+                    . Name digit uses{" "}
+                    <span className="font-medium text-ink">
+                      {activeSpellingLabel}
+                    </span>
+                    {currentName ? (
+                      <>
+                        {" "}
+                        (
+                        <span className="font-medium text-ink">{currentName}</span>
+                        )
+                      </>
+                    ) : null}
+                    . Trial first name below overrides when filled.
+                  </p>
+                </div>
               ) : null}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-3">
+              <NameSpellingModePicker
+                idPrefix="name-explore"
+                mode={spellingMode}
+                onModeChange={setSpellingMode}
+                nickname={nickname}
+                onNicknameChange={setNickname}
+              />
+              <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label
                   htmlFor="name-trial-first"
@@ -464,16 +523,15 @@ export function NameExplorer({ people }: Props) {
                   type="text"
                   value={trialLast}
                   onChange={(e) => setTrialLast(e.target.value)}
-                  placeholder="Surname (editable)"
+                  placeholder="Surname (optional for first-only)"
                   className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
                   autoComplete="off"
                 />
               </div>
               <p className="text-xs text-ink-soft sm:col-span-2">
-                Last name starts from the profile and is included in the score.
-                Change it for marriage or a legal surname. Leave first name
-                blank to score the current profile name. Reflective only—not
-                legal naming advice.
+                Trial overrides the spelling mode above. Leave last name blank
+                to score first name only. Reflective only—not legal naming
+                advice.
                 {trialFirst.trim().length >= 2 ? (
                   <>
                     {" "}
@@ -483,6 +541,7 @@ export function NameExplorer({ people }: Props) {
                   </>
                 ) : null}
               </p>
+              </div>
             </div>
           </div>
 

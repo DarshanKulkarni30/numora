@@ -1,6 +1,7 @@
 /**
- * Classical reflective BN→DN lifetime shift for business naming / mobile scoring.
- * BN (Psychic) leads early life; DN (Destiny) rises after ~30–35.
+ * Classical reflective BN→DN lifetime shift for business naming, mobile
+ * scoring, and name compatibility. BN (Psychic) leads early life; DN (Destiny)
+ * rises after ~30–35.
  */
 
 import { calculateAge } from "@/lib/numerology/reduce";

@@ -20,6 +20,13 @@ import {
   joinGivenAndSurname,
   splitGivenAndSurname,
 } from "@/lib/numerology/nameParts";
+import {
+  resolveNameSpelling,
+  type NameSpellingMode,
+} from "@/lib/numerology/nameSpelling";
+import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
+import { AgeFocusNumberChips } from "@/components/AgeFocusNumberChips";
+import { NameSpellingModePicker } from "@/components/name/NameSpellingModePicker";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import {
   TRIO_BAND_HINT,
@@ -193,6 +200,13 @@ export function NameCompatibilityExplorer({ people }: Props) {
   const [rightTrialFirst, setRightTrialFirst] = useState("");
   const [rightTrialLast, setRightTrialLast] = useState("");
 
+  const [leftSpellingMode, setLeftSpellingMode] =
+    useState<NameSpellingMode>("full");
+  const [leftNickname, setLeftNickname] = useState("");
+  const [rightSpellingMode, setRightSpellingMode] =
+    useState<NameSpellingMode>("full");
+  const [rightNickname, setRightNickname] = useState("");
+
   const leftProfile = selectable.find((p) => personKey(p) === leftKey);
 
   const left: SidePerson | null = leftProfile
@@ -227,16 +241,40 @@ export function NameCompatibilityExplorer({ people }: Props) {
     if (useLeftTrial && (leftTrialFirst.trim() || leftTrialLast.trim())) {
       return joinGivenAndSurname(leftTrialFirst, leftTrialLast);
     }
-    return left.fullName;
-  }, [left, useLeftTrial, leftTrialFirst, leftTrialLast]);
+    const resolved = resolveNameSpelling({
+      mode: leftSpellingMode,
+      fullName: left.fullName,
+      nickname: leftNickname,
+    });
+    return resolved.ready ? resolved.spelling : "";
+  }, [
+    left,
+    useLeftTrial,
+    leftTrialFirst,
+    leftTrialLast,
+    leftSpellingMode,
+    leftNickname,
+  ]);
 
   const rightEffectiveName = useMemo(() => {
     if (!right) return "";
     if (useRightTrial && (rightTrialFirst.trim() || rightTrialLast.trim())) {
       return joinGivenAndSurname(rightTrialFirst, rightTrialLast);
     }
-    return right.fullName;
-  }, [right, useRightTrial, rightTrialFirst, rightTrialLast]);
+    const resolved = resolveNameSpelling({
+      mode: rightSpellingMode,
+      fullName: right.fullName,
+      nickname: rightNickname,
+    });
+    return resolved.ready ? resolved.spelling : "";
+  }, [
+    right,
+    useRightTrial,
+    rightTrialFirst,
+    rightTrialLast,
+    rightSpellingMode,
+    rightNickname,
+  ]);
 
   const analysis = useMemo(() => {
     if (!left || !right || !leftEffectiveName || !rightEffectiveName) return null;
@@ -247,6 +285,9 @@ export function NameCompatibilityExplorer({ people }: Props) {
     const rDestiny = vedicDestinyFromDob(right.dob);
     const lLp = lifePathFromDob(left.dob);
     const rLp = lifePathFromDob(right.dob);
+
+    const lProminence = ownerProminenceFromDob(left.dob, lPsychic, lDestiny);
+    const rProminence = ownerProminenceFromDob(right.dob, rPsychic, rDestiny);
 
     const lVedic = calculateVedic(leftEffectiveName, left.dob);
     const rVedic = calculateVedic(rightEffectiveName, right.dob);
@@ -293,6 +334,10 @@ export function NameCompatibilityExplorer({ people }: Props) {
       expression,
       leftTrio,
       rightTrio,
+      lProminence,
+      rProminence,
+      leftEffectiveName,
+      rightEffectiveName,
     };
   }, [left, right, leftEffectiveName, rightEffectiveName]);
 
@@ -352,8 +397,22 @@ export function NameCompatibilityExplorer({ people }: Props) {
           {left ? (
             <p className="mt-2 text-xs text-ink-soft">
               DOB {left.dob} · using name{" "}
-              <span className="font-medium text-ink">{leftEffectiveName}</span>
+              <span className="font-medium text-ink">
+                {leftEffectiveName || "—"}
+              </span>
             </p>
+          ) : null}
+
+          {!useLeftTrial ? (
+            <div className="mt-4">
+              <NameSpellingModePicker
+                idPrefix="compat-left"
+                mode={leftSpellingMode}
+                onModeChange={setLeftSpellingMode}
+                nickname={leftNickname}
+                onNicknameChange={setLeftNickname}
+              />
+            </div>
           ) : null}
 
           <label className="mt-4 flex items-center gap-2 text-sm text-ink">
@@ -385,7 +444,7 @@ export function NameCompatibilityExplorer({ people }: Props) {
                 type="text"
                 value={leftTrialLast}
                 onChange={(e) => setLeftTrialLast(e.target.value)}
-                placeholder="Last name"
+                placeholder="Last name (optional)"
                 className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
               />
             </div>
@@ -489,8 +548,22 @@ export function NameCompatibilityExplorer({ people }: Props) {
           {right ? (
             <p className="mt-2 text-xs text-ink-soft">
               DOB {right.dob} · using name{" "}
-              <span className="font-medium text-ink">{rightEffectiveName}</span>
+              <span className="font-medium text-ink">
+                {rightEffectiveName || "—"}
+              </span>
             </p>
+          ) : null}
+
+          {!useRightTrial ? (
+            <div className="mt-4">
+              <NameSpellingModePicker
+                idPrefix="compat-right"
+                mode={rightSpellingMode}
+                onModeChange={setRightSpellingMode}
+                nickname={rightNickname}
+                onNicknameChange={setRightNickname}
+              />
+            </div>
           ) : null}
 
           <label className="mt-4 flex items-center gap-2 text-sm text-ink">
@@ -527,7 +600,7 @@ export function NameCompatibilityExplorer({ people }: Props) {
                 type="text"
                 value={rightTrialLast}
                 onChange={(e) => setRightTrialLast(e.target.value)}
-                placeholder="Last name"
+                placeholder="Last name (optional)"
                 className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
               />
             </div>
@@ -546,8 +619,40 @@ export function NameCompatibilityExplorer({ people }: Props) {
             <h2 className="text-xl text-ink">Summary</h2>
             <p className="text-sm text-ink-soft">
               {left.label} × {right.label} — romantic / business / friendship
-              tones (same legend as reports).
+              tones (same legend as reports). Name digits from{" "}
+              <span className="font-medium text-ink">
+                {analysis.leftEffectiveName}
+              </span>{" "}
+              ×{" "}
+              <span className="font-medium text-ink">
+                {analysis.rightEffectiveName}
+              </span>
+              .
             </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
+                <p className="text-sm font-medium text-ink">{left.label}</p>
+                <div className="mt-2">
+                  <AgeFocusNumberChips
+                    psychic={analysis.lPsychic}
+                    destiny={analysis.lDestiny}
+                    nameNumber={analysis.lName}
+                    prominence={analysis.lProminence}
+                  />
+                </div>
+              </div>
+              <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
+                <p className="text-sm font-medium text-ink">{right.label}</p>
+                <div className="mt-2">
+                  <AgeFocusNumberChips
+                    psychic={analysis.rPsychic}
+                    destiny={analysis.rDestiny}
+                    nameNumber={analysis.rName}
+                    prominence={analysis.rProminence}
+                  />
+                </div>
+              </div>
+            </div>
             <div className="overflow-x-auto rounded-2xl border border-[var(--line)] bg-white/70">
               <table className="w-full min-w-[36rem] text-left text-sm">
                 <thead className="bg-mist/60 text-ink-soft">
