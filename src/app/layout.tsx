@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   description:
     "Personal numerology reports from Pythagorean, Chaldean, Vedic, and Lo Shu traditions. Belief-based insight for self-reflection.",
   icons: {
-    icon: "/favicon.png",
-    apple: "/nw-mark.png",
+    icon: "/favicon.png?v=3",
+    apple: "/nw-mark.png?v=3",
   },
 };
 

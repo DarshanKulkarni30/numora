@@ -58,7 +58,7 @@ export default async function HomePage() {
             <div className="animate-drift absolute h-40 w-40 translate-x-10 translate-y-8 rounded-full bg-emerald/20 blur-3xl" />
             <div className="animate-ring relative">
               <Image
-                src="/nw-mark.png?v=2"
+                src="/nw-mark.png?v=3"
                 alt={`${BRAND_NAME} mark — NW monogram`}
                 width={420}
                 height={420}

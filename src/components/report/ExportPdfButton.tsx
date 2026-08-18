@@ -16,7 +16,7 @@ export function ExportPdfButton({ report }: Props) {
     setBusy(true);
     setError(null);
     try {
-      downloadReportPdf(report);
+      await downloadReportPdf(report);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not create PDF");
     } finally {
@@ -30,7 +30,7 @@ export function ExportPdfButton({ report }: Props) {
         type="button"
         disabled={busy}
         onClick={onClick}
-        className="rounded-full bg-sea px-4 py-2 text-sm text-paper shadow-sm transition hover:bg-sea-deep disabled:opacity-60"
+        className="rounded-full bg-sea px-4 py-2 text-sm text-paper shadow-sm transition duration-200 hover:-translate-y-px hover:bg-sea-deep hover:shadow-md active:translate-y-0 active:bg-sea-deep/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea disabled:pointer-events-none disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
       >
         {busy ? "Preparing…" : "Export PDF"}
       </button>
