@@ -57,11 +57,7 @@ export function BirthChartsPanel({
         <PythagoreanBirthTable dateOfBirth={dateOfBirth} snap={snap} />
       ) : null}
       {tab === "vedic" ? (
-        <VedicBirthChart
-          psychic={snap.vedic_psychic}
-          destiny={snap.vedic_destiny}
-          nameNumber={snap.vedic_name}
-        />
+        <VedicBirthChart dateOfBirth={dateOfBirth} />
       ) : null}
       {tab === "vedic-square" ? (
         <VedicSquarePanel
