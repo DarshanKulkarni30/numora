@@ -25,11 +25,11 @@ export type VedicGridCell = {
   english: string;
 };
 
-/** Fixed Ank Kundli layout: rows top → bottom. */
+/** Fixed Ank Kundli layout: rows top → bottom (3-1-9 / 6-7-5 / 2-8-4). */
 export const VEDIC_GRID_ORDER: number[][] = [
-  [3, 6, 2],
-  [1, 7, 8],
-  [9, 5, 4],
+  [3, 1, 9],
+  [6, 7, 5],
+  [2, 8, 4],
 ];
 
 export const VEDIC_GRID_CELL: Record<number, VedicGridCell> = {
@@ -376,7 +376,7 @@ const VOIDS: GridPattern[] = [
     numbers: [9, 5, 4],
     status: "Defeat",
     trait:
-      "Empty action row (no 9, 5, or 4). Ideas may outrun follow-through—pair vision with small physical steps.",
+      "Empty action plane (no 9, 5, or 4 in the right column). Ideas may outrun follow-through—pair vision with small physical steps.",
   },
   {
     id: "void-soul-column",
@@ -385,7 +385,7 @@ const VOIDS: GridPattern[] = [
     numbers: [3, 1, 9],
     status: "Defeat",
     trait:
-      "Empty soul column (no 3, 1, or 9). Standing firm and protecting boundaries may take more practice.",
+      "Empty soul plane (no 3, 1, or 9 in the top row). Standing firm and protecting boundaries may take more practice.",
   },
 ];
 

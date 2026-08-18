@@ -2,7 +2,9 @@
  * Smoke checks for Ank Kundli digits (century ignored) and yoga/void lookup.
  */
 import {
+  VEDIC_GRID_ORDER,
   calculateVedicGrid,
+  cellCenter,
   vedicGridDigitsFromDob,
 } from "../src/lib/numerology/vedicGrid";
 
@@ -31,6 +33,21 @@ function lacksId(ids: string[], id: string, label: string) {
   }
   console.log("ok", label);
 }
+
+eq(
+  VEDIC_GRID_ORDER,
+  [
+    [3, 1, 9],
+    [6, 7, 5],
+    [2, 8, 4],
+  ],
+  "visual cell order 3-1-9 / 6-7-5 / 2-8-4",
+);
+eq(cellCenter(3).x < 20 && cellCenter(3).y < 20, true, "3 is top-left");
+eq(cellCenter(9).x > 80 && cellCenter(9).y < 20, true, "9 is top-right");
+eq(cellCenter(4).x > 80 && cellCenter(4).y > 80, true, "4 is bottom-right");
+eq(cellCenter(2).x < 20 && cellCenter(2).y > 80, true, "2 is bottom-left");
+eq(cellCenter(7).x > 40 && cellCenter(7).x < 60, true, "7 is center");
 
 eq(vedicGridDigitsFromDob("21/05/2012"), [1, 2, 5], "21/05/2012 unique digits");
 
