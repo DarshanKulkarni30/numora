@@ -111,9 +111,9 @@ export function BusinessExplorer({
   const domain = getBusinessDomain(domainId);
 
   const owners: OwnerBits[] = useMemo(() => {
-    const keys = new Set(selectedKeys);
-    return selectable
-      .filter((p) => keys.has(personKey(p)))
+    return selectedKeys
+      .map((key) => selectable.find((p) => personKey(p) === key))
+      .filter((p): p is PersonRecord => p != null)
       .map((p) => {
         const dob = p.date_of_birth;
         const fullName = p.full_name || p.preferred_name || "";
@@ -168,13 +168,30 @@ export function BusinessExplorer({
         )
       : null;
 
-  const toggleOwner = (key: string) => {
+  const unusedOwners = useMemo(
+    () => selectable.filter((p) => !selectedKeys.includes(personKey(p))),
+    [selectable, selectedKeys],
+  );
+
+  const setOwnerAt = (index: number, key: string) => {
     setSelectedKeys((prev) => {
-      if (prev.includes(key)) {
-        if (prev.length <= 1) return prev;
-        return prev.filter((k) => k !== key);
-      }
-      return [...prev, key];
+      const next = [...prev];
+      if (next.includes(key) && next[index] !== key) return prev;
+      next[index] = key;
+      return next;
+    });
+  };
+
+  const addOwnerSlot = () => {
+    const next = unusedOwners[0];
+    if (!next) return;
+    setSelectedKeys((prev) => [...prev, personKey(next)]);
+  };
+
+  const removeOwnerAt = (index: number) => {
+    setSelectedKeys((prev) => {
+      if (prev.length <= 1) return prev;
+      return prev.filter((_, i) => i !== index);
     });
   };
 
@@ -193,30 +210,58 @@ export function BusinessExplorer({
           <div className="grid gap-4 lg:grid-cols-2">
             <div>
               <p className="mb-1 text-sm text-ink-soft">
-                Owners from your profile (select one or more)
+                Owners from your profile
               </p>
-              <ul className="max-h-48 space-y-1.5 overflow-y-auto rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2">
-                {selectable.map((p) => {
-                  const key = personKey(p);
-                  const checked = selectedKeys.includes(key);
+              <div className="space-y-2">
+                {selectedKeys.map((key, index) => {
+                  const current = selectable.find((p) => personKey(p) === key);
+                  const options = selectable.filter(
+                    (p) =>
+                      personKey(p) === key ||
+                      !selectedKeys.includes(personKey(p)),
+                  );
                   return (
-                    <li key={key}>
-                      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1.5 text-sm text-ink hover:bg-mist/50">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleOwner(key)}
-                          className="rounded border-[var(--line)]"
-                        />
-                        <span>{personLabel(p)}</span>
+                    <div key={`owner-slot-${index}`} className="flex gap-2">
+                      <label className="sr-only" htmlFor={`biz-owner-${index}`}>
+                        Owner {index + 1}
                       </label>
-                    </li>
+                      <select
+                        id={`biz-owner-${index}`}
+                        value={key}
+                        onChange={(e) => setOwnerAt(index, e.target.value)}
+                        className="min-w-0 flex-1 rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-sm text-ink outline-none ring-gold focus:ring-2"
+                      >
+                        {options.map((p) => (
+                          <option key={personKey(p)} value={personKey(p)}>
+                            {personLabel(p)}
+                          </option>
+                        ))}
+                      </select>
+                      {selectedKeys.length > 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => removeOwnerAt(index)}
+                          className="shrink-0 rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-sm text-ink-soft transition duration-200 hover:-translate-y-px hover:border-rose-300 hover:bg-rose-50 hover:text-rose-900 hover:shadow-sm active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea"
+                          aria-label={`Remove ${current ? personLabel(current) : "owner"}`}
+                        >
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
                   );
                 })}
-              </ul>
+                <button
+                  type="button"
+                  onClick={addOwnerSlot}
+                  disabled={unusedOwners.length === 0}
+                  className="rounded-xl border border-dashed border-[var(--line)] bg-white/60 px-3 py-2 text-sm text-ink transition duration-200 hover:-translate-y-px hover:border-sea/40 hover:bg-mist/60 hover:shadow-sm active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  Add owner
+                </button>
+              </div>
               <p className="mt-2 text-xs text-ink-soft">
-                Compatibility below is shown for each selected owner. At least
-                one owner is required.
+                Each owner gets their own compatibility section. Use Add owner
+                for co-founders or family on the same venture.
               </p>
               {owners.length > 0 ? (
                 <ul className="mt-2 space-y-1 text-xs text-ink-soft">
@@ -360,7 +405,8 @@ export function BusinessExplorer({
                           className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[fullTrio.band]}`}
                         >
                           <p className="text-[10px] uppercase tracking-wider opacity-80">
-                            Birth × Destiny × full core {mobile.core}
+                            Vedic trio · Psychic {o.psychic} × Destiny{" "}
+                            {o.destiny} × full core {mobile.core}
                           </p>
                           <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                             {TRIO_BAND_ICON[fullTrio.band]}{" "}
@@ -378,7 +424,8 @@ export function BusinessExplorer({
                             className={`rounded-2xl border px-5 py-4 ${BAND_STYLE[last4Trio.band]}`}
                           >
                             <p className="text-[10px] uppercase tracking-wider opacity-80">
-                              Birth × Destiny × last-4 core {mobile.last4.core}
+                              Vedic trio · Psychic {o.psychic} × Destiny{" "}
+                              {o.destiny} × last-4 core {mobile.last4.core}
                             </p>
                             <p className="mt-1 text-xl font-semibold">
                               {TRIO_BAND_ICON[last4Trio.band]}{" "}
@@ -428,6 +475,10 @@ export function BusinessExplorer({
                             </>
                           ) : null}
                         </div>
+                        <p className="text-xs text-ink-soft">
+                          Chips are pairwise digit distance—separate from the
+                          Vedic trio result above.
+                        </p>
                       </div>
                     );
                   })}
@@ -471,13 +522,14 @@ export function BusinessExplorer({
               </label>
 
               <label className="block text-sm text-ink">
-                Mobile for cross-check (shared with Mobile tab)
+                Mobile for cross-check{" "}
+                <span className="font-normal text-ink-soft">(optional)</span>
                 <input
                   type="text"
                   inputMode="tel"
                   value={mobileRaw}
                   onChange={(e) => setMobileRaw(e.target.value)}
-                  placeholder="Same number used on the Mobile tab"
+                  placeholder="Optional — same number as the Mobile tab"
                   className="mt-1.5 w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
                   autoComplete="tel-national"
                 />
@@ -527,7 +579,8 @@ export function BusinessExplorer({
 
                   <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
                     <p className="text-sm font-medium text-ink">
-                      Domain + company × mobile (shared)
+                      Domain fit
+                      {mobileCore != null ? " + company × mobile" : ""}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <FitChip
@@ -569,11 +622,7 @@ export function BusinessExplorer({
                           {BAND_WORD[companyMobile.band]} · {companyMobile.label}
                         </p>
                       </div>
-                    ) : (
-                      <p className="mt-2 text-sm text-ink-soft">
-                        Add a valid mobile to score company × mobile.
-                      </p>
-                    )}
+                    ) : null}
                     {companyMobileLast4 && mobile.ok && mobile.last4 ? (
                       <div
                         className={`mt-2 rounded-2xl border px-4 py-3 ${BAND_STYLE[companyMobileLast4.band]}`}
@@ -618,7 +667,8 @@ export function BusinessExplorer({
                           className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[trio.band]}`}
                         >
                           <p className="text-[10px] uppercase tracking-wider opacity-80">
-                            Birth × Destiny × company name
+                            Vedic trio · Psychic {o.psychic} × Destiny{" "}
+                            {o.destiny} × company {companyLayers.vedicCore}
                           </p>
                           <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                             {TRIO_BAND_ICON[trio.band]} {BAND_WORD[trio.band]}
@@ -656,6 +706,10 @@ export function BusinessExplorer({
                             />
                           ) : null}
                         </div>
+                        <p className="text-xs text-ink-soft">
+                          Chips are pairwise digit distance (company vs each
+                          number)—separate from the Vedic trio result above.
+                        </p>
                         {breakdown ? (
                           <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-4 py-3 text-sm">
                             <p className="font-medium text-ink">
@@ -687,7 +741,8 @@ export function BusinessExplorer({
               ) : (
                 <p className="text-sm text-ink-soft">
                   Type a company or brand name (at least 2 letters) to compare
-                  against each owner, mobile, and domain.
+                  against each owner and domain. Mobile is optional for a
+                  company × number cross-check.
                 </p>
               )}
             </section>
