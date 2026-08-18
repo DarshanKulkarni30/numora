@@ -238,8 +238,14 @@ export function NameCompatibilityExplorer({ people }: Props) {
 
   const leftEffectiveName = useMemo(() => {
     if (!left) return "";
-    if (useLeftTrial && (leftTrialFirst.trim() || leftTrialLast.trim())) {
-      return joinGivenAndSurname(leftTrialFirst, leftTrialLast);
+    if (
+      useLeftTrial &&
+      leftSpellingMode !== "nickname" &&
+      leftTrialFirst.trim()
+    ) {
+      return leftSpellingMode === "first"
+        ? leftTrialFirst.trim()
+        : joinGivenAndSurname(leftTrialFirst, leftTrialLast);
     }
     const resolved = resolveNameSpelling({
       mode: leftSpellingMode,
@@ -258,8 +264,14 @@ export function NameCompatibilityExplorer({ people }: Props) {
 
   const rightEffectiveName = useMemo(() => {
     if (!right) return "";
-    if (useRightTrial && (rightTrialFirst.trim() || rightTrialLast.trim())) {
-      return joinGivenAndSurname(rightTrialFirst, rightTrialLast);
+    if (
+      useRightTrial &&
+      rightSpellingMode !== "nickname" &&
+      rightTrialFirst.trim()
+    ) {
+      return rightSpellingMode === "first"
+        ? rightTrialFirst.trim()
+        : joinGivenAndSurname(rightTrialFirst, rightTrialLast);
     }
     const resolved = resolveNameSpelling({
       mode: rightSpellingMode,
@@ -408,46 +420,67 @@ export function NameCompatibilityExplorer({ people }: Props) {
               <NameSpellingModePicker
                 idPrefix="compat-left"
                 mode={leftSpellingMode}
-                onModeChange={setLeftSpellingMode}
+                onModeChange={(m) => {
+                  setLeftSpellingMode(m);
+                  if (m === "nickname") setUseLeftTrial(false);
+                }}
                 nickname={leftNickname}
                 onNicknameChange={setLeftNickname}
               />
             </div>
           ) : null}
 
-          <label className="mt-4 flex items-center gap-2 text-sm text-ink">
-            <input
-              type="checkbox"
-              checked={useLeftTrial}
-              onChange={(e) => {
-                setUseLeftTrial(e.target.checked);
-                if (e.target.checked && left && !leftTrialFirst && !leftTrialLast) {
-                  const parts = splitGivenAndSurname(left.fullName);
-                  setLeftTrialFirst(parts.given);
-                  setLeftTrialLast(parts.surname);
-                }
-              }}
-              className="rounded border-[var(--line)]"
-            />
-            Trial spelling (e.g. after marriage)
-          </label>
-          {useLeftTrial ? (
-            <div className="mt-2 grid gap-2 sm:grid-cols-2">
-              <input
-                type="text"
-                value={leftTrialFirst}
-                onChange={(e) => setLeftTrialFirst(e.target.value)}
-                placeholder="First name"
-                className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
-              />
-              <input
-                type="text"
-                value={leftTrialLast}
-                onChange={(e) => setLeftTrialLast(e.target.value)}
-                placeholder="Last name (optional)"
-                className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
-              />
-            </div>
+          {leftSpellingMode !== "nickname" ? (
+            <>
+              <label className="mt-4 flex items-center gap-2 text-sm text-ink">
+                <input
+                  type="checkbox"
+                  checked={useLeftTrial}
+                  onChange={(e) => {
+                    setUseLeftTrial(e.target.checked);
+                    if (
+                      e.target.checked &&
+                      left &&
+                      !leftTrialFirst &&
+                      !leftTrialLast
+                    ) {
+                      const parts = splitGivenAndSurname(left.fullName);
+                      setLeftTrialFirst(parts.given);
+                      setLeftTrialLast(
+                        leftSpellingMode === "full" ? parts.surname : "",
+                      );
+                    }
+                  }}
+                  className="rounded border-[var(--line)]"
+                />
+                Trial spelling
+                {leftSpellingMode === "first" ? " (first name)" : ""}
+              </label>
+              {useLeftTrial ? (
+                <div
+                  className={`mt-2 grid gap-2 ${
+                    leftSpellingMode === "full" ? "sm:grid-cols-2" : ""
+                  }`}
+                >
+                  <input
+                    type="text"
+                    value={leftTrialFirst}
+                    onChange={(e) => setLeftTrialFirst(e.target.value)}
+                    placeholder="First name"
+                    className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
+                  />
+                  {leftSpellingMode === "full" ? (
+                    <input
+                      type="text"
+                      value={leftTrialLast}
+                      onChange={(e) => setLeftTrialLast(e.target.value)}
+                      placeholder="Last name"
+                      className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+            </>
           ) : null}
         </div>
 
@@ -559,51 +592,67 @@ export function NameCompatibilityExplorer({ people }: Props) {
               <NameSpellingModePicker
                 idPrefix="compat-right"
                 mode={rightSpellingMode}
-                onModeChange={setRightSpellingMode}
+                onModeChange={(m) => {
+                  setRightSpellingMode(m);
+                  if (m === "nickname") setUseRightTrial(false);
+                }}
                 nickname={rightNickname}
                 onNicknameChange={setRightNickname}
               />
             </div>
           ) : null}
 
-          <label className="mt-4 flex items-center gap-2 text-sm text-ink">
-            <input
-              type="checkbox"
-              checked={useRightTrial}
-              onChange={(e) => {
-                setUseRightTrial(e.target.checked);
-                if (
-                  e.target.checked &&
-                  right &&
-                  !rightTrialFirst &&
-                  !rightTrialLast
-                ) {
-                  const parts = splitGivenAndSurname(right.fullName);
-                  setRightTrialFirst(parts.given);
-                  setRightTrialLast(parts.surname);
-                }
-              }}
-              className="rounded border-[var(--line)]"
-            />
-            Trial spelling for right side
-          </label>
-          {useRightTrial ? (
-            <div className="mt-2 grid gap-2 sm:grid-cols-2">
-              <input
-                type="text"
-                value={rightTrialFirst}
-                onChange={(e) => setRightTrialFirst(e.target.value)}
-                placeholder="First name"
-                className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
-              />
-              <input
-                type="text"
-                value={rightTrialLast}
-                onChange={(e) => setRightTrialLast(e.target.value)}
-                placeholder="Last name (optional)"
-                className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
-              />
-            </div>
+          {rightSpellingMode !== "nickname" ? (
+            <>
+              <label className="mt-4 flex items-center gap-2 text-sm text-ink">
+                <input
+                  type="checkbox"
+                  checked={useRightTrial}
+                  onChange={(e) => {
+                    setUseRightTrial(e.target.checked);
+                    if (
+                      e.target.checked &&
+                      right &&
+                      !rightTrialFirst &&
+                      !rightTrialLast
+                    ) {
+                      const parts = splitGivenAndSurname(right.fullName);
+                      setRightTrialFirst(parts.given);
+                      setRightTrialLast(
+                        rightSpellingMode === "full" ? parts.surname : "",
+                      );
+                    }
+                  }}
+                  className="rounded border-[var(--line)]"
+                />
+                Trial spelling
+                {rightSpellingMode === "first" ? " (first name)" : ""}
+              </label>
+              {useRightTrial ? (
+                <div
+                  className={`mt-2 grid gap-2 ${
+                    rightSpellingMode === "full" ? "sm:grid-cols-2" : ""
+                  }`}
+                >
+                  <input
+                    type="text"
+                    value={rightTrialFirst}
+                    onChange={(e) => setRightTrialFirst(e.target.value)}
+                    placeholder="First name"
+                    className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
+                  />
+                  {rightSpellingMode === "full" ? (
+                    <input
+                      type="text"
+                      value={rightTrialLast}
+                      onChange={(e) => setRightTrialLast(e.target.value)}
+                      placeholder="Last name"
+                      className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+            </>
           ) : null}
         </div>
       </div>

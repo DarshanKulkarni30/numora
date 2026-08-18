@@ -201,17 +201,27 @@ export function NameExplorer({ people }: Props) {
     return nameLayers(currentName, dob);
   }, [selected, currentName, dob]);
 
-  const trialFullName = joinGivenAndSurname(trialFirst, trialLast);
-
   const trialSnap = useMemo(() => {
-    if (!selected || trialFirst.trim().length < 2) return null;
-    return nameLayers(trialFullName, dob);
-  }, [trialFirst, trialFullName, selected, dob]);
+    if (!selected || spellingMode === "nickname") return null;
+    if (trialFirst.trim().length < 2) return null;
+    const spelling =
+      spellingMode === "first"
+        ? trialFirst.trim()
+        : joinGivenAndSurname(trialFirst, trialLast);
+    return nameLayers(spelling, dob);
+  }, [trialFirst, trialLast, selected, dob, spellingMode]);
 
   const activeLayers = trialSnap ?? current;
   const activeSpellingLabel = trialSnap
-    ? "Trial spelling"
+    ? spellingMode === "first"
+      ? "Trial first name"
+      : "Trial spelling"
     : profileResolved.label;
+  const activeScoredSpelling = trialSnap
+    ? spellingMode === "first"
+      ? trialFirst.trim()
+      : joinGivenAndSurname(trialFirst, trialLast)
+    : currentName;
 
   const vedicHit =
     psychic != null && destiny != null && activeLayers
@@ -479,7 +489,7 @@ export function NameExplorer({ people }: Props) {
                         )
                       </>
                     ) : null}
-                    . Trial first name below overrides when filled.
+                    . Trial below overrides when shown and filled.
                   </p>
                 </div>
               ) : null}
@@ -489,59 +499,98 @@ export function NameExplorer({ people }: Props) {
               <NameSpellingModePicker
                 idPrefix="name-explore"
                 mode={spellingMode}
-                onModeChange={setSpellingMode}
+                onModeChange={(m) => {
+                  setSpellingMode(m);
+                  if (m === "nickname") setTrialFirst("");
+                }}
                 nickname={nickname}
                 onNicknameChange={setNickname}
               />
-              <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="name-trial-first"
-                  className="mb-1 block text-sm text-ink-soft"
-                >
-                  Trial first name
-                </label>
-                <input
-                  id="name-trial-first"
-                  type="text"
-                  value={trialFirst}
-                  onChange={(e) => setTrialFirst(e.target.value)}
-                  placeholder="Type a first name"
-                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
-                  autoComplete="off"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="name-trial-last"
-                  className="mb-1 block text-sm text-ink-soft"
-                >
-                  Last name
-                </label>
-                <input
-                  id="name-trial-last"
-                  type="text"
-                  value={trialLast}
-                  onChange={(e) => setTrialLast(e.target.value)}
-                  placeholder="Surname (optional for first-only)"
-                  className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
-                  autoComplete="off"
-                />
-              </div>
-              <p className="text-xs text-ink-soft sm:col-span-2">
-                Trial overrides the spelling mode above. Leave last name blank
-                to score first name only. Reflective only—not legal naming
-                advice.
-                {trialFirst.trim().length >= 2 ? (
-                  <>
-                    {" "}
-                    Scoring{" "}
-                    <span className="font-medium text-ink">{trialFullName}</span>
-                    .
-                  </>
-                ) : null}
-              </p>
-              </div>
+              {spellingMode === "full" ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="name-trial-first"
+                      className="mb-1 block text-sm text-ink-soft"
+                    >
+                      Trial first name
+                    </label>
+                    <input
+                      id="name-trial-first"
+                      type="text"
+                      value={trialFirst}
+                      onChange={(e) => setTrialFirst(e.target.value)}
+                      placeholder="Type a first name"
+                      className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="name-trial-last"
+                      className="mb-1 block text-sm text-ink-soft"
+                    >
+                      Trial last name
+                    </label>
+                    <input
+                      id="name-trial-last"
+                      type="text"
+                      value={trialLast}
+                      onChange={(e) => setTrialLast(e.target.value)}
+                      placeholder="Surname"
+                      className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
+                      autoComplete="off"
+                    />
+                  </div>
+                  <p className="text-xs text-ink-soft sm:col-span-2">
+                    Optional trial full spelling. Leave first blank to use the
+                    profile full name. Reflective only—not legal naming advice.
+                    {trialFirst.trim().length >= 2 ? (
+                      <>
+                        {" "}
+                        Scoring{" "}
+                        <span className="font-medium text-ink">
+                          {joinGivenAndSurname(trialFirst, trialLast)}
+                        </span>
+                        .
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+              ) : null}
+              {spellingMode === "first" ? (
+                <div>
+                  <label
+                    htmlFor="name-trial-first-only"
+                    className="mb-1 block text-sm text-ink-soft"
+                  >
+                    Trial first name (optional)
+                  </label>
+                  <input
+                    id="name-trial-first-only"
+                    type="text"
+                    value={trialFirst}
+                    onChange={(e) => setTrialFirst(e.target.value)}
+                    placeholder="Try another first name"
+                    className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
+                    autoComplete="off"
+                  />
+                  <p className="mt-1.5 text-xs text-ink-soft">
+                    Leave blank to score the profile given name. No surname in
+                    this mode.
+                    {trialFirst.trim().length >= 2 ? (
+                      <>
+                        {" "}
+                        Scoring{" "}
+                        <span className="font-medium text-ink">
+                          {trialFirst.trim()}
+                        </span>
+                        .
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -581,13 +630,7 @@ export function NameExplorer({ people }: Props) {
             </div>
           ) : null}
 
-          <NameMathPanels
-            fullName={
-              trialSnap
-                ? trialFullName
-                : currentName || trialFullName
-            }
-          />
+          <NameMathPanels fullName={activeScoredSpelling || currentName} />
 
           <div>
             <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
