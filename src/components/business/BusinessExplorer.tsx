@@ -70,9 +70,22 @@ const BAND_STYLE: Record<TrioBand, string> = {
 };
 
 const FIT_BANNER_STYLE: Record<DomainFit, string> = {
-  favourable: BAND_STYLE.amazing,
-  neutral: BAND_STYLE.neutral,
-  careful: BAND_STYLE.friction,
+  favourable: "border-teal-200/80 bg-mist/50 text-ink",
+  neutral: "border-[var(--line)] bg-white/80 text-ink-soft",
+  careful: "border-[var(--line)] bg-mist/40 text-ink-soft",
+};
+
+/** Soft labels for pairwise digit distance — not a name reject verdict. */
+const PAIRWISE_FIT_WORD: Record<DomainFit, string> = {
+  favourable: "Close match",
+  neutral: "Nearby tone",
+  careful: "Different tone",
+};
+
+const PAIRWISE_CHIP_STYLE: Record<DomainFit, string> = {
+  favourable: "border-teal-200 bg-teal-50/80 text-teal-950",
+  neutral: "border-slate-200 bg-slate-50 text-slate-800",
+  careful: "border-slate-200 bg-mist/50 text-ink-soft",
 };
 
 function personKey(p: PersonRecord) {
@@ -88,24 +101,30 @@ function FitChip({
   fit,
   label,
   emphasize,
+  kind = "pairwise",
 }: {
   fit: DomainFit;
   label: string;
   emphasize?: boolean;
+  kind?: "pairwise" | "domain";
 }) {
+  const word =
+    kind === "domain" ? DOMAIN_FIT_WORD[fit] : PAIRWISE_FIT_WORD[fit];
+  const style =
+    kind === "domain" ? DOMAIN_FIT_STYLE[fit] : PAIRWISE_CHIP_STYLE[fit];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs ${DOMAIN_FIT_STYLE[fit]} ${
-        emphasize ? "ring-2 ring-sea/35 shadow-sm" : ""
+      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs ${style} ${
+        emphasize ? "ring-2 ring-sea/25" : ""
       }`}
     >
-      {DOMAIN_FIT_WORD[fit]} · {label}
-      {emphasize ? " · primary" : ""}
+      {word} · {label}
+      {emphasize ? " · age focus" : ""}
     </span>
   );
 }
 
-function PrimaryDigitBanner({
+function AgeLedNote({
   digitLabel,
   digit,
   prominence,
@@ -118,20 +137,23 @@ function PrimaryDigitBanner({
 }) {
   return (
     <div
-      className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${FIT_BANNER_STYLE[fit]}`}
+      className={`rounded-xl border px-4 py-3 text-sm ${FIT_BANNER_STYLE[fit]}`}
     >
       <p className="text-[10px] uppercase tracking-wider opacity-80">
-        Age-led · {prominence.primaryLabel} {prominence.primaryCore} ×{" "}
+        Age focus note · {prominence.primaryLabel} {prominence.primaryCore} ×{" "}
         {digitLabel} {digit}
       </p>
-      <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-        {DOMAIN_FIT_WORD[fit]}
+      <p className="mt-1 font-medium text-ink">
+        {PAIRWISE_FIT_WORD[fit]}
+        <span className="font-normal text-ink-soft">
+          {" "}
+          — not a reject; only how close that one number sits to the digit
+        </span>
       </p>
-      <p className="mt-1 text-sm leading-6 opacity-90">
-        Pairwise fit of the age-priority number against this digit. Reflective
-        branding note only.
+      <p className="mt-1 text-xs leading-5 text-ink-soft">
+        {prominence.caption}. The full-chart trio above is the main naming
+        read; this is a quieter pairwise distance check.
       </p>
-      <p className="mt-2 text-xs opacity-80">{prominence.caption}</p>
     </div>
   );
 }
@@ -420,11 +442,13 @@ export function BusinessExplorer({
                       <FitChip
                         fit={domainFit(mobile.core, domain, "mobile")}
                         label={`full ${mobile.core} · domain`}
+                        kind="domain"
                       />
                       {mobile.last4 ? (
                         <FitChip
                           fit={domainFit(mobile.last4.core, domain, "mobile")}
                           label={`last-4 ${mobile.last4.core} · domain`}
+                          kind="domain"
                         />
                       ) : null}
                     </div>
@@ -470,36 +494,22 @@ export function BusinessExplorer({
                             ? ` · Name ${o.personalName}`
                             : ""}
                         </p>
-                        <PrimaryDigitBanner
-                          digitLabel="full core"
-                          digit={mobile.core}
-                          prominence={o.prominence}
-                          fit={primaryFit}
-                        />
-                        {last4PrimaryFit && mobile.last4 ? (
-                          <div
-                            className={`rounded-2xl border px-5 py-4 ${FIT_BANNER_STYLE[last4PrimaryFit]}`}
-                          >
-                            <p className="text-[10px] uppercase tracking-wider opacity-80">
-                              Age-led · {o.prominence.primaryLabel}{" "}
-                              {o.prominence.primaryCore} × last-4{" "}
-                              {mobile.last4.core}
-                            </p>
-                            <p className="mt-1 text-xl font-semibold">
-                              {DOMAIN_FIT_WORD[last4PrimaryFit]}
-                            </p>
-                          </div>
-                        ) : null}
                         <div
-                          className={`rounded-xl border px-4 py-3 ${BAND_STYLE[fullTrio.band]}`}
+                          className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[fullTrio.band]}`}
                         >
                           <p className="text-[10px] uppercase tracking-wider opacity-80">
                             Full chart · Psychic {o.psychic} × Destiny{" "}
                             {o.destiny} × full {mobile.core}
                           </p>
-                          <p className="mt-1 font-medium">
+                          <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                             {TRIO_BAND_ICON[fullTrio.band]}{" "}
-                            {BAND_WORD[fullTrio.band]} · {fullTrio.label}
+                            {BAND_WORD[fullTrio.band]}
+                          </p>
+                          <p className="mt-1 text-base font-medium opacity-90">
+                            {fullTrio.label}
+                          </p>
+                          <p className="mt-2 text-sm leading-6">
+                            {fullTrio.summary}
                           </p>
                           <p className="mt-1 text-xs opacity-80">
                             {TRIO_BAND_HINT[fullTrio.band]}
@@ -562,9 +572,24 @@ export function BusinessExplorer({
                           ) : null}
                         </div>
                         <p className="text-xs text-ink-soft">
-                          Primary banner follows BN→DN age shift. Full-chart trio
-                          stays as a secondary read.
+                          Chips = how close each single number sits to the digit
+                          (distance). Full chart = traditional trio table—they
+                          can differ.
                         </p>
+                        <AgeLedNote
+                          digitLabel="full core"
+                          digit={mobile.core}
+                          prominence={o.prominence}
+                          fit={primaryFit}
+                        />
+                        {last4PrimaryFit && mobile.last4 ? (
+                          <AgeLedNote
+                            digitLabel="last-4"
+                            digit={mobile.last4.core}
+                            prominence={o.prominence}
+                            fit={last4PrimaryFit}
+                          />
+                        ) : null}
                       </div>
                     );
                   })}
@@ -692,6 +717,7 @@ export function BusinessExplorer({
                             "name",
                           )}
                           label={`domain · name ${companyLayers.vedicCore}`}
+                          kind="domain"
                         />
                         {mobileCore != null ? (
                           <FitChip
@@ -776,24 +802,20 @@ export function BusinessExplorer({
                           <h3 className="text-lg text-ink">
                             Compatibility · {o.label}
                           </h3>
-                          <PrimaryDigitBanner
-                            digitLabel="company"
-                            digit={companyLayers.vedicCore}
-                            prominence={o.prominence}
-                            fit={primaryFit}
-                          />
                           <div
-                            className={`rounded-xl border px-4 py-3 ${BAND_STYLE[trio.band]}`}
+                            className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[trio.band]}`}
                           >
                             <p className="text-[10px] uppercase tracking-wider opacity-80">
                               Full chart · Psychic {o.psychic} × Destiny{" "}
                               {o.destiny} × company {companyLayers.vedicCore}
                             </p>
-                            <p className="mt-1 font-medium">
-                              {TRIO_BAND_ICON[trio.band]} {BAND_WORD[trio.band]}{" "}
-                              · {trio.label}
+                            <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                              {TRIO_BAND_ICON[trio.band]} {BAND_WORD[trio.band]}
                             </p>
-                            <p className="mt-1 text-sm leading-6 opacity-90">
+                            <p className="mt-1 text-base font-medium opacity-90">
+                              {trio.label}
+                            </p>
+                            <p className="mt-2 text-sm leading-6">
                               {trio.summary}
                             </p>
                             <p className="mt-1 text-xs opacity-80">
@@ -828,8 +850,9 @@ export function BusinessExplorer({
                             ) : null}
                           </div>
                           <p className="text-xs text-ink-soft">
-                            Chips are pairwise digit distance. Primary banner
-                            follows this owner’s BN→DN age phase.
+                            Chips = single-number distance to the company digit.
+                            Full chart = traditional trio table—they measure
+                            different things and can disagree.
                           </p>
                           {breakdown ? (
                             <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-4 py-3 text-sm">
@@ -844,17 +867,22 @@ export function BusinessExplorer({
                               </p>
                             </div>
                           ) : null}
+                          <AgeLedNote
+                            digitLabel="company"
+                            digit={companyLayers.vedicCore}
+                            prominence={o.prominence}
+                            fit={primaryFit}
+                          />
                           <p className="text-sm leading-6 text-ink-soft">
-                            For {domain.label}, company digit{" "}
-                            <span className="brand text-ink">
-                              {companyLayers.vedicCore}
-                            </span>{" "}
-                            with {o.label}’s {o.prominence.primaryLabel} reads{" "}
+                            For {domain.label}, full-chart trio with {o.label}{" "}
+                            reads{" "}
                             <span className="font-medium text-ink">
-                              {DOMAIN_FIT_WORD[primaryFit]}
-                            </span>
-                            . Full-chart trio: {BAND_WORD[trio.band]} (
-                            {trio.label}). Reflective branding notes only.
+                              {BAND_WORD[trio.band]}
+                            </span>{" "}
+                            ({trio.label}). Age-focus pairwise vs{" "}
+                            {o.prominence.primaryLabel}:{" "}
+                            {PAIRWISE_FIT_WORD[primaryFit]}. Reflective branding
+                            notes only.
                           </p>
                         </div>
                       );
