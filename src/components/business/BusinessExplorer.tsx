@@ -560,7 +560,60 @@ export function BusinessExplorer({
                       />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
+                        <p className="text-sm font-medium text-ink">
+                          Overall domain fit · {domain.label}
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <DomainFitChip
+                            fit={domainFit(
+                              companyLayers.vedicCore,
+                              domain,
+                              "name",
+                            )}
+                            label={`domain · name ${companyLayers.vedicCore}`}
+                          />
+                          {mobileCore != null ? (
+                            <DomainFitChip
+                              fit={coreDigitFit(
+                                companyLayers.vedicCore,
+                                mobileCore,
+                              )}
+                              label={`vs full mobile ${mobileCore}`}
+                            />
+                          ) : null}
+                          {mobile.ok && mobile.last4 ? (
+                            <DomainFitChip
+                              fit={coreDigitFit(
+                                companyLayers.vedicCore,
+                                mobile.last4.core,
+                              )}
+                              label={`vs last-4 ${mobile.last4.core}`}
+                            />
+                          ) : null}
+                        </div>
+                        {companyMobile ? (
+                          <div
+                            className={`mt-3 rounded-2xl border px-4 py-3 ${BAND_STYLE[companyMobile.band]}`}
+                          >
+                            <p className="text-[10px] uppercase tracking-wider opacity-80">
+                              Company × full mobile · {domain.label}
+                            </p>
+                            <p className="mt-1 font-medium">
+                              {TRIO_BAND_ICON[companyMobile.band]}{" "}
+                              {BAND_WORD[companyMobile.band]} ·{" "}
+                              {companyMobile.label}
+                            </p>
+                          </div>
+                        ) : null}
+                        <p className="mt-2 text-xs text-ink-soft">
+                          Preferred digits for {domain.label}:{" "}
+                          {domain.preferredNameDigits.join(", ")}. Careful:{" "}
+                          {domain.carefulNameDigits.join(", ") || "—"}.
+                        </p>
+                      </div>
+
                       {owners.map((o) => (
                         <div
                           key={`company-domain-${o.key}`}
@@ -569,6 +622,7 @@ export function BusinessExplorer({
                           <p className="text-sm font-medium text-ink">
                             Domain fit · {o.label}
                           </p>
+                          <OwnerNumberChips owner={o} />
                           <div className="mt-2 flex flex-wrap gap-2">
                             <DomainFitChip
                               fit={domainFit(
@@ -576,155 +630,123 @@ export function BusinessExplorer({
                                 domain,
                                 "name",
                               )}
-                              label={`domain · name ${companyLayers.vedicCore}`}
+                              label={`name ${companyLayers.vedicCore} · domain`}
                             />
-                            {mobileCore != null ? (
-                              <DomainFitChip
-                                fit={coreDigitFit(
-                                  companyLayers.vedicCore,
-                                  mobileCore,
-                                )}
-                                label={`vs full mobile ${mobileCore}`}
-                              />
-                            ) : null}
-                            {mobile.ok && mobile.last4 ? (
-                              <DomainFitChip
-                                fit={coreDigitFit(
-                                  companyLayers.vedicCore,
-                                  mobile.last4.core,
-                                )}
-                                label={`vs last-4 ${mobile.last4.core}`}
-                              />
-                            ) : null}
                           </div>
-                          {companyMobile ? (
-                            <div
-                              className={`mt-3 rounded-2xl border px-4 py-3 ${BAND_STYLE[companyMobile.band]}`}
-                            >
-                              <p className="text-[10px] uppercase tracking-wider opacity-80">
-                                Company × full mobile · {domain.label}
-                              </p>
-                              <p className="mt-1 font-medium">
-                                {TRIO_BAND_ICON[companyMobile.band]}{" "}
-                                {BAND_WORD[companyMobile.band]} ·{" "}
-                                {companyMobile.label}
-                              </p>
-                            </div>
-                          ) : null}
                           <p className="mt-2 text-xs text-ink-soft">
-                            Preferred digits for {domain.label}:{" "}
-                            {domain.preferredNameDigits.join(", ")}.
+                            {o.prominence.caption}
                           </p>
                         </div>
                       ))}
+                    </div>
+                  </div>
 
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm">
-                        <span className="text-xs font-medium uppercase tracking-wider text-ink-soft">
-                          Layers
-                        </span>
-                        <span className="text-ink-soft">
-                          Vedic{" "}
-                          <span className="brand text-ink">
-                            {companyLayers.vedicName}
-                            {companyLayers.vedicName !== companyLayers.vedicCore
-                              ? ` → ${companyLayers.vedicCore}`
-                              : ""}
-                          </span>
-                        </span>
-                        <span className="text-ink-soft/40" aria-hidden>
-                          ·
-                        </span>
-                        <span className="text-ink-soft">
-                          Unit{" "}
-                          <span className="brand text-ink">
-                            {companyLayers.unitName}
-                          </span>
-                        </span>
-                        <span className="text-ink-soft/40" aria-hidden>
-                          ·
-                        </span>
-                        <span className="text-ink-soft">
-                          Chaldean{" "}
-                          <span className="brand text-ink">
-                            {companyLayers.chaldean}
-                          </span>
-                        </span>
-                      </div>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm">
+                    <span className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+                      Layers
+                    </span>
+                    <span className="text-ink-soft">
+                      Vedic{" "}
+                      <span className="brand text-ink">
+                        {companyLayers.vedicName}
+                        {companyLayers.vedicName !== companyLayers.vedicCore
+                          ? ` → ${companyLayers.vedicCore}`
+                          : ""}
+                      </span>
+                    </span>
+                    <span className="text-ink-soft/40" aria-hidden>
+                      ·
+                    </span>
+                    <span className="text-ink-soft">
+                      Unit{" "}
+                      <span className="brand text-ink">
+                        {companyLayers.unitName}
+                      </span>
+                    </span>
+                    <span className="text-ink-soft/40" aria-hidden>
+                      ·
+                    </span>
+                    <span className="text-ink-soft">
+                      Chaldean{" "}
+                      <span className="brand text-ink">
+                        {companyLayers.chaldean}
+                      </span>
+                    </span>
+                  </div>
 
-                      {owners.map((o) => {
-                        const trio = vedicTrio(
-                          o.psychic,
-                          o.destiny,
-                          companyLayers.vedicCore,
-                        );
-                        const breakdown = analyzeCompanyNameChaldean(
-                          companyRaw,
-                          o.psychic,
-                          o.destiny,
-                        );
-                        return (
+                  <div className="space-y-4">
+                    {owners.map((o) => {
+                      const trio = vedicTrio(
+                        o.psychic,
+                        o.destiny,
+                        companyLayers.vedicCore,
+                      );
+                      const breakdown = analyzeCompanyNameChaldean(
+                        companyRaw,
+                        o.psychic,
+                        o.destiny,
+                      );
+                      return (
+                        <div
+                          key={o.key}
+                          className="w-full space-y-3 rounded-2xl border border-[var(--line)] bg-white/70 p-4 sm:p-5"
+                        >
+                          <h3 className="text-lg text-ink">
+                            Compatibility · {o.label}
+                          </h3>
+                          <OwnerNumberChips owner={o} />
                           <div
-                            key={o.key}
-                            className="space-y-3 rounded-2xl border border-[var(--line)] bg-white/70 p-4"
+                            className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[trio.band]}`}
                           >
-                            <h3 className="text-lg text-ink">
-                              Compatibility · {o.label}
-                            </h3>
-                            <OwnerNumberChips owner={o} />
-                            <div
-                              className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[trio.band]}`}
-                            >
-                              <p className="text-[10px] uppercase tracking-wider opacity-80">
-                                Full chart · Psychic {o.psychic} × Destiny{" "}
-                                {o.destiny} × company {companyLayers.vedicCore}
-                              </p>
-                              <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                                {TRIO_BAND_ICON[trio.band]}{" "}
-                                {BAND_WORD[trio.band]}
-                              </p>
-                              <p className="mt-1 text-base font-medium opacity-90">
-                                {trio.label}
-                              </p>
-                              <p className="mt-2 text-sm leading-6">
-                                {trio.summary}
-                              </p>
-                              <p className="mt-1 text-xs opacity-80">
-                                {TRIO_BAND_HINT[trio.band]}
-                              </p>
-                            </div>
-                            {breakdown ? (
-                              <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-4 py-3 text-sm">
-                                <span className="inline-block rounded-md bg-ink px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-paper">
-                                  Age focus note · {o.prominence.primaryLabel}{" "}
-                                  {o.prominence.primaryCore} × company{" "}
-                                  {companyLayers.vedicCore}
-                                </span>
-                                <p className="mt-3 font-medium text-ink">
-                                  Chaldean math · {o.label}
-                                </p>
-                                <p className="mt-2 text-ink-soft">
-                                  {breakdown.ownerBridge}
-                                </p>
-                                <p className="mt-2 text-xs text-ink-soft">
-                                  {breakdown.compoundNote}
-                                </p>
-                                <p className="mt-2 text-xs text-ink-soft">
-                                  {o.prominence.caption}
-                                </p>
-                              </div>
-                            ) : null}
-                            <p className="text-sm leading-6 text-ink-soft">
-                              For {domain.label}, full-chart trio with {o.label}{" "}
-                              reads{" "}
-                              <span className="font-medium text-ink">
-                                {BAND_WORD[trio.band]}
-                              </span>{" "}
-                              ({trio.label}). Reflective branding notes only.
+                            <p className="text-[10px] uppercase tracking-wider opacity-80">
+                              Full chart · Psychic {o.psychic} × Destiny{" "}
+                              {o.destiny} × company {companyLayers.vedicCore}
+                            </p>
+                            <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                              {TRIO_BAND_ICON[trio.band]} {BAND_WORD[trio.band]}
+                            </p>
+                            <p className="mt-1 text-base font-medium opacity-90">
+                              {trio.label}
+                            </p>
+                            <p className="mt-2 text-sm leading-6">
+                              {trio.summary}
+                            </p>
+                            <p className="mt-1 text-xs opacity-80">
+                              {TRIO_BAND_HINT[trio.band]}
                             </p>
                           </div>
-                        );
-                      })}
-                    </div>
+                          {breakdown ? (
+                            <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-4 py-3 text-sm">
+                              <span className="inline-block rounded-md bg-ink px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-paper">
+                                Age focus note · {o.prominence.primaryLabel}{" "}
+                                {o.prominence.primaryCore} × company{" "}
+                                {companyLayers.vedicCore}
+                              </span>
+                              <p className="mt-3 font-medium text-ink">
+                                Chaldean math · {o.label}
+                              </p>
+                              <p className="mt-2 text-ink-soft">
+                                {breakdown.ownerBridge}
+                              </p>
+                              <p className="mt-2 text-xs text-ink-soft">
+                                {breakdown.compoundNote}
+                              </p>
+                              <p className="mt-2 text-xs text-ink-soft">
+                                {o.prominence.caption}
+                              </p>
+                            </div>
+                          ) : null}
+                          <p className="text-sm leading-6 text-ink-soft">
+                            For {domain.label}, full-chart trio with {o.label}{" "}
+                            reads{" "}
+                            <span className="font-medium text-ink">
+                              {BAND_WORD[trio.band]}
+                            </span>{" "}
+                            ({trio.label}). Reflective branding notes only.
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </>
               ) : (
