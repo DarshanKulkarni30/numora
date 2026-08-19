@@ -1,5 +1,6 @@
 import { PERSONAL_CYCLE } from "@/lib/guides/numberMeanings";
 import { watchoutsFor } from "@/lib/guides/watchouts";
+import { pyNatureMeta } from "./personalYearOutlook";
 import type { YearTag } from "./vedicYearNumber";
 
 export type YearSystemTab = "western" | "vedic";
@@ -22,21 +23,21 @@ export const YEAR_PAGE_DISCLAIMER =
   "Numerology is a reflective tradition, not a forecast of events. Year numbers are pacing themes for how a calendar year may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
 
 export const WESTERN_YEAR_METHOD_NOTE =
-  "Personal Year (Western) adds birth month, birth day, and the full calendar year, then reduces—keeping 11, 22, or 33 when they appear. It is a reflective weather theme for pacing, not a guarantee of specific events.";
+  "Personal Year (Western) adds birth month, birth day, and a calendar year, then reduces—keeping 11, 22, or 33 when they appear. NumoraWisdom defaults to a birthday-to-birthday cycle (this year’s number activates on your birthday). Toggle Calendar year for the 1 Jan–31 Dec version. Nature labels describe typical experience—not Amazing/Good scores.";
 
 export const VEDIC_YEAR_METHOD_NOTE =
   "Vedic year number adds birth month, birth day, the year’s last two digits, and the weekday digit of that year’s birthday, then reduces to 1–9. It sits beside Western Personal Year as a second mirror—not a forecast of fixed events.";
 
 export const WESTERN_YEAR_TAG: Record<number, YearTag> = {
-  1: "Favourable",
+  1: "Neutral",
   2: "Neutral",
   3: "Favourable",
   4: "Challenging",
   5: "Favourable",
-  6: "Favourable",
-  7: "Neutral",
+  6: "Neutral",
+  7: "Challenging",
   8: "Favourable",
-  9: "Neutral",
+  9: "Challenging",
   11: "Neutral",
   22: "Neutral",
   33: "Neutral",
@@ -70,13 +71,12 @@ export function westernYearCopy(number: number): {
 } {
   const key = String(number);
   const cycle = PERSONAL_CYCLE[key];
+  const nature = pyNatureMeta(number);
   return {
     tag: WESTERN_YEAR_TAG[number] ?? "Neutral",
-    shortMeaning: cycle?.theme ?? "A reflective pacing theme for the year.",
+    shortMeaning: nature.short,
     strengths: cycle?.strengths ?? [],
     watchouts: watchoutsFor("personal-year", key),
-    practice:
-      cycle?.practice ??
-      "Treat the number as weather for pacing, not a script of events.",
+    practice: nature.practice,
   };
 }

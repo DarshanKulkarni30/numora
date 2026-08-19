@@ -199,6 +199,13 @@ export type NumerologyReport = {
     number: string;
     theme: string;
     advice: string;
+    nature?: string;
+    land?: string;
+    range_label?: string;
+    pinnacle?: string;
+    karmic?: string;
+    resonance?: string;
+    moment_note?: string;
   };
   projected_year?: {
     number: string;

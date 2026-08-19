@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
-import { personalYearBreakdown } from "@/lib/numerology/cycles";
+import { personalYearCycleAt } from "@/lib/numerology/cycles";
+import {
+  LAND_LABEL,
+  WESTERN_BIRTHDAY_NOTE,
+  WESTERN_CALENDAR_NOTE,
+  westernYearOutlook,
+  type LandBand,
+  type WesternYearAnchor,
+} from "@/lib/numerology/personalYearOutlook";
 import {
   projectedYearBreakdown,
   projectedYearMeta,
@@ -13,7 +21,6 @@ import {
   VEDIC_YEAR_METHOD_NOTE,
   WESTERN_YEAR_METHOD_NOTE,
   YEAR_PAGE_DISCLAIMER,
-  westernYearCopy,
   yearsFromBirthToAge90,
   type YearSystemTab,
 } from "@/lib/numerology/yearPage";
@@ -34,6 +41,12 @@ const TAG_STYLE: Record<YearTag, string> = {
   Favourable: "border-teal-200 bg-teal-50 text-teal-950",
   Neutral: "border-slate-200 bg-slate-50 text-slate-800",
   Challenging: "border-amber-300 bg-amber-50 text-amber-950",
+};
+
+const LAND_STYLE: Record<LandBand, string> = {
+  lighter: "border-teal-200 bg-teal-50 text-teal-950",
+  mixed: "border-slate-200 bg-slate-50 text-slate-800",
+  heavier: "border-amber-300 bg-amber-50 text-amber-950",
 };
 
 function personLabel(p: PersonRecord) {
@@ -87,6 +100,8 @@ export function YearOutlookExplorer({
   const [selectedKey, setSelectedKey] = useState(() =>
     resolveInitialKey(selectable, initialDob, initialName),
   );  const [tab, setTab] = useState<YearSystemTab>(initialTab);
+  const [westernAnchor, setWesternAnchor] =
+    useState<WesternYearAnchor>("birthday");
   const nowYear = new Date().getFullYear();
   const [openYear, setOpenYear] = useState<number | "default" | null>(
     "default",
@@ -111,24 +126,36 @@ export function YearOutlookExplorer({
     }
   }, [dob]);
 
+  const currentKeyYear = useMemo(() => {
+    if (!dob) return nowYear;
+    try {
+      if (tab === "western" && westernAnchor === "birthday") {
+        return personalYearCycleAt(dob, new Date()).calendarYearUsed;
+      }
+    } catch {
+      return nowYear;
+    }
+    return nowYear;
+  }, [dob, tab, westernAnchor, nowYear]);
+
   const { pastYears, visibleYears } = useMemo(() => {
-    const current = years.includes(nowYear) ? nowYear : null;
-    const past = years.filter((y) => y < nowYear);
-    const future = years.filter((y) => y > nowYear);
+    const current = years.includes(currentKeyYear) ? currentKeyYear : null;
+    const past = years.filter((y) => y < currentKeyYear);
+    const future = years.filter((y) => y > currentKeyYear);
     const featured = current ?? future[0] ?? past[past.length - 1] ?? null;
     const hiddenPast = past.filter((y) => y !== featured);
     const visible = [
-      ...(featured != null && featured <= nowYear ? [featured] : []),
+      ...(featured != null && featured <= currentKeyYear ? [featured] : []),
       ...future,
     ];
     return { pastYears: hiddenPast, visibleYears: visible };
-  }, [years, nowYear]);
+  }, [years, currentKeyYear]);
 
   const expandedYear = useMemo(() => {
     if (!years.length) return null;
-    if (openYear === "default") return defaultExpandedYear(years, nowYear);
+    if (openYear === "default") return defaultExpandedYear(years, currentKeyYear);
     return openYear;
-  }, [years, openYear, nowYear]);
+  }, [years, openYear, currentKeyYear]);
 
   const pastOpen = showPast || (expandedYear != null && pastYears.includes(expandedYear));
 
@@ -136,13 +163,15 @@ export function YearOutlookExplorer({
     const age = birthYear != null ? year - birthYear : null;
     return (
       <YearEntry
-        key={`${tab}-${year}`}
+        key={`${tab}-${westernAnchor}-${year}`}
         year={year}
         age={age}
         dob={dob}
+        fullName={selected?.full_name}
         tab={tab}
+        westernAnchor={westernAnchor}
         isOpen={year === expandedYear}
-        isNow={year === nowYear}
+        isNow={year === currentKeyYear}
         onToggle={() => setOpenYear(year === expandedYear ? null : year)}
       />
     );
@@ -206,11 +235,15 @@ export function YearOutlookExplorer({
               <button
                 key={id}
                 type="button"
-                onClick={() => setTab(id)}
-                className={`flex-1 rounded-full px-3 py-2 text-sm ${
+                onClick={() => {
+                  setTab(id);
+                  setOpenYear("default");
+                  setShowPast(false);
+                }}
+                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
                   tab === id
                     ? "bg-ink text-paper shadow-sm"
-                    : "text-ink-soft"
+                    : "text-ink-soft hover:text-ink"
                 }`}
               >
                 {label}
@@ -218,10 +251,43 @@ export function YearOutlookExplorer({
             ))}
           </div>
 
+          {tab === "western" ? (
+            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
+              {(
+                [
+                  ["birthday", "Birthday cycle"],
+                  ["calendar", "Calendar year"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    setWesternAnchor(id);
+                    setOpenYear("default");
+                    setShowPast(false);
+                  }}
+                  className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                    westernAnchor === id
+                      ? "bg-ink text-paper"
+                      : "text-ink-soft hover:text-ink"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
           <p className="text-sm leading-6 text-ink-soft">
             {tab === "vedic"
               ? VEDIC_YEAR_METHOD_NOTE
-              : WESTERN_YEAR_METHOD_NOTE}
+              : westernAnchor === "birthday"
+                ? WESTERN_BIRTHDAY_NOTE
+                : WESTERN_CALENDAR_NOTE}
+            {tab === "western" ? (
+              <span className="mt-2 block text-xs">{WESTERN_YEAR_METHOD_NOTE}</span>
+            ) : null}
           </p>
 
           {selected && years.length > 0 ? (
@@ -268,7 +334,9 @@ function YearEntry({
   year,
   age,
   dob,
+  fullName,
   tab,
+  westernAnchor,
   isOpen,
   isNow,
   onToggle,
@@ -276,7 +344,9 @@ function YearEntry({
   year: number;
   age: number | null;
   dob: string;
+  fullName?: string;
   tab: YearSystemTab;
+  westernAnchor: WesternYearAnchor;
   isOpen: boolean;
   isNow: boolean;
   onToggle: () => void;
@@ -286,10 +356,11 @@ function YearEntry({
     const meta = projectedYearMeta(breakdown.number);
     return (
       <YearRow
-        year={year}
+        yearLabel={String(year)}
         age={age}
         number={breakdown.number}
         tag={meta.tag}
+        tagClass={TAG_STYLE[meta.tag]}
         shortMeaning={meta.shortMeaning}
         isOpen={isOpen}
         isNow={isNow}
@@ -308,29 +379,47 @@ function YearEntry({
     );
   }
 
-  const breakdown = personalYearBreakdown(dob, year);
-  const copy = westernYearCopy(breakdown.number);
+  const outlook = westernYearOutlook({
+    dob,
+    fullName,
+    anchor: westernAnchor,
+    year,
+  });
+  const pin = outlook.pinnacle;
+  const pinCopy = outlook.pinnacleCopy;
+  const debtLine =
+    outlook.debts.length > 0
+      ? outlook.debts
+          .map((d) => `${d.label} (${d.source === "birth-day" ? "birth day" : "life path"}): ${d.lesson}`)
+          .join(" ")
+      : null;
+
   return (
     <YearRow
-      year={year}
+      yearLabel={
+        outlook.rangeLabel
+          ? outlook.rangeLabel
+          : String(year)
+      }
       age={age}
-      number={breakdown.number}
-      tag={copy.tag}
-      shortMeaning={copy.shortMeaning}
+      number={outlook.number}
+      tag={outlook.nature.nature}
+      tagClass={LAND_STYLE[outlook.land.band]}
+      shortMeaning={outlook.nature.short}
       isOpen={isOpen}
       isNow={isNow}
       onToggle={onToggle}
     >
       <YearDetail
+        intro={`${LAND_LABEL[outlook.land.band]}. ${outlook.nature.typical}`}
         points={[
-          ...copy.strengths,
-          ...copy.watchouts.map((line) => `Watch: ${line}`),
+          outlook.land.resonanceLine,
+          `Pinnacle ${pin.id} (${pin.number} · ${pinCopy.name}): ${pinCopy.theme} Shadow: ${pinCopy.shadow}`,
+          ...(debtLine ? [`Karmic: ${debtLine}`] : []),
+          ...(outlook.land.momentNote ? [outlook.land.momentNote] : []),
         ]}
-        practice={copy.practice}
-        calc={[
-          `Month ${breakdown.month} + day ${breakdown.day} + ${year} = ${breakdown.compound}`,
-          `Reduce to ${breakdown.number}.`,
-        ]}
+        practice={outlook.nature.practice}
+        calc={outlook.calcLines}
       />
     </YearRow>
   );
@@ -366,20 +455,22 @@ function YearDetail({
 }
 
 function YearRow({
-  year,
+  yearLabel,
   age,
   number,
   tag,
+  tagClass,
   shortMeaning,
   isOpen,
   isNow,
   onToggle,
   children,
 }: {
-  year: number;
+  yearLabel: string;
   age: number | null;
   number: number;
-  tag: YearTag;
+  tag: string;
+  tagClass: string;
   shortMeaning: string;
   isOpen: boolean;
   isNow: boolean;
@@ -395,11 +486,11 @@ function YearRow({
         className="flex w-full flex-wrap items-start gap-3 px-4 py-3 text-left sm:items-center"
       >
         <span
-          className={`brand min-w-[3.5rem] rounded-lg px-2 py-1 text-lg text-ink ${
+          className={`brand min-w-[3.5rem] max-w-[14rem] rounded-lg px-2 py-1 text-sm text-ink sm:text-lg ${
             isOpen ? "bg-white/80" : ""
           }`}
         >
-          {year}
+          {yearLabel}
         </span>
         {age != null ? (
           <span className="min-w-[3.25rem] text-sm text-ink-soft">
@@ -408,7 +499,7 @@ function YearRow({
         ) : null}
         <span className="brand text-xl text-ink">{number}</span>
         <span
-          className={`rounded-full border px-2.5 py-0.5 text-xs ${TAG_STYLE[tag]}`}
+          className={`rounded-full border px-2.5 py-0.5 text-xs ${tagClass}`}
         >
           {tag}
         </span>

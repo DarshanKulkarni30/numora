@@ -238,7 +238,7 @@ export function ReportView({
     {
       system: "timing" as const,
       title: "This year timing",
-      blurb: "How this calendar year and month may feel to pace.",
+      blurb: "Birthday-cycle Personal Year (toggle calendar on the Years page) plus this month’s pacing.",
       actionHref: yearsHrefForPerson({
         dateOfBirth: person.date_of_birth,
         fullName: person.full_name,
@@ -518,33 +518,42 @@ export function ReportView({
         </section>
 
         <section>
-          <h2 className="text-xl text-ink">Year outlook by calendar year</h2>
+          <h2 className="text-xl text-ink">Year outlook</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Pick any year to see the tone number and the exact addition used.
-            This sits beside{" "}
-            <span
-              className="text-ink"
-              title="Personal Year = birth month + birth day + the full calendar year, reduced to 1–9 (masters sometimes kept). A Western-style pacing theme for the year."
-            >
-              Personal Year
-            </span>
-            —not instead of it.{" "}
+            Personal Year below uses the <span className="font-medium text-ink">birthday cycle</span>
+            —this year’s number activates on your birthday. Nature describes typical
+            experience (transformational, responsibility-heavy, endings) rather than
+            Amazing or Good. Projected Year is a second, Vedic-style mirror.{" "}
             <LearningConceptLink conceptKey="personal-year" />
             {" · "}
             <LearningConceptLink conceptKey="projected-year" />
           </p>
           <p className="mt-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-            <span className="font-medium text-ink">Personal Year</span> (shown
-            in your snapshot
+            <span className="font-medium text-ink">Personal Year</span>{" "}
             {snap.personal_year ? (
+              <span className="brand text-ink">{snap.personal_year}</span>
+            ) : null}
+            {report.personal_year.nature ? (
               <>
                 {" "}
-                as{" "}
-                <span className="brand text-ink">{snap.personal_year}</span>
+                · {report.personal_year.nature}
               </>
             ) : null}
-            ): birth month + birth day + the full calendar year, then reduced to
-            one digit. It is a reflective “weather” theme for pacing the year.
+            {report.personal_year.range_label ? (
+              <> · {report.personal_year.range_label}</>
+            ) : null}
+            {report.personal_year.land ? (
+              <span className="mt-1 block text-xs">
+                {report.personal_year.land}
+                {report.personal_year.pinnacle
+                  ? ` · ${report.personal_year.pinnacle}`
+                  : ""}
+                {report.personal_year.karmic
+                  ? ` · Karmic ${report.personal_year.karmic}`
+                  : ""}
+              </span>
+            ) : null}
+            <span className="mt-1 block">{report.personal_year.theme}</span>
           </p>
           <div className="mt-4">
             <ProjectedYearPanel

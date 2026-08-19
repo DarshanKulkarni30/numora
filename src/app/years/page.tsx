@@ -56,8 +56,10 @@ export default async function YearsPage({ searchParams }: Props) {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">Personal year</h1>
           <p className="mt-3 text-ink-soft">
-            See the year number from birth through age 90. Personal Year is the
-            Western cycle; Vedic uses the weekday of that year’s birthday.
+            See the year number from birth through age 90. Personal Year defaults
+            to a birthday-to-birthday cycle (not Amazing/Good labels). Toggle
+            Calendar year if you want the 1 Jan–31 Dec version. Vedic uses the
+            weekday of that year’s birthday.
             Click a year for the longer reading. For name and mobile fit, open{" "}
             <Link href="/name" className="text-gold-deep underline">
               What&apos;s my name

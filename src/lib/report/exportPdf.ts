@@ -480,7 +480,15 @@ export async function downloadReportPdf(
   // —— Timing ——
   addBanner("Timing", "timing");
   addBody(
-    `Personal year ${report.personal_year.number}: ${report.personal_year.theme}. ${report.personal_year.advice}`,
+    `Personal year ${report.personal_year.number}${
+      report.personal_year.nature ? ` · ${report.personal_year.nature}` : ""
+    }${
+      report.personal_year.range_label
+        ? ` (${report.personal_year.range_label})`
+        : ""
+    }${
+      report.personal_year.land ? `. ${report.personal_year.land}` : ""
+    }: ${report.personal_year.theme}. ${report.personal_year.advice}`,
   );
   addBody(
     `Personal month ${report.personal_month.number}: ${report.personal_month.theme}. ${report.personal_month.advice}`,

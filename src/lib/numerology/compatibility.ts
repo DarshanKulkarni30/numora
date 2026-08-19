@@ -78,6 +78,11 @@ function baseTone(a: number, b: number): CompatTone {
   return PAIR_TONE[pairKey(a, b)] ?? "Neutral";
 }
 
+/** Undirected 1–9 pair tone (Pythagorean table). */
+export function pairTone(a: number, b: number): CompatTone {
+  return baseTone(reduceToSingleDigit(a), reduceToSingleDigit(b));
+}
+
 /** Slight channel nuance without harsh negatives */
 export function channelTone(
   base: CompatTone,

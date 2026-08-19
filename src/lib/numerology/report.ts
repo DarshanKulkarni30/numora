@@ -1,6 +1,11 @@
 import { sunSignFromDob } from "@/lib/astrology/sunSign";
 import { calculateChaldean } from "./chaldean";
-import { personalMonth, personalYear } from "./cycles";
+import { personalMonth } from "./cycles";
+import {
+  currentWesternOutlook,
+  LAND_LABEL,
+  pyNatureMeta,
+} from "./personalYearOutlook";
 import { calculateLoShu } from "./loShu";
 import {
   CHILD_REPORT_DISCLAIMER,
@@ -216,7 +221,7 @@ function recommendationsFor(
   const lp = coreTraitFor(pyth.lifePath);
   const pers = coreTraitFor(pyth.personality);
   const expr = coreTraitFor(pyth.expression);
-  const pyTheme = yearMonthMeaning(py);
+  const pyTheme = pyNatureMeta(py).short;
   const pmTheme = yearMonthMeaning(pm);
   const missingTips = missing
     .slice(0, 3)
@@ -587,11 +592,27 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       id: "personal-year",
       title: "14. Personal Year",
       body: [
-        `Personal Year ${report.personal_year.number}`,
+        `Personal Year ${report.personal_year.number}${
+          report.personal_year.nature ? ` · ${report.personal_year.nature}` : ""
+        }`,
+        report.personal_year.range_label
+          ? `• Cycle: ${report.personal_year.range_label}`
+          : "",
         `• Theme: ${report.personal_year.theme}`,
+        report.personal_year.land
+          ? `• How it may land: ${report.personal_year.land}`
+          : "",
+        report.personal_year.pinnacle
+          ? `• Pinnacle: ${report.personal_year.pinnacle}`
+          : "",
+        report.personal_year.karmic
+          ? `• Karmic: ${report.personal_year.karmic}`
+          : "",
         `• ${report.personal_year.advice}`,
-        "• See timing numbers in the snapshot above.",
-      ].join("\n"),
+        "• See timing numbers in the snapshot above. Personal Year is not an Amazing/Good score.",
+      ]
+        .filter(Boolean)
+        .join("\n"),
     },
     {
       id: "projected-year",
@@ -700,7 +721,12 @@ export function generateReport(
   const chald = calculateChaldean(fullName);
   const vedic = calculateVedic(fullName, input.dateOfBirth);
   const loShu = calculateLoShu(input.dateOfBirth);
-  const py = personalYear(input.dateOfBirth, now);
+  const pyOutlook = currentWesternOutlook(
+    input.dateOfBirth,
+    fullName,
+    now,
+  );
+  const py = pyOutlook.number;
   const pm = personalMonth(py, now);
   const name = displayName(input);
   const isChild = report_type === "child";
@@ -1033,10 +1059,18 @@ export function generateReport(
     growth_areas,
     age_guidance,
     personal_year: {
-      number: String(py),
-      theme: yearMonthMeaning(py),
-      advice:
-        "Treat the Personal Year as a weather report for pacing: lean into its emphasis, stay flexible, and avoid reading it as a guarantee of specific events.",
+      number: String(pyOutlook.number),
+      theme: pyOutlook.nature.typical,
+      advice: pyOutlook.nature.practice,
+      nature: pyOutlook.nature.nature,
+      land: LAND_LABEL[pyOutlook.land.band],
+      range_label: pyOutlook.rangeLabel ?? undefined,
+      pinnacle: `Pinnacle ${pyOutlook.pinnacle.id} · ${pyOutlook.pinnacle.number} ${pyOutlook.pinnacleCopy.name}`,
+      karmic: pyOutlook.debts.length
+        ? pyOutlook.debts.map((d) => d.label).join(", ")
+        : undefined,
+      resonance: pyOutlook.land.resonanceLine,
+      moment_note: pyOutlook.land.momentNote ?? undefined,
     },
     projected_year: {
       number: String(projected.number),

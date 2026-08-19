@@ -1,7 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { personalYearBreakdown } from "@/lib/numerology/cycles";
+import {
+  formatCycleRange,
+  personalYearBreakdown,
+  personalYearCycleAt,
+} from "@/lib/numerology/cycles";
 import { isValidDob } from "@/lib/profile/date";
 
 export function PersonalYearDemo() {
@@ -12,6 +16,15 @@ export function PersonalYearDemo() {
     if (!isValidDob(dob)) return null;
     try {
       return personalYearBreakdown(dob, year);
+    } catch {
+      return null;
+    }
+  }, [dob, year]);
+
+  const cycle = useMemo(() => {
+    if (!isValidDob(dob)) return null;
+    try {
+      return personalYearCycleAt(dob, new Date(year, 6, 1));
     } catch {
       return null;
     }
@@ -52,11 +65,21 @@ export function PersonalYearDemo() {
             {steps.number}
           </p>
           <p>
-            <span className="font-medium text-ink">Personal Year</span> →{" "}
-            <span className="brand text-ink">{steps.number}</span>
+            <span className="font-medium text-ink">Calendar Personal Year</span>{" "}
+            → <span className="brand text-ink">{steps.number}</span>
+            {cycle ? (
+              <>
+                {" "}
+                · birthday cycle now:{" "}
+                <span className="brand text-ink">{cycle.number}</span> (
+                {formatCycleRange(cycle)})
+              </>
+            ) : null}
           </p>
           <p className="text-xs">
-            A reflective pacing theme for the year—not a forecast of events.
+            Most software uses 1 Jan–31 Dec. Many practitioners start the year
+            on the birthday (School A: this calendar year’s number activates on
+            that birthday). Reflective pacing only—not a forecast.
           </p>
         </div>
       ) : (
