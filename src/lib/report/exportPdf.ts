@@ -8,6 +8,10 @@ import {
   buildPythagoreanWheel,
   pythagoreanWheelPdfLines,
 } from "@/lib/numerology/pythagoreanWheel";
+import {
+  auraIdentityPdfLines,
+  buildAuraIdentity,
+} from "@/lib/numerology/auraIdentity";
 import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -296,6 +300,7 @@ export async function downloadReportPdf(
     { id: "chaldean", label: "Chaldean name" },
     { id: "vedic", label: "Vedic" },
     { id: "lo-shu", label: "Lo Shu grid" },
+    { id: "aura", label: "Aura identity" },
     { id: "compatibility", label: "Compatibility matrices" },
     { id: "personality", label: "Personality & career" },
     { id: "growth", label: "Strengths & growth" },
@@ -428,6 +433,16 @@ export async function downloadReportPdf(
   );
   for (const line of architecture.blueprint.lines.slice(0, 14)) {
     addBody(line, 9);
+  }
+
+  addBanner("Aura identity", "aura");
+  const aura = buildAuraIdentity({
+    lifePath: snap.life_path,
+    vedicDestiny: snap.vedic_destiny,
+    chaldeanName: snap.chaldean_name_number,
+  });
+  for (const line of auraIdentityPdfLines(aura)) {
+    addBody(line);
   }
 
   // —— Compatibility (full matrices) ——

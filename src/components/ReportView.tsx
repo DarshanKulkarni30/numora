@@ -775,6 +775,7 @@ export function ReportView({
               lifePath={snap.life_path}
               vedicDestiny={snap.vedic_destiny}
               chaldeanName={snap.chaldean_name_number}
+              fullName={person.full_name}
             />
           </div>
         </section>

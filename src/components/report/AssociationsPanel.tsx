@@ -1,273 +1,470 @@
-import { associationsForNumber } from "@/lib/numerology/associations";
+"use client";
+
+import { useId, useMemo, useState } from "react";
+import { ChartTipPanel } from "@/components/report/ChartTipPanel";
+import { PlanetIcon } from "@/components/report/PlanetIcon";
+import { planetGuideHref } from "@/lib/guides/planets";
+import {
+  buildAuraIdentity,
+  synergyKindLabel,
+  type AuraIdentity,
+  type AuraLayer,
+  type AuraLayerId,
+} from "@/lib/numerology/auraIdentity";
 
 type Props = {
   lifePath: string;
   vedicDestiny: string;
   chaldeanName: string;
+  fullName?: string;
 };
 
-type System = "pythagorean" | "vedic" | "chaldean";
-
-const SYS: Record<System, string> = {
-  pythagorean: "sys-pyth",
-  vedic: "sys-vedic",
-  chaldean: "sys-chal",
+const RING: Record<
+  AuraLayerId,
+  { r: number; width: number }
+> = {
+  path: { r: 82, width: 22 },
+  destiny: { r: 58, width: 20 },
+  name: { r: 36, width: 18 },
 };
 
-const SYS_LABEL: Record<System, string> = {
-  pythagorean: "Pythagorean",
-  vedic: "Vedic",
-  chaldean: "Chaldean",
+const LAYER_CHIP: Record<AuraLayerId, string> = {
+  path: "bg-sky-100 text-sky-900 border-sky-200",
+  destiny: "bg-indigo-100 text-indigo-950 border-indigo-200",
+  name: "bg-amber-100 text-amber-950 border-amber-200",
 };
 
-function AssocBlock({
-  label,
-  number,
-  system,
-  blurb,
-}: {
-  label: string;
-  number: string;
-  system: System;
-  blurb: string;
-}) {
-  const a = associationsForNumber(number);
-  const dark = system === "vedic";
+function gradientId(uid: string, id: AuraLayerId) {
+  return `aura-${uid}-${id}`;
+}
+
+function layerTip(layer: AuraLayer): string {
+  return [
+    `${layer.label} · ${layer.raw}${layer.raw !== String(layer.digit) ? ` → ${layer.digit}` : ""}`,
+    layer.represents,
+    `Colors: ${layer.assoc.colors.map((c) => c.name).join(", ")}`,
+    `Crystals: ${layer.assoc.stones.join(", ")}`,
+    `Anchor: ${layer.assoc.metals.join(", ")}`,
+    `Rhythm: ${layer.assoc.weekdays.join(", ")} · ${layer.planet.symbol} ${layer.planet.name}`,
+  ].join("\n");
+}
+
+function LayerPills({ ids }: { ids: AuraLayerId[] }) {
+  const labels: Record<AuraLayerId, string> = {
+    path: "Path",
+    destiny: "Destiny",
+    name: "Name",
+  };
   return (
-    <div className={`rounded-xl border p-4 ${SYS[system]}`}>
-      <p className="text-[10px] uppercase tracking-wider opacity-70">
-        {SYS_LABEL[system]}
-      </p>
-      <p className={`text-sm font-medium ${dark ? "text-paper" : "text-ink"}`}>
-        {label} · {number}
-        {a.number !== Number(number) && Number(number) > 9
-          ? ` → ${a.number}`
-          : ""}
-      </p>
-      <p className={`mt-1 text-xs ${dark ? "sys-muted" : "opacity-80"}`}>
-        {blurb}
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {a.colors.map((c) => (
-          <span
-            key={c.name}
-            className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs ${
-              dark
-                ? "border-white/15 bg-white/10 text-paper"
-                : "border-[var(--line)] bg-white/70 text-ink"
-            }`}
-          >
-            <span
-              className="h-3.5 w-3.5 rounded-full border border-black/10"
-              style={{ backgroundColor: c.hex }}
-              aria-hidden
-            />
-            {c.name}
-          </span>
-        ))}
-      </div>
-      <dl
-        className={`mt-3 grid gap-2 text-sm sm:grid-cols-2 ${
-          dark ? "text-paper/80" : "text-ink-soft"
-        }`}
+    <span className="ml-1 inline-flex flex-wrap gap-0.5">
+      {ids.map((id) => (
+        <span
+          key={id}
+          className={`rounded-full border px-1.5 py-0 text-[9px] uppercase tracking-wide ${LAYER_CHIP[id]}`}
+        >
+          {labels[id]}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function AuraMandala({
+  aura,
+  uid,
+  selected,
+  onSelect,
+  onTip,
+}: {
+  aura: AuraIdentity;
+  uid: string;
+  selected: AuraLayerId | null;
+  onSelect: (id: AuraLayerId) => void;
+  onTip: (text: string | null) => void;
+}) {
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-sm">
+      <svg
+        viewBox="0 0 200 200"
+        className="h-full w-full overflow-visible"
+        role="img"
+        aria-label="Tri-aura mandala with Path, Destiny, and Name rings"
       >
-        <div>
-          <dt className="text-xs uppercase tracking-wider opacity-70">
-            Weekdays
-          </dt>
-          <dd className={`mt-0.5 ${dark ? "text-paper" : "text-ink"}`}>
-            {a.weekdays.join(", ")}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs uppercase tracking-wider opacity-70">
-            Stones
-          </dt>
-          <dd className={`mt-0.5 ${dark ? "text-paper" : "text-ink"}`}>
-            {a.stones.join(", ")}
-          </dd>
-        </div>
-        <div className="sm:col-span-2">
-          <dt className="text-xs uppercase tracking-wider opacity-70">
-            Metals
-          </dt>
-          <dd className={`mt-0.5 ${dark ? "text-paper" : "text-ink"}`}>
-            {a.metals.join(", ")}
-          </dd>
-        </div>
-      </dl>
+        <defs>
+          {aura.layers.map((layer) => {
+            const colors = layer.assoc.colors;
+            const a = colors[0]?.hex ?? "#94a3b8";
+            const b = colors[1]?.hex ?? colors[0]?.hex ?? "#cbd5e1";
+            const c = colors[2]?.hex ?? b;
+            return (
+              <linearGradient
+                key={layer.id}
+                id={gradientId(uid, layer.id)}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor={a} />
+                <stop offset="55%" stopColor={b} />
+                <stop offset="100%" stopColor={c} />
+              </linearGradient>
+            );
+          })}
+        </defs>
+        <circle
+          cx="100"
+          cy="100"
+          r="94"
+          fill="rgba(255,255,255,0.55)"
+          stroke="rgba(35, 79, 150, 0.14)"
+          strokeWidth="0.6"
+        />
+        {aura.layers.map((layer) => {
+          const ring = RING[layer.id];
+          const active = selected === layer.id;
+          return (
+            <circle
+              key={layer.id}
+              cx="100"
+              cy="100"
+              r={ring.r}
+              fill="none"
+              stroke={`url(#${gradientId(uid, layer.id)})`}
+              strokeWidth={ring.width}
+              className="aura-ring-pulse"
+              opacity={selected && !active ? 0.45 : 0.92}
+              style={{ cursor: "pointer" }}
+              onMouseEnter={() => onTip(layerTip(layer))}
+              onMouseLeave={() => onTip(null)}
+              onClick={() => onSelect(layer.id)}
+            />
+          );
+        })}
+        <circle
+          cx="100"
+          cy="100"
+          r="22"
+          fill="rgba(255,255,255,0.94)"
+          stroke="rgba(35, 79, 150, 0.22)"
+          strokeWidth="0.8"
+        />
+        <text
+          x="100"
+          y="96"
+          textAnchor="middle"
+          fill="#183a6b"
+          fontSize="8"
+          fontWeight="700"
+        >
+          {aura.layers.map((l) => l.digit).join(" · ")}
+        </text>
+        <text
+          x="100"
+          y="108"
+          textAnchor="middle"
+          fill="#355680"
+          fontSize="4.5"
+        >
+          aura signature
+        </text>
+      </svg>
     </div>
   );
-}
-
-function normTitle(s: string, source: string[]) {
-  return source.find((x) => x.toLowerCase() === s) ?? s;
-}
-
-function setOverlap(a: string[], b: string[]): {
-  shared: string[];
-  onlyA: string[];
-  onlyB: string[];
-} {
-  const A = new Set(a.map((x) => x.toLowerCase()));
-  const B = new Set(b.map((x) => x.toLowerCase()));
-  const shared = [...A].filter((x) => B.has(x));
-  const onlyA = [...A].filter((x) => !B.has(x));
-  const onlyB = [...B].filter((x) => !A.has(x));
-  return {
-    shared: shared.map((s) => normTitle(s, a)),
-    onlyA: onlyA.map((s) => normTitle(s, a)),
-    onlyB: onlyB.map((s) => normTitle(s, b)),
-  };
-}
-
-/** Three-way: shared by all, and unique to each list. */
-function tripleParts(a: string[], b: string[], c: string[]) {
-  const A = new Set(a.map((x) => x.toLowerCase()));
-  const B = new Set(b.map((x) => x.toLowerCase()));
-  const C = new Set(c.map((x) => x.toLowerCase()));
-  const sharedAll = [...A].filter((x) => B.has(x) && C.has(x));
-  const onlyA = [...A].filter((x) => !B.has(x) && !C.has(x));
-  const onlyB = [...B].filter((x) => !A.has(x) && !C.has(x));
-  const onlyC = [...C].filter((x) => !A.has(x) && !B.has(x));
-  return {
-    sharedAll: sharedAll.map((s) => normTitle(s, a)),
-    onlyA: onlyA.map((s) => normTitle(s, a)),
-    onlyB: onlyB.map((s) => normTitle(s, b)),
-    onlyC: onlyC.map((s) => normTitle(s, c)),
-  };
-}
-
-function line(label: string, parts: (string | null)[]) {
-  const text = parts.filter(Boolean).join(" · ");
-  return (
-    <li>
-      <strong className="text-ink">{label}:</strong> {text || "—"}
-    </li>
-  );
-}
-
-function cat(
-  items: string[],
-  prefix?: string,
-): string | null {
-  if (!items.length) return null;
-  return prefix ? `${prefix} ${items.join(", ")}` : items.join(", ");
 }
 
 export function AssociationsPanel({
   lifePath,
   vedicDestiny,
   chaldeanName,
+  fullName,
 }: Props) {
-  const lp = associationsForNumber(lifePath);
-  const dest = associationsForNumber(vedicDestiny);
-  const chal = associationsForNumber(chaldeanName);
+  const uid = useId().replace(/:/g, "");
+  const aura = useMemo(
+    () =>
+      buildAuraIdentity({ lifePath, vedicDestiny, chaldeanName }),
+    [lifePath, vedicDestiny, chaldeanName],
+  );
+  const [tip, setTip] = useState<string | null>(null);
+  const [selected, setSelected] = useState<AuraLayerId | null>(null);
+  const selectedLayer =
+    aura.layers.find((l) => l.id === selected) ?? null;
+  const displayName = fullName?.trim() || null;
 
-  const lpColors = lp.colors.map((c) => c.name);
-  const destColors = dest.colors.map((c) => c.name);
-  const chalColors = chal.colors.map((c) => c.name);
-
-  const pathPair = {
-    colors: setOverlap(lpColors, destColors),
-    weekdays: setOverlap(lp.weekdays, dest.weekdays),
-    metals: setOverlap(lp.metals, dest.metals),
-    stones: setOverlap(lp.stones, dest.stones),
-  };
-
-  const triple = {
-    colors: tripleParts(lpColors, destColors, chalColors),
-    weekdays: tripleParts(lp.weekdays, dest.weekdays, chal.weekdays),
-    metals: tripleParts(lp.metals, dest.metals, chal.metals),
-    stones: tripleParts(lp.stones, dest.stones, chal.stones),
-  };
-
-  const samePathDigit = lp.number === dest.number;
+  function toggleLayer(id: AuraLayerId) {
+    const next = selected === id ? null : id;
+    setSelected(next);
+    const layer = aura.layers.find((l) => l.id === id);
+    if (next && layer) setTip(layerTip(layer));
+  }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <p className="text-sm text-ink-soft">
-        Traditional reflective associations by number—colors, weekdays, and
-        stones as atmosphere cues, not prescriptions or purchases to make. Life
-        Path and Destiny both come from the full birth date; Chaldean name is
-        the name vibration in this product.
+        A <span className="font-medium text-ink">tri-aura mandala</span> —
+        Path (outer), Destiny (middle), Name (inner). Colors, crystals, metals,
+        and weekdays are traditional atmosphere cues, not prescriptions,
+        purchases, or a weekly schedule.
       </p>
-      <p className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-        {samePathDigit ? (
-          <>
-            Life Path and Vedic Destiny reduce to the same core digit (
-            {lp.number})
-            {String(lifePath) !== String(vedicDestiny)
-              ? ` (${lifePath} / ${vedicDestiny})`
-              : ""}
-            —path cards may look similar. Chaldean name{" "}
-            <span className="text-ink">{chaldeanName}</span> is the name layer.
-          </>
-        ) : (
-          <>
-            Path peers: <span className="text-ink">Life Path</span> {lifePath}{" "}
-            vs <span className="text-ink">Vedic Destiny</span> {vedicDestiny}.
-            Name layer: <span className="text-ink">Chaldean name</span>{" "}
-            {chaldeanName}.
-          </>
-        )}
-      </p>
-      <div className="grid gap-4 md:grid-cols-3">
-        <AssocBlock
-          label="Life Path"
-          number={lifePath}
-          system="pythagorean"
-          blurb="From your full birth date (Pythagorean)."
-        />
-        <AssocBlock
-          label="Vedic Destiny"
-          number={vedicDestiny}
-          system="vedic"
-          blurb="From your full birth date (Vedic DN / Bhagyank)."
-        />
-        <AssocBlock
-          label="Chaldean name"
-          number={chaldeanName}
-          system="chaldean"
-          blurb="From your written name (Chaldean map)—not a birth-path digit."
-        />
+
+      <div className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            {displayName ? (
+              <p className="text-sm font-medium text-ink">{displayName}</p>
+            ) : null}
+            <p className="text-xs text-ink-soft">
+              Path{" "}
+              <span className="brand text-base text-ink">{lifePath}</span>
+              <span className="mx-1.5 text-ink/30">·</span>
+              Destiny{" "}
+              <span className="brand text-base text-ink">{vedicDestiny}</span>
+              <span className="mx-1.5 text-ink/30">·</span>
+              Name{" "}
+              <span className="brand text-base text-ink">{chaldeanName}</span>
+            </p>
+          </div>
+          <div className="min-w-[10rem]">
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Aura synergy
+            </p>
+            <p className="mt-0.5 text-sm font-medium text-ink">
+              {aura.synergyLabel}{" "}
+              <span className="text-ink-soft">({aura.synergyScore})</span>
+            </p>
+            <div
+              className="mt-1 h-2 overflow-hidden rounded-full bg-mist"
+              role="meter"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={aura.synergyScore}
+              aria-label="Aura synergy"
+            >
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${Math.max(10, aura.synergyScore)}%`,
+                  background: `linear-gradient(90deg, ${aura.palette.primary.hex}, ${aura.palette.secondary.hex}, ${aura.palette.highlight.hex})`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-ink-soft">
-        <p className="font-medium text-ink">Common &amp; different</p>
-        <ul className="mt-2 space-y-1.5 text-xs leading-5">
-          {line("Shared by all three", [
-            cat(triple.colors.sharedAll, "colors"),
-            cat(triple.weekdays.sharedAll, "weekdays"),
-            cat(triple.metals.sharedAll, "metals"),
-            cat(triple.stones.sharedAll, "stones"),
-          ])}
-          {line("Life Path ↔ Destiny (path peers)", [
-            cat(pathPair.colors.shared, "colors"),
-            cat(pathPair.weekdays.shared, "weekdays"),
-            cat(pathPair.metals.shared, "metals"),
-            cat(pathPair.stones.shared, "stones"),
-          ])}
-          {line("Only Life Path", [
-            cat(triple.colors.onlyA),
-            cat(triple.weekdays.onlyA, "weekdays"),
-            cat(triple.metals.onlyA, "metals"),
-            cat(triple.stones.onlyA, "stones"),
-          ])}
-          {line("Only Destiny", [
-            cat(triple.colors.onlyB),
-            cat(triple.weekdays.onlyB, "weekdays"),
-            cat(triple.metals.onlyB, "metals"),
-            cat(triple.stones.onlyB, "stones"),
-          ])}
-          {line("Only Chaldean name", [
-            cat(triple.colors.onlyC),
-            cat(triple.weekdays.onlyC, "weekdays"),
-            cat(triple.metals.onlyC, "metals"),
-            cat(triple.stones.onlyC, "stones"),
-          ])}
-        </ul>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17.5rem]">
+        <div className="space-y-4">
+          <AuraMandala
+            aura={aura}
+            uid={uid}
+            selected={selected}
+            onSelect={toggleLayer}
+            onTip={setTip}
+          />
+          <div className="flex flex-wrap justify-center gap-2">
+            {aura.layers.map((layer) => (
+              <button
+                key={layer.id}
+                type="button"
+                aria-pressed={selected === layer.id}
+                onClick={() => toggleLayer(layer.id)}
+                onMouseEnter={() => setTip(layerTip(layer))}
+                onMouseLeave={() => setTip(null)}
+                className={`btn-tactile rounded-full border px-3 py-1.5 text-xs ${LAYER_CHIP[layer.id]} ${
+                  selected === layer.id ? "ring-2 ring-gold" : ""
+                }`}
+              >
+                {layer.role} · {layer.digit}
+              </button>
+            ))}
+          </div>
+          <ChartTipPanel
+            tip={tip}
+            empty="Tap a ring or legend chip for that layer’s colors, crystals, anchor, and rhythm day."
+          />
+          {selectedLayer ? (
+            <SelectedLayerCard layer={selectedLayer} />
+          ) : null}
+        </div>
+
+        <div className="space-y-4">
+          <PaletteCard aura={aura} />
+          <CrystalsCard aura={aura} />
+          <AnchorsCard aura={aura} />
+          <RhythmCard aura={aura} />
+        </div>
       </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+          <h3 className="text-ink">Aura narrative</h3>
+          <p className="mt-2 text-sm leading-6 text-ink-soft">{aura.narrative}</p>
+        </div>
+        <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+          <h3 className="text-ink">Layer insights</h3>
+          <ul className="mt-2 space-y-2 text-sm leading-6 text-ink-soft">
+            {aura.pairs.map((p) => (
+              <li key={`${p.a}-${p.b}`}>
+                <span className="font-medium text-ink">
+                  {synergyKindLabel(p.kind)}.
+                </span>{" "}
+                {p.summary}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SelectedLayerCard({ layer }: { layer: AuraLayer }) {
+  return (
+    <div className={`rounded-xl border px-4 py-3 ${LAYER_CHIP[layer.id]}`}>
+      <p className="text-[10px] uppercase tracking-wider opacity-80">
+        {layer.role}
+      </p>
+      <p className="mt-0.5 text-sm font-medium">
+        {layer.label} · {layer.raw}
+      </p>
+      <p className="mt-1 text-[12px] leading-snug opacity-90">
+        {layer.represents}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {layer.assoc.colors.map((c) => (
+          <span
+            key={c.name}
+            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/70 px-2 py-0.5 text-[11px] text-ink"
+          >
+            <span
+              className="h-2.5 w-2.5 rounded-full border border-black/10"
+              style={{ backgroundColor: c.hex }}
+            />
+            {c.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PaletteCard({ aura }: { aura: AuraIdentity }) {
+  const swatches = [
+    aura.palette.primary,
+    aura.palette.secondary,
+    aura.palette.highlight,
+  ];
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Aura palette
+      </p>
+      <div
+        className="mt-2 h-10 overflow-hidden rounded-full border border-[var(--line)]"
+        style={{
+          background: `linear-gradient(90deg, ${aura.palette.primary.hex} 0%, ${aura.palette.secondary.hex} 52%, ${aura.palette.highlight.hex} 100%)`,
+        }}
+        aria-hidden
+      />
+      <ul className="mt-2 space-y-1.5">
+        {swatches.map((s) => (
+          <li key={s.role} className="flex items-center gap-2 text-sm">
+            <span
+              className="h-3.5 w-3.5 rounded-full border border-black/10"
+              style={{ backgroundColor: s.hex }}
+            />
+            <span className="text-[10px] uppercase tracking-wide text-ink-soft">
+              {s.role}
+            </span>
+            <span className="text-ink">{s.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CrystalsCard({ aura }: { aura: AuraIdentity }) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Resonance crystals
+      </p>
+      <ul className="mt-2 space-y-2">
+        {aura.crystals.map((c) => (
+          <li key={c.name} className="flex gap-2 text-sm">
+            <span
+              className="mt-0.5 inline-block h-3.5 w-3.5 shrink-0 rotate-45 rounded-[2px] border border-black/15"
+              style={{ backgroundColor: c.hex }}
+              aria-hidden
+            />
+            <span>
+              <span className="font-medium text-ink">
+                {c.name} · {c.keyword}
+              </span>
+              <LayerPills ids={c.layers} />
+              <span className="mt-0.5 block text-[12px] leading-snug text-ink-soft">
+                {c.body}
+                {c.shared ? " Shared across layers." : ""}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function AnchorsCard({ aura }: { aura: AuraIdentity }) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Elemental anchors
+      </p>
+      <ul className="mt-2 space-y-2">
+        {aura.anchors.map((a) => (
+          <li key={a.name} className="text-sm">
+            <span className="font-medium text-ink">
+              {a.name} · {a.keyword}
+            </span>
+            <LayerPills ids={a.layers} />
+            <span className="mt-0.5 block text-[12px] leading-snug text-ink-soft">
+              {a.body}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function RhythmCard({ aura }: { aura: AuraIdentity }) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Planetary rhythm
+      </p>
+      <ul className="mt-2 space-y-3">
+        {aura.rhythms.map((r) => (
+          <li key={r.weekday} className="text-sm">
+            <span className="flex items-center gap-2">
+              <PlanetIcon
+                planet={r.planet}
+                size="sm"
+                href={planetGuideHref("vedic", r.planet.id)}
+              />
+              <span className="font-medium text-ink">{r.weekday}</span>
+              <LayerPills ids={r.layers} />
+            </span>
+            <span className="mt-1 block text-[11px] text-ink-soft">
+              {r.energy}
+            </span>
+            <span className="mt-0.5 block text-[12px] leading-snug text-ink-soft">
+              {r.invitation}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
