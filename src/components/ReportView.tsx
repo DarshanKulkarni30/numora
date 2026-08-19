@@ -10,6 +10,8 @@ import { ExportPdfButton } from "@/components/report/ExportPdfButton";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
+import { IdentitySnapshotPanel } from "@/components/report/IdentitySnapshotPanel";
+import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { YearRhythmPanel } from "@/components/report/YearRhythmPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
@@ -626,34 +628,41 @@ export function ReportView({
         {summary ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h2 className="text-xl text-ink">Executive summary</h2>
-            <div className="mt-3">
-              <MoreDetail text={summary.body} />
+            <div className="mt-4">
+              <IdentitySnapshotPanel
+                snap={snap}
+                loShu={report.lo_shu}
+                preferredName={person.preferred_name || person.full_name}
+                legacyBody={summary.body}
+              />
             </div>
           </section>
         ) : null}
 
         {report.growth_areas?.length ? (
-          <section>
+          <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h2 className="text-xl text-ink">Growth Mode</h2>
             <div className="mt-4">
-              <GrowthAreasPanel areas={report.growth_areas} growthMode />
+              <GrowthAreasPanel
+                areas={report.growth_areas}
+                growthMode
+                personalYear={snap.personal_year}
+                personalMonth={snap.personal_month}
+                lifePath={snap.life_path}
+              />
             </div>
           </section>
         ) : null}
 
         {report.strengths.length ? (
-          <section>
+          <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h2 className="text-xl text-ink">Strengths at a glance</h2>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {report.strengths.slice(0, 8).map((s) => (
-                <li
-                  key={s}
-                  className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-sm text-ink"
-                >
-                  {s}
-                </li>
-              ))}
-            </ul>
+            <div className="mt-4">
+              <StrengthsConstellation
+                strengths={report.strengths}
+                lifePath={snap.life_path}
+              />
+            </div>
           </section>
         ) : null}
 

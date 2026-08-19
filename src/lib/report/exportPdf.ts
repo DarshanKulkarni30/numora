@@ -22,6 +22,7 @@ import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArc
 import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIdentityLayers";
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
+import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { BRAND_NAME } from "@/lib/site";
@@ -336,6 +337,16 @@ export async function downloadReportPdf(
   // —— Snapshot ——
   doc.addPage();
   y = contentTop;
+  addBanner("Identity Snapshot", "snapshot");
+  const identitySnap = buildIdentitySnapshot({
+    snap,
+    loShu: report.lo_shu,
+    preferredName: person.preferred_name || person.full_name,
+  });
+  for (const line of identitySnap.blueprintLines) {
+    addBody(line, 9);
+  }
+
   addBanner("Core snapshot", "snapshot");
   const snapRows: [string, string][] = [
     ["Life Path", snap.life_path],
@@ -614,18 +625,19 @@ export async function downloadReportPdf(
   // —— Growth ——
   addBanner("Strengths & growth", "growth");
   if (report.strengths?.length) {
-    addBody("Strengths", 10);
+    addBody("Strengths constellation", 10);
     for (const s of report.strengths.slice(0, 12)) addBullet(s);
+  }
+  if (report.growth_areas?.length) {
+    addBody("Catalyst Pathway Map", 10);
+    for (const g of report.growth_areas.slice(0, 10)) {
+      addBody(`${g.title}: ${g.suggestion}`, 9);
+      if (g.actions?.[0]) addBullet(`Practice: ${g.actions[0]}`);
+    }
   }
   if (report.growth_opportunities?.length) {
     addBody("Growth opportunities", 10);
     for (const g of report.growth_opportunities.slice(0, 12)) addBullet(g);
-  }
-  if (report.growth_areas?.length) {
-    addBody("Areas to work on", 10);
-    for (const g of report.growth_areas.slice(0, 10)) {
-      addBody(`${g.title}: ${g.suggestion}`);
-    }
   }
 
   // —— Timing ——
