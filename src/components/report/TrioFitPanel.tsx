@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { TriIdentityHarmony } from "@/components/report/TriIdentityHarmony";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -94,7 +95,7 @@ export function TrioFitPanel({
     return (
       <div className={wrap}>
         <p className={`text-[10px] uppercase tracking-wider ${dark ? "text-sand" : "text-ink-soft"}`}>
-          Birth × Destiny × Name
+          Tri-Identity Harmony
         </p>
         <p className={`mt-1 text-sm ${dark ? "text-paper" : "text-ink"}`}>
           Psychic {vBirth.raw} · Destiny {vDest.raw} · Name {vName.raw}
@@ -143,8 +144,9 @@ export function TrioFitPanel({
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        How Birth, Destiny, and Name sit together in each system. This is not
-        the partner radar. For mobile and company branding numbers, open{" "}
+        Tri-Identity Harmony — how Birth, Destiny, and Name sit together in each
+        system. This is not the partner radar. For mobile and company branding
+        numbers, open{" "}
         <Link href="/business" className="text-gold-deep underline">
           Business numbers
         </Link>
@@ -179,9 +181,11 @@ export function TrioFitPanel({
         {numberLine}
       </p>
 
+      <TriIdentityHarmony hit={active} />
+
       <div className={`rounded-xl border px-4 py-3 ${BAND_STYLE[active.band]}`}>
         <p className="text-[10px] uppercase tracking-wider opacity-80">
-          Your cell
+          Combined reading
         </p>
         <p className="mt-1 font-medium">
           {BAND_WORD[active.band]} · {active.label}
@@ -270,7 +274,7 @@ export function TrioFitPanel({
             className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
             onClick={() => setShowGrid((v) => !v)}
           >
-            {showGrid ? "Hide" : "View"} Birth {vBirth.core} table
+            {showGrid ? "Hide" : "View"} classic Birth {vBirth.core} table
           </button>
           {showGrid && table ? (
             <div className="mt-3 overflow-x-auto">
@@ -340,7 +344,7 @@ export function TrioFitPanel({
       )}
 
       <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-        <p className="font-medium text-ink">How to read the table</p>
+        <p className="font-medium text-ink">How to read harmony lines</p>
         <ul className="mt-2 space-y-1.5">
           {(Object.keys(TRIO_BAND_HINT) as TrioBand[]).map((b) => (
             <li key={b}>

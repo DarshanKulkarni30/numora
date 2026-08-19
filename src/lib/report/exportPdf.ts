@@ -15,6 +15,8 @@ import {
 import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArchitecture";
 import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIdentityLayers";
+import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
+import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -423,6 +425,17 @@ export async function downloadReportPdf(
     `Name ${report.vedic.name_number.number}: ${report.vedic.name_number.meaning}`,
   );
   addBody(report.vedic.analysis);
+
+  addBanner("Tri-Identity Harmony", "vedic");
+  addBody(
+    "Birth × Destiny × Name as pair lines and a center score (Vedic table basis):",
+    9,
+  );
+  for (const line of buildTriIdentityHarmony(
+    vedicTrio(snap.vedic_psychic, snap.vedic_destiny, snap.vedic_name),
+  ).blueprintLines) {
+    addBody(line, 9);
+  }
 
   addBanner("Vedic Square", "vedic");
   addBody(
