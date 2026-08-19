@@ -21,7 +21,8 @@ export type LearningInteractive =
   | "name-chaldean"
   | "personal-year"
   | "lo-shu-grid"
-  | "vedic-explore";
+  | "vedic-explore"
+  | "vedic-square";
 
 export type LearningConcept = {
   slug: string;
@@ -205,11 +206,12 @@ export const LEARNING_METHODS: LearningMethod[] = [
       },
       {
         slug: "vedic-square",
-        title: "Vedic number chart",
-        blurb: "A reflective grid of birth and name digits—not a full kundli.",
+        title: "Vedic Square",
+        blurb:
+          "9×9 digital-root multiplication lattice—footprints and opposite pairs, not a full kundli.",
         detail:
-          "The Vedic number chart in reports arranges key birth and name digits for pattern-spotting—compatibility tones, opposites, and planet cues. It is not a full Vedic kundli or dasha timeline. Study it after you understand Psychic and Destiny. Open a saved report to see your square; Learning here explains the idea without claiming predictive astrology.",
-        interactive: "none",
+          "The Vedic Square is a fixed 9×9 table of digital roots from multiplication. Highlight Psychic, Destiny, or Name to see that digit’s footprint constellation, its opposite shadow (1↔8, 2↔7, 3↔6, 4↔5; 9 alone), and a short reflective practice. It is not Ank Kundli and not a house chart—pattern-spotting for reflection only. Try the lattice below, then open a report for your live numbers.",
+        interactive: "vedic-square",
         guideTopic: "vedic-square",
       },
     ],

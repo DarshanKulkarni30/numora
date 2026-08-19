@@ -13,6 +13,7 @@ import {
   buildAuraIdentity,
 } from "@/lib/numerology/auraIdentity";
 import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
+import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArchitecture";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -408,6 +409,19 @@ export async function downloadReportPdf(
     `Name ${report.vedic.name_number.number}: ${report.vedic.name_number.meaning}`,
   );
   addBody(report.vedic.analysis);
+
+  addBanner("Vedic Square", "vedic");
+  addBody(
+    "9×9 digital-root multiplication lattice (not Ank Kundli). Footprints for Psychic, Destiny, and Name:",
+    9,
+  );
+  for (const line of vedicSquareReportBlueprintLines({
+    psychic: snap.vedic_psychic,
+    destiny: snap.vedic_destiny,
+    name: snap.vedic_name,
+  })) {
+    addBody(line, 9);
+  }
 
   // —— Lo Shu ——
   addBanner("Lo Shu grid", "lo-shu");

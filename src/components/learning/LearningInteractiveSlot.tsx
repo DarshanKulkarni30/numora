@@ -7,6 +7,7 @@ import { LoShuDemo } from "@/components/learning/LoShuDemo";
 import { NameNumberDemo } from "@/components/learning/NameNumberDemo";
 import { PersonalYearDemo } from "@/components/learning/PersonalYearDemo";
 import { VedicNumberExploreGrid } from "@/components/learning/VedicNumberExploreGrid";
+import { VedicSquareDemo } from "@/components/learning/VedicSquareDemo";
 import type { LearningInteractive } from "@/lib/learning/curriculum";
 
 export function LearningInteractiveSlot({
@@ -23,6 +24,7 @@ export function LearningInteractiveSlot({
   if (kind === "personal-year") return <PersonalYearDemo />;
   if (kind === "lo-shu-grid") return <LoShuDemo />;
   if (kind === "vedic-explore") return <VedicNumberExploreGrid />;
+  if (kind === "vedic-square") return <VedicSquareDemo />;
   return null;
 }
 
