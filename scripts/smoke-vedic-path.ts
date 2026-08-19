@@ -6,6 +6,10 @@ import {
   nameOnBnDnPath,
   twoNameMapsCopy,
 } from "../src/lib/numerology/bnDnPath";
+import {
+  chaldeanInsight,
+  pythagoreanInsight,
+} from "../src/lib/numerology/westernPath";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -47,5 +51,30 @@ if (!maps?.detail.includes("not two destinies") && !maps?.headline.includes("two
   process.exit(1);
 }
 console.log("ok two maps", maps?.headline);
+
+const py = pythagoreanInsight({
+  birthDay: "7",
+  lifePath: "3",
+  expression: "5",
+  soulUrge: "7",
+  personality: "7",
+  maturity: "8",
+});
+if (!py.path.heading.includes("7") || !py.path.heading.includes("3")) {
+  console.error("FAIL py path heading", py.path);
+  process.exit(1);
+}
+console.log("ok pythagorean path", py.path.heading);
+
+const ch = chaldeanInsight({
+  compound: "42",
+  reduced: "6",
+  pythExpression: "5",
+});
+if (!ch.path.heading.includes("42") || !ch.extras[0]?.body.toLowerCase().includes("pythagorean")) {
+  console.error("FAIL chaldean insight", ch);
+  process.exit(1);
+}
+console.log("ok chaldean compound", ch.path.heading);
 
 console.log("vedic path smoke ok");

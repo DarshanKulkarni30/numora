@@ -20,10 +20,11 @@ export const metadata: Metadata = {
     "Personal numerology reports from Pythagorean, Chaldean, Vedic, and Lo Shu traditions. Belief-based insight for self-reflection.",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.ico?v=7", type: "image/x-icon", sizes: "48x48" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: "/nw-mark.png",
+    shortcut: "/favicon.ico?v=7",
+    apple: "/apple-icon.png",
   },
 };
 

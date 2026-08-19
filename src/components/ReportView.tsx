@@ -13,6 +13,11 @@ import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
+import { CORE_TRAIT } from "@/lib/numerology/meanings";
+import {
+  chaldeanInsight,
+  pythagoreanInsight,
+} from "@/lib/numerology/westernPath";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -161,46 +166,75 @@ export function ReportView({
     {
       system: "pythagorean" as const,
       title: "Pythagorean",
-      blurb: "From your full name and birth date (Western-style core map).",
+      blurb: "Western core map from full name and birth date — path, name craft, inner want, and outer face.",
+      insight: pythagoreanInsight({
+        birthDay: snap.birth_day,
+        lifePath: snap.life_path,
+        expression: snap.expression_number,
+        soulUrge: snap.soul_urge_number,
+        personality: snap.personality_number,
+        maturity: snap.maturity_number,
+      }),
       rows: [
-        { label: "Life Path", topic: "life-path" as const, value: snap.life_path },
-        { label: "Birth Day", topic: "birth-day" as const, value: snap.birth_day },
+        {
+          label: "Life Path",
+          topic: "life-path" as const,
+          value: snap.life_path,
+          note: `The long walk from your full birth date · ${CORE_TRAIT[Number(snap.life_path)] ?? ""}`.trim(),
+        },
+        {
+          label: "Birth Day",
+          topic: "birth-day" as const,
+          value: snap.birth_day,
+          note: `Innate day talent · ${CORE_TRAIT[Number(snap.birth_day)] ?? ""}`.trim(),
+        },
         {
           label: "Expression",
           topic: "expression" as const,
           value: snap.expression_number,
+          note: `Whole-name craft · ${CORE_TRAIT[Number(snap.expression_number)] ?? ""}`.trim(),
         },
         {
           label: "Soul Urge",
           topic: "soul-urge" as const,
           value: snap.soul_urge_number,
+          note: `Vowels — inner want · ${CORE_TRAIT[Number(snap.soul_urge_number)] ?? ""}`.trim(),
         },
         {
           label: "Personality",
           topic: "personality" as const,
           value: snap.personality_number,
+          note: `Consonants — outer face · ${CORE_TRAIT[Number(snap.personality_number)] ?? ""}`.trim(),
         },
         {
           label: "Maturity",
           topic: "maturity" as const,
           value: snap.maturity_number,
+          note: `Later blend of Life Path + Expression · ${CORE_TRAIT[Number(snap.maturity_number)] ?? ""}`.trim(),
         },
       ],
     },
     {
       system: "chaldean" as const,
       title: "Chaldean",
-      blurb: "Name vibration using the Chaldean letter map.",
+      blurb: "Name vibration on the older 1–8 letter chart — keep the compound and the reduced digit together.",
+      insight: chaldeanInsight({
+        compound: snap.compound_number,
+        reduced: snap.chaldean_name_number,
+        pythExpression: snap.expression_number,
+      }),
       rows: [
         {
           label: "Name number",
           topic: "chaldean-name" as const,
           value: snap.chaldean_name_number,
+          note: `Reduced name vibration · ${CORE_TRAIT[Number(snap.chaldean_name_number)] ?? ""}`.trim(),
         },
         {
           label: "Before reduce",
           value: snap.compound_number,
           hint: "Total before reducing to a single digit",
+          note: "Compound texture of this spelling — not a second person.",
         },
       ],
     },
