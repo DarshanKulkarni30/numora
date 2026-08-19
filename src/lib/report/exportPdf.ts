@@ -4,6 +4,11 @@ import {
   normalizeCompatTone,
   type CompatTone,
 } from "@/lib/numerology/compatibility";
+import {
+  buildPythagoreanWheel,
+  pythagoreanWheelPdfLines,
+} from "@/lib/numerology/pythagoreanWheel";
+import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -290,7 +295,7 @@ export async function downloadReportPdf(
     { id: "pythagorean", label: "Pythagorean" },
     { id: "chaldean", label: "Chaldean name" },
     { id: "vedic", label: "Vedic" },
-    { id: "lo-shu", label: "Lo Shu" },
+    { id: "lo-shu", label: "Lo Shu grid" },
     { id: "compatibility", label: "Compatibility matrices" },
     { id: "personality", label: "Personality & career" },
     { id: "growth", label: "Strengths & growth" },
@@ -370,6 +375,14 @@ export async function downloadReportPdf(
   addBody(
     `Maturity ${report.pythagorean.maturity.number}: ${report.pythagorean.maturity.meaning}`,
   );
+  try {
+    const wheel = buildPythagoreanWheel(person.date_of_birth, snap);
+    for (const line of pythagoreanWheelPdfLines(wheel)) {
+      addBody(line);
+    }
+  } catch {
+    /* skip wheel lines if DOB cannot be parsed */
+  }
 
   // —— Chaldean ——
   addBanner("Chaldean name", "chaldean");
@@ -392,7 +405,7 @@ export async function downloadReportPdf(
   addBody(report.vedic.analysis);
 
   // —— Lo Shu ——
-  addBanner("Lo Shu", "lo-shu");
+  addBanner("Lo Shu grid", "lo-shu");
   addBody(
     `Present: ${report.lo_shu.present_numbers.join(", ") || "—"}. Missing: ${report.lo_shu.missing_numbers.join(", ") || "—"}.`,
   );
@@ -406,6 +419,16 @@ export async function downloadReportPdf(
     addBody(`DN (Destiny) in grid: ${report.lo_shu.destiny_number}`);
   }
   addBody(report.lo_shu.analysis);
+
+  const architecture = buildLoShuArchitecture(report.lo_shu);
+  addBanner(architecture.blueprint.title, "lo-shu");
+  addBody(`Decision flow: ${architecture.decisionFlowLabel}.`);
+  addBody(
+    `Life-path tension: ${architecture.tension.label}. ${architecture.tension.narrative}`,
+  );
+  for (const line of architecture.blueprint.lines.slice(0, 14)) {
+    addBody(line, 9);
+  }
 
   // —— Compatibility (full matrices) ——
   doc.addPage();

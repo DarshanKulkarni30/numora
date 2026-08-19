@@ -8,450 +8,810 @@ import {
   guideHref,
   LO_SHU_ARROW_GUIDES,
 } from "@/lib/guides/content";
+import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
 import {
-  LO_SHU_NUMBER_META,
-  loShuEffectNotes,
-} from "@/lib/numerology/loShuEffects";
-import { LO_SHU_ARROWS } from "@/lib/numerology/loShu";
+  buildLoShuArchitecture,
+  loShuBlueprintJson,
+  type LoShuArchitecture,
+  type StrengthEngine,
+} from "@/lib/numerology/loShuArchitecture";
 import type { LoShuResult } from "@/lib/numerology/types";
+import { personalYearForCalendarYear } from "@/lib/numerology/cycles";
+import { reduceNumber } from "@/lib/numerology/reduce";
 
-const CELL_ORDER = [
-  [4, 9, 2],
-  [3, 5, 7],
-  [8, 1, 6],
-];
-
-const PLANE_BY_NUMBER: Record<number, string> = {
-  4: "Mental",
-  9: "Mental",
-  2: "Mental",
-  3: "Emotional",
-  5: "Emotional",
-  7: "Emotional",
-  8: "Practical",
-  1: "Practical",
-  6: "Practical",
+/** Classic Lo Shu compass angles (deg, 0 = east; SVG y-down). */
+const NODE_ANGLE: Record<number, number> = {
+  4: -135,
+  9: -90,
+  2: -45,
+  7: 0,
+  6: 45,
+  1: 90,
+  5: 90, // inner radius on same ray as 1
+  8: 135,
+  3: 180,
 };
 
-const NUMBER_PLANE_TINT: Record<number, string> = {
-  4: "text-sky-800",
-  9: "text-sky-800",
-  2: "text-sky-800",
-  3: "text-rose-800",
-  5: "text-rose-800",
-  7: "text-rose-800",
-  8: "text-emerald-800",
-  1: "text-emerald-800",
-  6: "text-emerald-800",
+/** Radius by plane — 5 sits near center on emotional ring. */
+const NODE_RADIUS: Record<number, number> = {
+  5: 14,
+  3: 28,
+  7: 28,
+  4: 36,
+  9: 36,
+  2: 36,
+  8: 44,
+  1: 44,
+  6: 44,
 };
 
-type PlaneRow = {
-  id: "mental" | "emotional" | "practical";
-  label: string;
-  numbers: number[];
-  strength: string;
-  present: string;
-  missing: string;
-  chip: string;
-  rail: string;
+const PLANE_STROKE: Record<string, string> = {
+  emotional: "rgb(244 63 94 / 0.35)",
+  mental: "rgb(14 165 233 / 0.35)",
+  practical: "rgb(16 185 129 / 0.4)",
+};
+
+const PLANE_FILL: Record<string, string> = {
+  emotional: "rgb(255 228 230)",
+  mental: "rgb(224 242 254)",
+  practical: "rgb(209 250 229)",
+};
+
+const PLANE_OF: Record<number, "emotional" | "mental" | "practical"> = {
+  3: "emotional",
+  5: "emotional",
+  7: "emotional",
+  4: "mental",
+  9: "mental",
+  2: "mental",
+  8: "practical",
+  1: "practical",
+  6: "practical",
 };
 
 type Props = {
   loShu: LoShuResult;
-  /** Override the default Lo Shu intro copy */
   intro?: ReactNode;
-  /** Optional aspect chips under the tip panel (Pythagorean / Vedic) */
   aspectLegend?: ReactNode;
+  /** When false, skip architecture panels (Pythagorean reuse). Default true. */
+  showArchitecture?: boolean;
+  /** DOB for yearly timeline (ISO or DD/MM/YYYY). */
+  dateOfBirth?: string;
+  personName?: string;
 };
 
-function cellCenter(n: number): { x: number; y: number } {
-  const row = CELL_ORDER.findIndex((r) => r.includes(n));
-  const col = CELL_ORDER[row].indexOf(n);
-  const slot = 100 / 3;
-  return { x: slot * col + slot / 2, y: slot * row + slot / 2 };
+function polar(cx: number, cy: number, r: number, deg: number) {
+  const rad = (deg * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
-function arrowSlugKey(name: string): string | null {
-  return arrowNameToSlug(name);
-}
-
-function ArrowListItem({ name }: { name: string }) {
-  const slug = arrowNameToSlug(name);
-  const guide = slug ? LO_SHU_ARROW_GUIDES[slug] : null;
-  return (
-    <li className="space-y-0.5">
-      {slug ? (
-        <Link
-          href={guideHref("lo-shu-arrow", slug)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`Click for more about ${name}`}
-          className="text-ink underline decoration-gold/60 underline-offset-2 hover:text-gold-deep"
-        >
-          {name}
-        </Link>
-      ) : (
-        <span className="text-ink">{name}</span>
-      )}
-      {guide ? (
-        <p className="text-[11px] leading-snug text-ink-soft">
-          {guide.significance}
-        </p>
-      ) : null}
-    </li>
-  );
-}
-
-export function LoShuChart({ loShu, intro, aspectLegend }: Props) {
-  const uid = useId().replace(/:/g, "");
-  const markerPresent = `numora-arrow-present-${uid}`;
-  const markerMissing = `numora-arrow-missing-${uid}`;
-  const effects = loShuEffectNotes(
-    loShu.repeated_numbers,
-    loShu.missing_numbers,
-  );
-  const [tip, setTip] = useState<string | null>(null);
-
-  const presentSet = useMemo(
-    () => new Set(loShu.present_arrows),
-    [loShu.present_arrows],
-  );
-  const missingSet = useMemo(
-    () => new Set(loShu.missing_arrows),
-    [loShu.missing_arrows],
-  );
-
-  const overlayArrows = LO_SHU_ARROWS.filter(
-    (a) => presentSet.has(a.name) || missingSet.has(a.name),
-  );
-
-  const planes: PlaneRow[] = [
-    {
-      id: "mental",
-      label: "Mental",
-      numbers: [4, 9, 2],
-      strength: loShu.mental_plane,
-      present: "border-sky-300/80 bg-sky-100 text-sky-950",
-      missing: "border-dashed border-sky-300/60 bg-sky-50/50 text-sky-400",
-      chip: "bg-sky-100 text-sky-900 border-sky-200",
-      rail: "bg-sky-100/80 border-sky-200",
-    },
-    {
-      id: "emotional",
-      label: "Emotional",
-      numbers: [3, 5, 7],
-      strength: loShu.emotional_plane,
-      present: "border-rose-300/80 bg-rose-100 text-rose-950",
-      missing: "border-dashed border-rose-300/60 bg-rose-50/50 text-rose-400",
-      chip: "bg-rose-100 text-rose-900 border-rose-200",
-      rail: "bg-rose-100/80 border-rose-200",
-    },
-    {
-      id: "practical",
-      label: "Practical",
-      numbers: [8, 1, 6],
-      strength: loShu.practical_plane,
-      present: "border-emerald-300/80 bg-emerald-100 text-emerald-950",
-      missing:
-        "border-dashed border-emerald-300/60 bg-emerald-50/50 text-emerald-400",
-      chip: "bg-emerald-100 text-emerald-900 border-emerald-200",
-      rail: "bg-emerald-100/80 border-emerald-200",
-    },
+function TriBalanceRadar({ architecture }: { architecture: LoShuArchitecture }) {
+  const cx = 50;
+  const cy = 52;
+  const R = 36;
+  const order: ("emotional" | "practical" | "mental")[] = [
+    "emotional",
+    "practical",
+    "mental",
   ];
+  const angles = [-90, 150, 30];
+  const byId = Object.fromEntries(architecture.planes.map((p) => [p.id, p]));
+  const pts = order.map((id, i) => {
+    const n = byId[id]?.normalized ?? 0;
+    return polar(cx, cy, 8 + R * n, angles[i]);
+  });
+  const poly = pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const frame = angles
+    .map((a) => {
+      const p = polar(cx, cy, R + 8, a);
+      return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/50 p-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Tri-balance
+      </p>
+      <svg viewBox="0 0 100 100" className="mx-auto mt-1 h-36 w-full max-w-[11rem]">
+        <polygon
+          points={frame}
+          fill="none"
+          stroke="var(--line)"
+          strokeWidth="0.8"
+        />
+        <polygon
+          points={poly}
+          fill="rgb(180 83 9 / 0.2)"
+          stroke="rgb(180 83 9 / 0.7)"
+          strokeWidth="1.2"
+        />
+        {order.map((id, i) => {
+          const tip = polar(cx, cy, R + 14, angles[i]);
+          return (
+            <text
+              key={id}
+              x={tip.x}
+              y={tip.y}
+              textAnchor="middle"
+              className="fill-[var(--ink-soft)]"
+              style={{ fontSize: 7 }}
+            >
+              {byId[id]?.label.slice(0, 3)}
+            </text>
+          );
+        })}
+      </svg>
+      <ul className="mt-1 space-y-0.5 text-[11px] text-ink-soft">
+        {architecture.planes.map((p) => (
+          <li key={p.id}>
+            <span className="font-medium text-ink">{p.label}</span> · {p.level}{" "}
+            ({p.score})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TensionBar({ architecture }: { architecture: LoShuArchitecture }) {
+  const { tension } = architecture;
+  const pct = Math.round(tension.position * 100);
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Life-path tension
+      </p>
+      <p className="mt-1 text-sm font-medium text-ink">{tension.label}</p>
+      <div className="relative mt-3 h-2 rounded-full bg-[var(--line)]/60">
+        <div
+          className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-gold-deep bg-paper shadow-sm transition-[left] duration-500"
+          style={{ left: `calc(${pct}% - 0.5rem)` }}
+          aria-hidden
+        />
+      </div>
+      <div className="mt-1.5 flex justify-between text-[10px] uppercase tracking-wider text-ink-soft">
+        <span>
+          BN {tension.bn ?? "—"} · inner
+        </span>
+        <span>
+          DN {tension.dn ?? "—"} · outer
+        </span>
+      </div>
+      <p className="mt-2 text-xs leading-5 text-ink-soft">{tension.narrative}</p>
+    </div>
+  );
+}
+
+function YearTimeline({
+  dateOfBirth,
+  architecture,
+}: {
+  dateOfBirth: string;
+  architecture: LoShuArchitecture;
+}) {
+  const years = useMemo(() => {
+    const now = new Date().getFullYear();
+    try {
+      return [now - 1, now, now + 1, now + 2].map((y) => ({
+        year: y,
+        py: personalYearForCalendarYear(dateOfBirth, y),
+      }));
+    } catch {
+      return [];
+    }
+  }, [dateOfBirth]);
+
+  if (!years.length) return null;
+
+  const catalystNums = new Set(architecture.catalysts.map((c) => c.number));
+
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        Yearly timeline
+      </p>
+      <p className="mt-1 text-[11px] text-ink-soft">
+        Personal year digits beside Lo Shu catalysts—reflective pairing only,
+        not Lo Shu year math.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {years.map(({ year, py }) => {
+          const digit = reduceNumber(py, []);
+          const hit =
+            catalystNums.has(digit) || catalystNums.has(py);
+          return (
+            <div
+              key={year}
+              className={`min-w-[4.5rem] rounded-lg border px-2.5 py-2 text-center ${
+                year === new Date().getFullYear()
+                  ? "border-gold/70 bg-gold/10"
+                  : "border-[var(--line)] bg-white/70"
+              }`}
+            >
+              <p className="text-[10px] text-ink-soft">{year}</p>
+              <p className="brand text-lg text-ink">{py}</p>
+              {hit ? (
+                <p className="text-[9px] text-gold-deep">Catalyst year</p>
+              ) : (
+                <p className="text-[9px] text-ink-soft">Personal year</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function downloadBlueprint(
+  loShu: LoShuResult,
+  architecture: LoShuArchitecture,
+  personName?: string,
+  dateOfBirth?: string,
+) {
+  const payload = loShuBlueprintJson(loShu, architecture, {
+    name: personName,
+    dateOfBirth,
+  });
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lo-shu-personality-blueprint.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function LoShuChart({
+  loShu,
+  intro,
+  aspectLegend,
+  showArchitecture = true,
+  dateOfBirth,
+  personName,
+}: Props) {
+  const uid = useId().replace(/:/g, "");
+  const [tip, setTip] = useState<string | null>(null);
+  const [layout, setLayout] = useState<"circular" | "square">("circular");
+
+  const architecture = useMemo(
+    () => (showArchitecture ? buildLoShuArchitecture(loShu) : null),
+    [loShu, showArchitecture],
+  );
+
+  const cx = 50;
+  const cy = 50;
+
+  const nodePos = useMemo(() => {
+    const map: Record<number, { x: number; y: number }> = {};
+    for (let n = 1; n <= 9; n++) {
+      map[n] = polar(cx, cy, NODE_RADIUS[n], NODE_ANGLE[n]);
+    }
+    return map;
+  }, []);
+
+  const enginePaths: {
+    engine: StrengthEngine;
+    d: string;
+  }[] = useMemo(() => {
+    if (!architecture) return [];
+    return architecture.engines.map((engine) => {
+      const pts = engine.numbers.map((n) => nodePos[n]);
+      const d = pts
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`)
+        .join(" ");
+      return { engine, d };
+    });
+  }, [architecture, nodePos]);
 
   return (
     <div className="space-y-5">
       {intro ?? (
         <p className="text-sm text-ink-soft">
           Birth-date digits plus{" "}
-          <span className="font-medium text-ink">BN</span> (Psychic / birth
-          number
-          {loShu.birth_number != null ? ` ${loShu.birth_number}` : ""}) and{" "}
-          <span className="font-medium text-ink">DN</span> (Destiny
-          {loShu.destiny_number != null ? ` ${loShu.destiny_number}` : ""}) are
-          placed on the grid. Rows are color-coded by plane. Hover a tile or
-          arrow for meaning; click a tile for its Lo Shu guide.
+          <span className="font-medium text-ink">BN</span>
+          {loShu.birth_number != null ? ` ${loShu.birth_number}` : ""} and{" "}
+          <span className="font-medium text-ink">DN</span>
+          {loShu.destiny_number != null ? ` ${loShu.destiny_number}` : ""} on
+          the Lo Shu grid. Rings mark Emotional (inner), Mental, and Practical
+          (outer). Hover a node for meaning; click for its guide.
         </p>
       )}
 
-      <div className="mx-auto grid max-w-md grid-cols-[5.5rem_1fr] gap-2">
-        <div className="flex flex-col gap-2 py-2">
-          {planes.map((plane) => (
-            <div
-              key={plane.id}
-              className={`flex flex-1 flex-col justify-center rounded-xl border px-1.5 py-2 ${plane.rail}`}
-            >
-              <span
-                className={`inline-flex w-fit rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${plane.chip}`}
+      {showArchitecture ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex rounded-full border border-[var(--line)] bg-white/50 p-0.5">
+            {(
+              [
+                ["circular", "Lo Shu grid"],
+                ["square", "Classic 3×3"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setLayout(id)}
+                className={`btn-tactile rounded-full px-3 py-1.5 text-xs transition ${
+                  layout === id
+                    ? "bg-ink text-paper"
+                    : "text-ink-soft hover:text-ink"
+                }`}
               >
-                {plane.label}
-              </span>
-              <span className="mt-1 text-[11px] leading-snug text-ink-soft">
-                {plane.strength}
-              </span>
-            </div>
-          ))}
+                {label}
+              </button>
+            ))}
+          </div>
+          {architecture ? (
+            <button
+              type="button"
+              onClick={() =>
+                downloadBlueprint(loShu, architecture, personName, dateOfBirth)
+              }
+              className="btn-tactile rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-xs text-ink hover:border-gold/50"
+            >
+              Export blueprint (JSON)
+            </button>
+          ) : null}
         </div>
+      ) : null}
 
-        <div className="relative overflow-visible">
-          <div className="grid grid-cols-3 gap-1.5">
-            {CELL_ORDER.flat().map((n) => {
-              const plane = planes.find((p) => p.numbers.includes(n))!;
+      {architecture && showArchitecture ? (
+        <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
+          <TensionBar architecture={architecture} />
+          <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
+            <p className="text-xs uppercase tracking-wider text-ink-soft">
+              Decision flow
+            </p>
+            <p className="brand mt-1 text-xl text-ink">
+              {architecture.decisionFlowLabel}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {layout === "circular" ? (
+        <div className="mx-auto max-w-md">
+          <svg
+            viewBox="0 0 100 100"
+            className="h-auto w-full overflow-visible"
+            role="img"
+            aria-label="Lo Shu grid"
+          >
+            <defs>
+              <linearGradient id={`will-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgb(244 63 94)" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="rgb(244 63 94)" stopOpacity="0.7" />
+              </linearGradient>
+              <linearGradient id={`action-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgb(16 185 129)" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="rgb(16 185 129)" stopOpacity="0.75" />
+              </linearGradient>
+              <linearGradient
+                id={`determination-${uid}`}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
+                <stop offset="0%" stopColor="rgb(180 83 9)" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
+              </linearGradient>
+            </defs>
+
+            {[44, 36, 28].map((r, i) => (
+              <circle
+                key={r}
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill="none"
+                stroke={
+                  i === 0
+                    ? PLANE_STROKE.practical
+                    : i === 1
+                      ? PLANE_STROKE.mental
+                      : PLANE_STROKE.emotional
+                }
+                strokeWidth="0.6"
+              />
+            ))}
+
+            {enginePaths.map(({ engine, d }) => {
+              const grad =
+                engine.id === "will"
+                  ? `url(#will-${uid})`
+                  : engine.id === "action"
+                    ? `url(#action-${uid})`
+                    : `url(#determination-${uid})`;
+              const thick =
+                engine.status === "active"
+                  ? 1.8
+                  : engine.status === "partial"
+                    ? 1.1
+                    : 0.5;
+              return (
+                <path
+                  key={engine.id}
+                  d={d}
+                  fill="none"
+                  stroke={grad}
+                  strokeWidth={thick}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray={
+                    engine.status === "quiet" ? "1.5 2" : undefined
+                  }
+                  className={
+                    engine.status === "active"
+                      ? "motion-safe:animate-pulse"
+                      : undefined
+                  }
+                  opacity={engine.status === "quiet" ? 0.35 : 0.9}
+                  onMouseEnter={() =>
+                    setTip(
+                      `${engine.label} (${engine.status})\n${engine.numbers.join("–")}\n${engine.summary}`,
+                    )
+                  }
+                  onMouseLeave={() => setTip(null)}
+                  style={{ pointerEvents: "stroke" }}
+                />
+              );
+            })}
+
+            {/* BN | DN center */}
+            <circle
+              cx={cx}
+              cy={cy}
+              r="9"
+              fill="var(--paper)"
+              stroke="var(--gold-deep)"
+              strokeWidth="0.7"
+            />
+            <path
+              d={`M ${cx} ${cy - 9} A 9 9 0 0 0 ${cx} ${cy + 9} Z`}
+              fill="rgb(180 83 9 / 0.12)"
+            />
+            <text
+              x={cx - 3.5}
+              y={cy + 1.5}
+              textAnchor="middle"
+              style={{ fontSize: 5.5, fontWeight: 600 }}
+              className="fill-[var(--ink)]"
+            >
+              {loShu.birth_number ?? "·"}
+            </text>
+            <text
+              x={cx + 3.5}
+              y={cy + 1.5}
+              textAnchor="middle"
+              style={{ fontSize: 5.5, fontWeight: 600 }}
+              className="fill-[var(--ink)]"
+            >
+              {loShu.destiny_number ?? "·"}
+            </text>
+            <text
+              x={cx}
+              y={cy + 6.5}
+              textAnchor="middle"
+              style={{ fontSize: 3.2 }}
+              className="fill-[var(--ink-soft)]"
+            >
+              BN | DN
+            </text>
+
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => {
               const count = loShu.grid[n] ?? 0;
               const missing = count === 0;
+              const { x, y } = nodePos[n];
+              const plane = PLANE_OF[n];
+              const size = missing ? 4.2 : Math.min(8, 4 + count * 1.4);
               const meta = LO_SHU_NUMBER_META[n];
+              const catalyst = architecture?.catalysts.find((c) => c.number === n);
               const tileTip = [
                 `${n} · ${meta.trait} (${meta.vedic})`,
-                `Plane: ${PLANE_BY_NUMBER[n]} · ${plane.strength}`,
+                `Plane: ${plane}`,
                 missing
-                  ? "Missing in this birth grid — a growth invite, not a deficit."
-                  : `Present ×${count} — core strength theme: ${meta.theme}.`,
-                loShu.birth_number === n
-                  ? `Includes BN (Psychic / birth number) ${loShu.birth_number}.`
-                  : null,
+                  ? catalyst
+                    ? `Growth catalyst · ${catalyst.keyword}`
+                    : "Quiet in this birth grid — a growth invite."
+                  : `Present ×${count} — ${meta.theme}.`,
+                loShu.birth_number === n ? `Includes BN ${loShu.birth_number}.` : null,
                 loShu.destiny_number === n
-                  ? `Includes DN (Destiny number) ${loShu.destiny_number}.`
+                  ? `Includes DN ${loShu.destiny_number}.`
                   : null,
               ]
                 .filter(Boolean)
                 .join("\n");
+
               return (
-                <Link
+                <a
                   key={n}
                   href={guideHref("lo-shu-number", n)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Click for more about Lo Shu number ${n}`}
                   onMouseEnter={() => setTip(tileTip)}
                   onMouseLeave={() => setTip(null)}
                   onFocus={() => setTip(tileTip)}
                   onBlur={() => setTip(null)}
-                  className={`relative z-[1] flex aspect-square flex-col items-center justify-center rounded-lg border outline-none transition hover:border-gold/60 focus-visible:ring-2 focus-visible:ring-gold ${
-                    missing ? plane.missing : plane.present
-                  }`}
                 >
-                  <span className="brand text-xl leading-none">{n}</span>
-                  <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
-                    {missing ? "miss" : `×${count}`}
-                  </span>
-                  {(loShu.birth_number === n || loShu.destiny_number === n) &&
-                  !missing ? (
-                    <span className="mt-0.5 flex gap-0.5 text-[8px] font-semibold uppercase tracking-wide opacity-90">
-                      {loShu.birth_number === n ? <span>BN</span> : null}
-                      {loShu.destiny_number === n ? <span>DN</span> : null}
-                    </span>
+                  {missing ? (
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={size + 1.5}
+                      fill="none"
+                      stroke={PLANE_STROKE[plane]}
+                      strokeWidth="0.5"
+                      strokeDasharray="1.2 1.4"
+                      opacity="0.7"
+                      className="motion-safe:opacity-80"
+                    />
                   ) : null}
-                </Link>
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={size}
+                    fill={missing ? "transparent" : PLANE_FILL[plane]}
+                    stroke={
+                      loShu.birth_number === n || loShu.destiny_number === n
+                        ? "var(--gold-deep)"
+                        : PLANE_STROKE[plane]
+                    }
+                    strokeWidth={
+                      loShu.birth_number === n || loShu.destiny_number === n
+                        ? 1.1
+                        : 0.6
+                    }
+                    opacity={missing ? 0.55 : 1}
+                  />
+                  <text
+                    x={x}
+                    y={y + 1.6}
+                    textAnchor="middle"
+                    style={{ fontSize: missing ? 4.5 : 5.5, fontWeight: 600 }}
+                    className={
+                      missing ? "fill-[var(--ink-soft)]" : "fill-[var(--ink)]"
+                    }
+                  >
+                    {n}
+                  </text>
+                  {missing && catalyst ? (
+                    <text
+                      x={x}
+                      y={y + size + 3.2}
+                      textAnchor="middle"
+                      style={{ fontSize: 2.8 }}
+                      className="fill-[var(--ink-soft)]"
+                    >
+                      {catalyst.keyword.slice(0, 8)}
+                    </text>
+                  ) : !missing && count > 1 ? (
+                    <text
+                      x={x}
+                      y={y + size + 2.8}
+                      textAnchor="middle"
+                      style={{ fontSize: 2.8 }}
+                      className="fill-[var(--ink-soft)]"
+                    >
+                      ×{count}
+                    </text>
+                  ) : null}
+                </a>
               );
             })}
-          </div>
-
-          {overlayArrows.length > 0 ? (
-            <svg
-              className="pointer-events-none absolute inset-0 z-[2] h-full w-full overflow-visible"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden
-            >
-              <defs>
-                <marker
-                  id={markerPresent}
-                  markerWidth="3"
-                  markerHeight="3"
-                  refX="2.5"
-                  refY="1.5"
-                  orient="auto"
-                  markerUnits="userSpaceOnUse"
-                >
-                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(217, 119, 6, 0.55)" />
-                </marker>
-                <marker
-                  id={markerMissing}
-                  markerWidth="3"
-                  markerHeight="3"
-                  refX="2.5"
-                  refY="1.5"
-                  orient="auto"
-                  markerUnits="userSpaceOnUse"
-                >
-                  <path d="M0,0 L3,1.5 L0,3 Z" fill="rgba(100, 116, 139, 0.45)" />
-                </marker>
-              </defs>
-              {overlayArrows.map((arrow) => {
-                const present = presentSet.has(arrow.name);
-                const a = cellCenter(arrow.numbers[0]);
-                const b = cellCenter(arrow.numbers[2]);
-                const slug = arrowSlugKey(arrow.name);
-                const guide = slug ? LO_SHU_ARROW_GUIDES[slug] : null;
-                const meaning = guide
-                  ? present
-                    ? guide.present
-                    : guide.missing
-                  : present
-                    ? "Present strength pattern in this grid."
-                    : "Fully missing pattern — a gentle growth area.";
-                const arrowTip = `${arrow.name}\n${present ? "Present" : "Missing"} · ${arrow.numbers.join("–")}\n${meaning}`;
-                return (
-                  <g key={arrow.name}>
-                    <line
-                      x1={a.x}
-                      y1={a.y}
-                      x2={b.x}
-                      y2={b.y}
-                      stroke="transparent"
-                      strokeWidth={10}
-                      className="cursor-help"
-                      style={{ pointerEvents: "stroke" }}
-                      onMouseEnter={() => setTip(arrowTip)}
-                      onMouseLeave={() => setTip(null)}
-                    />
-                    <line
-                      x1={a.x}
-                      y1={a.y}
-                      x2={b.x}
-                      y2={b.y}
-                      stroke={
-                        present
-                          ? "rgba(180, 83, 9, 0.55)"
-                          : "rgba(71, 85, 105, 0.45)"
-                      }
-                      strokeWidth={0.9}
-                      strokeLinecap="round"
-                      strokeDasharray="1.4 2.6"
-                      markerEnd={
-                        present
-                          ? `url(#${markerPresent})`
-                          : `url(#${markerMissing})`
-                      }
-                      style={{ pointerEvents: "none" }}
-                    />
-                  </g>
-                );
-              })}
-            </svg>
-          ) : null}
+          </svg>
         </div>
-      </div>
+      ) : (
+        <ClassicSquareGrid loShu={loShu} setTip={setTip} />
+      )}
 
       <ChartTipPanel
         tip={tip}
-        empty="Hover a grid tile for its plane and core strength, or hover a dotted arrow for its name and meaning."
+        empty="Hover a node for plane and meaning, or a vector for its strength engine."
       />
 
       {aspectLegend}
 
+      {architecture && showArchitecture ? (
+        <>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            <TriBalanceRadar architecture={architecture} />
+            <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3 md:col-span-1 lg:col-span-2">
+              <p className="text-xs uppercase tracking-wider text-ink-soft">
+                Strength engines
+              </p>
+              <ul className="mt-2 space-y-2">
+                {architecture.engines.map((e) => {
+                  const slug = arrowNameToSlug(e.arrowName);
+                  const guide = slug ? LO_SHU_ARROW_GUIDES[slug] : null;
+                  return (
+                    <li key={e.id} className="text-sm">
+                      <div className="flex flex-wrap items-baseline gap-2">
+                        {slug ? (
+                          <Link
+                            href={guideHref("lo-shu-arrow", slug)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+                          >
+                            {e.label}
+                          </Link>
+                        ) : (
+                          <span className="font-medium text-ink">{e.label}</span>
+                        )}
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider ${
+                            e.status === "active"
+                              ? "bg-emerald-100 text-emerald-900"
+                              : e.status === "partial"
+                                ? "bg-amber-100 text-amber-900"
+                                : "bg-slate-100 text-slate-600"
+                          }`}
+                        >
+                          {e.status}
+                        </span>
+                        <span className="text-xs text-ink-soft">
+                          {e.numbers.join("–")}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-ink-soft">{e.summary}</p>
+                      {guide ? (
+                        <p className="mt-0.5 text-[11px] text-ink-soft/80">
+                          {guide.significance}
+                        </p>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+              {architecture.activeEngineCount === 3 ? (
+                <p className="mt-2 text-xs font-medium text-gold-deep">
+                  Three active engines — rare and powerful when balanced with
+                  rest.
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
+            <p className="text-xs uppercase tracking-wider text-ink-soft">
+              Growth catalysts
+            </p>
+            {architecture.catalysts.length ? (
+              <ul className="mt-2 grid gap-3 sm:grid-cols-2">
+                {architecture.catalysts.map((c) => (
+                  <li key={c.number} className="text-sm">
+                    <Link
+                      href={guideHref("lo-shu-number", c.number)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+                    >
+                      {c.title}
+                    </Link>
+                    <p className="mt-0.5 text-xs text-ink-soft">{c.summary}</p>
+                    <ul className="mt-1 list-inside list-disc text-[11px] text-ink-soft">
+                      {c.actions.map((a) => (
+                        <li key={a}>{a}</li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-ink-soft">
+                No missing-number catalysts—broad distribution across the grid.
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+            <p className="text-xs uppercase tracking-wider text-ink-soft">
+              Personality architecture
+            </p>
+            <ul className="mt-2 space-y-2">
+              {architecture.layers.map((layer) => (
+                <li key={layer.id} className="text-sm">
+                  <span className="font-medium text-ink">{layer.label}</span>
+                  <p className="text-xs leading-5 text-ink-soft">
+                    {layer.summary}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-sm leading-6 text-ink-soft">
+              {architecture.narrative}
+            </p>
+          </div>
+
+          {dateOfBirth ? (
+            <YearTimeline
+              dateOfBirth={dateOfBirth}
+              architecture={architecture}
+            />
+          ) : null}
+        </>
+      ) : null}
+
       <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-sky-200 border border-sky-400" />{" "}
-          Mental (4–9–2)
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-rose-200 border border-rose-400" />{" "}
+          <span className="h-2.5 w-2.5 rounded-full bg-rose-200 border border-rose-400" />{" "}
           Emotional (3–5–7)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-emerald-200 border border-emerald-500" />{" "}
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-200 border border-sky-400" />{" "}
+          Mental (4–9–2)
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-200 border border-emerald-500" />{" "}
           Practical (8–1–6)
         </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-5 border-t border-dotted border-amber-700/60" />{" "}
-          Present arrow
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-5 border-t border-dotted border-slate-500" />{" "}
-          Missing arrow
-        </span>
       </div>
+    </div>
+  );
+}
 
-      <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
-        <p className="text-xs uppercase tracking-wider text-ink-soft">
-          Number meanings
-        </p>
-        <p className="mt-1 text-[11px] text-ink-soft">
-          Trait · Vedic nickname — click a number for its Lo Shu guide
-        </p>
-        <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-            <li key={n} className="flex items-baseline gap-1.5">
-              <Link
-                href={guideHref("lo-shu-number", n)}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`Click for more about Lo Shu number ${n}`}
-                className={`brand text-base underline decoration-gold/50 underline-offset-2 hover:text-gold-deep ${NUMBER_PLANE_TINT[n]}`}
-              >
-                {n}
-              </Link>
-              <span className="text-ink-soft">
-                {LO_SHU_NUMBER_META[n].trait}{" "}
-                <span className="text-ink/70">
-                  · {LO_SHU_NUMBER_META[n].vedic}
-                </span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+function ClassicSquareGrid({
+  loShu,
+  setTip,
+}: {
+  loShu: LoShuResult;
+  setTip: (t: string | null) => void;
+}) {
+  const CELL_ORDER = [
+    [4, 9, 2],
+    [3, 5, 7],
+    [8, 1, 6],
+  ];
+  const planes = [
+    {
+      numbers: [4, 9, 2],
+      present: "border-sky-300/80 bg-sky-100 text-sky-950",
+      missing: "border-dashed border-sky-300/60 bg-sky-50/50 text-sky-400",
+    },
+    {
+      numbers: [3, 5, 7],
+      present: "border-rose-300/80 bg-rose-100 text-rose-950",
+      missing: "border-dashed border-rose-300/60 bg-rose-50/50 text-rose-400",
+    },
+    {
+      numbers: [8, 1, 6],
+      present: "border-emerald-300/80 bg-emerald-100 text-emerald-950",
+      missing:
+        "border-dashed border-emerald-300/60 bg-emerald-50/50 text-emerald-400",
+    },
+  ];
 
-      {(effects.repeated.length > 0 || effects.missing.length > 0) && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <h3 className="text-ink">Repeated numbers</h3>
-            {effects.repeated.length ? (
-              <ul className="mt-2 space-y-2 text-sm text-ink-soft">
-                {effects.repeated.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-2 text-sm text-ink-soft">
-                No repeats beyond single occurrences.
-              </p>
-            )}
-          </div>
-          <div>
-            <h3 className="text-ink">Missing numbers</h3>
-            {effects.missing.length ? (
-              <ul className="mt-2 space-y-2 text-sm text-ink-soft">
-                {effects.missing.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-2 text-sm text-ink-soft">
-                No missing numbers in this grid.
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <h3 className="text-ink">Present arrows (strength patterns)</h3>
-          {loShu.present_arrows.length ? (
-            <ul className="mt-2 space-y-2 text-sm text-ink-soft">
-              {loShu.present_arrows.map((name) => (
-                <ArrowListItem key={name} name={name} />
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2 text-sm text-ink-soft">No complete present arrows.</p>
-          )}
-        </div>
-        <div>
-          <h3 className="text-ink">Missing arrows (growth areas)</h3>
-          {loShu.missing_arrows.length ? (
-            <ul className="mt-2 space-y-2 text-sm text-ink-soft">
-              {loShu.missing_arrows.map((name) => (
-                <ArrowListItem key={name} name={name} />
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2 text-sm text-ink-soft">No fully missing arrows.</p>
-          )}
-        </div>
-      </div>
+  return (
+    <div className="mx-auto grid max-w-xs grid-cols-3 gap-1.5">
+      {CELL_ORDER.flat().map((n) => {
+        const plane = planes.find((p) => p.numbers.includes(n))!;
+        const count = loShu.grid[n] ?? 0;
+        const missing = count === 0;
+        const meta = LO_SHU_NUMBER_META[n];
+        const tileTip = `${n} · ${meta.trait}${missing ? " · quiet" : ` · ×${count}`}`;
+        return (
+          <Link
+            key={n}
+            href={guideHref("lo-shu-number", n)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onMouseEnter={() => setTip(tileTip)}
+            onMouseLeave={() => setTip(null)}
+            className={`btn-tactile relative flex aspect-square flex-col items-center justify-center rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+              missing ? plane.missing : plane.present
+            }`}
+          >
+            <span className="brand text-xl leading-none">{n}</span>
+            <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
+              {missing ? "quiet" : `×${count}`}
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 }

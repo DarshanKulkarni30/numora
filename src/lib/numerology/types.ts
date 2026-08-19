@@ -190,6 +190,7 @@ export type NumerologyReport = {
     title: string;
     suggestion: string;
     sources: string[];
+    actions?: string[];
   }[];
   age_guidance: {
     category: string;

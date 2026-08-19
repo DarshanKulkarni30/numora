@@ -1,5 +1,6 @@
 import { blurbForTopic } from "@/lib/guides/numberMeanings";
 import { firstVowelMeaning } from "@/lib/guides/firstVowelMeanings";
+import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { analyzeNameBookends } from "@/lib/numerology/nameBookends";
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 
@@ -8,6 +9,8 @@ export type GrowthArea = {
   title: string;
   suggestion: string;
   sources: string[];
+  /** Optional practice steps (Lo Shu catalysts / Growth Mode) */
+  actions?: string[];
 };
 
 type Input = {
@@ -20,6 +23,7 @@ type Input = {
 export function synthesizeGrowthAreas(input: Input): GrowthArea[] {
   const { snap, loShu, fullName, growthBank } = input;
   const out: GrowthArea[] = [];
+  const architecture = buildLoShuArchitecture(loShu);
 
   const push = (area: GrowthArea) => {
     if (out.length >= 7) return;
@@ -27,22 +31,22 @@ export function synthesizeGrowthAreas(input: Input): GrowthArea[] {
     out.push(area);
   };
 
-  for (const n of loShu.missing_numbers.slice(0, 3)) {
+  for (const c of architecture.catalysts.slice(0, 3)) {
     push({
-      id: `lo-shu-missing-${n}`,
-      title: `Strengthen Lo Shu ${n}`,
-      suggestion: `Number ${n} is light or missing in the birth grid—practice its theme gently through daily habits rather than forcing a personality rewrite.`,
-      sources: [`Lo Shu · missing ${n}`],
+      id: `lo-shu-catalyst-${c.number}`,
+      title: c.title,
+      suggestion: c.summary,
+      sources: [`Lo Shu grid · catalyst ${c.number}`],
+      actions: c.actions,
     });
   }
 
-  for (const arrow of loShu.missing_arrows.slice(0, 2)) {
-    const short = arrow.replace(/^Arrow of\s+/i, "");
+  for (const engine of architecture.engines.filter((e) => e.status === "quiet").slice(0, 2)) {
     push({
-      id: `lo-shu-arrow-${short}`,
-      title: `Develop ${short}`,
-      suggestion: `A missing ${arrow} invites conscious practice along that plane—small weekly drills beat self-judgment.`,
-      sources: [`Lo Shu · ${arrow}`],
+      id: `lo-shu-engine-${engine.id}`,
+      title: `Develop ${engine.label}`,
+      suggestion: engine.summary,
+      sources: [`Lo Shu grid · ${engine.arrowName}`],
     });
   }
 

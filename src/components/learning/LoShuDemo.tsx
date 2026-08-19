@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { LoShuChart } from "@/components/report/LoShuChart";
+import { LoShuCompare } from "@/components/report/LoShuCompare";
 import { calculateLoShu } from "@/lib/numerology/loShu";
 import {
   vedicDestinyFromDob,
@@ -59,7 +60,7 @@ export function LoShuDemo() {
               <span className="brand text-ink">{result.dn}</span>
             </p>
             <p className="text-xs">
-              Both BN and DN are also placed on the grid (common Indian Lo Shu
+              Both BN and DN are also placed on the Lo Shu grid (common Indian
               practice)—reflective only.
             </p>
           </div>
@@ -72,9 +73,11 @@ export function LoShuDemo() {
 
       {result ? (
         <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-          <LoShuChart loShu={result.loShu} />
+          <LoShuChart loShu={result.loShu} dateOfBirth={dob} />
         </div>
       ) : null}
+
+      <LoShuCompare defaultDobA={dob} labelA="Your chart" />
     </div>
   );
 }

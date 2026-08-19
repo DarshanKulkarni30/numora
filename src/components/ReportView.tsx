@@ -615,8 +615,8 @@ export function ReportView({
         <section>
           <h2 className="text-xl text-ink">Birth charts</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Lo Shu grid, Pythagorean birth table, and Vedic number chart—same
-            hover tips and click-through guides. Not a full kundli.{" "}
+            Lo Shu grid, Pythagorean personality wheel, and Vedic number
+            chart—same hover tips and click-through guides. Not a full kundli.{" "}
             <LearningConceptLink conceptKey="lo-shu" />
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -640,9 +640,9 @@ export function ReportView({
 
         {report.growth_areas?.length ? (
           <section>
-            <h2 className="text-xl text-ink">Areas to work on</h2>
+            <h2 className="text-xl text-ink">Growth Mode</h2>
             <div className="mt-4">
-              <GrowthAreasPanel areas={report.growth_areas} />
+              <GrowthAreasPanel areas={report.growth_areas} growthMode />
             </div>
           </section>
         ) : null}
