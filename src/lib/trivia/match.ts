@@ -21,17 +21,32 @@ export function matchPeopleByDayMonth(
     .slice(0, limit);
 }
 
-type Triple = {
+export type NumberTriple = {
   lifePath: number;
   destiny: number;
   psychic: number;
+};
+
+export type LayerScore = {
+  matched: boolean;
+  distance: number;
+};
+
+export type TripleCompare = {
+  exact: number;
+  closeness: number;
+  layers: {
+    lifePath: LayerScore;
+    destiny: LayerScore;
+    psychic: LayerScore;
+  };
 };
 
 function asTriple(opts: {
   lifePath: number | string;
   destiny: number | string;
   psychic?: number | string;
-}): Triple {
+}): NumberTriple {
   return {
     lifePath: Number(opts.lifePath),
     destiny: Number(opts.destiny),
@@ -43,47 +58,58 @@ function asTriple(opts: {
 }
 
 /** Circular distance on 1–9 wheel (e.g. 1 vs 9 = 1). */
-function digitDistance(a: number, b: number): number {
+export function digitDistance(a: number, b: number): number {
   const x = reduceToSingleDigit(a);
   const y = reduceToSingleDigit(b);
   const d = Math.abs(x - y);
   return Math.min(d, 9 - d);
 }
 
-function scoreTriple(
-  target: Triple,
-  candidate: Triple,
-): { exact: number; closeness: number } {
-  const tLp = reduceToSingleDigit(target.lifePath);
-  const tDest = reduceToSingleDigit(target.destiny);
+function layerScore(targetRaw: number, candidateRaw: number): LayerScore {
+  const t = reduceToSingleDigit(targetRaw);
+  const c = reduceToSingleDigit(candidateRaw);
+  if (candidateRaw === targetRaw || c === t) {
+    return { matched: true, distance: 0 };
+  }
+  return { matched: false, distance: digitDistance(targetRaw, candidateRaw) };
+}
+
+/** Exact-digit overlap plus wheel closeness — used for ranking and gallery rings. */
+export function compareTriples(
+  target: NumberTriple,
+  candidate: NumberTriple,
+): TripleCompare {
+  const lifePath = layerScore(target.lifePath, candidate.lifePath);
+  const destiny = layerScore(target.destiny, candidate.destiny);
   const hasPsychic = Number.isFinite(target.psychic);
-  const tPsy = hasPsychic ? reduceToSingleDigit(target.psychic) : null;
+  const psychic = hasPsychic
+    ? layerScore(target.psychic, candidate.psychic)
+    : { matched: false, distance: 0 };
 
-  const cLp = reduceToSingleDigit(candidate.lifePath);
-  const cDest = reduceToSingleDigit(candidate.destiny);
-  const cPsy = reduceToSingleDigit(candidate.psychic);
-
-  let exact = 0;
-  let closeness = 0;
-
-  if (candidate.lifePath === target.lifePath || cLp === tLp) exact += 1;
-  else closeness += digitDistance(target.lifePath, candidate.lifePath);
-
-  if (candidate.destiny === target.destiny || cDest === tDest) exact += 1;
-  else closeness += digitDistance(target.destiny, candidate.destiny);
-
-  if (tPsy != null) {
-    if (candidate.psychic === target.psychic || cPsy === tPsy) exact += 1;
-    else closeness += digitDistance(target.psychic, candidate.psychic);
+  let exact = (lifePath.matched ? 1 : 0) + (destiny.matched ? 1 : 0);
+  let closeness =
+    (lifePath.matched ? 0 : lifePath.distance) +
+    (destiny.matched ? 0 : destiny.distance);
+  if (hasPsychic) {
+    exact += psychic.matched ? 1 : 0;
+    closeness += psychic.matched ? 0 : psychic.distance;
   }
 
+  return { exact, closeness, layers: { lifePath, destiny, psychic } };
+}
+
+function scoreTriple(
+  target: NumberTriple,
+  candidate: NumberTriple,
+): { exact: number; closeness: number } {
+  const { exact, closeness } = compareTriples(target, candidate);
   return { exact, closeness };
 }
 
 function rankByTriple<T>(
   items: T[],
-  target: Triple,
-  get: (item: T) => Triple,
+  target: NumberTriple,
+  get: (item: T) => NumberTriple,
   nameOf: (item: T) => string,
   limit: number,
 ): T[] {

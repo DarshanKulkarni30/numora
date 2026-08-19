@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   lifePathFromDob,
   vedicDestinyFromDob,
@@ -11,8 +11,19 @@ import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import { calculateVedic } from "@/lib/numerology/vedic";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
+import { BirthDateTimeline } from "@/components/trivia/BirthDateTimeline";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
+import { MatchGallery } from "@/components/trivia/MatchGallery";
+import { MatchInsightPanel } from "@/components/trivia/MatchInsightPanel";
+import {
+  annotatePeople,
+  buildDiscoveryNarratives,
+  filterDiscovery,
+  personDiscoveryKey,
+  type DiscoveryFilter,
+  type DiscoveryPerson,
+} from "@/lib/trivia/discovery";
 import {
   matchCities,
   matchCountries,
@@ -46,6 +57,8 @@ export function TriviaExplorer({ people }: Props) {
   const [filterPsychic, setFilterPsychic] = useState("");
   const [filterCityNumber, setFilterCityNumber] = useState("");
   const [query, setQuery] = useState("");
+  const [matchFilter, setMatchFilter] = useState<DiscoveryFilter>("all");
+  const [selectedMatchKey, setSelectedMatchKey] = useState<string | null>(null);
 
   const selectable = useMemo(
     () =>
@@ -81,18 +94,73 @@ export function TriviaExplorer({ people }: Props) {
       })()
     : null;
 
-  const matchedPeople =
-    matchLp != null && matchDestiny != null && matchPsychic != null
-      ? matchPeople({
+  const discoveryTarget =
+    selected && matchLp != null && matchDestiny != null && matchPsychic != null
+      ? {
           lifePath: matchLp,
           destiny: matchDestiny,
           psychic: matchPsychic,
+          dob: selected.date_of_birth,
+        }
+      : null;
+
+  const matchedPeople = discoveryTarget
+    ? annotatePeople(
+        discoveryTarget,
+        matchPeople({
+          lifePath: discoveryTarget.lifePath,
+          destiny: discoveryTarget.destiny,
+          psychic: discoveryTarget.psychic,
           limit: 10,
-        })
-      : [];
-  const birthdayTwins = selected
-    ? matchPeopleByDayMonth(selected.date_of_birth, 10)
+        }),
+      )
     : [];
+  const birthdayTwins = discoveryTarget
+    ? annotatePeople(
+        discoveryTarget,
+        matchPeopleByDayMonth(discoveryTarget.dob, 10),
+      )
+    : [];
+  const galleryRows = discoveryTarget
+    ? filterDiscovery(matchedPeople, matchFilter, birthdayTwins)
+    : [];
+  const narratives = discoveryTarget
+    ? buildDiscoveryNarratives(discoveryTarget)
+    : null;
+
+  useEffect(() => {
+    setMatchFilter("all");
+    setSelectedMatchKey(null);
+  }, [selectedKey]);
+
+  const selectedDiscovery = useMemo(() => {
+    const pool = [...galleryRows, ...birthdayTwins, ...matchedPeople];
+    const seen = new Set<string>();
+    const unique: DiscoveryPerson[] = [];
+    for (const row of pool) {
+      const key = personDiscoveryKey(row.person);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(row);
+    }
+    const fromSelection = selectedMatchKey
+      ? unique.find((row) => personDiscoveryKey(row.person) === selectedMatchKey)
+      : undefined;
+    return (
+      fromSelection ??
+      galleryRows[0] ??
+      birthdayTwins[0] ??
+      matchedPeople[0] ??
+      null
+    );
+  }, [galleryRows, birthdayTwins, matchedPeople, selectedMatchKey]);
+
+  const resolvedMatchKey = selectedDiscovery
+    ? personDiscoveryKey(selectedDiscovery.person)
+    : null;
+
+  const triadCount = matchedPeople.filter((row) => row.kind === "triad").length;
+  const dualCount = matchedPeople.filter((row) => row.kind === "dual").length;
   const matchedCountries =
     matchLp != null && matchDestiny != null && matchPsychic != null
       ? matchCountries({
@@ -232,24 +300,77 @@ export function TriviaExplorer({ people }: Props) {
                 ) : null}
               </div>
 
-              <section>
-                <h2 className="text-xl text-ink">Top 10 personalities</h2>
-                <PeopleTable rows={matchedPeople} />
-              </section>
+              <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-6">
+                <div className="space-y-5">
+                  <section>
+                    <h2 className="text-xl text-ink">Match gallery</h2>
+                    <p className="mt-1 text-sm text-ink-soft">
+                      People who share your numerology tones. Rings show Life
+                      Path (outer), Destiny (middle), and Psychic (inner).
+                      Reflective likeness only.
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(
+                        [
+                          ["all", `All (${matchedPeople.length})`],
+                          ["triad", `Strong triad (${triadCount})`],
+                          ["dual", `Dual (${dualCount})`],
+                          ["day", `Same day (${birthdayTwins.length})`],
+                        ] as const
+                      ).map(([id, label]) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setMatchFilter(id)}
+                          className={`rounded-full px-3 py-1.5 text-sm ${
+                            matchFilter === id
+                              ? "bg-ink text-paper shadow-sm"
+                              : "border border-[var(--line)] bg-white/70 text-ink-soft hover:text-ink"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <MatchGallery
+                      rows={galleryRows}
+                      selectedKey={resolvedMatchKey}
+                      onSelect={setSelectedMatchKey}
+                      emptyLabel={
+                        matchFilter === "day"
+                          ? "No one in the current bank shares this day and month."
+                          : "No personality matches for this filter."
+                      }
+                    />
+                  </section>
 
-              <section>
-                <h2 className="text-xl text-ink">
-                  Born on the same day &amp; month
-                </h2>
-                <p className="mt-1 text-sm text-ink-soft">
-                  Same calendar day and month as{" "}
-                  {selected ? personLabel(selected) : "the selected person"}{" "}
-                  (year ignored). Up to 10 from the bank.
-                </p>
-                <div className="mt-3">
-                  <PeopleTable rows={birthdayTwins} />
+                  <section>
+                    <h2 className="text-xl text-ink">
+                      Born on your day &amp; month
+                    </h2>
+                    <p className="mt-1 text-sm text-ink-soft">
+                      Same calendar day and month as{" "}
+                      {selected ? personLabel(selected) : "the selected person"}{" "}
+                      (year ignored). A historical strip from the bank—not a
+                      lineage.
+                    </p>
+                    <BirthDateTimeline
+                      rows={birthdayTwins}
+                      selectedKey={resolvedMatchKey}
+                      onSelect={setSelectedMatchKey}
+                      viewerDob={selected?.date_of_birth}
+                    />
+                  </section>
                 </div>
-              </section>
+                {narratives ? (
+                  <div className="mt-6 lg:mt-0 lg:sticky lg:top-4">
+                    <MatchInsightPanel
+                      narratives={narratives}
+                      selected={selectedDiscovery}
+                    />
+                  </div>
+                ) : null}
+              </div>
 
               <section>
                 <h2 className="text-xl text-ink">Top 10 countries</h2>

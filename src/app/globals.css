@@ -342,3 +342,38 @@ a.rounded-full:active {
   border-color: var(--sys-astro-border);
   color: var(--sys-astro-fg);
 }
+
+/* Trivia match gallery — quiet geometry, no neon */
+.match-similarity-rings {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: trivia-ring-drift 22s linear infinite;
+}
+
+.trivia-match-card--triad {
+  box-shadow: 0 0 0 1px rgba(232, 163, 23, 0.16);
+}
+
+.birth-timeline {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.birth-timeline-node--match {
+  box-shadow: 0 0 0 1px rgba(13, 159, 110, 0.22);
+}
+
+@keyframes trivia-ring-drift {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .match-similarity-rings {
+    animation: none;
+  }
+}

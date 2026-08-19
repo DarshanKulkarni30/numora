@@ -12,7 +12,8 @@
     "smoke:personal-year": "tsx scripts/smoke-personal-year.ts",
     "smoke:pythagorean-wheel": "tsx scripts/smoke-pythagorean-wheel.ts",
     "smoke:aura": "tsx scripts/smoke-aura-identity.ts",
-    "smoke:year-rhythm": "tsx scripts/smoke-year-rhythm.ts"
+    "smoke:year-rhythm": "tsx scripts/smoke-year-rhythm.ts",
+    "smoke:trivia": "tsx scripts/smoke-trivia-discovery.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

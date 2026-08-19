@@ -1,10 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
+import { BirthDateTimeline } from "@/components/trivia/BirthDateTimeline";
 import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
 import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
+import { MatchGallery } from "@/components/trivia/MatchGallery";
+import { MatchInsightPanel } from "@/components/trivia/MatchInsightPanel";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { TRIVIA_CITIES } from "@/lib/trivia/cities";
+import {
+  annotatePeople,
+  buildDiscoveryNarratives,
+  personDiscoveryKey,
+} from "@/lib/trivia/discovery";
 import {
   matchCities,
   matchCountries,
@@ -39,8 +48,32 @@ export function TriviaPanel({
   vedicName,
   dateOfBirth,
 }: Props) {
-  const people = matchPeople({ lifePath, destiny, psychic, limit: 5 });
-  const birthdayTwins = matchPeopleByDayMonth(dateOfBirth, 5);
+  const target = {
+    lifePath: Number(lifePath),
+    destiny: Number(destiny),
+    psychic: Number(psychic),
+    dob: dateOfBirth,
+  };
+  const people = annotatePeople(
+    target,
+    matchPeople({ lifePath, destiny, psychic, limit: 5 }),
+  );
+  const birthdayTwins = annotatePeople(
+    target,
+    matchPeopleByDayMonth(dateOfBirth, 5),
+  );
+  const narratives = buildDiscoveryNarratives(target);
+  const [selectedMatchKey, setSelectedMatchKey] = useState<string | null>(null);
+  const selectedDiscovery = useMemo(() => {
+    const pool = [...people, ...birthdayTwins];
+    const fromSelection = selectedMatchKey
+      ? pool.find((row) => personDiscoveryKey(row.person) === selectedMatchKey)
+      : undefined;
+    return fromSelection ?? people[0] ?? birthdayTwins[0] ?? null;
+  }, [people, birthdayTwins, selectedMatchKey]);
+  const resolvedMatchKey = selectedDiscovery
+    ? personDiscoveryKey(selectedDiscovery.person)
+    : null;
   const countries = matchCountries({
     lifePath,
     destiny,
@@ -86,32 +119,24 @@ export function TriviaPanel({
 
       <div>
         <h3 className="text-lg text-ink">Top 5 similar personalities</h3>
+        <p className="mt-1 text-xs text-ink-soft">
+          Match gallery — same tones, not a shared fate. Tap a card for the
+          likeness note.
+        </p>
         {people.length ? (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
-            <table className="w-full min-w-[36rem] text-left text-sm">
-              <thead className="bg-mist/60 text-ink-soft">
-                <tr>
-                  <th className="px-3 py-2 font-medium">Name</th>
-                  <th className="px-3 py-2 font-medium">Known for</th>
-                  <th className="px-3 py-2 font-medium">DOB</th>
-                  <th className="px-3 py-2 font-medium">Life Path</th>
-                  <th className="px-3 py-2 font-medium">Destiny</th>
-                  <th className="px-3 py-2 font-medium">Psychic</th>
-                </tr>
-              </thead>
-              <tbody>
-                {people.map((p) => (
-                  <tr key={p.name} className="border-t border-[var(--line)]">
-                    <td className="px-3 py-2 text-ink">{p.name}</td>
-                    <td className="px-3 py-2 text-ink-soft">{p.note}</td>
-                    <td className="px-3 py-2 text-ink-soft">{p.dob}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.lifePath}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.destiny}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.psychic}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start">
+            <MatchGallery
+              rows={people}
+              selectedKey={resolvedMatchKey}
+              onSelect={setSelectedMatchKey}
+              compact
+              emptyLabel="No close matches in the current bank."
+            />
+            <MatchInsightPanel
+              narratives={narratives}
+              selected={selectedDiscovery}
+              compact
+            />
           </div>
         ) : (
           <p className="mt-2 text-sm text-ink-soft">
@@ -126,38 +151,13 @@ export function TriviaPanel({
           Calendar day and month only (year ignored). Reflective coincidence—not
           destiny.
         </p>
-        {birthdayTwins.length ? (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
-            <table className="w-full min-w-[36rem] text-left text-sm">
-              <thead className="bg-mist/60 text-ink-soft">
-                <tr>
-                  <th className="px-3 py-2 font-medium">Name</th>
-                  <th className="px-3 py-2 font-medium">Known for</th>
-                  <th className="px-3 py-2 font-medium">DOB</th>
-                  <th className="px-3 py-2 font-medium">Life Path</th>
-                  <th className="px-3 py-2 font-medium">Destiny</th>
-                  <th className="px-3 py-2 font-medium">Psychic</th>
-                </tr>
-              </thead>
-              <tbody>
-                {birthdayTwins.map((p) => (
-                  <tr key={`bday-${p.name}`} className="border-t border-[var(--line)]">
-                    <td className="px-3 py-2 text-ink">{p.name}</td>
-                    <td className="px-3 py-2 text-ink-soft">{p.note}</td>
-                    <td className="px-3 py-2 text-ink-soft">{p.dob}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.lifePath}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.destiny}</td>
-                    <td className="brand px-3 py-2 text-ink">{p.psychic}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="mt-2 text-sm text-ink-soft">
-            No one in the current bank shares this day and month.
-          </p>
-        )}
+        <BirthDateTimeline
+          rows={birthdayTwins}
+          selectedKey={resolvedMatchKey}
+          onSelect={setSelectedMatchKey}
+          viewerDob={dateOfBirth}
+          compact
+        />
       </div>
 
       <div>
