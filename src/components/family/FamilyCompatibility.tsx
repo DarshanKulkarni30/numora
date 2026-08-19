@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CompatRadar } from "@/components/report/CompatRadar";
+import { CompatCompass } from "@/components/report/CompatCompass";
 import {
   buildCompatibilityMatrix,
   TONE_HINT,
@@ -79,43 +79,37 @@ function vedicPairTones(selfRaw: number, otherRaw: number) {
 }
 
 function ChannelList({
+  selfNumber,
+  partner,
   tones,
   hideRomantic,
+  vedicArcLabels = false,
 }: {
+  selfNumber: number;
+  partner: number;
   tones: {
     romantic: CompatTone;
     business: CompatTone;
     friendship: CompatTone;
   };
   hideRomantic: boolean;
+  vedicArcLabels?: boolean;
 }) {
   return (
-    <div className="mt-3 space-y-3">
-      <CompatRadar
+    <div className="mt-3">
+      <CompatCompass
+        selfNumber={selfNumber}
+        partner={partner}
         romantic={tones.romantic}
         business={tones.business}
         friendship={tones.friendship}
         hideRomantic={hideRomantic}
         size={200}
+        compact
+        vedicArcLabels={vedicArcLabels}
+        vedicPlanet={vedicArcLabels}
+        systemLabel="Compatibility Compass"
       />
-      <ul className="space-y-2 text-sm">
-        {!hideRomantic ? (
-          <li className="flex items-center justify-between gap-2">
-            <span className="text-ink-soft">Romantic</span>
-            <TonePill tone={tones.romantic} />
-          </li>
-        ) : null}
-        <li className="flex items-center justify-between gap-2">
-          <span className="text-ink-soft">
-            {hideRomantic ? "Team / class" : "Business"}
-          </span>
-          <TonePill tone={tones.business} />
-        </li>
-        <li className="flex items-center justify-between gap-2">
-          <span className="text-ink-soft">Friendship</span>
-          <TonePill tone={tones.friendship} />
-        </li>
-      </ul>
     </div>
   );
 }
@@ -254,7 +248,12 @@ export function FamilyCompatibility({ people }: Props) {
                 <p className="mt-1 text-xs text-ink-soft">
                   You {selfLp} × them {otherLp}
                 </p>
-                <ChannelList tones={py} hideRomantic={hideRomantic} />
+                <ChannelList
+                  selfNumber={selfLp}
+                  partner={otherLp}
+                  tones={py}
+                  hideRomantic={hideRomantic}
+                />
               </div>
 
               <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
@@ -262,7 +261,13 @@ export function FamilyCompatibility({ people }: Props) {
                 <p className="mt-1 text-xs text-ink-soft">
                   You {selfPsychic} × them {otherPsychic}
                 </p>
-                <ChannelList tones={moolank} hideRomantic={hideRomantic} />
+                <ChannelList
+                  selfNumber={selfPsychic}
+                  partner={otherPsychic}
+                  tones={moolank}
+                  hideRomantic={hideRomantic}
+                  vedicArcLabels
+                />
               </div>
 
               <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4">
@@ -270,7 +275,13 @@ export function FamilyCompatibility({ people }: Props) {
                 <p className="mt-1 text-xs text-ink-soft">
                   You {selfDestiny} × them {otherDestiny}
                 </p>
-                <ChannelList tones={bhagyank} hideRomantic={hideRomantic} />
+                <ChannelList
+                  selfNumber={selfDestiny}
+                  partner={otherDestiny}
+                  tones={bhagyank}
+                  hideRomantic={hideRomantic}
+                  vedicArcLabels
+                />
               </div>
 
               {namank ? (
@@ -279,7 +290,13 @@ export function FamilyCompatibility({ people }: Props) {
                   <p className="mt-1 text-xs text-ink-soft">
                     You {selfName} × them {otherName}
                   </p>
-                  <ChannelList tones={namank} hideRomantic={hideRomantic} />
+                  <ChannelList
+                    selfNumber={selfName!}
+                    partner={otherName!}
+                    tones={namank}
+                    hideRomantic={hideRomantic}
+                    vedicArcLabels
+                  />
                 </div>
               ) : null}
             </div>

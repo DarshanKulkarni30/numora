@@ -5,6 +5,11 @@ import {
   type CompatTone,
 } from "@/lib/numerology/compatibility";
 import {
+  buildCompatCompass,
+  buildGrahaMandala,
+  visualStateLegend,
+} from "@/lib/numerology/compatCompass";
+import {
   buildPythagoreanWheel,
   pythagoreanWheelPdfLines,
 } from "@/lib/numerology/pythagoreanWheel";
@@ -18,6 +23,7 @@ import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIden
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
+import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -489,6 +495,74 @@ export async function downloadReportPdf(
   // —— Compatibility (full matrices) ——
   doc.addPage();
   y = contentTop;
+  addBanner("Compatibility Compass", "compatibility");
+  addBody(
+    "Visual states map to matrix tones: Radiant←Amazing, Supportive←Favourable, Balanced←Neutral, Friction←Challenging.",
+    9,
+  );
+  for (const row of visualStateLegend()) {
+    addBody(`${row.symbol} ${row.label} (${row.tone}) — ${row.hint}`, 9);
+  }
+
+  const py = report.compatibility.pythagorean;
+  const pyMatrix = py?.matrix ?? report.compatibility.matrix ?? [];
+  const pySelf = reduceToSingleDigit(
+    Number(py?.raw_number ?? snap.life_path),
+  );
+  const pyPartnerRow =
+    pyMatrix.find((r) => r.partnerLifePath === pySelf) ?? pyMatrix[0];
+  if (pyPartnerRow) {
+    const compass = buildCompatCompass({
+      selfNumber: pySelf,
+      partner: pyPartnerRow.partnerLifePath,
+      romantic: String(pyPartnerRow.romantic),
+      business: String(pyPartnerRow.business),
+      friendship: String(pyPartnerRow.friendship),
+      systemLabel: "Pythagorean",
+    });
+    addBanner("Pythagorean compass (partner = your Life Path digit)", "compatibility");
+    for (const line of compass.blueprintLines) {
+      addBody(line, 9);
+    }
+  }
+
+  const ved = report.compatibility.vedic;
+  if (ved?.moolank && ved?.bhagyank && ved?.namank) {
+    const partner = reduceToSingleDigit(Number(ved.bhagyank.raw_number));
+    const pick = (matrix: typeof ved.moolank.matrix) =>
+      matrix.find((r) => r.partnerLifePath === partner) ?? matrix[0];
+    const mR = pick(ved.moolank.matrix);
+    const bR = pick(ved.bhagyank.matrix);
+    const nR = pick(ved.namank.matrix);
+    if (mR && bR && nR) {
+      const mandala = buildGrahaMandala({
+        moolank: Number(ved.moolank.raw_number),
+        bhagyank: Number(ved.bhagyank.raw_number),
+        namank: Number(ved.namank.raw_number),
+        partner,
+        moolankRow: {
+          romantic: String(mR.romantic),
+          business: String(mR.business),
+          friendship: String(mR.friendship),
+        },
+        bhagyankRow: {
+          romantic: String(bR.romantic),
+          business: String(bR.business),
+          friendship: String(bR.friendship),
+        },
+        namankRow: {
+          romantic: String(nR.romantic),
+          business: String(nR.business),
+          friendship: String(nR.friendship),
+        },
+      });
+      addBanner("Vedic Compatibility Mandala (partner = Destiny digit)", "vedic");
+      for (const line of mandala.blueprintLines) {
+        addBody(line, 9);
+      }
+    }
+  }
+
   addBanner("Compatibility matrices", "compatibility");
   addBody(
     report.compatibility.disclaimer ||
@@ -496,14 +570,12 @@ export async function downloadReportPdf(
     9,
   );
 
-  const py = report.compatibility.pythagorean;
   addCompatTable(
     "Pythagorean · Life Path",
     py?.raw_number ?? snap.life_path,
-    py?.matrix ?? report.compatibility.matrix,
+    pyMatrix,
   );
 
-  const ved = report.compatibility.vedic;
   if (ved?.moolank) {
     addCompatTable(
       "Vedic · Psychic (Moolank)",

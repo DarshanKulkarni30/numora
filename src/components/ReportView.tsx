@@ -699,7 +699,11 @@ export function ReportView({
 
         {report.compatibility ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <h2 className="text-xl text-ink">Compatibility radar</h2>
+            <h2 className="text-xl text-ink">Compatibility Compass</h2>
+            <p className="mt-1 text-sm text-ink-soft">
+              Tri-bond wheel across Romantic, Business, and Friendship — plus
+              Vedic Graha Mandala for Psychic · Destiny · Name.
+            </p>
             <div className="mt-4">
               <CompatibilityMatrix
                 pythagorean={{

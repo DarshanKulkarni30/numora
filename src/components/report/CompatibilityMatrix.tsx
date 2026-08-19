@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CompatRadar } from "@/components/report/CompatRadar";
+import { CompatCompass } from "@/components/report/CompatCompass";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
+import { VedicGrahaMandala } from "@/components/report/VedicGrahaMandala";
 import {
   CHANNEL_HINT,
   TONE_HINT,
@@ -55,6 +56,7 @@ type Props = {
 };
 
 type VedicLayerId = "moolank" | "bhagyank" | "namank";
+type VedicMode = "layer" | "mandala";
 
 const TONE_COLOR: Record<CompatTone, string> = {
   Amazing: "bg-emerald-100 text-emerald-950 border-emerald-300",
@@ -84,7 +86,7 @@ function TonePill({ tone }: { tone: string }) {
   );
 }
 
-function PartnerRadarView({
+function PartnerCompassView({
   systemLabel,
   numberLabel,
   rawNumber,
@@ -92,6 +94,8 @@ function PartnerRadarView({
   hideRomantic,
   showPlanet = false,
   showPsychicPhrases = false,
+  vedicArcLabels = false,
+  compassTitle,
 }: {
   systemLabel: string;
   numberLabel: string;
@@ -100,9 +104,13 @@ function PartnerRadarView({
   hideRomantic: boolean;
   showPlanet?: boolean;
   showPsychicPhrases?: boolean;
+  vedicArcLabels?: boolean;
+  compassTitle?: string;
 }) {
   const raw = Number(rawNumber);
-  const reduced = Number.isFinite(raw) ? reduceToSingleDigit(raw) : Number(rawNumber);
+  const reduced = Number.isFinite(raw)
+    ? reduceToSingleDigit(raw)
+    : Number(rawNumber);
   const masterNote = masterNumberNote(rawNumber);
   const planet =
     showPlanet && Number.isFinite(reduced)
@@ -114,6 +122,7 @@ function PartnerRadarView({
     matrix[0]?.partnerLifePath ??
     1;
   const [partner, setPartner] = useState(defaultPartner);
+  const [showGrid, setShowGrid] = useState(false);
 
   const row =
     matrix.find((r) => r.partnerLifePath === partner) ?? matrix[0] ?? {
@@ -127,8 +136,6 @@ function PartnerRadarView({
     ? psychicInteraction(reduced, row.partnerLifePath)
     : null;
 
-  const [showGrid, setShowGrid] = useState(false);
-
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
@@ -141,7 +148,7 @@ function PartnerRadarView({
             1–9 pairing
           </>
         ) : null}
-        . Select a partner digit to update the radar.
+        . Select a partner digit to update the compass.
       </p>
       {planet ? (
         <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
@@ -155,13 +162,17 @@ function PartnerRadarView({
         </p>
       ) : null}
 
-      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Partner number">
+      <div
+        className="flex flex-wrap gap-1.5"
+        role="group"
+        aria-label="Partner number"
+      >
         {matrix.map((r) => (
           <button
             key={r.partnerLifePath}
             type="button"
             onClick={() => setPartner(r.partnerLifePath)}
-            className={`min-w-[2.25rem] rounded-full border px-2.5 py-1.5 text-sm transition ${
+            className={`btn-tactile min-w-[2.25rem] rounded-full border px-2.5 py-1.5 text-sm ${
               partner === r.partnerLifePath
                 ? "border-ink bg-ink text-paper"
                 : "border-[var(--line)] bg-white/70 text-ink hover:border-gold"
@@ -177,130 +188,117 @@ function PartnerRadarView({
         ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 md:items-start">
-        <CompatRadar
-          romantic={row.romantic}
-          business={row.business}
-          friendship={row.friendship}
-          hideRomantic={hideRomantic}
-        />
-        <div className="space-y-3">
-          <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-xs leading-5 text-ink-soft">
-            <p className="font-medium text-ink">
-              Partner {row.partnerLifePath}
-              {row.partnerLifePath === reduced ? " · you" : ""}
+      <CompatCompass
+        selfNumber={reduced}
+        partner={row.partnerLifePath}
+        romantic={row.romantic}
+        business={row.business}
+        friendship={row.friendship}
+        hideRomantic={hideRomantic}
+        vedicPlanet={showPlanet}
+        vedicArcLabels={vedicArcLabels}
+        systemLabel={compassTitle ?? "Compatibility Compass"}
+      >
+        {interaction ? (
+          <div className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-3 text-sm text-ink">
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Psychic interaction · {interaction.tone}
             </p>
-            {interaction ? (
-              <p className="mt-2 rounded-lg border border-[var(--line)] bg-white/70 px-2.5 py-2 text-ink">
-                <span className="text-[10px] uppercase tracking-wider text-ink-soft">
-                  Psychic interaction · {interaction.tone}
-                </span>
-                <span className="mt-1 block">{interaction.phrase}</span>
-              </p>
+            <p className="mt-1">{interaction.phrase}</p>
+          </div>
+        ) : null}
+
+        <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-xs leading-5 text-ink-soft">
+          <p className="font-medium text-ink">
+            Partner {row.partnerLifePath}
+            {row.partnerLifePath === reduced ? " · you" : ""}
+          </p>
+          <ul className="mt-2 space-y-1.5">
+            {!hideRomantic ? (
+              <li className="flex flex-wrap items-center gap-2">
+                <strong className="text-ink">Romantic</strong>
+                <TonePill tone={row.romantic} />
+                <span>— {CHANNEL_HINT.romantic}</span>
+              </li>
             ) : null}
-            <ul className="mt-2 space-y-1.5">
-              {!hideRomantic ? (
-                <li className="flex flex-wrap items-center gap-2">
-                  <strong className="text-ink">Romantic</strong>
-                  <TonePill tone={row.romantic} />
-                  <span>— {CHANNEL_HINT.romantic}</span>
-                </li>
-              ) : null}
-              <li className="flex flex-wrap items-center gap-2">
-                <strong className="text-ink">
-                  {hideRomantic ? "Team / class" : "Business"}
-                </strong>
-                <TonePill tone={row.business} />
-                <span>
-                  — {hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
-                </span>
-              </li>
-              <li className="flex flex-wrap items-center gap-2">
-                <strong className="text-ink">Friendship</strong>
-                <TonePill tone={row.friendship} />
-                <span>— {CHANNEL_HINT.friendship}</span>
-              </li>
-            </ul>
-          </div>
-          {showPsychicPhrases ? (
-            <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-              <button
-                type="button"
-                className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
-                onClick={() => setShowGrid((v) => !v)}
-              >
-                {showGrid ? "Hide" : "View"} full Psychic grid
-              </button>
-              {showGrid ? (
-                <div className="mt-3 overflow-x-auto">
-                  <table className="w-full min-w-[18rem] border-collapse text-left">
-                    <thead>
-                      <tr>
-                        <th className="border-b border-[var(--line)] p-1 font-medium text-ink">
-                          You ↓ / them →
-                        </th>
-                        {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
-                          <th
-                            key={n}
-                            className="border-b border-[var(--line)] p-1 text-center font-medium text-ink"
-                          >
-                            {n}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border-b border-[var(--line)] p-1 font-medium text-ink">
-                          {reduced}
-                        </td>
-                        {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => {
-                          const cell = psychicInteraction(reduced, n);
-                          return (
-                            <td
-                              key={n}
-                              title={cell.phrase}
-                              className={`border-b border-[var(--line)] p-1 text-center ${
-                                n === partner ? "bg-ink/5 font-medium text-ink" : ""
-                              }`}
-                            >
-                              {cell.tone === "supportive"
-                                ? "↑"
-                                : cell.tone === "stretch"
-                                  ? "↓"
-                                  : "·"}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    </tbody>
-                  </table>
-                  <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
-                </div>
-              ) : (
-                <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
-              )}
-            </div>
-          ) : null}
-          <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-            <p className="font-medium text-ink">Tone scale</p>
-            <ul className="mt-2 space-y-2">
-              {(
-                [
-                  "Amazing",
-                  "Favourable",
-                  "Neutral",
-                  "Challenging",
-                ] as CompatTone[]
-              ).map((t) => (
-                <li key={t}>
-                  <strong className="text-ink">{t}</strong> — {TONE_HINT[t]}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <li className="flex flex-wrap items-center gap-2">
+              <strong className="text-ink">
+                {hideRomantic ? "Team / class" : "Business"}
+              </strong>
+              <TonePill tone={row.business} />
+              <span>
+                — {hideRomantic ? CHANNEL_HINT.team : CHANNEL_HINT.business}
+              </span>
+            </li>
+            <li className="flex flex-wrap items-center gap-2">
+              <strong className="text-ink">Friendship</strong>
+              <TonePill tone={row.friendship} />
+              <span>— {CHANNEL_HINT.friendship}</span>
+            </li>
+          </ul>
         </div>
-      </div>
+
+        {showPsychicPhrases ? (
+          <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
+            <button
+              type="button"
+              className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
+              onClick={() => setShowGrid((v) => !v)}
+            >
+              {showGrid ? "Hide" : "View"} full Psychic grid
+            </button>
+            {showGrid ? (
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full min-w-[18rem] border-collapse text-left">
+                  <thead>
+                    <tr>
+                      <th className="border-b border-[var(--line)] p-1 font-medium text-ink">
+                        You ↓ / them →
+                      </th>
+                      {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
+                        <th
+                          key={n}
+                          className="border-b border-[var(--line)] p-1 text-center font-medium text-ink"
+                        >
+                          {n}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="border-b border-[var(--line)] p-1 font-medium text-ink">
+                        {reduced}
+                      </td>
+                      {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => {
+                        const cell = psychicInteraction(reduced, n);
+                        return (
+                          <td
+                            key={n}
+                            title={cell.phrase}
+                            className={`border-b border-[var(--line)] p-1 text-center ${
+                              n === partner ? "bg-ink/5 font-medium text-ink" : ""
+                            }`}
+                          >
+                            {cell.tone === "supportive"
+                              ? "↑"
+                              : cell.tone === "stretch"
+                                ? "↓"
+                                : "·"}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
+              </div>
+            ) : (
+              <p className="mt-2">{PSYCHIC_INTERACTION_NOTE}</p>
+            )}
+          </div>
+        ) : null}
+      </CompatCompass>
     </div>
   );
 }
@@ -312,6 +310,8 @@ export function CompatibilityMatrix({
 }: Props) {
   const [tab, setTab] = useState<"pythagorean" | "vedic">("pythagorean");
   const [vedicLayer, setVedicLayer] = useState<VedicLayerId>("moolank");
+  const [vedicMode, setVedicMode] = useState<VedicMode>("mandala");
+  const [mandalaPartner, setMandalaPartner] = useState<number | null>(null);
 
   const layers = useMemo(() => {
     const hasNew =
@@ -336,9 +336,7 @@ export function CompatibilityMatrix({
   }, [vedic]);
 
   const activeVedic =
-    layers.mode === "layered"
-      ? layers[vedicLayer]
-      : layers.legacy;
+    layers.mode === "layered" ? layers[vedicLayer] : layers.legacy;
 
   const layerLabel: Record<VedicLayerId, string> = {
     moolank: "Psychic (Moolank)",
@@ -351,6 +349,9 @@ export function CompatibilityMatrix({
       ? layers.bhagyank.rawNumber
       : layers.legacy.rawNumber;
 
+  const destinyDigit = reduceToSingleDigit(Number(destinyRaw)) || 1;
+  const activeMandalaPartner = mandalaPartner ?? destinyDigit;
+
   const sameCore =
     reduceToSingleDigit(Number(pythagorean.rawNumber)) ===
     reduceToSingleDigit(Number(destinyRaw));
@@ -358,10 +359,10 @@ export function CompatibilityMatrix({
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        Same four-tone scale for both systems:{" "}
-        <span className="text-ink">Amazing</span>, Favourable, Neutral,
-        Challenging. Pythagorean uses Life Path; Vedic uses Psychic, Destiny, and
-        Name layers with a traditional 1–9 relationship table.
+        Compatibility Compass uses visual states (Radiant · Supportive ·
+        Balanced · Friction) while matrices keep Amazing / Favourable / Neutral
+        / Challenging. Pythagorean uses Life Path; Vedic offers layer bonds or a
+        Graha Mandala across Psychic, Destiny, and Name.
       </p>
       {sameCore ? (
         <p className="rounded-xl border border-sky-200 bg-sky-50/80 px-3 py-2 text-sm text-sky-950">
@@ -376,7 +377,7 @@ export function CompatibilityMatrix({
         <button
           type="button"
           onClick={() => setTab("pythagorean")}
-          className={`flex-1 rounded-full px-3 py-2 text-sm transition ${
+          className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
             tab === "pythagorean"
               ? "bg-ink text-paper"
               : "text-ink-soft hover:text-ink"
@@ -387,7 +388,7 @@ export function CompatibilityMatrix({
         <button
           type="button"
           onClick={() => setTab("vedic")}
-          className={`flex-1 rounded-full px-3 py-2 text-sm transition ${
+          className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
             tab === "vedic"
               ? "bg-ink text-paper"
               : "text-ink-soft hover:text-ink"
@@ -398,37 +399,40 @@ export function CompatibilityMatrix({
       </div>
 
       {tab === "pythagorean" ? (
-        <PartnerRadarView
+        <PartnerCompassView
           systemLabel="Pythagorean"
           numberLabel="Life Path"
           rawNumber={pythagorean.rawNumber}
           matrix={pythagorean.matrix}
           hideRomantic={hideRomantic}
+          compassTitle="Compatibility Compass"
         />
       ) : (
         <div className="space-y-4">
           {layers.mode === "layered" ? (
-            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/40 p-1">
-              {(
-                [
-                  "moolank",
-                  "bhagyank",
-                  "namank",
-                ] as VedicLayerId[]
-              ).map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setVedicLayer(id)}
-                  className={`flex-1 rounded-full px-3 py-2 text-sm transition ${
-                    vedicLayer === id
-                      ? "bg-ink text-paper"
-                      : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {layerLabel[id]}
-                </button>
-              ))}
+            <div className="flex rounded-full border border-[var(--line)] bg-white/40 p-1">
+              <button
+                type="button"
+                onClick={() => setVedicMode("mandala")}
+                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                  vedicMode === "mandala"
+                    ? "bg-ink text-paper"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                Graha Mandala
+              </button>
+              <button
+                type="button"
+                onClick={() => setVedicMode("layer")}
+                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                  vedicMode === "layer"
+                    ? "bg-ink text-paper"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                Layer bonds
+              </button>
             </div>
           ) : (
             <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-sm text-amber-950">
@@ -439,29 +443,69 @@ export function CompatibilityMatrix({
 
           <p className="text-xs leading-5 text-ink-soft">{VEDIC_COMPAT_NOTE}</p>
 
-          {layers.mode === "layered" && vedicLayer === "namank" ? (
-            <p className="text-xs leading-5 text-ink-soft">
-              For first-letter approach cues (Cornerstone / Capstone / First
-              vowel), open Birth charts → Name letters on this report.
-            </p>
-          ) : null}
+          {layers.mode === "layered" && vedicMode === "mandala" ? (
+            <VedicGrahaMandala
+              moolank={layers.moolank}
+              bhagyank={layers.bhagyank}
+              namank={layers.namank}
+              partner={activeMandalaPartner}
+              onPartnerChange={setMandalaPartner}
+              hideRomantic={hideRomantic}
+            />
+          ) : (
+            <>
+              {layers.mode === "layered" ? (
+                <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/40 p-1">
+                  {(
+                    [
+                      "moolank",
+                      "bhagyank",
+                      "namank",
+                    ] as VedicLayerId[]
+                  ).map((id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setVedicLayer(id)}
+                      className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                        vedicLayer === id
+                          ? "bg-ink text-paper"
+                          : "text-ink-soft hover:text-ink"
+                      }`}
+                    >
+                      {layerLabel[id]}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
 
-          <PartnerRadarView
-            key={`vedic-${vedicLayer}-${activeVedic.rawNumber}`}
-            systemLabel="Vedic"
-            numberLabel={
-              layers.mode === "layered"
-                ? layerLabel[vedicLayer]
-                : "Destiny Number"
-            }
-            rawNumber={activeVedic.rawNumber}
-            matrix={activeVedic.matrix}
-            hideRomantic={hideRomantic}
-            showPlanet
-            showPsychicPhrases={
-              layers.mode !== "layered" || vedicLayer === "moolank"
-            }
-          />
+              {layers.mode === "layered" && vedicLayer === "namank" ? (
+                <p className="text-xs leading-5 text-ink-soft">
+                  For first-letter approach cues (Cornerstone / Capstone / First
+                  vowel), open Birth charts → Name letters on this report.
+                </p>
+              ) : null}
+
+              <PartnerCompassView
+                key={`vedic-${vedicLayer}-${activeVedic.rawNumber}`}
+                systemLabel="Vedic"
+                numberLabel={
+                  layers.mode === "layered"
+                    ? layerLabel[vedicLayer]
+                    : "Destiny Number"
+                }
+                rawNumber={activeVedic.rawNumber}
+                matrix={activeVedic.matrix}
+                hideRomantic={hideRomantic}
+                showPlanet
+                vedicArcLabels
+                compassTitle="Graha Compatibility Wheel"
+                showPsychicPhrases={
+                  layers.mode !== "layered" || vedicLayer === "moolank"
+                }
+              />
+            </>
+          )}
         </div>
       )}
     </div>

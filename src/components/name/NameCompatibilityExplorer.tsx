@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DobInput } from "@/components/DobInput";
-import { CompatRadar } from "@/components/report/CompatRadar";
+import { CompatCompass } from "@/components/report/CompatCompass";
 import { calculateChaldean } from "@/lib/numerology/chaldean";
 import {
   buildCompatibilityMatrix,
@@ -117,41 +117,39 @@ function pairTones(
 function ChannelBlock({
   title,
   subtitle,
+  selfNumber,
+  partner,
   tones,
+  vedicArcLabels = false,
 }: {
   title: string;
   subtitle: string;
+  selfNumber: number;
+  partner: number;
   tones: {
     romantic: CompatTone;
     business: CompatTone;
     friendship: CompatTone;
   };
+  vedicArcLabels?: boolean;
 }) {
   return (
     <div className="rounded-xl border border-[var(--line)] bg-white/70 p-4">
       <h3 className="text-ink">{title}</h3>
       <p className="mt-1 text-xs text-ink-soft">{subtitle}</p>
-      <div className="mt-3 space-y-3">
-        <CompatRadar
+      <div className="mt-3">
+        <CompatCompass
+          selfNumber={selfNumber}
+          partner={partner}
           romantic={tones.romantic}
           business={tones.business}
           friendship={tones.friendship}
-          size={180}
+          size={200}
+          compact
+          vedicArcLabels={vedicArcLabels}
+          vedicPlanet={vedicArcLabels}
+          systemLabel="Compatibility Compass"
         />
-        <ul className="space-y-2 text-sm">
-          <li className="flex items-center justify-between gap-2">
-            <span className="text-ink-soft">Romantic</span>
-            <TonePill tone={tones.romantic} />
-          </li>
-          <li className="flex items-center justify-between gap-2">
-            <span className="text-ink-soft">Business</span>
-            <TonePill tone={tones.business} />
-          </li>
-          <li className="flex items-center justify-between gap-2">
-            <span className="text-ink-soft">Friendship</span>
-            <TonePill tone={tones.friendship} />
-          </li>
-        </ul>
       </div>
     </div>
   );
@@ -837,17 +835,26 @@ export function NameCompatibilityExplorer({ people }: Props) {
                 <ChannelBlock
                   title="Psychic (Moolank)"
                   subtitle={`${analysis.lPsychic} × ${analysis.rPsychic}`}
+                  selfNumber={analysis.lPsychic}
+                  partner={analysis.rPsychic}
                   tones={analysis.psychic}
+                  vedicArcLabels
                 />
                 <ChannelBlock
                   title="Destiny (Bhagyank)"
                   subtitle={`${analysis.lDestiny} × ${analysis.rDestiny}`}
+                  selfNumber={analysis.lDestiny}
+                  partner={analysis.rDestiny}
                   tones={analysis.destiny}
+                  vedicArcLabels
                 />
                 <ChannelBlock
                   title="Name (Namank)"
                   subtitle={`${analysis.lName} × ${analysis.rName}`}
+                  selfNumber={analysis.lName}
+                  partner={analysis.rName}
                   tones={analysis.namank}
+                  vedicArcLabels
                 />
               </div>
             ) : null}
@@ -857,6 +864,8 @@ export function NameCompatibilityExplorer({ people }: Props) {
                 <ChannelBlock
                   title="Chaldean name"
                   subtitle={`${analysis.lChName} × ${analysis.rChName}`}
+                  selfNumber={analysis.lChName}
+                  partner={analysis.rChName}
                   tones={analysis.chaldean}
                 />
                 <div className="rounded-xl border border-[var(--line)] bg-mist/40 p-4 text-sm text-ink-soft">
@@ -876,11 +885,15 @@ export function NameCompatibilityExplorer({ people }: Props) {
                 <ChannelBlock
                   title="Life Path"
                   subtitle={`${analysis.lLp} × ${analysis.rLp}`}
+                  selfNumber={analysis.lLp}
+                  partner={analysis.rLp}
                   tones={analysis.lifePath}
                 />
                 <ChannelBlock
                   title="Expression"
                   subtitle={`${analysis.lExpr} × ${analysis.rExpr}`}
+                  selfNumber={analysis.lExpr}
+                  partner={analysis.rExpr}
                   tones={analysis.expression}
                 />
               </div>
