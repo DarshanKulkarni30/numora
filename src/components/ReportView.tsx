@@ -11,8 +11,10 @@ import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
+import { YearRhythmPanel } from "@/components/report/YearRhythmPanel";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
+import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
 import { CORE_TRAIT } from "@/lib/numerology/meanings";
 import {
   chaldeanInsight,
@@ -272,7 +274,7 @@ export function ReportView({
     {
       system: "timing" as const,
       title: "This year timing",
-      blurb: "Birthday-cycle Personal Year and Vedic Year outlook (toggle calendar on the Years page) plus this month’s pacing.",
+      blurb: "Birthday-cycle Personal Year, month pacing, and Vedic Year outlook — open the Annual rhythm wheel below.",
       actionHref: yearsHrefForPerson({
         dateOfBirth: person.date_of_birth,
         fullName: person.full_name,
@@ -450,6 +452,8 @@ export function ReportView({
             {" · "}
             <Link
               href="/name"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gold-deep underline underline-offset-2 hover:text-ink"
             >
               What&apos;s my name
@@ -484,6 +488,16 @@ export function ReportView({
           </p>
           <div className="mt-4">
             <SnapshotBySystem groups={snapshotGroups} />
+          </div>
+          <div className="mt-6">
+            <PythagoreanIdentityLayers
+              birthDay={snap.birth_day}
+              lifePath={snap.life_path}
+              expression={snap.expression_number}
+              soulUrge={snap.soul_urge_number}
+              personality={snap.personality_number}
+              maturity={snap.maturity_number}
+            />
           </div>
         </section>
 
@@ -556,46 +570,14 @@ export function ReportView({
         </section>
 
         <section>
-          <h2 className="text-xl text-ink">Year outlook</h2>
-          <p className="mt-1 text-sm text-ink-soft">
-            Personal Year below uses the <span className="font-medium text-ink">birthday cycle</span>
-            —this year’s number activates on your birthday. Vedic Year outlook
-            uses the same clock. Nature describes typical experience
-            (transformational, responsibility-heavy, endings) rather than
-            Amazing or Good. Toggle Calendar year on the Years page for
-            1 Jan–31 Dec.{" "}
-            <LearningConceptLink conceptKey="personal-year" />
-            {" · "}
-            <LearningConceptLink conceptKey="projected-year" />
-          </p>
-          <p className="mt-2 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-ink-soft">
-            <span className="font-medium text-ink">Personal Year</span>{" "}
-            {snap.personal_year ? (
-              <span className="brand text-ink">{snap.personal_year}</span>
-            ) : null}
-            {report.personal_year.nature ? (
-              <>
-                {" "}
-                · {report.personal_year.nature}
-              </>
-            ) : null}
-            {report.personal_year.range_label ? (
-              <> · {report.personal_year.range_label}</>
-            ) : null}
-            {report.personal_year.land ? (
-              <span className="mt-1 block text-xs">
-                {report.personal_year.land}
-                {report.personal_year.pinnacle
-                  ? ` · ${report.personal_year.pinnacle}`
-                  : ""}
-                {report.personal_year.karmic
-                  ? ` · Karmic ${report.personal_year.karmic}`
-                  : ""}
-              </span>
-            ) : null}
-            <span className="mt-1 block">{report.personal_year.theme}</span>
-          </p>
-          <div className="mt-4">
+          <YearRhythmPanel
+            personalYear={report.personal_year}
+            personalMonth={report.personal_month}
+            projectedYear={report.projected_year}
+            sunSignId={snap.sun_sign}
+            sunSignLabel={snap.sun_sign_label}
+          />
+          <div className="mt-6">
             <ProjectedYearPanel
               dateOfBirth={person.date_of_birth}
               initialYear={

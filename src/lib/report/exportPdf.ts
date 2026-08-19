@@ -14,6 +14,8 @@ import {
 } from "@/lib/numerology/auraIdentity";
 import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArchitecture";
+import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIdentityLayers";
+import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -381,6 +383,18 @@ export async function downloadReportPdf(
   addBody(
     `Maturity ${report.pythagorean.maturity.number}: ${report.pythagorean.maturity.meaning}`,
   );
+  addBanner("Identity layers", "pythagorean");
+  const identity = buildPythagoreanIdentityLayers({
+    birthDay: snap.birth_day,
+    lifePath: snap.life_path,
+    expression: snap.expression_number,
+    soulUrge: snap.soul_urge_number,
+    personality: snap.personality_number,
+    maturity: snap.maturity_number,
+  });
+  for (const line of identity.blueprintLines) {
+    addBody(line, 9);
+  }
   try {
     const wheel = buildPythagoreanWheel(person.date_of_birth, snap);
     for (const line of pythagoreanWheelPdfLines(wheel)) {
@@ -552,6 +566,19 @@ export async function downloadReportPdf(
         report.projected_year.calendar_year
       }): ${report.projected_year.theme}. ${report.projected_year.advice}`,
     );
+  }
+  const rhythm = buildYearRhythm({
+    personalYear: report.personal_year.number,
+    personalMonth: report.personal_month.number,
+    outlook: report.projected_year?.number,
+    yearNature: report.personal_year.nature,
+    yearTheme: report.personal_year.theme,
+    monthTheme: report.personal_month.theme,
+    monthAdvice: report.personal_month.advice,
+    sunSignId: snap.sun_sign,
+  });
+  for (const line of yearRhythmPdfLines(rhythm)) {
+    addBody(line);
   }
   addBody(
     `Age guidance — ${report.age_guidance.category}: ${report.age_guidance.guidance}`,
