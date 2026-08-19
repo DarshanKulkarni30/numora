@@ -620,6 +620,8 @@ export function LoShuChart({
         <ClassicSquareGrid loShu={loShu} setTip={setTip} />
       )}
 
+      <PlaneSwatchLegend />
+
       <ChartTipPanel
         tip={tip}
         empty="Hover a node for plane and meaning, or a vector for its strength engine."
@@ -747,21 +749,25 @@ export function LoShuChart({
           ) : null}
         </>
       ) : null}
+    </div>
+  );
+}
 
-      <div className="flex flex-wrap gap-3 text-xs text-ink-soft">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-200 border border-rose-400" />{" "}
-          Emotional (3–5–7)
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-200 border border-sky-400" />{" "}
-          Mental (4–9–2)
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-200 border border-emerald-500" />{" "}
-          Practical (8–1–6)
-        </span>
-      </div>
+function PlaneSwatchLegend() {
+  return (
+    <div className="flex flex-wrap justify-center gap-3 text-[11px] text-ink-soft">
+      <span className="inline-flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-200" />
+        Mental · 4–9–2
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-full border border-rose-400 bg-rose-200" />
+        Emotional · 3–5–7
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-full border border-emerald-500 bg-emerald-200" />
+        Practical · 8–1–6
+      </span>
     </div>
   );
 }
@@ -773,24 +779,25 @@ function ClassicSquareGrid({
   loShu: LoShuResult;
   setTip: (t: string | null) => void;
 }) {
-  const CELL_ORDER = [
-    [4, 9, 2],
-    [3, 5, 7],
-    [8, 1, 6],
-  ];
-  const planes = [
+  const rows = [
     {
+      label: "Mental",
       numbers: [4, 9, 2],
+      labelClass: "text-sky-800",
       present: "border-sky-300/80 bg-sky-100 text-sky-950",
       missing: "border-dashed border-sky-300/60 bg-sky-50/50 text-sky-400",
     },
     {
+      label: "Emotional",
       numbers: [3, 5, 7],
+      labelClass: "text-rose-800",
       present: "border-rose-300/80 bg-rose-100 text-rose-950",
       missing: "border-dashed border-rose-300/60 bg-rose-50/50 text-rose-400",
     },
     {
+      label: "Practical",
       numbers: [8, 1, 6],
+      labelClass: "text-emerald-900",
       present: "border-emerald-300/80 bg-emerald-100 text-emerald-950",
       missing:
         "border-dashed border-emerald-300/60 bg-emerald-50/50 text-emerald-400",
@@ -798,32 +805,44 @@ function ClassicSquareGrid({
   ];
 
   return (
-    <div className="mx-auto grid max-w-xs grid-cols-3 gap-1.5">
-      {CELL_ORDER.flat().map((n) => {
-        const plane = planes.find((p) => p.numbers.includes(n))!;
-        const count = loShu.grid[n] ?? 0;
-        const missing = count === 0;
-        const meta = LO_SHU_NUMBER_META[n];
-        const tileTip = `${n} · ${meta.trait}${missing ? " · quiet" : ` · ×${count}`}`;
-        return (
-          <Link
-            key={n}
-            href={guideHref("lo-shu-number", n)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onMouseEnter={() => setTip(tileTip)}
-            onMouseLeave={() => setTip(null)}
-            className={`btn-tactile relative flex aspect-square flex-col items-center justify-center rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-gold ${
-              missing ? plane.missing : plane.present
-            }`}
-          >
-            <span className="brand text-xl leading-none">{n}</span>
-            <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
-              {missing ? "quiet" : `×${count}`}
-            </span>
-          </Link>
-        );
-      })}
+    <div className="mx-auto max-w-sm">
+      <div className="grid grid-cols-[3.4rem_1fr_1fr_1fr] gap-1.5">
+        {rows.map((row) => (
+          <div key={row.label} className="contents">
+            <p
+              className={`flex items-center justify-end pr-1 text-[9px] font-medium uppercase leading-tight tracking-wider ${row.labelClass}`}
+            >
+              {row.label}
+            </p>
+            {row.numbers.map((n) => {
+              const count = loShu.grid[n] ?? 0;
+              const missing = count === 0;
+              const meta = LO_SHU_NUMBER_META[n];
+              const tileTip = `${n} · ${meta.trait} · ${row.label} plane${
+                missing ? " · quiet" : ` · ×${count}`
+              }`;
+              return (
+                <Link
+                  key={n}
+                  href={guideHref("lo-shu-number", n)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onMouseEnter={() => setTip(tileTip)}
+                  onMouseLeave={() => setTip(null)}
+                  className={`btn-tactile relative flex aspect-square flex-col items-center justify-center rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+                    missing ? row.missing : row.present
+                  }`}
+                >
+                  <span className="brand text-xl leading-none">{n}</span>
+                  <span className="mt-0.5 text-[9px] uppercase tracking-wider opacity-90">
+                    {missing ? "quiet" : `×${count}`}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

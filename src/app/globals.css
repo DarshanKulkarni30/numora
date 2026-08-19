@@ -377,3 +377,40 @@ a.rounded-full:active {
     animation: none;
   }
 }
+
+.insight-header {
+  background-size: 160% 160%;
+  animation: insight-wash 16s ease-in-out infinite;
+}
+
+.insight-glyph {
+  display: inline-block;
+  animation: insight-glyph-breathe 4.8s ease-in-out infinite;
+}
+
+@keyframes insight-wash {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes insight-glyph-breathe {
+  0%,
+  100% {
+    opacity: 0.82;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insight-header,
+  .insight-glyph {
+    animation: none;
+  }
+}

@@ -23,6 +23,8 @@ import {
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
+import { InsightTileCard } from "@/components/report/InsightTileCard";
+import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { BRAND_NAME } from "@/lib/site";
@@ -128,6 +130,14 @@ function SectionBody({ text }: { text: string }) {
 function MoreDetail({ text }: { text: string }) {
   return <SectionBody text={text} />;
 }
+
+const INSIGHT_SECTIONS = new Set([
+  "pythagorean",
+  "chaldean",
+  "vedic",
+  "lo-shu",
+  "core-personality",
+]);
 
 export function ReportView({
   report,
@@ -390,6 +400,7 @@ export function ReportView({
       s.id !== "compatibility" &&
       s.id !== "closing",
   );
+  const insightPack = buildDetailedInsightCards(report);
 
   return (
     <article className="report-protected relative mx-auto max-w-3xl px-5 pb-20 pt-4">
@@ -689,6 +700,15 @@ export function ReportView({
                       ))}
                     </ul>
                   </div>
+                </div>
+              ) : INSIGHT_SECTIONS.has(section.id) ? (
+                <div className="space-y-4">
+                  <div className="space-y-4">
+                    {(insightPack[section.id] ?? []).map((card) => (
+                      <InsightTileCard key={card.key} card={card} />
+                    ))}
+                  </div>
+                  <MoreDetail text={section.body} />
                 </div>
               ) : (
                 <MoreDetail text={section.body} />
