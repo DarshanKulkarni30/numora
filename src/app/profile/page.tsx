@@ -59,15 +59,15 @@ export default async function ProfilePage() {
   return (
     <div>
       <SiteHeader email={user.email} />
-      <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-4xl text-ink">Profile settings</h1>
-          <p className="mt-3 text-ink-soft">
+      <main className="mx-auto max-w-6xl px-5 pb-36 pt-6">
+        <div className="mx-auto max-w-2xl">
+          <h1 className="text-3xl text-ink sm:text-4xl">Profile settings</h1>
+          <p className="mt-2 text-sm text-ink-soft sm:text-base">
             Save yourself
             {entitlements.maxFamily > 0
               ? ` and up to ${entitlements.maxFamily} family member${entitlements.maxFamily === 1 ? "" : "s"}`
               : ""}
-            . Complete profiles can be used for new readings.
+            . Switch people with the tabs — Add and Save stay on screen.
           </p>
         </div>
         <div className="mt-10">
