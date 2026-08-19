@@ -503,7 +503,11 @@ export function ReportView({
         </section>
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-          <h2 className="text-xl text-ink">Birth × Destiny × Name fit</h2>
+          <h2 className="text-xl text-ink">Birth × Destiny × Name table</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Optional grid from school tables. The Vedic panel above already
+            explains Birth → Destiny and what Name adds in plain language.
+          </p>
           <div className="mt-4">
             <TrioFitPanel
               vedicBirth={snap.vedic_psychic}

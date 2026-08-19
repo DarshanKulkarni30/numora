@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
-  TRIO_BAND_TAGS,
   TRIO_NOTE,
   chaldeanTableForBirth,
   chaldeanTrio,
@@ -48,11 +47,11 @@ const BAND_CELL: Record<TrioBand, string> = {
 };
 
 const BAND_WORD: Record<TrioBand, string> = {
-  amazing: "Amazing",
-  favourable: "Favourable",
-  neutral: "Neutral",
-  friction: "Friction",
-  block: "Heavy",
+  amazing: "Often easier together",
+  favourable: "Usually supportive",
+  neutral: "Mixed / average",
+  friction: "May need extra care",
+  block: "May ask more patience",
 };
 
 function digits(raw: string): { raw: string; core: number } {
@@ -341,7 +340,7 @@ export function TrioFitPanel({
       )}
 
       <div className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-3 text-xs leading-5 text-ink-soft">
-        <p className="font-medium text-ink">Five-band scale (best → heavier)</p>
+        <p className="font-medium text-ink">How to read the table</p>
         <ul className="mt-2 space-y-1.5">
           {(Object.keys(TRIO_BAND_HINT) as TrioBand[]).map((b) => (
             <li key={b}>
@@ -349,10 +348,7 @@ export function TrioFitPanel({
                 {TRIO_BAND_ICON[b]}
               </span>
               <strong className="text-ink">{BAND_WORD[b]}</strong> —{" "}
-              {TRIO_BAND_HINT[b]}{" "}
-              <span className="opacity-80">
-                (tags: {TRIO_BAND_TAGS[b].join(", ")})
-              </span>
+              {TRIO_BAND_HINT[b]}
             </li>
           ))}
         </ul>
