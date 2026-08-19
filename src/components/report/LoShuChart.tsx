@@ -87,14 +87,24 @@ function polar(cx: number, cy: number, r: number, deg: number) {
 
 function TriBalanceRadar({ architecture }: { architecture: LoShuArchitecture }) {
   const cx = 50;
-  const cy = 52;
-  const R = 36;
+  const cy = 54;
+  const R = 30;
   const order: ("emotional" | "practical" | "mental")[] = [
     "emotional",
     "practical",
     "mental",
   ];
   const angles = [-90, 150, 30];
+  const anchors: Array<{
+    id: (typeof order)[number];
+    x: number;
+    y: number;
+    anchor: "middle" | "end" | "start";
+  }> = [
+    { id: "emotional", x: 50, y: 10, anchor: "middle" },
+    { id: "practical", x: 8, y: 108, anchor: "start" },
+    { id: "mental", x: 92, y: 108, anchor: "end" },
+  ];
   const byId = Object.fromEntries(architecture.planes.map((p) => [p.id, p]));
   const pts = order.map((id, i) => {
     const n = byId[id]?.normalized ?? 0;
@@ -113,7 +123,12 @@ function TriBalanceRadar({ architecture }: { architecture: LoShuArchitecture }) 
       <p className="text-xs uppercase tracking-wider text-ink-soft">
         Tri-balance
       </p>
-      <svg viewBox="0 0 100 100" className="mx-auto mt-1 h-36 w-full max-w-[11rem]">
+      <svg
+        viewBox="0 0 100 118"
+        className="mx-auto mt-1 h-40 w-full max-w-[12rem] overflow-visible"
+        role="img"
+        aria-label="Emotional, practical, and mental balance"
+      >
         <polygon
           points={frame}
           fill="none"
@@ -126,21 +141,18 @@ function TriBalanceRadar({ architecture }: { architecture: LoShuArchitecture }) 
           stroke="rgb(180 83 9 / 0.7)"
           strokeWidth="1.2"
         />
-        {order.map((id, i) => {
-          const tip = polar(cx, cy, R + 14, angles[i]);
-          return (
-            <text
-              key={id}
-              x={tip.x}
-              y={tip.y}
-              textAnchor="middle"
-              className="fill-[var(--ink-soft)]"
-              style={{ fontSize: 7 }}
-            >
-              {byId[id]?.label.slice(0, 3)}
-            </text>
-          );
-        })}
+        {anchors.map((a) => (
+          <text
+            key={a.id}
+            x={a.x}
+            y={a.y}
+            textAnchor={a.anchor}
+            className="fill-[var(--ink-soft)]"
+            style={{ fontSize: 6.5 }}
+          >
+            {byId[a.id]?.label}
+          </text>
+        ))}
       </svg>
       <ul className="mt-1 space-y-0.5 text-[11px] text-ink-soft">
         {architecture.planes.map((p) => (
@@ -373,9 +385,9 @@ export function LoShuChart({
       ) : null}
 
       {layout === "circular" ? (
-        <div className="mx-auto max-w-md">
+        <div className="mx-auto max-w-md overflow-visible px-3 py-4">
           <svg
-            viewBox="0 0 100 100"
+            viewBox="-10 -10 120 120"
             className="h-auto w-full overflow-visible"
             role="img"
             aria-label="Lo Shu grid"
