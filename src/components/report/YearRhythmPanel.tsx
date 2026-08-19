@@ -17,6 +17,8 @@ type Props = {
   projectedYear?: NumerologyReport["projected_year"];
   sunSignId?: string | null;
   sunSignLabel?: string | null;
+  /** When nested in TimingDashboard */
+  hideSectionTitle?: boolean;
 };
 
 const RING: Record<RhythmLayerId, { r: number; width: number }> = {
@@ -42,6 +44,7 @@ export function YearRhythmPanel({
   projectedYear,
   sunSignId,
   sunSignLabel,
+  hideSectionTitle = false,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const rhythm = useMemo(
@@ -71,21 +74,39 @@ export function YearRhythmPanel({
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-xl text-ink">Annual rhythm</h2>
-        <p className="mt-1 text-sm text-ink-soft">
-          Your year’s movement, this month’s pacing, and sun-sign tone — as
-          weather, not a calendar of events.{" "}
-          <LearningConceptLink conceptKey="personal-year" />
-          {" · "}
-          <LearningConceptLink conceptKey="personal-month" />
-          {" · "}
-          <LearningConceptLink conceptKey="projected-year" />
-        </p>
-        {personalYear.range_label ? (
-          <p className="mt-1 text-xs text-ink-soft">{personalYear.range_label}</p>
-        ) : null}
-      </div>
+      {!hideSectionTitle ? (
+        <div>
+          <h2 className="text-xl text-ink">Annual rhythm</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Your year’s movement, this month’s pacing, and sun-sign tone — as
+            weather, not a calendar of events.{" "}
+            <LearningConceptLink conceptKey="personal-year" />
+            {" · "}
+            <LearningConceptLink conceptKey="personal-month" />
+            {" · "}
+            <LearningConceptLink conceptKey="projected-year" />
+          </p>
+          {personalYear.range_label ? (
+            <p className="mt-1 text-xs text-ink-soft">
+              {personalYear.range_label}
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+            Annual rhythm
+          </p>
+          <p className="mt-1 text-sm text-ink-soft">
+            Personal Year · Month · Outlook rings — weather, not events.
+          </p>
+          {personalYear.range_label ? (
+            <p className="mt-1 text-xs text-ink-soft">
+              {personalYear.range_label}
+            </p>
+          ) : null}
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17.5rem]">
         <div className="space-y-4">

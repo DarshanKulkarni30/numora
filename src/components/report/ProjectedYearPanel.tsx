@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { YearOutlookMandala } from "@/components/report/YearOutlookMandala";
 import {
   projectedYearCycleStarting,
-  projectedYearMeta,
 } from "@/lib/numerology/vedicYearNumber";
 
 type Props = {
@@ -13,12 +13,15 @@ type Props = {
   initialYear?: number;
   /** Deep-link to /years for this report person. */
   yearsHref?: string;
+  /** Hide outer chrome when nested in TimingDashboard */
+  embedded?: boolean;
 };
 
 export function ProjectedYearPanel({
   dateOfBirth,
   initialYear,
   yearsHref = "/years?tab=vedic",
+  embedded = false,
 }: Props) {
   const fallbackYear = initialYear ?? new Date().getFullYear();
   const [year, setYear] = useState(fallbackYear);
@@ -27,26 +30,23 @@ export function ProjectedYearPanel({
     () => projectedYearCycleStarting(dateOfBirth, year),
     [dateOfBirth, year],
   );
-  const meta = projectedYearMeta(cycle.number);
 
-  return (
-    <div className="sys-timing rounded-2xl border p-5 sm:p-6">
+  const body = (
+    <>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium tracking-wide">
-            Year outlook by birthday cycle
+          <h2 className={embedded ? "text-lg text-ink" : "text-xl text-ink"}>
+            Year Outlook
+          </h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Your birthday-cycle Vedic tone — Year Cycle Mandala with season,
+            planet, and practice cues.
           </p>
-          <p className="mt-1 text-sm opacity-80">
-            A second way to read a year’s tone beside Personal Year. This
-            year’s Vedic number activates on your birthday. Step years to see
-            each cycle.
-          </p>
-          <p className="mt-2 text-xs leading-5 opacity-80">
+          <p className="mt-2 text-xs leading-5 text-ink-soft">
             <span className="font-medium text-ink">Personal Year</span> =
-            birth month + birth day + full year → one digit (Western pacing).{" "}
-            <span className="font-medium text-ink">Year outlook</span> below
-            also folds in the weekday of that year’s birthday. Toggle Calendar
-            year on the Years page for 1 Jan–31 Dec.
+            birth month + birth day + full year (Western pacing).{" "}
+            <span className="font-medium text-ink">Year Outlook</span> also
+            folds in the weekday of that year’s birthday.
           </p>
           <p className="mt-3">
             <Link
@@ -82,75 +82,23 @@ export function ProjectedYearPanel({
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-end gap-4">
-        <div>
-          <p className="text-[10px] uppercase tracking-wider opacity-70">
-            Year number for {cycle.rangeLabel}
-          </p>
-          <Link
-            href={`/guide/projected-year/${cycle.number}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="brand text-4xl text-ink underline-offset-4 hover:underline"
-          >
-            {cycle.number}
-          </Link>
-        </div>
-        <p className="text-sm opacity-80">
-          Planet tone: <span className="text-ink">{meta.planet}</span>
+      <div className="mt-4">
+        <p className="mb-2 text-[10px] uppercase tracking-wider text-ink-soft">
+          Year number for {cycle.rangeLabel}
         </p>
+        <YearOutlookMandala cycle={cycle} dob={dateOfBirth} />
       </div>
 
-      <div className="mt-4 rounded-xl border border-[var(--sys-timing-border)] bg-white/70 px-4 py-3 text-sm text-ink">
-        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-          Calculation for {cycle.rangeLabel}
-        </p>
-        <ol className="mt-2 space-y-1.5 text-ink-soft">
-          <li>
-            1. Birth month{" "}
-            <span className="font-medium text-ink">{cycle.month}</span> +
-            birth day{" "}
-            <span className="font-medium text-ink">{cycle.day}</span>
-          </li>
-          <li>
-            2. Last two digits of {cycle.calendarYearUsed}:{" "}
-            <span className="font-medium text-ink">{cycle.yearDigits}</span>
-          </li>
-          <li>
-            3. Weekday of your birthday in {cycle.calendarYearUsed}:{" "}
-            <span className="font-medium text-ink">
-              {cycle.weekdayLabel}
-            </span>{" "}
-            → number{" "}
-            <span className="font-medium text-ink">
-              {cycle.weekdayDigit}
-            </span>
-          </li>
-          <li>
-            4. Add them:{" "}
-            <span className="font-medium text-ink">
-              {cycle.month} + {cycle.day} + {cycle.yearDigits} +{" "}
-              {cycle.weekdayDigit} = {cycle.compound}
-            </span>
-          </li>
-          <li>
-            5. Reduce to one digit:{" "}
-            <span className="font-medium text-ink">{cycle.number}</span>
-          </li>
-        </ol>
-      </div>
-
-      <p className="mt-4 text-sm leading-6 text-ink">{meta.theme}</p>
-      <ul className="mt-3 space-y-1 text-sm opacity-80">
-        {meta.strengths.slice(0, 2).map((s) => (
-          <li key={s}>· {s}</li>
-        ))}
-        <li>· Practice: {meta.practice}</li>
-      </ul>
-      <p className="mt-4 text-xs leading-5 opacity-75">
+      <p className="mt-4 text-xs leading-5 text-ink-soft">
         Reflective pacing theme for the selected birthday cycle—not a prediction
         of specific events.
       </p>
-    </div>
+    </>
   );
+
+  if (embedded) {
+    return <div className="sys-timing rounded-2xl border p-5 sm:p-6">{body}</div>;
+  }
+
+  return <div className="sys-timing rounded-2xl border p-5 sm:p-6">{body}</div>;
 }

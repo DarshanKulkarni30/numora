@@ -24,6 +24,8 @@ import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
+import { buildYearOutlookMandala } from "@/lib/numerology/yearOutlookMandala";
+import { projectedYearCycleStarting } from "@/lib/numerology/vedicYearNumber";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -663,6 +665,22 @@ export async function downloadReportPdf(
         report.projected_year.calendar_year
       }): ${report.projected_year.theme}. ${report.projected_year.advice}`,
     );
+    try {
+      const startY = Number(report.projected_year.calendar_year);
+      if (Number.isFinite(startY)) {
+        const cycle = projectedYearCycleStarting(
+          person.date_of_birth,
+          startY,
+        );
+        const mandala = buildYearOutlookMandala(cycle, person.date_of_birth);
+        addBanner("Year Outlook Mandala", "timing");
+        for (const line of mandala.blueprintLines) {
+          addBody(line, 9);
+        }
+      }
+    } catch {
+      /* skip if DOB/cycle cannot be built */
+    }
   }
   const rhythm = buildYearRhythm({
     personalYear: report.personal_year.number,

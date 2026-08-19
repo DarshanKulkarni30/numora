@@ -17,6 +17,7 @@ import {
   projectedYearMeta,
   type YearTag,
 } from "@/lib/numerology/vedicYearNumber";
+import { YearOutlookMandala } from "@/components/report/YearOutlookMandala";
 import {
   defaultExpandedYear,
   VEDIC_BIRTHDAY_NOTE,
@@ -363,6 +364,15 @@ function YearEntry({
         : null;
     const breakdown = cycle ?? projectedYearBreakdown(dob, year);
     const meta = projectedYearMeta(breakdown.number);
+    const mandalaCycle =
+      cycle ??
+      ({
+        ...breakdown,
+        rangeStart: new Date(year, 0, 1),
+        rangeEnd: new Date(year, 11, 31),
+        calendarYearUsed: year,
+        rangeLabel: String(year),
+      } as ReturnType<typeof projectedYearCycleStarting>);
     return (
       <YearRow
         yearLabel={cycle ? cycle.rangeLabel : String(year)}
@@ -375,6 +385,9 @@ function YearEntry({
         isNow={isNow}
         onToggle={onToggle}
       >
+        <div className="mb-4">
+          <YearOutlookMandala cycle={mandalaCycle} dob={dob} compact />
+        </div>
         <YearDetail
           intro={`Ruled by ${meta.planet}. ${meta.theme}`}
           points={meta.details}

@@ -12,8 +12,7 @@ import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { IdentitySnapshotPanel } from "@/components/report/IdentitySnapshotPanel";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
-import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
-import { YearRhythmPanel } from "@/components/report/YearRhythmPanel";
+import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
 import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
@@ -583,30 +582,24 @@ export function ReportView({
           </div>
         </section>
 
-        <section>
-          <YearRhythmPanel
-            personalYear={report.personal_year}
-            personalMonth={report.personal_month}
-            projectedYear={report.projected_year}
-            sunSignId={snap.sun_sign}
-            sunSignLabel={snap.sun_sign_label}
-          />
-          <div className="mt-6">
-            <ProjectedYearPanel
-              dateOfBirth={person.date_of_birth}
-              initialYear={
-                report.projected_year
-                  ? Number(report.projected_year.calendar_year)
-                  : undefined
-              }
-              yearsHref={yearsHrefForPerson({
-                dateOfBirth: person.date_of_birth,
-                fullName: person.full_name,
-                tab: "vedic",
-              })}
-            />
-          </div>
-        </section>
+        <TimingDashboard
+          personalYear={report.personal_year}
+          personalMonth={report.personal_month}
+          projectedYear={report.projected_year}
+          sunSignId={snap.sun_sign}
+          sunSignLabel={snap.sun_sign_label}
+          dateOfBirth={person.date_of_birth}
+          initialOutlookYear={
+            report.projected_year
+              ? Number(report.projected_year.calendar_year)
+              : undefined
+          }
+          yearsHref={yearsHrefForPerson({
+            dateOfBirth: person.date_of_birth,
+            fullName: person.full_name,
+            tab: "vedic",
+          })}
+        />
 
         <section>
           <h2 className="text-xl text-ink">Birth charts</h2>
