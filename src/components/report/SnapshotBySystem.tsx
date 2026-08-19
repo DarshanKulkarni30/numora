@@ -135,6 +135,8 @@ export function SnapshotBySystem({ groups }: Props) {
             <p className="mt-3">
               <Link
                 href={g.actionHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-tactile inline-flex rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-sm text-ink"
               >
                 {g.actionLabel}

@@ -305,6 +305,8 @@ export function VedicPanel({
                     <Link
                       key={`${pair.a}-${pair.b}`}
                       href={`/guide/vedic-square/${pair.a}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn-tactile max-w-full rounded-xl border border-sand/35 bg-sand/10 px-3 py-2 text-left transition hover:bg-sand/20"
                       title={pair.theme}
                     >

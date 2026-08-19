@@ -188,8 +188,24 @@ h3,
   }
 }
 
-.aura-ring-pulse {
+.year-rhythm-pulse {
   animation: aura-ring-soft 5.5s ease-in-out infinite;
+}
+
+@keyframes year-rhythm-wave {
+  0%,
+  100% {
+    stroke-dashoffset: 0;
+    stroke-opacity: 0.78;
+  }
+  50% {
+    stroke-dashoffset: 12;
+    stroke-opacity: 1;
+  }
+}
+
+.year-rhythm-wave {
+  animation: year-rhythm-wave 6s ease-in-out infinite;
 }
 
 /* Tactile controls — subtle hover / press for all buttons & CTA links */
@@ -274,7 +290,9 @@ a.rounded-full:active {
 @media (prefers-reduced-motion: reduce) {
   .pyth-current-pulse,
   .pyth-halo-shimmer,
-  .aura-ring-pulse {
+  .aura-ring-pulse,
+  .year-rhythm-pulse,
+  .year-rhythm-wave {
     animation: none;
   }
 

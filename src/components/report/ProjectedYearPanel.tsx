@@ -51,6 +51,8 @@ export function ProjectedYearPanel({
           <p className="mt-3">
             <Link
               href={yearsHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-tactile inline-flex rounded-full border border-[var(--sys-timing-border)] bg-white/80 px-3 py-1.5 text-sm text-ink"
             >
               View all years
@@ -87,6 +89,8 @@ export function ProjectedYearPanel({
           </p>
           <Link
             href={`/guide/projected-year/${cycle.number}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="brand text-4xl text-ink underline-offset-4 hover:underline"
           >
             {cycle.number}

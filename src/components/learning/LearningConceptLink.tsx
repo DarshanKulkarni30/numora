@@ -16,6 +16,8 @@ export function LearningConceptLink({ conceptKey, className }: Props) {
   return (
     <Link
       href={learningHref(entry.method, entry.concept)}
+      target="_blank"
+      rel="noopener noreferrer"
       className={
         className ??
         "text-xs text-gold-deep/90 underline decoration-gold/40 underline-offset-2 hover:text-gold-deep"

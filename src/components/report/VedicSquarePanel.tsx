@@ -455,6 +455,8 @@ export function VedicSquarePanel({
             times ·{" "}
             <Link
               href={`/guide/vedic-square/${digit}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gold-deep underline underline-offset-2 hover:text-ink"
             >
               Full digit guide

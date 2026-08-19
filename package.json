@@ -11,7 +11,8 @@
     "smoke:vedic-grid": "tsx scripts/smoke-vedic-grid.ts",
     "smoke:personal-year": "tsx scripts/smoke-personal-year.ts",
     "smoke:pythagorean-wheel": "tsx scripts/smoke-pythagorean-wheel.ts",
-    "smoke:aura": "tsx scripts/smoke-aura-identity.ts"
+    "smoke:aura": "tsx scripts/smoke-aura-identity.ts",
+    "smoke:year-rhythm": "tsx scripts/smoke-year-rhythm.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
