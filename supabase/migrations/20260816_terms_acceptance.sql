@@ -24,3 +24,6 @@ create policy "Users update own terms acceptance"
   on public.user_terms_acceptance for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+grant select, insert, update on public.user_terms_acceptance to authenticated;
+grant all on public.user_terms_acceptance to service_role;

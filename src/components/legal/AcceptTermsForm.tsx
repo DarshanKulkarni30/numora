@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CURRENT_TERMS_VERSION } from "@/lib/legal/terms";
 
@@ -9,7 +8,6 @@ type Props = {
 };
 
 export function AcceptTermsForm({ nextPath }: Props) {
-  const router = useRouter();
   const [checked, setChecked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +30,8 @@ export function AcceptTermsForm({ nextPath }: Props) {
         setBusy(false);
         return;
       }
-      router.replace(nextPath.startsWith("/") ? nextPath : "/dashboard");
-      router.refresh();
+      const dest = nextPath.startsWith("/") ? nextPath : "/dashboard";
+      window.location.assign(dest);
     } catch {
       setError("Network error. Try again.");
       setBusy(false);

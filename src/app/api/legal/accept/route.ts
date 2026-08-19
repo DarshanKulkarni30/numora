@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { CURRENT_TERMS_VERSION } from "@/lib/legal/terms";
+import { recordTermsAcceptance } from "@/lib/legal/termsAcceptance";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -26,27 +27,12 @@ export async function POST(request: NextRequest) {
     // empty body ok
   }
 
-  const { error } = await supabase.from("user_terms_acceptance").upsert(
-    {
-      user_id: user.id,
-      terms_version: version,
-      accepted_at: new Date().toISOString(),
-    },
-    { onConflict: "user_id" },
-  );
-
-  if (error) {
-    return NextResponse.json(
-      {
-        error:
-          error.message.includes("schema cache") ||
-          error.message.includes("does not exist")
-            ? "Terms table missing — run the Supabase migration 20260816_terms_acceptance.sql"
-            : error.message,
-      },
-      { status: 500 },
-    );
+  const result = await recordTermsAcceptance(supabase, user.id, version);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
   }
+
+  await supabase.auth.refreshSession();
 
   return NextResponse.json({ ok: true, version });
 }

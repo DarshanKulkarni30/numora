@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { AcceptTermsForm } from "@/components/legal/AcceptTermsForm";
 import { CURRENT_TERMS_VERSION, TERMS_TITLE } from "@/lib/legal/terms";
+import { hasAcceptedCurrentTerms } from "@/lib/legal/termsAcceptance";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -25,18 +26,7 @@ export default async function AcceptTermsPage({ searchParams }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=${encodeURIComponent(`/legal/accept?next=${next}`)}`);
 
-  let alreadyAccepted = false;
-  try {
-    const { data } = await supabase
-      .from("user_terms_acceptance")
-      .select("terms_version")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    alreadyAccepted = data?.terms_version === CURRENT_TERMS_VERSION;
-  } catch {
-    alreadyAccepted = false;
-  }
-  if (alreadyAccepted) redirect(next);
+  if (await hasAcceptedCurrentTerms(supabase, user)) redirect(next);
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-20 pt-10">

@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSiteUrl } from "@/lib/site";
-import { CURRENT_TERMS_VERSION } from "@/lib/legal/terms";
+import { hasAcceptedCurrentTerms } from "@/lib/legal/termsAcceptance";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -70,25 +70,18 @@ export async function GET(request: NextRequest) {
 
   // If Terms not accepted, send to accept while keeping session cookies.
   try {
-    const uid = sessionData.user?.id;
-    if (uid) {
-      const { data: terms } = await supabase
-        .from("user_terms_acceptance")
-        .select("terms_version")
-        .eq("user_id", uid)
-        .maybeSingle();
-      if (terms?.terms_version !== CURRENT_TERMS_VERSION) {
-        redirectTo = new URL("/legal/accept", site);
-        redirectTo.searchParams.set("next", next);
-        const cookies = response.cookies.getAll();
-        response = NextResponse.redirect(redirectTo);
-        cookies.forEach((c) => {
-          response.cookies.set(c.name, c.value);
-        });
-      }
+    const user = sessionData.user;
+    if (user && !(await hasAcceptedCurrentTerms(supabase, user))) {
+      redirectTo = new URL("/legal/accept", site);
+      redirectTo.searchParams.set("next", next);
+      const cookies = response.cookies.getAll();
+      response = NextResponse.redirect(redirectTo);
+      cookies.forEach((c) => {
+        response.cookies.set(c.name, c.value);
+      });
     }
   } catch {
-    // Table missing — continue to app; run migration to enable gate.
+    // Continue to app if the check itself fails.
   }
 
   return response;
