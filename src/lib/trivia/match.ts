@@ -1,3 +1,4 @@
+import { countryFameScore, personFameScore } from "./fame";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { TRIVIA_CITIES, type TriviaCity } from "./cities";
 import { TRIVIA_COUNTRIES, type TriviaCountry } from "./countries";
@@ -17,7 +18,11 @@ export function matchPeopleByDayMonth(
   const key = dayMonthKey(dob);
   if (!key) return [];
   return TRIVIA_PEOPLE.filter((p) => dayMonthKey(p.dob) === key)
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => {
+      const fame = personFameScore(b) - personFameScore(a);
+      if (fame !== 0) return fame;
+      return a.name.localeCompare(b.name);
+    })
     .slice(0, limit);
 }
 
@@ -112,15 +117,23 @@ function rankByTriple<T>(
   get: (item: T) => NumberTriple,
   nameOf: (item: T) => string,
   limit: number,
+  fameOf: (item: T) => number = () => 0,
 ): T[] {
   return items
     .map((item) => {
       const { exact, closeness } = scoreTriple(target, get(item));
-      return { item, exact, closeness, name: nameOf(item) };
+      return {
+        item,
+        exact,
+        closeness,
+        fame: fameOf(item),
+        name: nameOf(item),
+      };
     })
     .sort((a, b) => {
       if (b.exact !== a.exact) return b.exact - a.exact;
       if (a.closeness !== b.closeness) return a.closeness - b.closeness;
+      if (b.fame !== a.fame) return b.fame - a.fame;
       return a.name.localeCompare(b.name);
     })
     .slice(0, limit)
@@ -144,6 +157,7 @@ export function matchPeople(opts: {
     }),
     (p) => p.name,
     opts.limit ?? 12,
+    personFameScore,
   );
 }
 
@@ -154,17 +168,31 @@ export function matchCountries(opts: {
   limit?: number;
 }): TriviaCountry[] {
   const target = asTriple(opts);
-  return rankByTriple(
-    TRIVIA_COUNTRIES,
-    target,
-    (c) => ({
-      lifePath: c.lifePath,
-      destiny: c.destiny,
-      psychic: c.psychic,
-    }),
-    (c) => c.name,
-    opts.limit ?? 8,
-  );
+  const fillLimit = opts.limit ?? 8;
+  const scored = TRIVIA_COUNTRIES.map((item) => {
+    const { exact, closeness } = scoreTriple(target, {
+      lifePath: item.lifePath,
+      destiny: item.destiny,
+      psychic: item.psychic,
+    });
+    return { item, exact, closeness, fame: countryFameScore(item) };
+  });
+  const exactTriad = scored
+    .filter((row) => row.exact === 3)
+    .sort(
+      (a, b) =>
+        b.fame - a.fame || a.item.name.localeCompare(b.item.name),
+    );
+  const rest = scored
+    .filter((row) => row.exact < 3)
+    .sort((a, b) => {
+      if (b.exact !== a.exact) return b.exact - a.exact;
+      if (a.closeness !== b.closeness) return a.closeness - b.closeness;
+      if (b.fame !== a.fame) return b.fame - a.fame;
+      return a.item.name.localeCompare(b.item.name);
+    });
+  const fill = Math.max(0, fillLimit - exactTriad.length);
+  return [...exactTriad, ...rest.slice(0, fill)].map((row) => row.item);
 }
 
 function personDigits(opts: {

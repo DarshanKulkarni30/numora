@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { BirthDateTimeline } from "@/components/trivia/BirthDateTimeline";
-import { CountryNumberStat } from "@/components/trivia/CountryNumberStat";
-import { CountryWikiMap } from "@/components/trivia/CountryWikiMap";
+import { CountryCards } from "@/components/trivia/CountryCards";
 import { MatchGallery } from "@/components/trivia/MatchGallery";
 import { MatchInsightPanel } from "@/components/trivia/MatchInsightPanel";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
@@ -78,9 +77,8 @@ export function TriviaPanel({
     lifePath,
     destiny,
     psychic,
-    limit: 1,
+    limit: 8,
   });
-  const topCountry = countries[0];
   const cities = matchCities({
     lifePath,
     destiny,
@@ -161,57 +159,16 @@ export function TriviaPanel({
       </div>
 
       <div>
-        <h3 className="text-lg text-ink">Top matching country</h3>
+        <h3 className="text-lg text-ink">Matching countries</h3>
         <p className="mt-1 text-xs text-ink-soft">
-          Date used is a commonly cited independence or formation day—not a
-          political verdict.
+          Every country whose Life Path, Destiny, and Psychic all match yours is
+          listed. Date used is a commonly cited independence or formation
+          day—not a political verdict.
         </p>
-        {topCountry ? (
-          <div className="mt-3 flex max-w-lg gap-3 rounded-xl border border-[var(--line)] bg-white/50 p-3">
-            <div className="flex w-[5.5rem] shrink-0 flex-col items-center gap-1.5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`https://flagcdn.com/w80/${topCountry.iso2}.png`}
-                alt={`${topCountry.name} flag`}
-                width={80}
-                height={53}
-                className="h-auto w-full rounded border border-[var(--line)]"
-                loading="lazy"
-              />
-              <CountryWikiMap
-                name={topCountry.name}
-                iso2={topCountry.iso2}
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-ink">{topCountry.name}</p>
-              <p className="mt-0.5 text-xs text-ink-soft">
-                Founding / independence: {topCountry.dob}
-              </p>
-              <dl className="mt-2 grid grid-cols-3 gap-1 text-center text-xs">
-                <CountryNumberStat
-                  kind="lifePath"
-                  value={topCountry.lifePath}
-                  countryName={topCountry.name}
-                />
-                <CountryNumberStat
-                  kind="destiny"
-                  value={topCountry.destiny}
-                  countryName={topCountry.name}
-                />
-                <CountryNumberStat
-                  kind="psychic"
-                  value={topCountry.psychic}
-                  countryName={topCountry.name}
-                />
-              </dl>
-            </div>
-          </div>
-        ) : (
-          <p className="mt-2 text-sm text-ink-soft">
-            No close country match in the bank.
-          </p>
-        )}
+        <CountryCards
+          rows={countries}
+          emptyLabel="No close country match in the bank."
+        />
       </div>
 
       <div>
