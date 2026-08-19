@@ -150,6 +150,34 @@ h3,
   animation: ring-soft 10s ease-in-out infinite;
 }
 
+@keyframes pyth-current-pulse {
+  0%,
+  100% {
+    stroke-opacity: 0.42;
+  }
+  50% {
+    stroke-opacity: 0.9;
+  }
+}
+
+@keyframes pyth-halo {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
+.pyth-current-pulse {
+  animation: pyth-current-pulse 3.2s ease-in-out infinite;
+}
+
+.pyth-halo-shimmer {
+  animation: pyth-halo 2.8s ease-in-out infinite;
+}
+
 /* Tactile controls — subtle hover / press for all buttons & CTA links */
 button,
 [type="button"],
@@ -230,6 +258,11 @@ a.rounded-full:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pyth-current-pulse,
+  .pyth-halo-shimmer {
+    animation: none;
+  }
+
   button,
   [type="button"],
   [type="submit"],

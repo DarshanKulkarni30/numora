@@ -9,7 +9,8 @@
     "lint": "eslint",
     "smoke:report": "tsx scripts/smoke-report.ts",
     "smoke:vedic-grid": "tsx scripts/smoke-vedic-grid.ts",
-    "smoke:personal-year": "tsx scripts/smoke-personal-year.ts"
+    "smoke:personal-year": "tsx scripts/smoke-personal-year.ts",
+    "smoke:pythagorean-wheel": "tsx scripts/smoke-pythagorean-wheel.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
