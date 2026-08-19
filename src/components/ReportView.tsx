@@ -238,7 +238,7 @@ export function ReportView({
     {
       system: "timing" as const,
       title: "This year timing",
-      blurb: "Birthday-cycle Personal Year (toggle calendar on the Years page) plus this month’s pacing.",
+      blurb: "Birthday-cycle Personal Year and Vedic Year outlook (toggle calendar on the Years page) plus this month’s pacing.",
       actionHref: yearsHrefForPerson({
         dateOfBirth: person.date_of_birth,
         fullName: person.full_name,
@@ -262,7 +262,7 @@ export function ReportView({
                 topic: "projected-year" as const,
                 value: snap.projected_year,
                 hint: snap.projected_year_calendar
-                  ? `For calendar year ${snap.projected_year_calendar}`
+                  ? `Birthday cycle ${snap.projected_year_calendar}`
                   : undefined,
               },
             ]
@@ -521,9 +521,11 @@ export function ReportView({
           <h2 className="text-xl text-ink">Year outlook</h2>
           <p className="mt-1 text-sm text-ink-soft">
             Personal Year below uses the <span className="font-medium text-ink">birthday cycle</span>
-            —this year’s number activates on your birthday. Nature describes typical
-            experience (transformational, responsibility-heavy, endings) rather than
-            Amazing or Good. Projected Year is a second, Vedic-style mirror.{" "}
+            —this year’s number activates on your birthday. Vedic Year outlook
+            uses the same clock. Nature describes typical experience
+            (transformational, responsibility-heavy, endings) rather than
+            Amazing or Good. Toggle Calendar year on the Years page for
+            1 Jan–31 Dec.{" "}
             <LearningConceptLink conceptKey="personal-year" />
             {" · "}
             <LearningConceptLink conceptKey="projected-year" />
@@ -558,6 +560,11 @@ export function ReportView({
           <div className="mt-4">
             <ProjectedYearPanel
               dateOfBirth={person.date_of_birth}
+              initialYear={
+                report.projected_year
+                  ? Number(report.projected_year.calendar_year)
+                  : undefined
+              }
               yearsHref={yearsHrefForPerson({
                 dateOfBirth: person.date_of_birth,
                 fullName: person.full_name,

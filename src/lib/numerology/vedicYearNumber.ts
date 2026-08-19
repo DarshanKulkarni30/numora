@@ -4,6 +4,11 @@
  */
 
 import { parseDob, reduceNumber } from "./reduce";
+import {
+  formatCycleRange,
+  personalYearCycleAt,
+  personalYearCycleStarting,
+} from "./cycles";
 
 /** JS getDay() index 0=Sun … 6=Sat → Unit System weekday digits. */
 export const WEEKDAY_DIGIT = [1, 2, 9, 5, 3, 6, 8] as const;
@@ -57,6 +62,44 @@ export function projectedYearBreakdown(
 
 export function projectedYearNumber(dob: string, year: number): number {
   return projectedYearBreakdown(dob, year).number;
+}
+
+export type ProjectedYearCycle = ProjectedYearBreakdown & {
+  rangeStart: Date;
+  rangeEnd: Date;
+  calendarYearUsed: number;
+  rangeLabel: string;
+};
+
+/** Same birthday window as Western School A; formula stays Johari projected year. */
+export function projectedYearCycleAt(
+  dob: string,
+  asOf = new Date(),
+): ProjectedYearCycle {
+  const py = personalYearCycleAt(dob, asOf);
+  const breakdown = projectedYearBreakdown(dob, py.calendarYearUsed);
+  return {
+    ...breakdown,
+    rangeStart: py.rangeStart,
+    rangeEnd: py.rangeEnd,
+    calendarYearUsed: py.calendarYearUsed,
+    rangeLabel: formatCycleRange(py),
+  };
+}
+
+export function projectedYearCycleStarting(
+  dob: string,
+  startYear: number,
+): ProjectedYearCycle {
+  const py = personalYearCycleStarting(dob, startYear);
+  const breakdown = projectedYearBreakdown(dob, py.calendarYearUsed);
+  return {
+    ...breakdown,
+    rangeStart: py.rangeStart,
+    rangeEnd: py.rangeEnd,
+    calendarYearUsed: py.calendarYearUsed,
+    rangeLabel: formatCycleRange(py),
+  };
 }
 
 export type YearTag = "Favourable" | "Neutral" | "Challenging";
@@ -276,4 +319,4 @@ export function projectedYearMeta(n: number): ProjectedYearMeta {
 }
 
 export const PROJECTED_YEAR_METHOD_NOTE =
-  "Projected Year (Unit System style) adds birth month, birth day, the year’s last two digits, and the weekday digit of that year’s anniversary, then reduces to 1–9. It sits beside Western Personal Year as a second reflective mirror—not a forecast of fixed events.";
+  "Projected Year (Johari / Unit System style) adds birth month, birth day, the year’s last two digits, and the weekday digit of that year’s anniversary, then reduces to 1–9. NumoraWisdom defaults to a birthday-to-birthday cycle (this year’s number activates on your birthday). Toggle Calendar year on the Years page for 1 Jan–31 Dec. It sits beside Western Personal Year as a second reflective mirror—not a forecast of fixed events.";

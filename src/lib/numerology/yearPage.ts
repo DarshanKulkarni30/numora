@@ -20,13 +20,19 @@ export function yearsHrefForPerson(opts: {
 }
 
 export const YEAR_PAGE_DISCLAIMER =
-  "Numerology is a reflective tradition, not a forecast of events. Year numbers are pacing themes for how a calendar year may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
+  "Numerology is a reflective tradition, not a forecast of events. Year numbers are pacing themes for how a cycle may feel to work with. They do not diagnose, treat, or replace medical, legal, financial, or psychological advice.";
 
 export const WESTERN_YEAR_METHOD_NOTE =
   "Personal Year (Western) adds birth month, birth day, and a calendar year, then reduces—keeping 11, 22, or 33 when they appear. NumoraWisdom defaults to a birthday-to-birthday cycle (this year’s number activates on your birthday). Toggle Calendar year for the 1 Jan–31 Dec version. Nature labels describe typical experience—not Amazing/Good scores.";
 
 export const VEDIC_YEAR_METHOD_NOTE =
-  "Vedic year number adds birth month, birth day, the year’s last two digits, and the weekday digit of that year’s birthday, then reduces to 1–9. It sits beside Western Personal Year as a second mirror—not a forecast of fixed events.";
+  "Vedic year number (Harish Johari) adds birth month, birth day, the year’s last two digits, and the weekday digit of that year’s birthday, then reduces to 1–9. NumoraWisdom defaults to a birthday-to-birthday cycle (this year’s number activates on your birthday). Toggle Calendar year for the 1 Jan–31 Dec version. It sits beside Western Personal Year as a second mirror—not a forecast of fixed events.";
+
+export const VEDIC_BIRTHDAY_NOTE =
+  "Birthday cycle (default): this calendar year’s Vedic number uses the weekday of that year’s birthday and runs until the day before the next birthday. It is a pacing theme, not a forecast of events.";
+
+export const VEDIC_CALENDAR_NOTE =
+  "Calendar year: Vedic year number is calculated for 1 January–31 December of the chosen year (the Johari “year to examine”). Same formula, different start date — not mixed with the birthday cycle.";
 
 export const WESTERN_YEAR_TAG: Record<number, YearTag> = {
   1: "Neutral",

@@ -32,7 +32,7 @@ export type NumerologySnapshot = {
   unit_name_compound?: string;
   personal_year: string;
   personal_month: string;
-  /** Unit System–style projected year digit for the report calendar year */
+  /** Johari projected year digit for the current birthday cycle */
   projected_year?: string;
   projected_year_calendar?: string;
   /** Tropical sun sign id (aries…pisces), from DOB month/day */
@@ -210,6 +210,7 @@ export type NumerologyReport = {
   projected_year?: {
     number: string;
     calendar_year: string;
+    range_label?: string;
     planet: string;
     theme: string;
     advice: string;

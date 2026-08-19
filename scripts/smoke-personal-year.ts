@@ -8,6 +8,10 @@ import {
   yearLandScore,
   westernYearOutlook,
 } from "../src/lib/numerology/personalYearOutlook";
+import {
+  projectedYearBreakdown,
+  projectedYearCycleAt,
+} from "../src/lib/numerology/vedicYearNumber";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -70,5 +74,26 @@ const cal = westernYearOutlook({
   asOf: new Date(2026, 6, 1),
 });
 eq(cal.nature.nature, "Responsibility-heavy", "2026 nature is not Good/Amazing");
+
+eq(
+  projectedYearCycleAt(DOB, new Date(2021, 2, 1)).calendarYearUsed,
+  2020,
+  "Vedic birthday: 1 Mar 2021 still uses 2020",
+);
+eq(
+  projectedYearCycleAt(DOB, new Date(2021, 9, 13)).calendarYearUsed,
+  2021,
+  "Vedic birthday: 13 Oct 2021 activates 2021",
+);
+eq(
+  projectedYearCycleAt(DOB, new Date(2021, 2, 1)).number,
+  projectedYearBreakdown(DOB, 2020).number,
+  "Vedic before birthday matches 2020 formula",
+);
+eq(
+  projectedYearCycleAt(DOB, new Date(2021, 9, 13)).number,
+  projectedYearBreakdown(DOB, 2021).number,
+  "Vedic on birthday matches 2021 formula",
+);
 
 console.log("personal year smoke ok");

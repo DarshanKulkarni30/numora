@@ -44,7 +44,7 @@ import {
 } from "./vedicSquare";
 import {
   PROJECTED_YEAR_METHOD_NOTE,
-  projectedYearBreakdown,
+  projectedYearCycleAt,
   projectedYearMeta,
 } from "./vedicYearNumber";
 import { UNIT_AFFINITY_NOTE, vedicNumberProfile } from "./vedicNumberProfile";
@@ -616,13 +616,16 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
     },
     {
       id: "projected-year",
-      title: "14b. Year outlook (calendar year)",
+      title: "14b. Year outlook (birthday cycle)",
       body: report.projected_year
         ? [
-            `Year outlook ${report.projected_year.number} for ${report.projected_year.calendar_year} (${report.projected_year.planet})`,
+            `Year outlook ${report.projected_year.number} for ${
+              report.projected_year.range_label ??
+              report.projected_year.calendar_year
+            } (${report.projected_year.planet})`,
             `• ${report.projected_year.theme}`,
             `• Practice: ${report.projected_year.advice}`,
-            "• See the Year outlook panel above for the step-by-step calculation.",
+            "• See the Year outlook panel above for the step-by-step calculation. Toggle Calendar year on the Years page for 1 Jan–31 Dec.",
           ].join("\n")
         : "Year outlook not available for this report.",
     },
@@ -876,8 +879,7 @@ export function generateReport(
   const psychicProfile = vedicNumberProfile(vedic.psychic);
   const profileLine = `Unit System affinity for Psychic ${vedic.psychic}: friendly with ${psychicProfile.friendly.join(", ") || "—"}; more demanding with ${psychicProfile.challenging.join(", ") || "—"}. Color/gem study tones: ${psychicProfile.color} / ${psychicProfile.gem}. ${UNIT_AFFINITY_NOTE}`;
 
-  const calendarYear = now.getFullYear();
-  const projected = projectedYearBreakdown(input.dateOfBirth, calendarYear);
+  const projected = projectedYearCycleAt(input.dateOfBirth, now);
   const projectedMeta = projectedYearMeta(projected.number);
 
   const psychicTheme = vedicDigitTheme(vedic.psychic);
@@ -901,7 +903,7 @@ export function generateReport(
       REDUCTION_TIP,
       oppositeLine,
       profileLine,
-      `Projected Year ${projected.number} for ${calendarYear} (${projectedMeta.planet}): ${projectedMeta.theme}`,
+      `Projected Year ${projected.number} for ${projected.rangeLabel} (${projectedMeta.planet}): ${projectedMeta.theme}`,
       "Use Vedic numbers as a second mirror beside Pythagorean and Chaldean views. Where systems differ, treat the contrast as a prompt for nuance rather than conflict.",
     ]
       .filter(Boolean)
@@ -964,7 +966,7 @@ export function generateReport(
     personal_year: String(py),
     personal_month: String(pm),
     projected_year: String(projected.number),
-    projected_year_calendar: String(calendarYear),
+    projected_year_calendar: projected.rangeLabel,
     sun_sign: sun?.id,
     sun_sign_label: sun?.name,
   };
@@ -1074,7 +1076,8 @@ export function generateReport(
     },
     projected_year: {
       number: String(projected.number),
-      calendar_year: String(calendarYear),
+      calendar_year: String(projected.calendarYearUsed),
+      range_label: projected.rangeLabel,
       planet: projectedMeta.planet,
       theme: projectedMeta.theme,
       advice: projectedMeta.practice,

@@ -155,7 +155,7 @@ export const LEARNING_METHODS: LearningMethod[] = [
     origin:
       "Indian-style practice grew beside Vedic astrology and folk number lore on the subcontinent—Moolank (birth day) and Bhagyank (full date) with planetary rulers. Modern “Vedic numerology” courses blend those date themes with name charts; NumoraWisdom uses an Indian-style teaching map for reflection, not a full kundli.",
     detail:
-      "Indian-style (Vedic) teaching in NumoraWisdom centers on Psychic from the birth day (Moolank) and Destiny from the full date (Bhagyank), each reduced to 1–9 with planet and keyword themes such as Leader or Harmony. Name numbers use a Chaldean-aligned letter map; Unit System Map B is shown when letters disagree. Year outlook adds a calendar tone. Digits are mirrors for temperament and path themes—never medical or event predictions.",
+      "Indian-style (Vedic) teaching in NumoraWisdom centers on Psychic from the birth day (Moolank) and Destiny from the full date (Bhagyank), each reduced to 1–9 with planet and keyword themes such as Leader or Harmony. Name numbers use a Chaldean-aligned letter map; Unit System Map B is shown when letters disagree. Year outlook adds a birthday-cycle tone (calendar toggle on the Years page). Digits are mirrors for temperament and path themes—never medical or event predictions.",
     concepts: [
       {
         slug: "psychic",
@@ -197,9 +197,9 @@ export const LEARNING_METHODS: LearningMethod[] = [
       {
         slug: "projected-year",
         title: "Year outlook",
-        blurb: "Calendar-year tone using birthday weekday digits.",
+        blurb: "Birthday-cycle tone using birthday weekday digits.",
         detail:
-          "Year outlook (projected year tone) uses birthday-related digits with the calendar year to sketch a reflective yearly atmosphere. It sits beside Personal Year rather than replacing it. Pick a date and year below to see how the tone number is built. Weather language only—no event calendar.",
+          "Year outlook (projected year tone) uses birthday-related digits with that year’s last two digits to sketch a reflective yearly atmosphere. The number activates on your birthday; toggle Calendar year on the Years page for 1 Jan–31 Dec. It sits beside Personal Year rather than replacing it. Pick a date and year below to see how the tone number is built. Weather language only—no event calendar.",
         interactive: "personal-year",
         guideTopic: "projected-year",
       },

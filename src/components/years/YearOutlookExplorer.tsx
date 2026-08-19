@@ -13,11 +13,14 @@ import {
 } from "@/lib/numerology/personalYearOutlook";
 import {
   projectedYearBreakdown,
+  projectedYearCycleStarting,
   projectedYearMeta,
   type YearTag,
 } from "@/lib/numerology/vedicYearNumber";
 import {
   defaultExpandedYear,
+  VEDIC_BIRTHDAY_NOTE,
+  VEDIC_CALENDAR_NOTE,
   VEDIC_YEAR_METHOD_NOTE,
   WESTERN_YEAR_METHOD_NOTE,
   YEAR_PAGE_DISCLAIMER,
@@ -100,7 +103,7 @@ export function YearOutlookExplorer({
   const [selectedKey, setSelectedKey] = useState(() =>
     resolveInitialKey(selectable, initialDob, initialName),
   );  const [tab, setTab] = useState<YearSystemTab>(initialTab);
-  const [westernAnchor, setWesternAnchor] =
+  const [yearAnchor, setYearAnchor] =
     useState<WesternYearAnchor>("birthday");
   const nowYear = new Date().getFullYear();
   const [openYear, setOpenYear] = useState<number | "default" | null>(
@@ -129,14 +132,14 @@ export function YearOutlookExplorer({
   const currentKeyYear = useMemo(() => {
     if (!dob) return nowYear;
     try {
-      if (tab === "western" && westernAnchor === "birthday") {
+      if (yearAnchor === "birthday") {
         return personalYearCycleAt(dob, new Date()).calendarYearUsed;
       }
     } catch {
       return nowYear;
     }
     return nowYear;
-  }, [dob, tab, westernAnchor, nowYear]);
+  }, [dob, yearAnchor, nowYear]);
 
   const { pastYears, visibleYears } = useMemo(() => {
     const current = years.includes(currentKeyYear) ? currentKeyYear : null;
@@ -163,13 +166,13 @@ export function YearOutlookExplorer({
     const age = birthYear != null ? year - birthYear : null;
     return (
       <YearEntry
-        key={`${tab}-${westernAnchor}-${year}`}
+        key={`${tab}-${yearAnchor}-${year}`}
         year={year}
         age={age}
         dob={dob}
         fullName={selected?.full_name}
         tab={tab}
-        westernAnchor={westernAnchor}
+        yearAnchor={yearAnchor}
         isOpen={year === expandedYear}
         isNow={year === currentKeyYear}
         onToggle={() => setOpenYear(year === expandedYear ? null : year)}
@@ -251,43 +254,45 @@ export function YearOutlookExplorer({
             ))}
           </div>
 
-          {tab === "western" ? (
-            <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
-              {(
-                [
-                  ["birthday", "Birthday cycle"],
-                  ["calendar", "Calendar year"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => {
-                    setWesternAnchor(id);
-                    setOpenYear("default");
-                    setShowPast(false);
-                  }}
-                  className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
-                    westernAnchor === id
-                      ? "bg-ink text-paper"
-                      : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          ) : null}
+          <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
+            {(
+              [
+                ["birthday", "Birthday cycle"],
+                ["calendar", "Calendar year"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setYearAnchor(id);
+                  setOpenYear("default");
+                  setShowPast(false);
+                }}
+                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                  yearAnchor === id
+                    ? "bg-ink text-paper"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
 
           <p className="text-sm leading-6 text-ink-soft">
             {tab === "vedic"
-              ? VEDIC_YEAR_METHOD_NOTE
-              : westernAnchor === "birthday"
+              ? yearAnchor === "birthday"
+                ? VEDIC_BIRTHDAY_NOTE
+                : VEDIC_CALENDAR_NOTE
+              : yearAnchor === "birthday"
                 ? WESTERN_BIRTHDAY_NOTE
                 : WESTERN_CALENDAR_NOTE}
             {tab === "western" ? (
               <span className="mt-2 block text-xs">{WESTERN_YEAR_METHOD_NOTE}</span>
-            ) : null}
+            ) : (
+              <span className="mt-2 block text-xs">{VEDIC_YEAR_METHOD_NOTE}</span>
+            )}
           </p>
 
           {selected && years.length > 0 ? (
@@ -336,7 +341,7 @@ function YearEntry({
   dob,
   fullName,
   tab,
-  westernAnchor,
+  yearAnchor,
   isOpen,
   isNow,
   onToggle,
@@ -346,17 +351,21 @@ function YearEntry({
   dob: string;
   fullName?: string;
   tab: YearSystemTab;
-  westernAnchor: WesternYearAnchor;
+  yearAnchor: WesternYearAnchor;
   isOpen: boolean;
   isNow: boolean;
   onToggle: () => void;
 }) {
   if (tab === "vedic") {
-    const breakdown = projectedYearBreakdown(dob, year);
+    const cycle =
+      yearAnchor === "birthday"
+        ? projectedYearCycleStarting(dob, year)
+        : null;
+    const breakdown = cycle ?? projectedYearBreakdown(dob, year);
     const meta = projectedYearMeta(breakdown.number);
     return (
       <YearRow
-        yearLabel={String(year)}
+        yearLabel={cycle ? cycle.rangeLabel : String(year)}
         age={age}
         number={breakdown.number}
         tag={meta.tag}
@@ -371,6 +380,9 @@ function YearEntry({
           points={meta.details}
           practice={meta.practice}
           calc={[
+            cycle
+              ? `Birthday cycle ${cycle.rangeLabel}.`
+              : `Calendar year ${year} (1 Jan – 31 Dec).`,
             `Month ${breakdown.month} + day ${breakdown.day} + last two digits ${breakdown.yearDigits} + ${breakdown.weekdayLabel} (${breakdown.weekdayDigit}) = ${breakdown.compound}`,
             `Reduce to ${breakdown.number}.`,
           ]}
@@ -382,7 +394,7 @@ function YearEntry({
   const outlook = westernYearOutlook({
     dob,
     fullName,
-    anchor: westernAnchor,
+    anchor: yearAnchor,
     year,
   });
   const pin = outlook.pinnacle;

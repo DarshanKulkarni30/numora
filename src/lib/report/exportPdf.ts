@@ -495,7 +495,10 @@ export async function downloadReportPdf(
   );
   if (report.projected_year) {
     addBody(
-      `Projected year ${report.projected_year.number} (${report.projected_year.calendar_year}): ${report.projected_year.theme}. ${report.projected_year.advice}`,
+      `Projected year ${report.projected_year.number} (${
+        report.projected_year.range_label ??
+        report.projected_year.calendar_year
+      }): ${report.projected_year.theme}. ${report.projected_year.advice}`,
     );
   }
   addBody(
