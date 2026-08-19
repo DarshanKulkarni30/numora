@@ -23,6 +23,10 @@ import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIden
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
+import {
+  buildDetailedInsightCards,
+  insightCardPdfLines,
+} from "@/lib/numerology/insightTiles";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
 import { buildYearOutlookMandala } from "@/lib/numerology/yearOutlookMandala";
 import { projectedYearCycleStarting } from "@/lib/numerology/vedicYearNumber";
@@ -621,6 +625,25 @@ export async function downloadReportPdf(
     addBody("Career reflections:", 10);
     for (const p of report.career_suggestions.professions.slice(0, 14)) {
       addBullet(p);
+    }
+  }
+
+  addBanner("Detailed insight cards", "personality");
+  const insightPack = buildDetailedInsightCards(report);
+  for (const key of [
+    "pythagorean",
+    "chaldean",
+    "vedic",
+    "lo-shu",
+    "core-personality",
+    "career",
+    "relationships",
+    "communication",
+  ] as const) {
+    const cards = insightPack[key];
+    if (!cards?.length) continue;
+    for (const line of insightCardPdfLines(cards).slice(0, 12)) {
+      addBody(line, 9);
     }
   }
 

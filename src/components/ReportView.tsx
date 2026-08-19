@@ -132,12 +132,43 @@ function MoreDetail({ text }: { text: string }) {
   return <SectionBody text={text} />;
 }
 
+function ClassicProseToggle({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        type="button"
+        className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs text-ink"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {open ? "Hide" : "View"} classic prose
+      </button>
+      {open ? (
+        <div className="mt-3">
+          <MoreDetail text={text} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 const INSIGHT_SECTIONS = new Set([
   "pythagorean",
   "chaldean",
   "vedic",
   "lo-shu",
   "core-personality",
+  "strengths",
+  "growth",
+  "career",
+  "relationships",
+  "communication",
+  "age-guidance",
+  "personal-year",
+  "projected-year",
+  "personal-month",
+  "current-month",
+  "recommendations",
 ]);
 
 export function ReportView({
@@ -684,7 +715,9 @@ export function ReportView({
             >
               {section.id === "career" && report.career_suggestions ? (
                 <div className="space-y-4">
-                  <MoreDetail text={report.personality.career_style} />
+                  {(insightPack.career ?? []).map((card) => (
+                    <InsightTileCard key={card.key} card={card} />
+                  ))}
                   <div>
                     <h3 className="text-ink">
                       {person.report_type === "child"
@@ -702,15 +735,14 @@ export function ReportView({
                       ))}
                     </ul>
                   </div>
+                  <ClassicProseToggle text={section.body} />
                 </div>
               ) : INSIGHT_SECTIONS.has(section.id) ? (
                 <div className="space-y-4">
-                  <div className="space-y-4">
-                    {(insightPack[section.id] ?? []).map((card) => (
-                      <InsightTileCard key={card.key} card={card} />
-                    ))}
-                  </div>
-                  <MoreDetail text={section.body} />
+                  {(insightPack[section.id] ?? []).map((card) => (
+                    <InsightTileCard key={card.key} card={card} />
+                  ))}
+                  <ClassicProseToggle text={section.body} />
                 </div>
               ) : (
                 <MoreDetail text={section.body} />

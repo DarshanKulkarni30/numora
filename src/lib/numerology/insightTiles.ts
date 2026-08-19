@@ -25,7 +25,14 @@ export type InsightGeometry =
   | "lotus"
   | "square"
   | "mandala"
-  | "grid";
+  | "grid"
+  | "arrow"
+  | "circles"
+  | "speech"
+  | "hourglass"
+  | "ring"
+  | "calendar"
+  | "compass";
 
 export type InsightConnection = {
   pair: string;
@@ -473,11 +480,283 @@ export function buildDetailedInsightCards(report: NumerologyReport): Record<
     }),
   ];
 
+  function softCard(opts: {
+    key: string;
+    systemTag: string;
+    label: string;
+    number: string;
+    keyword: string;
+    glyph: string;
+    geometry: InsightGeometry;
+    core: string;
+    showsUp: string;
+    growth: string;
+    narrative: string;
+    related?: { label: string; value: string }[];
+    strengths?: string[];
+  }): InsightCardModel {
+    const value = opts.number;
+    return {
+      key: opts.key,
+      systemTag: opts.systemTag,
+      label: opts.label,
+      number: value,
+      keyword: opts.keyword,
+      glyph: opts.glyph,
+      geometry: opts.geometry,
+      palette: paletteFor(value === "—" ? snap.life_path : value),
+      core: assertSafeCopy(opts.core, "insight.soft.core"),
+      showsUp: assertSafeCopy(opts.showsUp, "insight.soft.showsUp"),
+      growth: assertSafeCopy(opts.growth, "insight.soft.growth"),
+      narrative: assertSafeCopy(opts.narrative, "insight.soft.narrative"),
+      dots: [true, true, true],
+      related: opts.related ?? relatedFromSnap(snap, opts.label),
+      connections: [
+        connectionBody("Life Path", snap.life_path, "Expression", snap.expression_number),
+        connectionBody("Life Path", snap.life_path, "Destiny", snap.vedic_destiny),
+      ],
+      strengths: (opts.strengths ?? report.strengths.slice(0, 3)).map((s) =>
+        assertSafeCopy(s, "insight.soft.strength"),
+      ),
+      growthTies: growthTiesFor("Life Path", snap.life_path, loShu, growthAreas),
+    };
+  }
+
+  const firstSentence = (text: string) =>
+    text.split(/(?<=\.)\s+/).filter(Boolean)[0]?.trim() ?? text.slice(0, 140);
+
+  const strengths = [
+    softCard({
+      key: "strengths",
+      systemTag: "Strengths",
+      label: "At a glance",
+      number: snap.life_path,
+      keyword: coreTraitFor(snap.life_path),
+      glyph: "✦",
+      geometry: "lotus",
+      core: "Gifts that showed up across this reading’s banks and charts.",
+      showsUp: report.strengths.slice(0, 3).join(" · ") || "Steady reflective strengths.",
+      growth: "Let strengths stay soft — overuse can harden into a blind spot.",
+      narrative: "Your gifts work best when they serve care, not performance.",
+      strengths: report.strengths.slice(0, 5),
+    }),
+  ];
+
+  const growth = [
+    softCard({
+      key: "growth",
+      systemTag: "Growth",
+      label: "Opportunities",
+      number: snap.personal_year,
+      keyword: "Practice",
+      glyph: "→",
+      geometry: "compass",
+      core: "Themes inviting patient skill — not flaws to erase.",
+      showsUp:
+        report.growth_opportunities.slice(0, 2).join(" ") ||
+        "Growth Mode catalysts above name the live practice list.",
+      growth:
+        report.growth_areas?.[0]?.actions?.[0] ??
+        "Pick one micro-practice for seven days, then review.",
+      narrative: "Growth is a pathway of small durable habits, not a verdict.",
+      strengths: report.growth_opportunities.slice(0, 3),
+    }),
+  ];
+
+  const career = [
+    softCard({
+      key: "career",
+      systemTag: "Career",
+      label: "Work tone",
+      number: snap.expression_number,
+      keyword: coreTraitFor(snap.expression_number),
+      glyph: "▲",
+      geometry: "arrow",
+      core: firstSentence(report.personality.career_style),
+      showsUp: `Expression ${snap.expression_number} and Life Path ${snap.life_path} shape how effort wants to land.`,
+      growth: "Choose roles that reward craft and recovery — not endless proving.",
+      narrative: firstSentence(report.personality.career_style),
+      related: [
+        { label: "Expression", value: snap.expression_number },
+        { label: "Life Path", value: snap.life_path },
+        { label: "Destiny", value: snap.vedic_destiny },
+      ],
+    }),
+  ];
+
+  const relationships = [
+    softCard({
+      key: "relationships",
+      systemTag: "Relationships",
+      label: "Closeness",
+      number: snap.soul_urge_number,
+      keyword: coreTraitFor(snap.soul_urge_number),
+      glyph: "○○",
+      geometry: "circles",
+      core: firstSentence(report.personality.relationship_style),
+      showsUp: `Soul Urge ${snap.soul_urge_number} meets Personality ${snap.personality_number} in how closeness starts.`,
+      growth: "Name one need clearly before agreeing to shared plans.",
+      narrative: firstSentence(report.personality.relationship_style),
+    }),
+  ];
+
+  const communication = [
+    softCard({
+      key: "communication",
+      systemTag: "Communication",
+      label: "Voice",
+      number: snap.personality_number,
+      keyword: coreTraitFor(snap.personality_number),
+      glyph: "◎",
+      geometry: "speech",
+      core: firstSentence(report.personality.communication_style),
+      showsUp: `Outer face ${snap.personality_number} colors first impressions and messaging pace.`,
+      growth: "One clarifying question before you defend a position.",
+      narrative: firstSentence(report.personality.communication_style),
+    }),
+  ];
+
+  const ageGuidance = [
+    softCard({
+      key: "age-guidance",
+      systemTag: "Age",
+      label: report.age_guidance.category,
+      number: String(report.person.age),
+      keyword: "Chapter",
+      glyph: "◇",
+      geometry: "hourglass",
+      core: firstSentence(report.age_guidance.guidance),
+      showsUp: `Age ${report.person.age} · Life Path ${snap.life_path} as the long walk behind this chapter.`,
+      growth: "Match ambition to season — Personal Year and Month set pace.",
+      narrative: firstSentence(report.age_guidance.guidance),
+      related: [
+        { label: "Life Path", value: snap.life_path },
+        { label: "Year", value: snap.personal_year },
+        { label: "Month", value: snap.personal_month },
+      ],
+    }),
+  ];
+
+  const personalYear = [
+    softCard({
+      key: "personal-year",
+      systemTag: "Timing",
+      label: "Personal Year",
+      number: snap.personal_year,
+      keyword: report.personal_year.nature || coreTraitFor(snap.personal_year),
+      glyph: "◎",
+      geometry: "ring",
+      core: report.personal_year.theme,
+      showsUp: report.personal_year.land || report.personal_year.theme,
+      growth: report.personal_year.advice,
+      narrative: report.personal_year.theme,
+      related: [
+        { label: "Month", value: snap.personal_month },
+        { label: "Life Path", value: snap.life_path },
+      ],
+    }),
+  ];
+
+  const projectedYear = report.projected_year
+    ? [
+        softCard({
+          key: "projected-year",
+          systemTag: "Year Outlook",
+          label: "Birthday cycle",
+          number: String(report.projected_year.number),
+          keyword: report.projected_year.planet || "Outlook",
+          glyph: "♄",
+          geometry: "ring",
+          core: report.projected_year.theme,
+          showsUp: `Outlook ${report.projected_year.number} for ${
+            report.projected_year.range_label ??
+            report.projected_year.calendar_year
+          }.`,
+          growth: report.projected_year.advice,
+          narrative: report.projected_year.theme,
+        }),
+      ]
+    : [];
+
+  const personalMonth = [
+    softCard({
+      key: "personal-month",
+      systemTag: "Timing",
+      label: "Personal Month",
+      number: snap.personal_month,
+      keyword: coreTraitFor(snap.personal_month),
+      glyph: "▢",
+      geometry: "calendar",
+      core: report.personal_month.theme,
+      showsUp: `Month ${snap.personal_month} inside Year ${snap.personal_year}.`,
+      growth: report.personal_month.advice,
+      narrative: report.personal_month.theme,
+    }),
+  ];
+
+  const mg = report.monthly_guidance;
+  const currentMonth = [
+    softCard({
+      key: "current-month",
+      systemTag: "This month",
+      label: "Guidance",
+      number: snap.personal_month,
+      keyword: "Focus",
+      glyph: "→",
+      geometry: "compass",
+      core: mg.focus_areas.slice(0, 2).join(" · ") || mg.career,
+      showsUp: `Work/learn: ${firstSentence(mg.career)} Relations: ${firstSentence(mg.relationships)}`,
+      growth: mg.avoid[0]
+        ? `Ease off: ${mg.avoid[0]}`
+        : firstSentence(mg.wellbeing),
+      narrative: firstSentence(mg.wellbeing),
+      strengths: mg.focus_areas.slice(0, 4),
+    }),
+  ];
+
+  const recommendations = [
+    softCard({
+      key: "recommendations",
+      systemTag: "Focus",
+      label: "Recommended",
+      number: snap.life_path,
+      keyword: "Practice list",
+      glyph: "◎",
+      geometry: "compass",
+      core: report.recommendations.slice(0, 2).join(" ") || "Stay with reflective practice.",
+      showsUp: report.recommendations.slice(0, 3).map((r, i) => `${i + 1}. ${r}`).join(" "),
+      growth: report.recommendations[0] ?? "Choose one focus for the next fortnight.",
+      narrative: "Focus areas are invitations — pick what fits this season.",
+      strengths: report.recommendations.slice(0, 4),
+    }),
+  ];
+
   return {
     pythagorean,
     chaldean,
     vedic,
     "lo-shu": loShuCards,
     "core-personality": core,
+    strengths,
+    growth,
+    career,
+    relationships,
+    communication,
+    "age-guidance": ageGuidance,
+    "personal-year": personalYear,
+    "projected-year": projectedYear,
+    "personal-month": personalMonth,
+    "current-month": currentMonth,
+    recommendations,
   };
+}
+
+export function insightCardPdfLines(cards: InsightCardModel[]): string[] {
+  return cards.flatMap((c) => [
+    `${c.systemTag} · ${c.label} ${c.number} — ${c.keyword}`,
+    `Core: ${c.core}`,
+    `Shows up: ${c.showsUp}`,
+    `Growth: ${c.growth}`,
+    c.narrative,
+  ]);
 }

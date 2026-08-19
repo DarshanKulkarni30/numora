@@ -77,9 +77,92 @@ function GeometryWatermark({ kind }: { kind: InsightGeometry }) {
       </>
     );
   }
+  if (kind === "grid") {
+    return (
+      <>
+        <path
+          d="M22 22h56v56H22z M22 50h56 M50 22v56"
+          fill="none"
+          stroke={stroke}
+          strokeWidth="1"
+        />
+      </>
+    );
+  }
+  if (kind === "arrow") {
+    return (
+      <path
+        d="M50 82 V22 M36 38 L50 22 L64 38"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    );
+  }
+  if (kind === "circles") {
+    return (
+      <>
+        <circle cx="38" cy="50" r="18" fill="none" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="62" cy="50" r="18" fill="none" stroke={stroke} strokeWidth="1.2" />
+      </>
+    );
+  }
+  if (kind === "speech") {
+    return (
+      <path
+        d="M22 28h56v36H48l-12 12 V64H22z"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1.2"
+      />
+    );
+  }
+  if (kind === "hourglass") {
+    return (
+      <path
+        d="M30 20h40v8L58 50l12 22v8H30v-8l12-22L30 28z"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1.2"
+      />
+    );
+  }
+  if (kind === "ring") {
+    return (
+      <circle cx="50" cy="50" r="28" fill="none" stroke={stroke} strokeWidth="1.4" />
+    );
+  }
+  if (kind === "calendar") {
+    return (
+      <rect
+        x="24"
+        y="28"
+        width="52"
+        height="48"
+        rx="4"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1.2"
+      />
+    );
+  }
+  if (kind === "compass") {
+    return (
+      <>
+        <circle cx="50" cy="50" r="28" fill="none" stroke={stroke} strokeWidth="1" />
+        <path d="M50 28 L56 50 L50 72 L44 50 Z" fill="none" stroke={stroke} strokeWidth="1.2" />
+      </>
+    );
+  }
   return (
     <>
-      <path d="M22 22h56v56H22z M22 50h56 M50 22v56" fill="none" stroke={stroke} strokeWidth="1" />
+      <path
+        d="M22 22h56v56H22z M22 50h56 M50 22v56"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1"
+      />
     </>
   );
 }
@@ -212,7 +295,7 @@ export function InsightTileCard({ card }: { card: InsightCardModel }) {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs text-ink"
+            className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs text-ink"
           >
             {open ? "Hide connections" : "See cross-system harmony"}
           </button>
