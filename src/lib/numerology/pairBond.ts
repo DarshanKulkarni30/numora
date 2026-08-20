@@ -296,8 +296,8 @@ export function buildPairBondModel(opts: {
   let bondTrait: string | null = null;
   let marriageYear: number | null = null;
   let yearsMarried: number | null = null;
-  let timeline: PairYearCell[] = [];
   let impact: PairBondImpact | null = null;
+  const timeline: PairYearCell[] = [];
 
   if (togetherSince) {
     bondNumber = bondNumberFromDate(togetherSince);

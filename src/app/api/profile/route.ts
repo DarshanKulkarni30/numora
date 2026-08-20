@@ -266,7 +266,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: delError.message }, { status: 500 });
   }
 
-  let { data, error } = await supabase
+  const insertResult = await supabase
     .from("people")
     .insert(
       normalized.map((p) => ({
@@ -277,6 +277,9 @@ export async function PUT(request: Request) {
     )
     .select("*")
     .order("sort_order", { ascending: true });
+
+  const { data } = insertResult;
+  let { error } = insertResult;
 
   if (error) {
     if (/name_history/i.test(error.message)) {
