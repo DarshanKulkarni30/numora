@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
+import type { GuideTopic } from "@/lib/guides/content";
 import {
   buildPythagoreanIdentityLayers,
+  identityTrait,
+  identityTraitBullets,
   type IdentityLayerCard,
   type InnerOuterAlignment,
 } from "@/lib/numerology/pythagoreanIdentityLayers";
@@ -18,6 +21,101 @@ type Props = {
   maturity: string;
 };
 
+type FocusNode = {
+  id: string;
+  code: string;
+  role: string;
+  value: string;
+  tip: string;
+  detail: string;
+  guide?: { topic: GuideTopic; label: string; value: string };
+  traitLine?: string;
+};
+
+function toggleFocus(
+  cur: string | null,
+  id: string,
+  set: (v: string | null) => void,
+) {
+  set(cur === id ? null : id);
+}
+
+function nodeKeyDown(
+  e: KeyboardEvent,
+  id: string,
+  focus: string | null,
+  setFocus: (v: string | null) => void,
+) {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    toggleFocus(focus, id, setFocus);
+  }
+}
+
+function NodeFocusStrip({ focus }: { focus: FocusNode | null }) {
+  if (!focus) {
+    return (
+      <p className="mt-2 text-center text-[11px] text-ink-soft">
+        Hover or tap a node for a closer look
+      </p>
+    );
+  }
+  return (
+    <div className="mt-2 rounded-xl border border-[var(--line)] bg-mist/45 px-3 py-2.5 shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+        {focus.code} · {focus.role}
+      </p>
+      <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        {focus.guide ? (
+          <GuideNumberLink
+            topic={focus.guide.topic}
+            value={focus.guide.value}
+            label={focus.guide.label}
+            display={focus.guide.value}
+            className="brand text-lg text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+          />
+        ) : (
+          <span className="brand text-lg text-ink">{focus.value}</span>
+        )}
+        <span className="text-sm text-ink-soft">
+          {focus.traitLine ??
+            (focus.guide ? identityTraitBullets(focus.guide.value) : null)}
+        </span>
+      </p>
+      <p className="mt-1 max-w-[65ch] text-sm leading-5 text-ink">{focus.detail}</p>
+    </div>
+  );
+}
+
+type HotspotProps = {
+  nodeId: string;
+  tip: string;
+  focus: string | null;
+  setFocus: (v: string | null) => void;
+  children: ReactNode;
+};
+
+function SvgHotspot({ nodeId, tip, focus, setFocus, children }: HotspotProps) {
+  const active = focus === nodeId;
+  const opacity = focus && !active ? 0.32 : 1;
+  return (
+    <g
+      opacity={opacity}
+      className="cursor-pointer"
+      role="button"
+      tabIndex={0}
+      aria-label={tip}
+      aria-pressed={active}
+      onClick={() => toggleFocus(focus, nodeId, setFocus)}
+      onMouseEnter={() => setFocus(nodeId)}
+      onKeyDown={(e) => nodeKeyDown(e, nodeId, focus, setFocus)}
+    >
+      <title>{tip}</title>
+      {children}
+    </g>
+  );
+}
+
 /** BD → EX → LP as an explicit bridge / flow (Expression = vehicle). */
 function ExpressionBridge({
   birthDay,
@@ -30,9 +128,53 @@ function ExpressionBridge({
 }) {
   const uid = useId().replace(/:/g, "");
   const echoes = String(birthDay) === String(expression);
+  const [focus, setFocus] = useState<string | null>(null);
+
+  const nodes: FocusNode[] = useMemo(
+    () => [
+      {
+        id: "bd",
+        code: "BD",
+        role: "Origin",
+        value: birthDay,
+        tip: `Birth Day ${birthDay} · ${identityTrait(birthDay)} — your starting energy`,
+        detail: `Birth Day ${birthDay} is the origin tone (${identityTrait(birthDay)}) you carry into the path.`,
+        guide: { topic: "birth-day", label: "Birth Day", value: birthDay },
+      },
+      {
+        id: "ex",
+        code: "EX",
+        role: echoes ? "Amplifies BD" : "Your how",
+        value: expression,
+        tip: `Expression ${expression} · ${identityTrait(expression)} — how you bridge Birth Day to Life Path`,
+        detail: echoes
+          ? `Expression ${expression} echoes Birth Day ${birthDay}, amplifying ${identityTraitBullets(expression).toLowerCase()} as the style toward Life Path ${lifePath}.`
+          : `Expression ${expression} is the vehicle — how ${identityTraitBullets(expression).toLowerCase()} colors the walk from Birth Day ${birthDay} toward Life Path ${lifePath}.`,
+        guide: { topic: "expression", label: "Expression", value: expression },
+      },
+      {
+        id: "lp",
+        code: "LP",
+        role: "Direction",
+        value: lifePath,
+        tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — the direction you're growing toward`,
+        detail: `Life Path ${lifePath} is the direction (${identityTrait(lifePath)}) Expression ${expression} helps you walk toward.`,
+        guide: { topic: "life-path", label: "Life Path", value: lifePath },
+      },
+    ],
+    [birthDay, lifePath, expression, echoes],
+  );
+
+  const active = nodes.find((n) => n.id === focus) ?? null;
+
   return (
-    <div className="relative">
-      <svg viewBox="0 0 280 88" className="h-[5.5rem] w-full" aria-hidden>
+    <div>
+      <svg
+        viewBox="0 0 280 88"
+        className="h-[5.5rem] w-full"
+        role="img"
+        aria-label="Expression bridge from Birth Day through Expression to Life Path. Hover or tap nodes for details."
+      >
         <defs>
           <linearGradient id={`bridge-${uid}`} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.85" />
@@ -40,7 +182,6 @@ function ExpressionBridge({
             <stop offset="100%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
           </linearGradient>
         </defs>
-        {/* faint scale ticks */}
         {[40, 80, 120, 160, 200, 240].map((x) => (
           <line
             key={x}
@@ -60,122 +201,83 @@ function ExpressionBridge({
           stroke={`url(#bridge-${uid})`}
           strokeWidth="3.5"
           strokeLinecap="round"
+          opacity={focus ? 0.55 : 1}
         />
-        {/* Origin */}
-        <circle cx="36" cy="44" r="9" fill="rgb(30 58 107)" />
-        <text
-          x="36"
-          y="47"
-          fontSize="8"
-          fill="white"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          {birthDay}
-        </text>
-        <text
-          x="36"
-          y="72"
-          fontSize="8"
-          fill="rgb(30 40 55)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          BD {birthDay}
-        </text>
-        <text
-          x="36"
-          y="84"
-          fontSize="6.5"
-          fill="rgb(70 82 98)"
-          textAnchor="middle"
-        >
-          Origin
-        </text>
-        {/* Vehicle */}
-        <circle
-          cx="140"
-          cy="44"
-          r="12"
-          fill="rgb(250 248 243)"
-          stroke="rgb(180 83 9)"
-          strokeWidth="2.5"
-        />
-        <circle
-          cx="140"
-          cy="44"
-          r="16"
-          fill="none"
-          stroke="rgb(180 83 9 / 0.35)"
-          strokeWidth="1.5"
-          className="motion-safe:animate-pulse"
-        />
-        <text
-          x="140"
-          y="47"
-          fontSize="9"
-          fill="rgb(180 83 9)"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          {expression}
-        </text>
-        <text
-          x="140"
-          y="18"
-          fontSize="8"
-          fill="rgb(180 83 9)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          Ex {expression}
-        </text>
-        <text
-          x="140"
-          y="28"
-          fontSize="6.5"
-          fill="rgb(70 82 98)"
-          textAnchor="middle"
-        >
-          {echoes ? "Amplifies BD" : "Your how"}
-        </text>
-        {/* Destination */}
-        <circle cx="244" cy="44" r="9" fill="rgb(45 122 120)" />
-        <text
-          x="244"
-          y="47"
-          fontSize="8"
-          fill="white"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          {lifePath}
-        </text>
-        <text
-          x="244"
-          y="72"
-          fontSize="8"
-          fill="rgb(30 40 55)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          LP {lifePath}
-        </text>
-        <text
-          x="244"
-          y="84"
-          fontSize="6.5"
-          fill="rgb(70 82 98)"
-          textAnchor="middle"
-        >
-          Direction
-        </text>
+
+        <SvgHotspot nodeId="bd" tip={nodes[0].tip} focus={focus} setFocus={setFocus}>
+          <circle
+            cx="36"
+            cy="44"
+            r={focus === "bd" ? 11 : 9}
+            fill="rgb(30 58 107)"
+            stroke={focus === "bd" ? "rgb(180 83 9)" : "transparent"}
+            strokeWidth="2"
+          />
+          <text x="36" y="47" fontSize="8" fill="white" textAnchor="middle" fontWeight="700">
+            {birthDay}
+          </text>
+          <text x="36" y="72" fontSize="8" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            BD {birthDay}
+          </text>
+          <text x="36" y="84" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+            Origin
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="ex" tip={nodes[1].tip} focus={focus} setFocus={setFocus}>
+          <circle
+            cx="140"
+            cy="44"
+            r={focus === "ex" ? 14 : 12}
+            fill="rgb(250 248 243)"
+            stroke="rgb(180 83 9)"
+            strokeWidth={focus === "ex" ? 3 : 2.5}
+          />
+          <circle
+            cx="140"
+            cy="44"
+            r="16"
+            fill="none"
+            stroke="rgb(180 83 9 / 0.35)"
+            strokeWidth="1.5"
+            className="motion-safe:animate-pulse"
+          />
+          <text x="140" y="47" fontSize="9" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="700">
+            {expression}
+          </text>
+          <text x="140" y="18" fontSize="8" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
+            Ex {expression}
+          </text>
+          <text x="140" y="28" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+            {echoes ? "Amplifies BD" : "Your how"}
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="lp" tip={nodes[2].tip} focus={focus} setFocus={setFocus}>
+          <circle
+            cx="244"
+            cy="44"
+            r={focus === "lp" ? 11 : 9}
+            fill="rgb(45 122 120)"
+            stroke={focus === "lp" ? "rgb(180 83 9)" : "transparent"}
+            strokeWidth="2"
+          />
+          <text x="244" y="47" fontSize="8" fill="white" textAnchor="middle" fontWeight="700">
+            {lifePath}
+          </text>
+          <text x="244" y="72" fontSize="8" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            LP {lifePath}
+          </text>
+          <text x="244" y="84" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+            Direction
+          </text>
+        </SvgHotspot>
       </svg>
+      <NodeFocusStrip focus={active} />
     </div>
   );
 }
 
-/** Soul Urge × Personality as labeled overlapping lenses + named shared self. */
 function InnerOuterOverlap({
   soulUrge,
   personality,
@@ -185,6 +287,7 @@ function InnerOuterOverlap({
   personality: string;
   alignment: InnerOuterAlignment;
 }) {
+  const [focus, setFocus] = useState<string | null>(null);
   const bandColor =
     alignment.band === "aligned"
       ? "rgb(13 159 110)"
@@ -192,130 +295,128 @@ function InnerOuterOverlap({
         ? "rgb(180 83 9)"
         : "rgb(35 79 150)";
 
+  const nodes: FocusNode[] = useMemo(
+    () => [
+      {
+        id: "su",
+        code: "SU",
+        role: "Inner want",
+        value: soulUrge,
+        tip: `Soul Urge ${soulUrge} · ${identityTrait(soulUrge)} — what you privately want`,
+        detail: `Inner want ${soulUrge} (${identityTrait(soulUrge)}) is the pull others may not see first.`,
+        guide: { topic: "soul-urge", label: "Soul Urge", value: soulUrge },
+      },
+      {
+        id: "pe",
+        code: "PE",
+        role: "Outer face",
+        value: personality,
+        tip: `Personality ${personality} · ${identityTrait(personality)} — how you are seen`,
+        detail: `Outer face ${personality} (${identityTrait(personality)}) is often the first impression in the room.`,
+        guide: {
+          topic: "personality",
+          label: "Personality",
+          value: personality,
+        },
+      },
+      {
+        id: "meet",
+        code: "∩",
+        role: "Where you meet the world",
+        value:
+          soulUrge === personality ? soulUrge : `${soulUrge} × ${personality}`,
+        tip: `${alignment.label} — ${alignment.note}`,
+        detail: alignment.note,
+        traitLine: alignment.label,
+      },
+    ],
+    [soulUrge, personality, alignment],
+  );
+
+  const active = nodes.find((n) => n.id === focus) ?? null;
+
   return (
-    <div className="space-y-2">
-      <svg viewBox="0 0 280 100" className="h-24 w-full" aria-hidden>
-        {/* Inner want — left */}
-        <ellipse
-          cx="108"
-          cy="48"
-          rx="52"
-          ry="36"
-          fill="rgb(30 58 107 / 0.16)"
-          stroke="rgb(30 58 107)"
-          strokeWidth="1.6"
-        />
-        {/* Outer face — right */}
-        <ellipse
-          cx="172"
-          cy="48"
-          rx="52"
-          ry="36"
-          fill="rgb(45 122 120 / 0.14)"
-          stroke="rgb(45 122 120)"
-          strokeWidth="1.6"
-        />
-        {/* Overlap highlight */}
-        <ellipse
-          cx="140"
-          cy="48"
-          rx="22"
-          ry="28"
-          fill="rgb(180 83 9 / 0.12)"
-          stroke="rgb(180 83 9 / 0.55)"
-          strokeWidth="1"
-          strokeDasharray="3 2"
-        />
-        <text
-          x="88"
-          y="46"
-          fontSize="14"
-          fill="rgb(30 58 107)"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          {soulUrge}
-        </text>
-        <text
-          x="88"
-          y="58"
-          fontSize="6.5"
-          fill="rgb(70 82 98)"
-          textAnchor="middle"
-        >
-          SU
-        </text>
-        <text
-          x="192"
-          y="46"
-          fontSize="14"
-          fill="rgb(45 122 120)"
-          textAnchor="middle"
-          fontWeight="700"
-        >
-          {personality}
-        </text>
-        <text
-          x="192"
-          y="58"
-          fontSize="6.5"
-          fill="rgb(70 82 98)"
-          textAnchor="middle"
-        >
-          PE
-        </text>
-        <text
-          x="140"
-          y="50"
-          fontSize="6.5"
-          fill="rgb(180 83 9)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          Meet
-        </text>
-        <text
-          x="70"
-          y="94"
-          fontSize="7"
-          fill="rgb(30 40 55)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          Inner want
-        </text>
-        <text
-          x="210"
-          y="94"
-          fontSize="7"
-          fill="rgb(30 40 55)"
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          Outer face
-        </text>
-        <text
-          x="140"
-          y="12"
-          fontSize="7"
-          fill={bandColor}
-          textAnchor="middle"
-          fontWeight="600"
-        >
-          Where you meet the world
-        </text>
+    <div className="space-y-1">
+      <svg
+        viewBox="0 0 280 100"
+        className="h-24 w-full"
+        role="img"
+        aria-label="Inner want and outer face overlapping lenses. Hover or tap for details."
+      >
+        <SvgHotspot nodeId="su" tip={nodes[0].tip} focus={focus} setFocus={setFocus}>
+          <ellipse
+            cx="108"
+            cy="48"
+            rx="52"
+            ry="36"
+            fill="rgb(30 58 107 / 0.16)"
+            stroke="rgb(30 58 107)"
+            strokeWidth={focus === "su" ? 2.4 : 1.6}
+          />
+          <text x="88" y="46" fontSize="14" fill="rgb(30 58 107)" textAnchor="middle" fontWeight="700">
+            {soulUrge}
+          </text>
+          <text x="88" y="58" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+            SU
+          </text>
+          <text x="70" y="94" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            Inner want
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="pe" tip={nodes[1].tip} focus={focus} setFocus={setFocus}>
+          <ellipse
+            cx="172"
+            cy="48"
+            rx="52"
+            ry="36"
+            fill="rgb(45 122 120 / 0.14)"
+            stroke="rgb(45 122 120)"
+            strokeWidth={focus === "pe" ? 2.4 : 1.6}
+          />
+          <text x="192" y="46" fontSize="14" fill="rgb(45 122 120)" textAnchor="middle" fontWeight="700">
+            {personality}
+          </text>
+          <text x="192" y="58" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+            PE
+          </text>
+          <text x="210" y="94" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            Outer face
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="meet" tip={nodes[2].tip} focus={focus} setFocus={setFocus}>
+          <ellipse
+            cx="140"
+            cy="48"
+            rx="22"
+            ry="28"
+            fill="rgb(180 83 9 / 0.16)"
+            stroke="rgb(180 83 9 / 0.75)"
+            strokeWidth={focus === "meet" ? 2 : 1}
+            strokeDasharray={focus === "meet" ? undefined : "3 2"}
+          />
+          <text x="140" y="50" fontSize="6.5" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
+            Meet
+          </text>
+          <text x="140" y="12" fontSize="7" fill={bandColor} textAnchor="middle" fontWeight="600">
+            Where you meet the world
+          </text>
+        </SvgHotspot>
       </svg>
-      <p className="text-center text-[11px] leading-5 text-ink">
-        <span className="font-medium" style={{ color: bandColor }}>
-          {alignment.label}
-        </span>
-        <span className="text-ink-soft"> — {alignment.note}</span>
-      </p>
+      <NodeFocusStrip focus={active} />
+      {!active ? (
+        <p className="text-center text-[11px] leading-5 text-ink">
+          <span className="font-medium" style={{ color: bandColor }}>
+            {alignment.label}
+          </span>
+          <span className="text-ink-soft"> — {alignment.note}</span>
+        </p>
+      ) : null}
     </div>
   );
 }
 
-/** LP + EX converge upward into Maturity (synthesis, not timeline). */
 function MaturityConvergence({
   lifePath,
   expression,
@@ -326,119 +427,143 @@ function MaturityConvergence({
   maturity: string;
 }) {
   const uid = useId().replace(/:/g, "");
+  const [focus, setFocus] = useState<string | null>(null);
+
+  const nodes: FocusNode[] = useMemo(
+    () => [
+      {
+        id: "lp",
+        code: "LP",
+        role: "Life Path",
+        value: lifePath,
+        tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — one input to Maturity`,
+        detail: `Life Path ${lifePath} (${identityTrait(lifePath)}) is one strand that integrates into Maturity ${maturity}.`,
+        guide: { topic: "life-path", label: "Life Path", value: lifePath },
+      },
+      {
+        id: "ex",
+        code: "EX",
+        role: "Expression",
+        value: expression,
+        tip: `Expression ${expression} · ${identityTrait(expression)} — the craft that blends with the path`,
+        detail: `Expression ${expression} (${identityTrait(expression)}) is the craft strand that converges with the path.`,
+        guide: { topic: "expression", label: "Expression", value: expression },
+      },
+      {
+        id: "mat",
+        code: "MAT",
+        role: "Integration",
+        value: maturity,
+        tip: `Maturity ${maturity} · ${identityTrait(maturity)} — Life Path + Expression synthesis`,
+        detail: `Maturity ${maturity} (${identityTrait(maturity)}) is the synthesis of Life Path ${lifePath} and Expression ${expression} — not a calendar flip.`,
+        guide: { topic: "maturity", label: "Maturity", value: maturity },
+      },
+    ],
+    [lifePath, expression, maturity],
+  );
+
+  const active = nodes.find((n) => n.id === focus) ?? null;
+
   return (
-    <svg viewBox="0 0 280 118" className="h-[7rem] w-full" aria-hidden>
-      <defs>
-        <linearGradient id={`conv-l-${uid}`} x1="0" y1="1" x2="0.5" y2="0">
-          <stop offset="0%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
-        </linearGradient>
-        <linearGradient id={`conv-r-${uid}`} x1="1" y1="1" x2="0.5" y2="0">
-          <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
-        </linearGradient>
-      </defs>
-      {/* converging paths */}
-      <path
-        d="M56 88 L140 36"
-        fill="none"
-        stroke={`url(#conv-l-${uid})`}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M224 88 L140 36"
-        fill="none"
-        stroke={`url(#conv-r-${uid})`}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      {/* Integration label */}
-      <text
-        x="140"
-        y="62"
-        fontSize="6.5"
-        fill="rgb(70 82 98)"
-        textAnchor="middle"
+    <div>
+      <svg
+        viewBox="0 0 280 118"
+        className="h-[7rem] w-full"
+        role="img"
+        aria-label="Maturity convergence of Life Path and Expression. Hover or tap nodes for details."
       >
-        Integration
-      </text>
-      {/* Maturity apex */}
-      <rect
-        x="104"
-        y="8"
-        width="72"
-        height="28"
-        rx="8"
-        fill="rgb(250 248 243)"
-        stroke="rgb(180 83 9)"
-        strokeWidth="1.8"
-      />
-      <text
-        x="140"
-        y="20"
-        fontSize="7"
-        fill="rgb(180 83 9)"
-        textAnchor="middle"
-        fontWeight="600"
-      >
-        Maturity
-      </text>
-      <text
-        x="140"
-        y="32"
-        fontSize="11"
-        fill="rgb(30 40 55)"
-        textAnchor="middle"
-        fontWeight="700"
-      >
-        {maturity}
-      </text>
-      {/* Life Path base */}
-      <circle cx="56" cy="88" r="14" fill="rgb(45 122 120)" />
-      <text
-        x="56"
-        y="92"
-        fontSize="10"
-        fill="white"
-        textAnchor="middle"
-        fontWeight="700"
-      >
-        {lifePath}
-      </text>
-      <text
-        x="56"
-        y="108"
-        fontSize="7"
-        fill="rgb(30 40 55)"
-        textAnchor="middle"
-        fontWeight="600"
-      >
-        Life Path
-      </text>
-      {/* Expression base */}
-      <circle cx="224" cy="88" r="14" fill="rgb(30 58 107)" />
-      <text
-        x="224"
-        y="92"
-        fontSize="10"
-        fill="white"
-        textAnchor="middle"
-        fontWeight="700"
-      >
-        {expression}
-      </text>
-      <text
-        x="224"
-        y="108"
-        fontSize="7"
-        fill="rgb(30 40 55)"
-        textAnchor="middle"
-        fontWeight="600"
-      >
-        Expression
-      </text>
-    </svg>
+        <defs>
+          <linearGradient id={`conv-l-${uid}`} x1="0" y1="1" x2="0.5" y2="0">
+            <stop offset="0%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
+          </linearGradient>
+          <linearGradient id={`conv-r-${uid}`} x1="1" y1="1" x2="0.5" y2="0">
+            <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M56 88 L140 36"
+          fill="none"
+          stroke={`url(#conv-l-${uid})`}
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity={focus ? 0.5 : 1}
+        />
+        <path
+          d="M224 88 L140 36"
+          fill="none"
+          stroke={`url(#conv-r-${uid})`}
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity={focus ? 0.5 : 1}
+        />
+        <text
+          x="140"
+          y="62"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+          opacity={focus ? 0.45 : 1}
+        >
+          Integration
+        </text>
+
+        <SvgHotspot nodeId="mat" tip={nodes[2].tip} focus={focus} setFocus={setFocus}>
+          <rect
+            x="104"
+            y="8"
+            width="72"
+            height="28"
+            rx="8"
+            fill="rgb(250 248 243)"
+            stroke="rgb(180 83 9)"
+            strokeWidth={focus === "mat" ? 2.4 : 1.8}
+          />
+          <text x="140" y="20" fontSize="7" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
+            Maturity
+          </text>
+          <text x="140" y="32" fontSize="11" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="700">
+            {maturity}
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="lp" tip={nodes[0].tip} focus={focus} setFocus={setFocus}>
+          <circle
+            cx="56"
+            cy="88"
+            r={focus === "lp" ? 16 : 14}
+            fill="rgb(45 122 120)"
+            stroke={focus === "lp" ? "rgb(180 83 9)" : "transparent"}
+            strokeWidth="2"
+          />
+          <text x="56" y="92" fontSize="10" fill="white" textAnchor="middle" fontWeight="700">
+            {lifePath}
+          </text>
+          <text x="56" y="108" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            Life Path
+          </text>
+        </SvgHotspot>
+
+        <SvgHotspot nodeId="ex" tip={nodes[1].tip} focus={focus} setFocus={setFocus}>
+          <circle
+            cx="224"
+            cy="88"
+            r={focus === "ex" ? 16 : 14}
+            fill="rgb(30 58 107)"
+            stroke={focus === "ex" ? "rgb(180 83 9)" : "transparent"}
+            strokeWidth="2"
+          />
+          <text x="224" y="92" fontSize="10" fill="white" textAnchor="middle" fontWeight="700">
+            {expression}
+          </text>
+          <text x="224" y="108" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+            Expression
+          </text>
+        </SvgHotspot>
+      </svg>
+      <NodeFocusStrip focus={active} />
+    </div>
   );
 }
 
@@ -657,7 +782,8 @@ export function PythagoreanIdentityLayers({
           <p className="brand text-lg text-ink sm:text-xl">Identity Layers</p>
           <p className="mt-1 max-w-[65ch] text-sm text-ink-soft">
             How your name and birth tones interact — Expression as bridge, inner
-            × outer overlap, and Maturity as convergence.
+            × outer overlap, and Maturity as convergence. Tap diagram nodes for
+            a closer look.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

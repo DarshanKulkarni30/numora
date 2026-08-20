@@ -43,18 +43,26 @@ export type PythagoreanIdentityLayers = {
   blueprintLines: string[];
 };
 
-function trait(n: number | string): string {
+export function identityTrait(n: number | string): string {
   const num = Number(n);
   const k = reduceToSingleDigit(num);
   return CORE_TRAIT[num] ?? CORE_TRAIT[k] ?? `Tone ${n}`;
 }
 
 /** Short bullets from CORE_TRAIT phrasing, e.g. "Freedom · Adaptability". */
-function traitBullets(n: number | string): string {
-  return trait(n)
+export function identityTraitBullets(n: number | string): string {
+  return identityTrait(n)
     .replace(/\s*&\s*/g, " · ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function trait(n: number | string): string {
+  return identityTrait(n);
+}
+
+function traitBullets(n: number | string): string {
+  return identityTraitBullets(n);
 }
 
 function buildAlignment(su: string, pe: string): InnerOuterAlignment {
