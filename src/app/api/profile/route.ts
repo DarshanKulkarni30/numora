@@ -74,7 +74,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  let people = ((data ?? []) as PersonRecord[]).map((p) => ({
+  let people: PersonRecord[] = ((data ?? []) as PersonRecord[]).map((p) => ({
     ...p,
     name_history: Array.isArray(p.name_history) ? p.name_history : [],
   }));
@@ -329,7 +329,7 @@ export async function PUT(request: Request) {
     .filter((id): id is string => Boolean(id));
   const staleIds = ((existingRows ?? []) as PersonRecord[])
     .map((p) => p.id)
-    .filter((id): id is string => Boolean(id) && !keepIds.includes(id));
+    .filter((id): id is string => typeof id === "string" && !keepIds.includes(id));
   if (staleIds.length) {
     const { error: delError } = await supabase
       .from("people")
