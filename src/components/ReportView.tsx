@@ -630,6 +630,8 @@ export function ReportView({
             fullName: person.full_name,
             tab: "vedic",
           })}
+          lifePath={snap.life_path}
+          expression={snap.expression_number}
         />
 
         <section>

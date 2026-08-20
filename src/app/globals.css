@@ -414,3 +414,29 @@ a.rounded-full:active {
     animation: none;
   }
 }
+
+.pinnacle-terrace-now {
+  filter: drop-shadow(0 4px 6px rgba(35, 79, 150, 0.18));
+}
+
+.pinnacle-practice {
+  animation: pinnacle-practice-pulse 1.2s ease-out 1;
+}
+
+@keyframes pinnacle-practice-pulse {
+  0% {
+    filter: brightness(1);
+  }
+  40% {
+    filter: brightness(1.08);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinnacle-practice {
+    animation: none;
+  }
+}

@@ -28,6 +28,14 @@ import {
   insightCardPdfLines,
 } from "@/lib/numerology/insightTiles";
 import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
+import {
+  buildPinnacleYearModel,
+  pinnacleYearPdfLines,
+} from "@/lib/numerology/pinnacleYear";
+import {
+  buildPinnacleYearModel,
+  pinnacleYearPdfLines,
+} from "@/lib/numerology/pinnacleYear";
 import { buildYearOutlookMandala } from "@/lib/numerology/yearOutlookMandala";
 import { projectedYearCycleStarting } from "@/lib/numerology/vedicYearNumber";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
@@ -717,6 +725,58 @@ export async function downloadReportPdf(
   });
   for (const line of yearRhythmPdfLines(rhythm)) {
     addBody(line);
+  }
+  try {
+    const pinModel = buildPinnacleYearModel({
+      dob: person.date_of_birth,
+      lifePath: snap.life_path,
+      personalYear: report.personal_year.number,
+      expression: snap.expression_number,
+    });
+    addBanner("Pinnacle year", "timing");
+    ensureSpace(86);
+    const topDown = [...pinModel.chapters].reverse();
+    for (let i = 0; i < topDown.length; i++) {
+      const ch = topDown[i]!;
+      const w = maxW * (0.38 + i * 0.15);
+      const x = margin + (maxW - w) / 2;
+      const hex = ch.palette.to.replace("#", "");
+      const r = Number.parseInt(hex.slice(0, 2), 16);
+      const g = Number.parseInt(hex.slice(2, 4), 16);
+      const b = Number.parseInt(hex.slice(4, 6), 16);
+      doc.setFillColor(r, g, b);
+      if (ch.pinnacle.id === pinModel.current.pinnacle.id) {
+        doc.setDrawColor(...SAND);
+        doc.setLineWidth(1.6);
+      } else {
+        doc.setDrawColor(...NAVY);
+        doc.setLineWidth(0.4);
+      }
+      doc.roundedRect(x, y, w, 15, 2, 2, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      const inkHex = ch.palette.ink.replace("#", "");
+      doc.setTextColor(
+        Number.parseInt(inkHex.slice(0, 2), 16),
+        Number.parseInt(inkHex.slice(2, 4), 16),
+        Number.parseInt(inkHex.slice(4, 6), 16),
+      );
+      doc.text(
+        `P${ch.pinnacle.id} · ${ch.pinnacle.number} ${ch.title} · ${ch.ageLabel}${
+          ch.pinnacle.id === pinModel.current.pinnacle.id ? " · current" : ""
+        }`,
+        pageW / 2,
+        y + 10,
+        { align: "center" },
+      );
+      y += 17;
+    }
+    y += 6;
+    for (const line of pinnacleYearPdfLines(pinModel)) {
+      addBody(line, 9);
+    }
+  } catch {
+    /* skip if DOB cannot build pinnacles */
   }
   addBody(
     `Age guidance — ${report.age_guidance.category}: ${report.age_guidance.guidance}`,

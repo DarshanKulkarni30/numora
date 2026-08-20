@@ -2,6 +2,7 @@
 
 import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
+import { PinnacleYearPanel } from "@/components/report/PinnacleYearPanel";
 import { YearRhythmPanel } from "@/components/report/YearRhythmPanel";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
@@ -14,6 +15,8 @@ type Props = {
   dateOfBirth: string;
   yearsHref: string;
   initialOutlookYear?: number;
+  lifePath: string;
+  expression: string;
 };
 
 /**
@@ -29,14 +32,16 @@ export function TimingDashboard({
   dateOfBirth,
   yearsHref,
   initialOutlookYear,
+  lifePath,
+  expression,
 }: Props) {
   return (
     <section className="space-y-6">
       <div>
         <h2 className="text-xl text-ink">Timing dashboard</h2>
         <p className="mt-1 text-sm text-ink-soft">
-          Personal Year, Personal Month, and Year Outlook as one seasonal
-          map — Western pacing beside Vedic birthday-cycle tone.{" "}
+          Personal Year, Pinnacle chapters, Personal Month, and Year Outlook as
+          one seasonal map — Western pacing beside Vedic birthday-cycle tone.{" "}
           <LearningConceptLink conceptKey="personal-year" />
           {" · "}
           <LearningConceptLink conceptKey="personal-month" />
@@ -53,6 +58,15 @@ export function TimingDashboard({
           sunSignId={sunSignId}
           sunSignLabel={sunSignLabel}
           hideSectionTitle
+        />
+      </div>
+
+      <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+        <PinnacleYearPanel
+          dateOfBirth={dateOfBirth}
+          lifePath={lifePath}
+          personalYear={personalYear.number}
+          expression={expression}
         />
       </div>
 
