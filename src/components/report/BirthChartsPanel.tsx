@@ -5,11 +5,18 @@ import { LoShuChart } from "@/components/report/LoShuChart";
 import { LoShuCompare } from "@/components/report/LoShuCompare";
 import { NameBookendsPanel } from "@/components/report/NameBookendsPanel";
 import { PythagoreanBirthTable } from "@/components/report/PythagoreanBirthTable";
+import { PythagoreanTrigonum } from "@/components/report/PythagoreanTrigonum";
 import { VedicBirthChart } from "@/components/report/VedicBirthChart";
 import { VedicSquarePanel } from "@/components/report/VedicSquarePanel";
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 
-type Tab = "lo-shu" | "pythagorean" | "vedic" | "vedic-square" | "name-letters";
+type Tab =
+  | "lo-shu"
+  | "pythagorean"
+  | "pythagorean-triangle"
+  | "vedic"
+  | "vedic-square"
+  | "name-letters";
 
 type Props = {
   loShu: LoShuResult;
@@ -21,6 +28,7 @@ type Props = {
 const TABS: { id: Tab; label: string }[] = [
   { id: "lo-shu", label: "Lo Shu" },
   { id: "pythagorean", label: "Pythagorean wheel" },
+  { id: "pythagorean-triangle", label: "Pythagorean triangle" },
   { id: "vedic", label: "Vedic birth chart" },
   { id: "vedic-square", label: "Vedic Square" },
   { id: "name-letters", label: "Name letters" },
@@ -84,6 +92,9 @@ export function BirthChartsPanel({
           snap={snap}
           fullName={fullName}
         />
+      ) : null}
+      {tab === "pythagorean-triangle" ? (
+        <PythagoreanTrigonum dateOfBirth={dateOfBirth} />
       ) : null}
       {tab === "vedic" ? (
         <VedicBirthChart dateOfBirth={dateOfBirth} />

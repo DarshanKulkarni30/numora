@@ -20,6 +20,7 @@ import {
 import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArchitecture";
 import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIdentityLayers";
+import { buildPythagoreanTrigonum } from "@/lib/numerology/pythagoreanTrigonum";
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
@@ -431,6 +432,15 @@ export async function downloadReportPdf(
     }
   } catch {
     /* skip wheel lines if DOB cannot be parsed */
+  }
+  try {
+    const trigonum = buildPythagoreanTrigonum(person.date_of_birth);
+    addBanner("Pythagorean Trigonum", "pythagorean");
+    for (const line of trigonum.blueprintLines) {
+      addBody(line, 9);
+    }
+  } catch {
+    /* skip triangle if DOB cannot be parsed */
   }
 
   // —— Chaldean ——
