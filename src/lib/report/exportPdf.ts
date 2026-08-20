@@ -32,10 +32,6 @@ import {
   buildPinnacleYearModel,
   pinnacleYearPdfLines,
 } from "@/lib/numerology/pinnacleYear";
-import {
-  buildPinnacleYearModel,
-  pinnacleYearPdfLines,
-} from "@/lib/numerology/pinnacleYear";
 import { buildYearOutlookMandala } from "@/lib/numerology/yearOutlookMandala";
 import { projectedYearCycleStarting } from "@/lib/numerology/vedicYearNumber";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
