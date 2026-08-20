@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { FamilyCompatibility } from "@/components/family/FamilyCompatibility";
+import { PairCompatibility } from "@/components/family/PairCompatibility";
 import { SiteHeader } from "@/components/SiteHeader";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
@@ -45,15 +45,16 @@ export default async function FamilyPage() {
       <SiteHeader email={user.email} />
       <main className="mx-auto max-w-3xl px-5 pb-20 pt-6">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">Family compatibility</h1>
+          <h1 className="text-4xl text-ink">Pair compatibility</h1>
           <p className="mt-3 text-ink-soft">
-            Live reflective tones for Self × Spouse/Partner and Self × Child
-            using Pythagorean Life Path and Vedic Destiny. Not stored as a
-            report—update your profile and refresh anytime.
+            Pick any two people from your profile. Optional marriage /
+            together-since date unlocks a bond number and a dual Personal Year
+            timeline—before vs after in digits, not generic advice. Live view
+            only.
           </p>
         </div>
         <div className="mt-10">
-          <FamilyCompatibility people={people} />
+          <PairCompatibility people={people} />
         </div>
       </main>
     </div>

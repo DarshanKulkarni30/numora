@@ -13,6 +13,7 @@ import {
   personDiscoveryKey,
 } from "@/lib/trivia/discovery";
 import {
+  citiesMatchingDigit,
   matchCitiesByPnDnNn,
   matchCountries,
   matchPeople,
@@ -25,6 +26,7 @@ type Props = {
   psychic: string;
   expression: string;
   vedicName: string;
+  natalVedicName?: string;
   dateOfBirth: string;
 };
 
@@ -36,6 +38,7 @@ export function TriviaPanel({
   psychic,
   expression,
   vedicName,
+  natalVedicName,
   dateOfBirth,
 }: Props) {
   const target = {
@@ -80,6 +83,14 @@ export function TriviaPanel({
   const psychicN = reduceToSingleDigit(Number(psychic));
   const destinyN = reduceToSingleDigit(Number(destiny));
   const nameN = reduceToSingleDigit(Number(vedicName));
+  const natalNameN =
+    natalVedicName != null && natalVedicName !== ""
+      ? reduceToSingleDigit(Number(natalVedicName))
+      : null;
+  const natalCities =
+    natalNameN != null && natalNameN !== nameN
+      ? citiesMatchingDigit(natalNameN, 5)
+      : [];
   const matrixRows = [
     { key: "psychic", label: "Psychic (PN)", digit: psychicN },
     { key: "destiny", label: "Destiny (DN)", digit: destinyN },
@@ -234,6 +245,17 @@ export function TriviaPanel({
               </li>
             ))}
           </ul>
+        ) : null}
+        {natalCities.length ? (
+          <div className="mt-3 rounded-xl border border-[var(--line)] bg-white/50 px-3 py-2 text-sm">
+            <p className="text-ink">
+              Natal name (NN) <span className="brand">{natalNameN}</span>
+            </p>
+            <p className="mt-1 text-xs text-ink-soft">
+              Birth-certificate spelling ·{" "}
+              {natalCities.map((c) => `${c.name} (${c.country})`).join(" · ")}
+            </p>
+          </div>
         ) : null}
       </div>
     </div>
