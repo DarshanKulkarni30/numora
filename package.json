@@ -15,7 +15,8 @@
     "smoke:year-rhythm": "tsx scripts/smoke-year-rhythm.ts",
     "smoke:trivia": "tsx scripts/smoke-trivia-discovery.ts",
     "smoke:insight-tiles": "tsx scripts/smoke-insight-tiles.ts",
-    "smoke:pinnacle-year": "tsx scripts/smoke-pinnacle-year.ts"
+    "smoke:pinnacle-year": "tsx scripts/smoke-pinnacle-year.ts",
+    "smoke:strengths": "tsx scripts/smoke-strength-constellation.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

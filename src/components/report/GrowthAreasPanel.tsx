@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { GrowthArea } from "@/lib/numerology/growthAreas";
 import { CORE_TRAIT } from "@/lib/numerology/meanings";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
+import { DIGIT_SEASON } from "@/lib/numerology/yearRhythm";
 
 type Props = {
   areas: GrowthArea[];
@@ -49,6 +50,15 @@ function wedgePath(
   ].join(" ");
 }
 
+function wedgeLabel(title: string): string {
+  return title
+    .replace(/^Develop\s+/i, "")
+    .replace(/\s+(catalyst|engine|balance|craft|awareness)$/i, "")
+    .split(/\s+/)
+    .slice(0, 2)
+    .join(" ");
+}
+
 export function GrowthAreasPanel({
   areas,
   growthMode = true,
@@ -57,8 +67,10 @@ export function GrowthAreasPanel({
   lifePath,
 }: Props) {
   const catalysts = areas.slice(0, 6);
-  const [focus, setFocus] = useState<number | null>(0);
-  const active = focus != null ? catalysts[focus] : null;
+  const [pin, setPin] = useState(0);
+  const [peek, setPeek] = useState<number | null>(null);
+  const shownIndex = peek ?? pin;
+  const active = catalysts[shownIndex] ?? catalysts[0] ?? null;
 
   const yearN = personalYear
     ? reduceToSingleDigit(Number(personalYear))
@@ -66,227 +78,32 @@ export function GrowthAreasPanel({
   const monthN = personalMonth
     ? reduceToSingleDigit(Number(personalMonth))
     : null;
-  const seasonTrait =
-    yearN != null ? CORE_TRAIT[yearN]?.toLowerCase() ?? `tone ${yearN}` : null;
+  const yearSeason = yearN != null ? DIGIT_SEASON[yearN] : null;
+  const monthSeason = monthN != null ? DIGIT_SEASON[monthN] : null;
 
   const narrative = useMemo(() => {
-    if (!catalysts.length) return "";
-    const titles = catalysts
-      .slice(0, 3)
-      .map((c) => c.title.replace(/^Develop\s+/i, "").toLowerCase());
-    const lp = lifePath ? `Life Path ${lifePath}` : "your long path";
-    return `Your growth path blends ${titles.join(", ")}${
-      titles.length ? " with" : ""
-    } the balance of ${lp}. Creative delivery and daily-vs-long-path alignment shape how you evolve across seasons.`;
-  }, [catalysts, lifePath]);
+    if (!active) return "";
+    const monthBit = monthSeason
+      ? `This month’s ${monthSeason.verb} weather may be a useful window for ${active.title.toLowerCase()}. `
+      : "";
+    const lp = lifePath ? `Life Path ${lifePath}` : "the longer path";
+    return `${monthBit}${active.suggestion} Hold it beside ${lp} as practice, not a verdict.`;
+  }, [active, lifePath, monthSeason]);
 
   if (!areas.length) return null;
 
   const n = Math.max(catalysts.length, 1);
   const sweep = 360 / n;
   const gap = 3;
+  const shownStyle = SEGMENT_STYLE[shownIndex % SEGMENT_STYLE.length];
 
-  return (
-    <div className="space-y-5">
-      <p className="text-sm text-ink-soft">
-        {growthMode
-          ? "Catalyst Pathway Map — Lo Shu catalysts and cross-chart themes as a practice roadmap."
-          : "Themes that showed up across more than one part of this reading."}
-      </p>
-
-      {growthMode ? (
-        <>
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
-            <div className="rounded-xl border border-[var(--line)] bg-white/60 p-3">
-              <svg
-                viewBox="0 0 220 220"
-                className="mx-auto h-auto w-full max-w-sm"
-                role="img"
-                aria-label="Six-catalyst growth wheel"
-              >
-                {catalysts.map((c, i) => {
-                  const style = SEGMENT_STYLE[i % SEGMENT_STYLE.length];
-                  const a0 = i * sweep + gap / 2;
-                  const a1 = (i + 1) * sweep - gap / 2;
-                  const mid = (a0 + a1) / 2;
-                  const icon = polar(110, 110, 72, mid);
-                  const lit = focus == null || focus === i;
-                  return (
-                    <g key={c.id} opacity={lit ? 1 : 0.28}>
-                      <path
-                        d={wedgePath(110, 110, 38, 92, a0, a1)}
-                        fill={style.fill}
-                        stroke={style.stroke}
-                        strokeWidth={focus === i ? 2 : 1}
-                        className="cursor-pointer transition"
-                        onClick={() =>
-                          setFocus((cur) => (cur === i ? null : i))
-                        }
-                        onMouseEnter={() => setFocus(i)}
-                      />
-                      <text
-                        x={icon.x}
-                        y={icon.y}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize="11"
-                        fill={style.stroke}
-                        style={{ pointerEvents: "none" }}
-                      >
-                        {style.glyph}
-                      </text>
-                    </g>
-                  );
-                })}
-                <circle
-                  cx="110"
-                  cy="110"
-                  r="32"
-                  fill="rgb(250 248 243)"
-                  stroke="rgb(30 58 107)"
-                  strokeWidth="1.4"
-                  className="motion-safe:animate-pulse"
-                />
-                <text
-                  x="110"
-                  y="104"
-                  textAnchor="middle"
-                  fontSize="7"
-                  fill="rgb(70 82 98)"
-                >
-                  Season
-                </text>
-                <text
-                  x="110"
-                  y="118"
-                  textAnchor="middle"
-                  fontSize="14"
-                  fontWeight="700"
-                  fill="rgb(30 58 107)"
-                >
-                  {yearN ?? "—"}
-                </text>
-              </svg>
-              {seasonTrait ? (
-                <p className="mt-1 text-center text-xs text-ink-soft">
-                  Personal Year {yearN} · {seasonTrait}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="space-y-2">
-              {catalysts.map((c, i) => {
-                const style = SEGMENT_STYLE[i % SEGMENT_STYLE.length];
-                const practice = c.actions?.[0];
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => setFocus(i)}
-                    className={`btn-tactile w-full rounded-xl border px-3 py-3 text-left ${
-                      focus === i
-                        ? "border-ink bg-white shadow-sm"
-                        : "border-[var(--line)] bg-white/55 hover:border-gold/50"
-                    }`}
-                  >
-                    <div
-                      className="mb-2 h-1 w-12 rounded-full"
-                      style={{ background: style.stroke }}
-                    />
-                    <div className="flex items-start gap-2">
-                      <span className="text-base" aria-hidden>
-                        {style.glyph}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-ink">{c.title}</p>
-                        <p className="mt-1 text-xs leading-5 text-ink-soft">
-                          {c.suggestion}
-                        </p>
-                        {practice ? (
-                          <p className="mt-1.5 text-xs text-ink">
-                            Practice: {practice}
-                          </p>
-                        ) : null}
-                        {c.sources.length ? (
-                          <p className="mt-1 text-[10px] text-ink-soft/80">
-                            Seen in: {c.sources.join(" · ")}
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {active && focus != null ? (
-            <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-sm leading-6 text-ink">
-              <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                Focus · Catalyst {focus + 1}
-              </p>
-              <p className="mt-1 font-medium">{active.title}</p>
-              <p className="mt-1 text-ink-soft">{active.suggestion}</p>
-            </div>
-          ) : null}
-
-          {yearN != null && monthN != null ? (
-            <div className="rounded-xl border border-[var(--line)] bg-white/55 px-3 py-3">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-                Seasonal Growth Meter
-              </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                <div>
-                  <p className="text-xs text-ink-soft">Personal Year</p>
-                  <p className="brand text-2xl text-ink">{yearN}</p>
-                  <p className="text-[11px] text-ink-soft">
-                    {CORE_TRAIT[yearN] ?? "Season tone"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-ink-soft">Personal Month</p>
-                  <p className="brand text-2xl text-ink">{monthN}</p>
-                  <p className="text-[11px] text-ink-soft">
-                    {CORE_TRAIT[monthN] ?? "Month tone"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-ink-soft">Combined feel</p>
-                  <p className="mt-1 text-sm leading-5 text-ink">
-                    {yearN === monthN
-                      ? "Year and month rhyme — lean into that tone."
-                      : `${CORE_TRAIT[yearN]?.split("&")[0]?.trim() ?? yearN} season with ${CORE_TRAIT[monthN]?.split("&")[0]?.trim()?.toLowerCase() ?? monthN} pacing.`}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-mist">
-                <div
-                  className="h-full bg-sea/70"
-                  style={{ width: `${(yearN / 9) * 100}%` }}
-                  title={`Year ${yearN}`}
-                />
-                <div
-                  className="h-full bg-gold/70"
-                  style={{ width: `${(monthN / 9) * 50}%` }}
-                  title={`Month ${monthN}`}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-white to-mist/50 px-4 py-4 text-sm leading-7 text-ink">
-            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-              Growth Narrative
-            </p>
-            <p className="mt-2">{narrative}</p>
-            <p className="mt-2 text-xs text-ink-soft">
-              Reflective practice of the month: pick one catalyst card and run
-              its first micro-practice for seven days.
-            </p>
-          </div>
-        </>
-      ) : (
-        <ol className="mt-4 space-y-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-white/70">
+  if (!growthMode) {
+    return (
+      <div className="space-y-5">
+        <p className="text-sm text-ink-soft">
+          Themes that showed up across more than one part of this reading.
+        </p>
+        <ol className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white/70">
           {areas.map((a, i) => (
             <li
               key={a.id}
@@ -306,7 +123,227 @@ export function GrowthAreasPanel({
             </li>
           ))}
         </ol>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <p className="text-sm text-ink-soft">
+        Catalyst Pathway Map — tap a wedge for one live practice. The wheel is
+        a roadmap, not a score of what is missing.
+      </p>
+
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,1fr)] lg:items-stretch">
+        <div className="rounded-xl border border-[var(--line)] bg-white/60 p-3">
+          <svg
+            viewBox="0 0 220 220"
+            className="mx-auto h-auto w-full max-w-md"
+            role="img"
+            aria-label="Six-catalyst growth wheel"
+          >
+            {catalysts.map((c, i) => {
+              const style = SEGMENT_STYLE[i % SEGMENT_STYLE.length];
+              const a0 = i * sweep + gap / 2;
+              const a1 = (i + 1) * sweep - gap / 2;
+              const mid = (a0 + a1) / 2;
+              const icon = polar(110, 110, 78, mid);
+              const label = polar(110, 110, 62, mid);
+              const isPin = pin === i;
+              const isShown = shownIndex === i;
+              return (
+                <g key={c.id} opacity={isShown ? 1 : 0.38}>
+                  <path
+                    d={wedgePath(110, 110, 36, 96, a0, a1)}
+                    fill={style.fill}
+                    stroke={style.stroke}
+                    strokeWidth={isPin ? 2.4 : isShown ? 1.6 : 1}
+                    className="cursor-pointer"
+                    onClick={() => setPin(i)}
+                    onMouseEnter={() => setPeek(i)}
+                    onMouseLeave={() => setPeek(null)}
+                  />
+                  <text
+                    x={icon.x}
+                    y={icon.y - 6}
+                    textAnchor="middle"
+                    fontSize="9"
+                    fill={style.stroke}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    {style.glyph}
+                  </text>
+                  <text
+                    x={label.x}
+                    y={label.y + 8}
+                    textAnchor="middle"
+                    fontSize="6.2"
+                    fill="rgb(28 35 48)"
+                    style={{ pointerEvents: "none" }}
+                  >
+                    {wedgeLabel(c.title)}
+                  </text>
+                </g>
+              );
+            })}
+            <circle
+              cx="110"
+              cy="110"
+              r="30"
+              fill="rgb(250 248 243)"
+              stroke="rgb(30 58 107)"
+              strokeWidth="1.4"
+            />
+            <text
+              x="110"
+              y="100"
+              textAnchor="middle"
+              fontSize="6"
+              fill="rgb(70 82 98)"
+            >
+              {yearSeason ? yearSeason.verb : "Season"}
+            </text>
+            <text
+              x="110"
+              y="116"
+              textAnchor="middle"
+              fontSize="14"
+              fontWeight="700"
+              fill="rgb(30 58 107)"
+            >
+              {yearN ?? "—"}
+            </text>
+            <text
+              x="110"
+              y="128"
+              textAnchor="middle"
+              fontSize="5.5"
+              fill="rgb(70 82 98)"
+            >
+              Personal Year
+            </text>
+          </svg>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {catalysts.map((c, i) => {
+              const style = SEGMENT_STYLE[i % SEGMENT_STYLE.length];
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  aria-pressed={pin === i}
+                  onClick={() => setPin(i)}
+                  onMouseEnter={() => setPeek(i)}
+                  onMouseLeave={() => setPeek(null)}
+                  className={`btn-tactile rounded-lg border px-2 py-1.5 text-left text-[11px] leading-4 ${
+                    pin === i
+                      ? "border-ink bg-white text-ink shadow-sm"
+                      : "border-[var(--line)] bg-white/70 text-ink-soft"
+                  }`}
+                >
+                  <span className="mr-1" style={{ color: style.stroke }}>
+                    {style.glyph}
+                  </span>
+                  {wedgeLabel(c.title)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {active ? (
+          <article
+            className="flex flex-col rounded-xl border bg-white/70 px-4 py-4"
+            style={{ borderColor: shownStyle.stroke }}
+          >
+            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+              Live practice · Catalyst {shownIndex + 1}
+            </p>
+            <h3 className="mt-1 text-lg text-ink">{active.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-ink-soft">
+              {active.suggestion}
+            </p>
+            {active.actions?.[0] ? (
+              <p className="mt-3 rounded-lg bg-mist/60 px-3 py-2 text-sm text-ink">
+                <span className="font-medium">This week. </span>
+                {active.actions[0]}
+              </p>
+            ) : (
+              <p className="mt-3 rounded-lg bg-mist/60 px-3 py-2 text-sm text-ink">
+                <span className="font-medium">This week. </span>
+                Run one small version of this theme for seven days.
+              </p>
+            )}
+            {active.sources.length ? (
+              <p className="mt-auto pt-3 text-[11px] text-ink-soft">
+                Seen in {active.sources.join(" · ")}
+              </p>
+            ) : null}
+          </article>
+        ) : null}
+      </div>
+
+      {yearN != null && monthN != null && yearSeason && monthSeason ? (
+        <div className="grid gap-3 rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3 sm:grid-cols-3">
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Climate · Personal Year
+            </p>
+            <p className="brand mt-1 text-2xl text-ink">
+              {yearSeason.verb} {yearN}
+            </p>
+            <p className="text-[11px] text-ink-soft">
+              {CORE_TRAIT[yearN] ?? "Season tone"}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Weather · Personal Month
+            </p>
+            <p className="brand mt-1 text-2xl text-ink">
+              {monthSeason.verb} {monthN}
+            </p>
+            <p className="text-[11px] text-ink-soft">
+              {CORE_TRAIT[monthN] ?? "Month tone"}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Mix
+            </p>
+            <p className="brand mt-1 text-lg text-ink">
+              {yearSeason.verb} → {monthSeason.verb}
+            </p>
+            <p className="mt-1 text-sm leading-5 text-ink-soft">
+              {yearN === monthN
+                ? "Year and month rhyme — lean into that tone as weather, not a forecast."
+                : `${CORE_TRAIT[yearN]?.split("&")[0]?.trim() ?? yearN} climate with ${CORE_TRAIT[monthN]?.split("&")[0]?.trim()?.toLowerCase() ?? monthN} pacing.`}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {active ? (
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-white to-mist/50 px-4 py-4 text-sm leading-7 text-ink">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+              Growth narrative
+            </p>
+            <p className="mt-2">{narrative}</p>
+          </div>
+          <div className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-4 text-sm leading-7 text-ink">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+              Seven-day cue
+            </p>
+            <p className="mt-2">
+              Stay with <span className="font-medium">{active.title}</span>
+              {monthSeason
+                ? ` while this month’s ${monthSeason.verb} weather is in play.`
+                : "."}{" "}
+              One micro-practice, not a new identity.
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

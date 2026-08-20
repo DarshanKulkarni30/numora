@@ -3,10 +3,18 @@
 import { useMemo, useState } from "react";
 import { CORE_TRAIT } from "@/lib/numerology/meanings";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
+import {
+  buildStrengthConstellation,
+  strengthWeightLabel,
+  type StrengthNode,
+} from "@/lib/numerology/strengthConstellation";
 
 type Props = {
   strengths: string[];
   lifePath?: string;
+  expression?: string;
+  soulUrge?: string;
+  vedicPsychic?: string;
 };
 
 const NODE_COLORS = [
@@ -15,20 +23,35 @@ const NODE_COLORS = [
   "rgb(180 100 50)",
   "rgb(79 70 150)",
   "rgb(45 122 90)",
-  "rgb(120 90 60)",
-  "rgb(56 120 170)",
-  "rgb(150 80 100)",
 ];
 
-function shortLabel(s: string): string {
-  const words = s.replace(/[.。].*$/, "").trim().split(/\s+/);
-  if (words.length <= 3) return words.join(" ");
-  return words.slice(0, 3).join(" ");
+function radiusFor(weight: StrengthNode["weight"]) {
+  if (weight === "core") return 15;
+  if (weight === "supporting") return 12;
+  return 9;
 }
 
-export function StrengthsConstellation({ strengths, lifePath }: Props) {
-  const nodes = strengths.slice(0, 8);
-  const [focus, setFocus] = useState<number | null>(null);
+export function StrengthsConstellation({
+  strengths,
+  lifePath,
+  expression,
+  soulUrge,
+  vedicPsychic,
+}: Props) {
+  const model = useMemo(
+    () =>
+      buildStrengthConstellation({
+        strengths,
+        lifePath,
+        expression,
+        soulUrge,
+        vedicPsychic,
+      }),
+    [strengths, lifePath, expression, soulUrge, vedicPsychic],
+  );
+  const [pin, setPin] = useState(model.defaultIndex);
+  const [peek, setPeek] = useState<number | null>(null);
+  const shownIndex = peek ?? pin;
   const lp = lifePath ? reduceToSingleDigit(Number(lifePath)) : null;
   const centerTrait = lp != null ? CORE_TRAIT[lp] : "Dominant tone";
 
@@ -36,59 +59,50 @@ export function StrengthsConstellation({ strengths, lifePath }: Props) {
     const cx = 110;
     const cy = 110;
     const r = 78;
-    return nodes.map((label, i) => {
-      const ang = (-90 + (i * 360) / Math.max(nodes.length, 1)) * (Math.PI / 180);
+    return model.map.map((node, i) => {
+      const ang =
+        (-90 + (i * 360) / Math.max(model.map.length, 1)) * (Math.PI / 180);
       return {
-        label,
-        short: shortLabel(label),
+        ...node,
         x: cx + Math.cos(ang) * r,
         y: cy + Math.sin(ang) * r,
         color: NODE_COLORS[i % NODE_COLORS.length],
       };
     });
-  }, [nodes]);
+  }, [model.map]);
 
-  if (!nodes.length) return null;
+  if (!model.map.length) return null;
 
-  const active = focus != null ? layout[focus] : null;
+  const active = layout[shownIndex] ?? layout[0]!;
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        Strength Constellation — related gifts around your Life Path tone.
+        Gifts clustered around Life Path {lifePath ?? "tone"} — not a complete
+        inventory of who you are. Larger nodes sit closer to that path.
       </p>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:items-start">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,1fr)] lg:items-stretch">
         <div className="rounded-xl border border-[var(--line)] bg-white/60 p-3">
           <svg
             viewBox="0 0 220 220"
-            className="mx-auto h-auto w-full max-w-sm"
+            className="mx-auto h-auto w-full max-w-md"
             role="img"
-            aria-label="Strength constellation"
+            aria-label="Weighted strength constellation"
           >
-            {layout.map((n, i) => {
-              const next = layout[(i + 1) % layout.length];
-              return (
-                <line
-                  key={`e-${i}`}
-                  x1={n.x}
-                  y1={n.y}
-                  x2={next.x}
-                  y2={next.y}
-                  stroke="rgb(196 164 108 / 0.35)"
-                  strokeWidth="1"
-                />
-              );
-            })}
-            {layout.map((n) => (
+            {layout.map((n, i) => (
               <line
-                key={`spoke-${n.short}`}
+                key={`spoke-${n.title}-${i}`}
                 x1="110"
                 y1="110"
                 x2={n.x}
                 y2={n.y}
-                stroke="rgb(30 58 107 / 0.12)"
-                strokeWidth="1"
+                stroke={
+                  n.weight === "core"
+                    ? "rgb(30 58 107 / 0.35)"
+                    : "rgb(30 58 107 / 0.12)"
+                }
+                strokeWidth={n.weight === "core" ? 1.8 : 1}
               />
             ))}
             <circle
@@ -98,7 +112,6 @@ export function StrengthsConstellation({ strengths, lifePath }: Props) {
               fill="rgb(250 248 243)"
               stroke="rgb(30 58 107)"
               strokeWidth="1.4"
-              className="motion-safe:animate-pulse"
             />
             <text
               x="110"
@@ -120,31 +133,34 @@ export function StrengthsConstellation({ strengths, lifePath }: Props) {
               Life Path
             </text>
             {layout.map((n, i) => {
-              const lit = focus == null || focus === i;
+              const isPin = pin === i;
+              const isShown = shownIndex === i;
+              const r = radiusFor(n.weight) + (isPin ? 2 : 0);
               return (
                 <g
-                  key={n.short + i}
-                  opacity={lit ? 1 : 0.3}
+                  key={n.title + i}
+                  opacity={isShown ? 1 : 0.38}
                   className="cursor-pointer"
-                  onClick={() => setFocus((cur) => (cur === i ? null : i))}
-                  onMouseEnter={() => setFocus(i)}
+                  onClick={() => setPin(i)}
+                  onMouseEnter={() => setPeek(i)}
+                  onMouseLeave={() => setPeek(null)}
                 >
                   <circle
                     cx={n.x}
                     cy={n.y}
-                    r={focus === i ? 14 : 11}
+                    r={r}
                     fill={n.color}
-                    fillOpacity="0.2"
+                    fillOpacity={n.weight === "stretch" ? 0.08 : 0.22}
                     stroke={n.color}
-                    strokeWidth="1.5"
-                    className="motion-safe:opacity-95"
+                    strokeWidth={n.weight === "core" ? 2 : 1.4}
+                    strokeDasharray={n.weight === "stretch" ? "2.5 2" : undefined}
                   />
                   <text
                     x={n.x}
                     y={n.y + 1}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize="7"
+                    fontSize="6"
                     fill="rgb(28 35 48)"
                     fontWeight="600"
                   >
@@ -157,49 +173,64 @@ export function StrengthsConstellation({ strengths, lifePath }: Props) {
           <p className="mt-1 text-center text-xs text-ink-soft">
             Center · {centerTrait}
           </p>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {layout.map((n, i) => (
+              <button
+                key={n.title + i}
+                type="button"
+                aria-pressed={pin === i}
+                onClick={() => setPin(i)}
+                onMouseEnter={() => setPeek(i)}
+                onMouseLeave={() => setPeek(null)}
+                className={`btn-tactile rounded-lg border px-2 py-1.5 text-left text-[11px] leading-4 ${
+                  pin === i
+                    ? "border-ink bg-white text-ink shadow-sm"
+                    : "border-[var(--line)] bg-white/70 text-ink-soft"
+                }`}
+              >
+                <span
+                  className="mr-1 inline-block h-2 w-2 rounded-full align-middle"
+                  style={{ background: n.color }}
+                />
+                {n.title}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="space-y-2">
-          {layout.map((n, i) => (
-            <button
-              key={n.short + i}
-              type="button"
-              onClick={() => setFocus(i)}
-              className={`btn-tactile w-full rounded-xl border px-3 py-2.5 text-left ${
-                focus === i
-                  ? "border-ink bg-white shadow-sm"
-                  : "border-[var(--line)] bg-white/55 hover:border-gold/50"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold text-ink"
-                  style={{
-                    background: `${n.color}22`,
-                    border: `1px solid ${n.color}`,
-                  }}
-                >
-                  {i + 1}
-                </span>
-                <span className="text-sm font-medium text-ink">{n.short}</span>
-              </div>
-              <p className="mt-1 text-xs leading-5 text-ink-soft">{n.label}</p>
-            </button>
-          ))}
-        </div>
+        <article className="flex flex-col rounded-xl border border-[var(--line)] bg-white/70 px-4 py-4">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+            {strengthWeightLabel(active.weight)}
+          </p>
+          <h3 className="mt-1 text-lg text-ink">{active.title}</h3>
+          {active.detail ? (
+            <p className="mt-2 text-sm leading-6 text-ink-soft">{active.detail}</p>
+          ) : null}
+          <p className="mt-3 text-xs text-ink-soft">
+            {active.sources.join(" · ")}
+          </p>
+          <p className="mt-auto pt-4 text-sm leading-6 text-ink-soft">
+            When this gift overextends, borrow one catalyst practice from Growth
+            Mode rather than treating the constellation as a complete self.
+          </p>
+        </article>
       </div>
 
-      {active ? (
-        <div className="rounded-xl border border-[var(--line)] bg-mist/40 px-3 py-3 text-sm leading-6 text-ink">
-          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-            Strength card
+      {model.extra.length ? (
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+            Also in the mix
           </p>
-          <p className="mt-1 font-medium">{active.short}</p>
-          <p className="mt-1 text-ink-soft">{active.label}</p>
-          <p className="mt-2 text-xs text-ink-soft">
-            Related growth: notice when this gift overextends, then borrow one
-            catalyst practice from Growth Mode.
-          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {model.extra.map((n) => (
+              <span
+                key={n.label}
+                className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink-soft"
+              >
+                {n.title}
+              </span>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

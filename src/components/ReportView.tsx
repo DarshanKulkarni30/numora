@@ -687,6 +687,9 @@ export function ReportView({
               <StrengthsConstellation
                 strengths={report.strengths}
                 lifePath={snap.life_path}
+                expression={snap.expression_number}
+                soulUrge={snap.soul_urge_number}
+                vedicPsychic={snap.vedic_psychic}
               />
             </div>
           </section>

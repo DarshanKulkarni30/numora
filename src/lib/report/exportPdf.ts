@@ -29,7 +29,8 @@ import {
   buildDetailedInsightCards,
   insightCardPdfLines,
 } from "@/lib/numerology/insightTiles";
-import { yearRhythmPdfLines, buildYearRhythm } from "@/lib/numerology/yearRhythm";
+import { yearRhythmPdfLines, buildYearRhythm, DIGIT_SEASON } from "@/lib/numerology/yearRhythm";
+import { buildStrengthConstellation } from "@/lib/numerology/strengthConstellation";
 import {
   buildPinnacleYearModel,
   pinnacleYearPdfLines,
@@ -674,11 +675,38 @@ export async function downloadReportPdf(
   // —— Growth ——
   addBanner("Strengths & growth", "growth");
   if (report.strengths?.length) {
-    addBody("Strengths constellation", 10);
-    for (const s of report.strengths.slice(0, 12)) addBullet(s);
+    addBody("Strengths constellation — clustered around Life Path, not a complete inventory", 10);
+    const constellation = buildStrengthConstellation({
+      strengths: report.strengths,
+      lifePath: snap.life_path,
+      expression: snap.expression_number,
+      soulUrge: snap.soul_urge_number,
+      vedicPsychic: snap.vedic_psychic,
+    });
+    for (const n of constellation.map) {
+      addBullet(
+        `${n.title}${n.detail ? ` (${n.detail})` : ""} · ${n.weight}${
+          n.sources[0] ? ` · ${n.sources.join(", ")}` : ""
+        }`,
+      );
+    }
+    if (constellation.extra.length) {
+      addBody(
+        `Also in the mix: ${constellation.extra.map((n) => n.title).join(", ")}`,
+        9,
+      );
+    }
   }
   if (report.growth_areas?.length) {
     addBody("Catalyst Pathway Map", 10);
+    const yearDigit = reduceToSingleDigit(Number(report.personal_year.number));
+    const monthDigit = reduceToSingleDigit(Number(report.personal_month.number));
+    if (DIGIT_SEASON[yearDigit] && DIGIT_SEASON[monthDigit]) {
+      addBody(
+        `Season mix: ${DIGIT_SEASON[yearDigit].verb} ${yearDigit} → ${DIGIT_SEASON[monthDigit].verb} ${monthDigit} (weather, not events).`,
+        9,
+      );
+    }
     for (const g of report.growth_areas.slice(0, 10)) {
       addBody(`${g.title}: ${g.suggestion}`, 9);
       if (g.actions?.[0]) addBullet(`Practice: ${g.actions[0]}`);
