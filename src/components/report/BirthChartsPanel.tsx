@@ -5,7 +5,7 @@ import { LoShuChart } from "@/components/report/LoShuChart";
 import { LoShuCompare } from "@/components/report/LoShuCompare";
 import { NameBookendsPanel } from "@/components/report/NameBookendsPanel";
 import { PythagoreanBirthTable } from "@/components/report/PythagoreanBirthTable";
-import { PythagoreanTrigonum } from "@/components/report/PythagoreanTrigonum";
+import { PythagoreanTriangleCharts } from "@/components/report/PythagoreanTriangleCharts";
 import { VedicBirthChart } from "@/components/report/VedicBirthChart";
 import { VedicSquarePanel } from "@/components/report/VedicSquarePanel";
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
@@ -94,7 +94,7 @@ export function BirthChartsPanel({
         />
       ) : null}
       {tab === "pythagorean-triangle" ? (
-        <PythagoreanTrigonum dateOfBirth={dateOfBirth} />
+        <PythagoreanTriangleCharts dateOfBirth={dateOfBirth} />
       ) : null}
       {tab === "vedic" ? (
         <VedicBirthChart dateOfBirth={dateOfBirth} />

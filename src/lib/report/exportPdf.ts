@@ -21,6 +21,7 @@ import { buildLoShuArchitecture } from "@/lib/numerology/loShuArchitecture";
 import { vedicSquareReportBlueprintLines } from "@/lib/numerology/vedicSquareArchitecture";
 import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIdentityLayers";
 import { buildPythagoreanTrigonum } from "@/lib/numerology/pythagoreanTrigonum";
+import { buildPythagoreanBirthPyramid } from "@/lib/numerology/pythagoreanBirthPyramid";
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
@@ -72,7 +73,7 @@ function wrapLines(doc: jsPDF, text: string, maxWidth: number): string[] {
 
 async function loadLogoDataUrl(): Promise<string | null> {
   try {
-    const res = await fetch("/nw-mark.png?v=6");
+    const res = await fetch("/nw-mark.png?v=7");
     if (!res.ok) return null;
     const blob = await res.blob();
     return await new Promise((resolve, reject) => {
@@ -441,6 +442,15 @@ export async function downloadReportPdf(
     }
   } catch {
     /* skip triangle if DOB cannot be parsed */
+  }
+  try {
+    const pyramid = buildPythagoreanBirthPyramid(person.date_of_birth);
+    addBanner("Birth Pyramid", "pythagorean");
+    for (const line of pyramid.blueprintLines) {
+      addBody(line, 9);
+    }
+  } catch {
+    /* skip pyramid if DOB cannot be parsed */
   }
 
   // —— Chaldean ——
