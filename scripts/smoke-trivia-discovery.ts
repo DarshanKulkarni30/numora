@@ -8,7 +8,8 @@ import {
   personInitials,
   triadNarrative,
 } from "../src/lib/trivia/discovery";
-import { matchPeople, matchPeopleByDayMonth, matchCountries, compareTriples } from "../src/lib/trivia/match";
+import { matchPeople, matchPeopleByDayMonth, matchCountries, matchCitiesByPnDnNn, compareTriples } from "../src/lib/trivia/match";
+import { reduceToSingleDigit } from "../src/lib/numerology/dateNumbers";
 import { TRIVIA_PEOPLE } from "../src/lib/trivia/people";
 import { TRIVIA_COUNTRIES } from "../src/lib/trivia/countries";
 
@@ -169,29 +170,93 @@ const countryHits = matchCountries({
   lifePath: sample.lifePath,
   destiny: sample.destiny,
   psychic: sample.psychic,
-  limit: 1,
 });
+eq(countryHits.mode, "triad", "crowded triad uses exact mode");
 eq(
-  countryHits.length >= crowded.length,
-  true,
-  "all exact-triad countries shown even when limit is 1",
+  countryHits.rows.length,
+  crowded.length,
+  "all exact-triad countries shown — none padded with near misses",
 );
 eq(
-  countryHits
-    .slice(0, crowded.length)
-    .every(
-      (c) =>
-        compareTriples(
-          {
-            lifePath: sample.lifePath,
-            destiny: sample.destiny,
-            psychic: sample.psychic,
-          },
-          { lifePath: c.lifePath, destiny: c.destiny, psychic: c.psychic },
-        ).exact === 3,
+  countryHits.rows.every(
+    (c) =>
+      compareTriples(
+        {
+          lifePath: sample.lifePath,
+          destiny: sample.destiny,
+          psychic: sample.psychic,
+        },
+        { lifePath: c.lifePath, destiny: c.destiny, psychic: c.psychic },
+      ).exact === 3,
+  ),
+  true,
+  "every listed country is an exact triad match",
+);
+
+let nearTriple: { lifePath: number; destiny: number; psychic: number } | null =
+  null;
+for (let lp = 1; lp <= 9 && !nearTriple; lp++) {
+  for (let dn = 1; dn <= 9 && !nearTriple; dn++) {
+    for (let pn = 1; pn <= 9 && !nearTriple; pn++) {
+      const hit = TRIVIA_COUNTRIES.some(
+        (c) => c.lifePath === lp && c.destiny === dn && c.psychic === pn,
+      );
+      if (!hit) nearTriple = { lifePath: lp, destiny: dn, psychic: pn };
+    }
+  }
+}
+if (!nearTriple) {
+  console.error("FAIL could not find a country triad with zero exact matches");
+  process.exit(1);
+}
+const nearHits = matchCountries({ ...nearTriple, nearLimit: 3 });
+eq(nearHits.mode, "near", "zero exact triad uses near mode");
+eq(nearHits.rows.length, 3, "near mode shows 3 next-best countries");
+eq(
+  nearHits.rows.every(
+    (c) =>
+      compareTriples(nearTriple!, {
+        lifePath: c.lifePath,
+        destiny: c.destiny,
+        psychic: c.psychic,
+      }).exact < 3,
+  ),
+  true,
+  "near rows are not accidental exact triads",
+);
+
+const cityGroups = matchCitiesByPnDnNn({
+  psychic: 5,
+  destiny: 4,
+  vedicName: 3,
+  perLayer: 5,
+});
+eq(cityGroups.length, 3, "three distinct PN/DN/NN digits make three city groups");
+eq(
+  cityGroups.every((g) => g.cities.length === 5),
+  true,
+  "each layer lists five cities",
+);
+eq(cityGroups[0]?.digit, 5, "PN group first");
+eq(cityGroups[1]?.digit, 4, "DN group second");
+eq(cityGroups[2]?.digit, 3, "NN group third");
+eq(
+  cityGroups.every((g) =>
+    g.cities.every(
+      (c) => reduceToSingleDigit(c.nameNumber) === g.digit,
     ),
+  ),
   true,
-  "leading country rows are exact triad matches",
+  "city name numbers match the layer digit",
 );
+
+const merged = matchCitiesByPnDnNn({
+  psychic: 5,
+  destiny: 5,
+  vedicName: 5,
+  perLayer: 5,
+});
+eq(merged.length, 1, "same PN/DN/NN digit is one city group");
+eq(merged[0]?.labels.length, 3, "merged group names all three layers");
 
 console.log("trivia discovery smoke passed");

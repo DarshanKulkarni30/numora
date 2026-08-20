@@ -161,14 +161,21 @@ export function matchPeople(opts: {
   );
 }
 
+export type CountryMatchSet = {
+  /** All Life Path + Destiny + Psychic hits, or nearest 2–3 if none. */
+  mode: "triad" | "near";
+  rows: TriviaCountry[];
+};
+
 export function matchCountries(opts: {
   lifePath: number | string;
   destiny: number | string;
   psychic?: number | string;
-  limit?: number;
-}): TriviaCountry[] {
+  /** Used only when no exact triad exists (default 3). */
+  nearLimit?: number;
+}): CountryMatchSet {
   const target = asTriple(opts);
-  const fillLimit = opts.limit ?? 8;
+  const nearLimit = opts.nearLimit ?? 3;
   const scored = TRIVIA_COUNTRIES.map((item) => {
     const { exact, closeness } = scoreTriple(target, {
       lifePath: item.lifePath,
@@ -183,16 +190,19 @@ export function matchCountries(opts: {
       (a, b) =>
         b.fame - a.fame || a.item.name.localeCompare(b.item.name),
     );
-  const rest = scored
-    .filter((row) => row.exact < 3)
-    .sort((a, b) => {
-      if (b.exact !== a.exact) return b.exact - a.exact;
-      if (a.closeness !== b.closeness) return a.closeness - b.closeness;
-      if (b.fame !== a.fame) return b.fame - a.fame;
-      return a.item.name.localeCompare(b.item.name);
-    });
-  const fill = Math.max(0, fillLimit - exactTriad.length);
-  return [...exactTriad, ...rest.slice(0, fill)].map((row) => row.item);
+  if (exactTriad.length) {
+    return { mode: "triad", rows: exactTriad.map((row) => row.item) };
+  }
+  const rest = scored.sort((a, b) => {
+    if (b.exact !== a.exact) return b.exact - a.exact;
+    if (a.closeness !== b.closeness) return a.closeness - b.closeness;
+    if (b.fame !== a.fame) return b.fame - a.fame;
+    return a.item.name.localeCompare(b.item.name);
+  });
+  return {
+    mode: "near",
+    rows: rest.slice(0, nearLimit).map((row) => row.item),
+  };
 }
 
 function personDigits(opts: {
@@ -215,6 +225,85 @@ function personDigits(opts: {
   push(opts.expression);
   push(opts.vedicName);
   return [...new Set(out)];
+}
+
+export function citiesMatchingDigit(
+  digit: number | string,
+  limit = 5,
+): TriviaCity[] {
+  const d = reduceToSingleDigit(Number(digit));
+  if (!Number.isFinite(d) || d < 1) return [];
+  return TRIVIA_CITIES.filter(
+    (city) => reduceToSingleDigit(city.nameNumber) === d,
+  )
+    .sort(
+      (a, b) =>
+        (a.rank ?? 9999) - (b.rank ?? 9999) || a.name.localeCompare(b.name),
+    )
+    .slice(0, limit);
+}
+
+export type CityLayerKey = "psychic" | "destiny" | "name";
+
+export type CityLayerGroup = {
+  keys: CityLayerKey[];
+  labels: string[];
+  digit: number;
+  cities: TriviaCity[];
+};
+
+/**
+ * Five popular cities per Psychic (PN), Destiny (DN), and Name (NN).
+ * Same digit is one group so the same five cities are not listed three times.
+ */
+export function matchCitiesByPnDnNn(opts: {
+  psychic: number | string;
+  destiny: number | string;
+  vedicName: number | string;
+  perLayer?: number;
+}): CityLayerGroup[] {
+  const per = opts.perLayer ?? 5;
+  const layers: { key: CityLayerKey; label: string; digit: number }[] = [
+    {
+      key: "psychic",
+      label: "Psychic (PN)",
+      digit: reduceToSingleDigit(Number(opts.psychic)),
+    },
+    {
+      key: "destiny",
+      label: "Destiny (DN)",
+      digit: reduceToSingleDigit(Number(opts.destiny)),
+    },
+    {
+      key: "name",
+      label: "Name (NN)",
+      digit: reduceToSingleDigit(Number(opts.vedicName)),
+    },
+  ];
+  const byDigit = new Map<number, CityLayerGroup>();
+  for (const layer of layers) {
+    if (!Number.isFinite(layer.digit) || layer.digit < 1) continue;
+    const existing = byDigit.get(layer.digit);
+    if (existing) {
+      existing.keys.push(layer.key);
+      existing.labels.push(layer.label);
+    } else {
+      byDigit.set(layer.digit, {
+        keys: [layer.key],
+        labels: [layer.label],
+        digit: layer.digit,
+        cities: citiesMatchingDigit(layer.digit, per),
+      });
+    }
+  }
+  const seen = new Set<number>();
+  const out: CityLayerGroup[] = [];
+  for (const layer of layers) {
+    if (seen.has(layer.digit) || !byDigit.has(layer.digit)) continue;
+    seen.add(layer.digit);
+    out.push(byDigit.get(layer.digit)!);
+  }
+  return out;
 }
 
 /**
@@ -243,7 +332,6 @@ export function matchCities(opts: {
     .sort((a, b) => {
       if (b.exact !== a.exact) return b.exact - a.exact;
       if (a.closeness !== b.closeness) return a.closeness - b.closeness;
-      // Prefer well-known cities over alphabetical obscure ties
       if (a.rank !== b.rank) return a.rank - b.rank;
       return a.city.name.localeCompare(b.city.name);
     })

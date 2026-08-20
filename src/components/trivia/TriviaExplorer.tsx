@@ -7,7 +7,6 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
-import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import { calculateVedic } from "@/lib/numerology/vedic";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
@@ -24,7 +23,7 @@ import {
   type DiscoveryPerson,
 } from "@/lib/trivia/discovery";
 import {
-  matchCities,
+  matchCitiesByPnDnNn,
   matchCountries,
   matchPeople,
   matchPeopleByDayMonth,
@@ -84,13 +83,11 @@ export function TriviaExplorer({ people }: Props) {
   const matchPsychic = selected
     ? vedicPsychicFromDob(selected.date_of_birth)
     : null;
-  const nameLayers = selected
-    ? (() => {
-        const full = selected.full_name || selected.preferred_name || "";
-        const pyth = calculatePythagorean(full, selected.date_of_birth);
-        const vedic = calculateVedic(full, selected.date_of_birth);
-        return { expression: pyth.expression, vedicName: vedic.nameNumber };
-      })()
+  const vedicName = selected
+    ? calculateVedic(
+        selected.full_name || selected.preferred_name || "",
+        selected.date_of_birth,
+      ).nameNumber
     : null;
 
   const discoveryTarget =
@@ -160,27 +157,22 @@ export function TriviaExplorer({ people }: Props) {
 
   const triadCount = matchedPeople.filter((row) => row.kind === "triad").length;
   const dualCount = matchedPeople.filter((row) => row.kind === "dual").length;
-  const matchedCountries =
+  const countryMatch =
     matchLp != null && matchDestiny != null && matchPsychic != null
       ? matchCountries({
           lifePath: matchLp,
           destiny: matchDestiny,
           psychic: matchPsychic,
-          limit: 10,
+          nearLimit: 3,
         })
-      : [];
-  const matchedCities =
-    matchLp != null &&
-    matchDestiny != null &&
-    matchPsychic != null &&
-    nameLayers != null
-      ? matchCities({
-          lifePath: matchLp,
-          destiny: matchDestiny,
+      : { mode: "near" as const, rows: [] };
+  const cityGroups =
+    matchPsychic != null && matchDestiny != null && vedicName != null
+      ? matchCitiesByPnDnNn({
           psychic: matchPsychic,
-          expression: nameLayers.expression,
-          vedicName: nameLayers.vedicName,
-          limit: 10,
+          destiny: matchDestiny,
+          vedicName,
+          perLayer: 5,
         })
       : [];
 
@@ -280,16 +272,10 @@ export function TriviaExplorer({ people }: Props) {
                     <span className="brand text-ink">{matchLp}</span>, Destiny{" "}
                     <span className="brand text-ink">{matchDestiny}</span>, and
                     Psychic <span className="brand text-ink">{matchPsychic}</span>
-                    {nameLayers ? (
+                    {vedicName != null ? (
                       <>
-                        ; cities also use Expression{" "}
-                        <span className="brand text-ink">
-                          {nameLayers.expression}
-                        </span>{" "}
-                        and Vedic name{" "}
-                        <span className="brand text-ink">
-                          {nameLayers.vedicName}
-                        </span>
+                        ; cities use Psychic, Destiny, and Vedic name{" "}
+                        <span className="brand text-ink">{vedicName}</span>
                       </>
                     ) : null}{" "}
                     (from {selected.date_of_birth}
@@ -373,17 +359,43 @@ export function TriviaExplorer({ people }: Props) {
               </div>
 
               <section>
-                <h2 className="text-xl text-ink">Top 10 countries</h2>
-                <CountryCards rows={matchedCountries} />
+                <h2 className="text-xl text-ink">Matching countries</h2>
+                <p className="mt-1 text-sm text-ink-soft">
+                  {countryMatch.mode === "triad"
+                    ? `Every country in the bank whose Life Path, Destiny, and Psychic all match (${countryMatch.rows.length}).`
+                    : "No full three-number match in the bank — showing the next closest 2–3."}{" "}
+                  Date used is a commonly cited independence or formation day—not
+                  a political verdict.
+                </p>
+                <CountryCards
+                  rows={countryMatch.rows}
+                  emptyLabel="No country match in the bank."
+                />
               </section>
 
               <section>
-                <h2 className="text-xl text-ink">Top 10 cities</h2>
+                <h2 className="text-xl text-ink">Cities by PN / DN / NN</h2>
                 <p className="mt-1 text-sm text-ink-soft">
-                  City name numbers matched to your core digits—reflective
-                  trivia, not relocation advice.
+                  Five popular cities whose name number matches Psychic, Destiny,
+                  and Vedic name — reflective trivia, not relocation advice.
                 </p>
-                <CityTable rows={matchedCities} />
+                {cityGroups.length ? (
+                  <div className="mt-3 space-y-4">
+                    {cityGroups.map((group) => (
+                      <div key={group.digit}>
+                        <p className="text-sm text-ink">
+                          {group.labels.join(" · ")}{" "}
+                          <span className="brand">{group.digit}</span>
+                        </p>
+                        <CityTable rows={group.cities} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-sm text-ink-soft">
+                    No city matches in the bank.
+                  </p>
+                )}
               </section>
             </>
           )}

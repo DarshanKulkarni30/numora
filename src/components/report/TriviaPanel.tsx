@@ -7,14 +7,13 @@ import { CountryCards } from "@/components/trivia/CountryCards";
 import { MatchGallery } from "@/components/trivia/MatchGallery";
 import { MatchInsightPanel } from "@/components/trivia/MatchInsightPanel";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
-import { TRIVIA_CITIES } from "@/lib/trivia/cities";
 import {
   annotatePeople,
   buildDiscoveryNarratives,
   personDiscoveryKey,
 } from "@/lib/trivia/discovery";
 import {
-  matchCities,
+  matchCitiesByPnDnNn,
   matchCountries,
   matchPeople,
   matchPeopleByDayMonth,
@@ -30,14 +29,6 @@ type Props = {
 };
 
 const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
-
-function sampleCitiesForDigit(digit: number, limit = 3) {
-  return TRIVIA_CITIES.filter(
-    (c) => reduceToSingleDigit(c.nameNumber) === digit,
-  )
-    .sort((a, b) => a.rank - b.rank)
-    .slice(0, limit);
-}
 
 export function TriviaPanel({
   lifePath,
@@ -73,38 +64,33 @@ export function TriviaPanel({
   const resolvedMatchKey = selectedDiscovery
     ? personDiscoveryKey(selectedDiscovery.person)
     : null;
-  const countries = matchCountries({
+  const countryMatch = matchCountries({
     lifePath,
     destiny,
     psychic,
-    limit: 8,
+    nearLimit: 3,
   });
-  const cities = matchCities({
-    lifePath,
-    destiny,
+  const cityGroups = matchCitiesByPnDnNn({
     psychic,
-    expression,
+    destiny,
     vedicName,
-    limit: 5,
+    perLayer: 5,
   });
 
   const psychicN = reduceToSingleDigit(Number(psychic));
+  const destinyN = reduceToSingleDigit(Number(destiny));
   const nameN = reduceToSingleDigit(Number(vedicName));
   const matrixRows = [
-    { key: "psychic", label: "Psychic", digit: psychicN },
-    { key: "name", label: "Vedic name", digit: nameN },
+    { key: "psychic", label: "Psychic (PN)", digit: psychicN },
+    { key: "destiny", label: "Destiny (DN)", digit: destinyN },
+    { key: "name", label: "Name (NN)", digit: nameN },
   ] as const;
-
-  const highlightDigits = [...new Set([psychicN, nameN])].filter(
-    (n) => Number.isFinite(n) && n >= 1 && n <= 9,
-  );
 
   return (
     <div className="space-y-8">
       <p className="text-sm text-ink-soft">
-        Light trivia only: countries, cities, and personalities ranked against
-        your core numbers (Life Path, Destiny, Psychic; cities also use
-        Expression and Vedic name), plus people born on the same day and month.
+        Light trivia only: countries that share all three numbers (Life Path,
+        Destiny, Psychic), plus five cities each for Psychic, Destiny, and Name.
         Not predictions or endorsements.{" "}
         <Link
           href="/trivia"
@@ -161,26 +147,25 @@ export function TriviaPanel({
       <div>
         <h3 className="text-lg text-ink">Matching countries</h3>
         <p className="mt-1 text-xs text-ink-soft">
-          Every country whose Life Path, Destiny, and Psychic all match yours is
-          listed. Date used is a commonly cited independence or formation
-          day—not a political verdict.
+          {countryMatch.mode === "triad"
+            ? `Every country whose Life Path, Destiny, and Psychic all match yours (${countryMatch.rows.length}).`
+            : "No full three-number match in the bank — showing the next closest 2–3."}{" "}
+          Date used is a commonly cited independence or formation day—not a
+          political verdict.
         </p>
         <CountryCards
-          rows={countries}
-          emptyLabel="No close country match in the bank."
+          rows={countryMatch.rows}
+          emptyLabel="No country match in the bank."
         />
       </div>
 
       <div>
-        <h3 className="text-lg text-ink">
-          Psychic / name × city name number
-        </h3>
+        <h3 className="text-lg text-ink">PN / DN / NN × city name number</h3>
         <p className="mt-1 text-xs text-ink-soft">
-          Your Psychic{" "}
-          <span className="brand text-ink">{psychicN}</span> and Vedic name{" "}
+          Psychic <span className="brand text-ink">{psychicN}</span>, Destiny{" "}
+          <span className="brand text-ink">{destinyN}</span>, and Name{" "}
           <span className="brand text-ink">{nameN}</span> against city name
-          numbers 1–9. Highlighted cells are exact digit matches; sample cities
-          are from the popular-city bank.
+          numbers 1–9. Five sample cities per matching digit.
         </p>
 
         <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
@@ -228,96 +213,28 @@ export function TriviaPanel({
           </table>
         </div>
 
-        {highlightDigits.length ? (
+        {cityGroups.length ? (
           <ul className="mt-3 space-y-2 text-sm">
-            {highlightDigits.map((d) => {
-              const samples = sampleCitiesForDigit(d, 4);
-              const tags = [
-                psychicN === d ? "Psychic" : null,
-                nameN === d ? "Vedic name" : null,
-              ].filter(Boolean);
-              return (
-                <li
-                  key={d}
-                  className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-2"
-                >
-                  <p className="text-ink">
-                    City name number{" "}
-                    <span className="brand">{d}</span>
-                    <span className="text-ink-soft">
-                      {" "}
-                      · matches {tags.join(" + ")}
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-ink-soft">
-                    {samples.length
-                      ? samples
-                          .map((c) => `${c.name} (${c.country})`)
-                          .join(" · ")
-                      : "No sample cities for this digit."}
-                  </p>
-                </li>
-              );
-            })}
+            {cityGroups.map((group) => (
+              <li
+                key={group.digit}
+                className="rounded-xl border border-[var(--line)] bg-white/50 px-3 py-2"
+              >
+                <p className="text-ink">
+                  {group.labels.join(" · ")}{" "}
+                  <span className="brand">{group.digit}</span>
+                </p>
+                <p className="mt-1 text-xs text-ink-soft">
+                  {group.cities.length
+                    ? group.cities
+                        .map((c) => `${c.name} (${c.country})`)
+                        .join(" · ")
+                    : "No sample cities for this digit."}
+                </p>
+              </li>
+            ))}
           </ul>
         ) : null}
-      </div>
-
-      <div>
-        <h3 className="text-lg text-ink">Top 5 compatible cities</h3>
-        <p className="mt-1 text-xs text-ink-soft">
-          City name numbers matched to Life Path, Destiny, Psychic, Expression,
-          and Vedic name—reflective geography trivia, not relocation advice.
-        </p>
-        {cities.length ? (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-[var(--line)]">
-            <table className="w-full min-w-[32rem] text-left text-sm">
-              <thead className="bg-mist/60 text-ink-soft">
-                <tr>
-                  <th className="px-3 py-2 font-medium">City</th>
-                  <th className="px-3 py-2 font-medium">Country</th>
-                  <th className="px-3 py-2 font-medium">Name number</th>
-                  <th className="px-3 py-2 font-medium">Fits</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cities.map((c) => {
-                  const n = reduceToSingleDigit(c.nameNumber);
-                  const fits = [
-                    n === psychicN ? "Psychic" : null,
-                    n === nameN ? "Name" : null,
-                    n === reduceToSingleDigit(Number(lifePath))
-                      ? "Life Path"
-                      : null,
-                    n === reduceToSingleDigit(Number(destiny))
-                      ? "Destiny"
-                      : null,
-                    n === reduceToSingleDigit(Number(expression))
-                      ? "Expression"
-                      : null,
-                  ].filter(Boolean);
-                  return (
-                    <tr
-                      key={`${c.name}|${c.country}`}
-                      className="border-t border-[var(--line)]"
-                    >
-                      <td className="px-3 py-2 text-ink">{c.name}</td>
-                      <td className="px-3 py-2 text-ink-soft">{c.country}</td>
-                      <td className="brand px-3 py-2 text-ink">{c.nameNumber}</td>
-                      <td className="px-3 py-2 text-xs text-ink-soft">
-                        {fits.length ? fits.join(" · ") : "Near"}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="mt-2 text-sm text-ink-soft">
-            No close city matches in the bank.
-          </p>
-        )}
       </div>
     </div>
   );
