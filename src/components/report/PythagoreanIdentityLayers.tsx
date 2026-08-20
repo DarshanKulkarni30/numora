@@ -6,6 +6,7 @@ import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import {
   buildPythagoreanIdentityLayers,
   type IdentityLayerCard,
+  type InnerOuterAlignment,
 } from "@/lib/numerology/pythagoreanIdentityLayers";
 
 type Props = {
@@ -17,7 +18,8 @@ type Props = {
   maturity: string;
 };
 
-function ExpressionBrush({
+/** BD → EX → LP as an explicit bridge / flow (Expression = vehicle). */
+function ExpressionBridge({
   birthDay,
   lifePath,
   expression,
@@ -27,117 +29,294 @@ function ExpressionBrush({
   expression: string;
 }) {
   const uid = useId().replace(/:/g, "");
+  const echoes = String(birthDay) === String(expression);
   return (
-    <svg viewBox="0 0 200 56" className="h-14 w-full" aria-hidden>
-      <defs>
-        <linearGradient id={`bd-${uid}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="rgb(30 58 107)" stopOpacity="0.35" />
-        </linearGradient>
-        <linearGradient id={`lp-${uid}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="rgb(45 122 120)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
-        </linearGradient>
-        <linearGradient id={`ex-${uid}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="rgb(180 83 9)" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.95" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M12 22 C48 18 72 20 96 24"
-        fill="none"
-        stroke={`url(#bd-${uid})`}
-        strokeWidth="7"
-        strokeLinecap="round"
-        className="motion-safe:opacity-90"
-      />
-      <path
-        d="M104 30 C128 28 156 26 188 28"
-        fill="none"
-        stroke={`url(#lp-${uid})`}
-        strokeWidth="7"
-        strokeLinecap="round"
-      />
-      <path
-        d="M40 40 C88 12 120 44 168 16"
-        fill="none"
-        stroke={`url(#ex-${uid})`}
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        className="motion-safe:animate-pulse"
-      />
-      <text x="14" y="50" fontSize="7" fill="rgb(70 82 98)">
-        BD {birthDay}
-      </text>
-      <text x="92" y="12" fontSize="7" fill="rgb(180 83 9)" textAnchor="middle">
-        Ex {expression}
-      </text>
-      <text x="186" y="50" fontSize="7" fill="rgb(70 82 98)" textAnchor="end">
-        LP {lifePath}
-      </text>
-    </svg>
+    <div className="relative">
+      <svg viewBox="0 0 280 88" className="h-[5.5rem] w-full" aria-hidden>
+        <defs>
+          <linearGradient id={`bridge-${uid}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="rgb(180 83 9)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
+          </linearGradient>
+        </defs>
+        {/* faint scale ticks */}
+        {[40, 80, 120, 160, 200, 240].map((x) => (
+          <line
+            key={x}
+            x1={x}
+            y1="48"
+            x2={x}
+            y2="54"
+            stroke="rgb(70 82 98 / 0.25)"
+            strokeWidth="1"
+          />
+        ))}
+        <line
+          x1="36"
+          y1="44"
+          x2="244"
+          y2="44"
+          stroke={`url(#bridge-${uid})`}
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        {/* Origin */}
+        <circle cx="36" cy="44" r="9" fill="rgb(30 58 107)" />
+        <text
+          x="36"
+          y="47"
+          fontSize="8"
+          fill="white"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          {birthDay}
+        </text>
+        <text
+          x="36"
+          y="72"
+          fontSize="8"
+          fill="rgb(30 40 55)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          BD {birthDay}
+        </text>
+        <text
+          x="36"
+          y="84"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+        >
+          Origin
+        </text>
+        {/* Vehicle */}
+        <circle
+          cx="140"
+          cy="44"
+          r="12"
+          fill="rgb(250 248 243)"
+          stroke="rgb(180 83 9)"
+          strokeWidth="2.5"
+        />
+        <circle
+          cx="140"
+          cy="44"
+          r="16"
+          fill="none"
+          stroke="rgb(180 83 9 / 0.35)"
+          strokeWidth="1.5"
+          className="motion-safe:animate-pulse"
+        />
+        <text
+          x="140"
+          y="47"
+          fontSize="9"
+          fill="rgb(180 83 9)"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          {expression}
+        </text>
+        <text
+          x="140"
+          y="18"
+          fontSize="8"
+          fill="rgb(180 83 9)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          Ex {expression}
+        </text>
+        <text
+          x="140"
+          y="28"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+        >
+          {echoes ? "Amplifies BD" : "Your how"}
+        </text>
+        {/* Destination */}
+        <circle cx="244" cy="44" r="9" fill="rgb(45 122 120)" />
+        <text
+          x="244"
+          y="47"
+          fontSize="8"
+          fill="white"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          {lifePath}
+        </text>
+        <text
+          x="244"
+          y="72"
+          fontSize="8"
+          fill="rgb(30 40 55)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          LP {lifePath}
+        </text>
+        <text
+          x="244"
+          y="84"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+        >
+          Direction
+        </text>
+      </svg>
+    </div>
   );
 }
 
-function DualMasks({
+/** Soul Urge × Personality as labeled overlapping lenses + named shared self. */
+function InnerOuterOverlap({
   soulUrge,
   personality,
+  alignment,
 }: {
   soulUrge: string;
   personality: string;
+  alignment: InnerOuterAlignment;
 }) {
+  const bandColor =
+    alignment.band === "aligned"
+      ? "rgb(13 159 110)"
+      : alignment.band === "tension"
+        ? "rgb(180 83 9)"
+        : "rgb(35 79 150)";
+
   return (
-    <svg viewBox="0 0 200 64" className="h-16 w-full" aria-hidden>
-      {/* Inner mask — indigo */}
-      <ellipse
-        cx="78"
-        cy="32"
-        rx="28"
-        ry="24"
-        fill="rgb(30 58 107 / 0.2)"
-        stroke="rgb(30 58 107)"
-        strokeWidth="1.4"
-      />
-      <circle cx="68" cy="28" r="2.2" fill="rgb(30 58 107)" />
-      <circle cx="88" cy="28" r="2.2" fill="rgb(30 58 107)" />
-      <path
-        d="M68 40 Q78 36 88 40"
-        fill="none"
-        stroke="rgb(30 58 107)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Outer mask — teal, slightly forward */}
-      <ellipse
-        cx="122"
-        cy="30"
-        rx="28"
-        ry="24"
-        fill="rgb(45 122 120 / 0.18)"
-        stroke="rgb(45 122 120)"
-        strokeWidth="1.4"
-        className="origin-center motion-safe:animate-pulse"
-      />
-      <circle cx="112" cy="26" r="2.2" fill="rgb(45 122 120)" />
-      <circle cx="132" cy="26" r="2.2" fill="rgb(45 122 120)" />
-      <path
-        d="M112 40 Q122 44 132 40"
-        fill="none"
-        stroke="rgb(45 122 120)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <text x="78" y="62" fontSize="7" fill="rgb(70 82 98)" textAnchor="middle">
-        SU {soulUrge}
-      </text>
-      <text x="122" y="62" fontSize="7" fill="rgb(70 82 98)" textAnchor="middle">
-        PE {personality}
-      </text>
-    </svg>
+    <div className="space-y-2">
+      <svg viewBox="0 0 280 100" className="h-24 w-full" aria-hidden>
+        {/* Inner want — left */}
+        <ellipse
+          cx="108"
+          cy="48"
+          rx="52"
+          ry="36"
+          fill="rgb(30 58 107 / 0.16)"
+          stroke="rgb(30 58 107)"
+          strokeWidth="1.6"
+        />
+        {/* Outer face — right */}
+        <ellipse
+          cx="172"
+          cy="48"
+          rx="52"
+          ry="36"
+          fill="rgb(45 122 120 / 0.14)"
+          stroke="rgb(45 122 120)"
+          strokeWidth="1.6"
+        />
+        {/* Overlap highlight */}
+        <ellipse
+          cx="140"
+          cy="48"
+          rx="22"
+          ry="28"
+          fill="rgb(180 83 9 / 0.12)"
+          stroke="rgb(180 83 9 / 0.55)"
+          strokeWidth="1"
+          strokeDasharray="3 2"
+        />
+        <text
+          x="88"
+          y="46"
+          fontSize="14"
+          fill="rgb(30 58 107)"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          {soulUrge}
+        </text>
+        <text
+          x="88"
+          y="58"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+        >
+          SU
+        </text>
+        <text
+          x="192"
+          y="46"
+          fontSize="14"
+          fill="rgb(45 122 120)"
+          textAnchor="middle"
+          fontWeight="700"
+        >
+          {personality}
+        </text>
+        <text
+          x="192"
+          y="58"
+          fontSize="6.5"
+          fill="rgb(70 82 98)"
+          textAnchor="middle"
+        >
+          PE
+        </text>
+        <text
+          x="140"
+          y="50"
+          fontSize="6.5"
+          fill="rgb(180 83 9)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          Meet
+        </text>
+        <text
+          x="70"
+          y="94"
+          fontSize="7"
+          fill="rgb(30 40 55)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          Inner want
+        </text>
+        <text
+          x="210"
+          y="94"
+          fontSize="7"
+          fill="rgb(30 40 55)"
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          Outer face
+        </text>
+        <text
+          x="140"
+          y="12"
+          fontSize="7"
+          fill={bandColor}
+          textAnchor="middle"
+          fontWeight="600"
+        >
+          Where you meet the world
+        </text>
+      </svg>
+      <p className="text-center text-[11px] leading-5 text-ink">
+        <span className="font-medium" style={{ color: bandColor }}>
+          {alignment.label}
+        </span>
+        <span className="text-ink-soft"> — {alignment.note}</span>
+      </p>
+    </div>
   );
 }
 
-function RipeningArc({
+/** LP + EX converge upward into Maturity (synthesis, not timeline). */
+function MaturityConvergence({
   lifePath,
   expression,
   maturity,
@@ -148,46 +327,116 @@ function RipeningArc({
 }) {
   const uid = useId().replace(/:/g, "");
   return (
-    <svg viewBox="0 0 200 64" className="h-16 w-full" aria-hidden>
+    <svg viewBox="0 0 280 118" className="h-[7rem] w-full" aria-hidden>
       <defs>
-        <linearGradient id={`arc-${uid}`} x1="0" y1="1" x2="1" y2="0">
+        <linearGradient id={`conv-l-${uid}`} x1="0" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor="rgb(45 122 120)" stopOpacity="0.9" />
-          <stop offset="55%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
-          <stop offset="100%" stopColor="rgb(30 58 107)" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
+        </linearGradient>
+        <linearGradient id={`conv-r-${uid}`} x1="1" y1="1" x2="0.5" y2="0">
+          <stop offset="0%" stopColor="rgb(30 58 107)" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="rgb(180 83 9)" stopOpacity="0.75" />
         </linearGradient>
       </defs>
+      {/* converging paths */}
       <path
-        d="M24 48 Q100 8 176 48"
+        d="M56 88 L140 36"
         fill="none"
-        stroke={`url(#arc-${uid})`}
-        strokeWidth="5"
+        stroke={`url(#conv-l-${uid})`}
+        strokeWidth="3"
         strokeLinecap="round"
-        className="motion-safe:opacity-95"
       />
-      <circle cx="24" cy="48" r="4" fill="rgb(45 122 120)" />
-      <circle cx="100" cy="18" r="4.5" fill="rgb(180 83 9)" />
-      <circle
-        cx="176"
-        cy="48"
-        r="5.5"
-        fill="rgb(30 58 107)"
-        className="motion-safe:animate-pulse"
-      />
-      {/* petal glyph at maturity */}
       <path
-        d="M176 36 C172 40 172 44 176 48 C180 44 180 40 176 36 Z"
+        d="M224 88 L140 36"
+        fill="none"
+        stroke={`url(#conv-r-${uid})`}
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      {/* Integration label */}
+      <text
+        x="140"
+        y="62"
+        fontSize="6.5"
+        fill="rgb(70 82 98)"
+        textAnchor="middle"
+      >
+        Integration
+      </text>
+      {/* Maturity apex */}
+      <rect
+        x="104"
+        y="8"
+        width="72"
+        height="28"
+        rx="8"
         fill="rgb(250 248 243)"
         stroke="rgb(180 83 9)"
-        strokeWidth="0.8"
+        strokeWidth="1.8"
       />
-      <text x="24" y="60" fontSize="7" fill="rgb(70 82 98)" textAnchor="middle">
-        LP {lifePath}
+      <text
+        x="140"
+        y="20"
+        fontSize="7"
+        fill="rgb(180 83 9)"
+        textAnchor="middle"
+        fontWeight="600"
+      >
+        Maturity
       </text>
-      <text x="100" y="12" fontSize="7" fill="rgb(180 83 9)" textAnchor="middle">
-        Ex {expression}
+      <text
+        x="140"
+        y="32"
+        fontSize="11"
+        fill="rgb(30 40 55)"
+        textAnchor="middle"
+        fontWeight="700"
+      >
+        {maturity}
       </text>
-      <text x="176" y="60" fontSize="7" fill="rgb(70 82 98)" textAnchor="middle">
-        Mat {maturity}
+      {/* Life Path base */}
+      <circle cx="56" cy="88" r="14" fill="rgb(45 122 120)" />
+      <text
+        x="56"
+        y="92"
+        fontSize="10"
+        fill="white"
+        textAnchor="middle"
+        fontWeight="700"
+      >
+        {lifePath}
+      </text>
+      <text
+        x="56"
+        y="108"
+        fontSize="7"
+        fill="rgb(30 40 55)"
+        textAnchor="middle"
+        fontWeight="600"
+      >
+        Life Path
+      </text>
+      {/* Expression base */}
+      <circle cx="224" cy="88" r="14" fill="rgb(30 58 107)" />
+      <text
+        x="224"
+        y="92"
+        fontSize="10"
+        fill="white"
+        textAnchor="middle"
+        fontWeight="700"
+      >
+        {expression}
+      </text>
+      <text
+        x="224"
+        y="108"
+        fontSize="7"
+        fill="rgb(30 40 55)"
+        textAnchor="middle"
+        fontWeight="600"
+      >
+        Expression
       </text>
     </svg>
   );
@@ -198,10 +447,11 @@ function LayerGlyph({ id }: { id: IdentityLayerCard["id"] }) {
     return (
       <svg viewBox="0 0 24 24" className="h-6 w-6 text-gold-deep" aria-hidden>
         <path
-          d="M12 4 L20 18 H4 Z"
+          d="M4 12 H20 M8 12 L12 8 L16 12"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
@@ -218,25 +468,98 @@ function LayerGlyph({ id }: { id: IdentityLayerCard["id"] }) {
   return (
     <svg viewBox="0 0 24 24" className="h-6 w-6 text-ink" aria-hidden>
       <path
-        d="M12 20 C8 16 8 10 12 6 C16 10 16 16 12 20 Z"
+        d="M6 18 L12 6 L18 18 Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.4"
+        strokeLinejoin="round"
       />
+      <circle cx="12" cy="14" r="1.5" fill="currentColor" />
     </svg>
+  );
+}
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <span
+      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--line)] bg-white text-ink shadow-sm transition-transform duration-200 ${
+        open ? "rotate-180" : ""
+      }`}
+      aria-hidden
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function MetaChip({
+  code,
+  value,
+  topic,
+  label,
+  tint,
+}: {
+  code: string;
+  value: string;
+  topic: "birth-day" | "life-path" | "expression";
+  label: string;
+  tint: string;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium shadow-sm ${tint}`}
+    >
+      <span className="uppercase tracking-wider opacity-70">{code}</span>
+      <GuideNumberLink
+        topic={topic}
+        value={value}
+        label={label}
+        display={value}
+        className="brand text-ink underline decoration-gold/40 underline-offset-2 hover:text-gold-deep"
+      />
+    </span>
+  );
+}
+
+function MetricCell({
+  label,
+  value,
+  dot,
+}: {
+  label: string;
+  value: string;
+  dot: string;
+}) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
+      <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} aria-hidden />
+        {label}
+      </p>
+      <p className="mt-1 text-sm leading-5 text-ink">{value}</p>
+    </div>
   );
 }
 
 function LayerVisual({
   layer,
   numbers,
+  alignment,
 }: {
   layer: IdentityLayerCard;
   numbers: Props;
+  alignment: InnerOuterAlignment;
 }) {
   if (layer.id === "expression") {
     return (
-      <ExpressionBrush
+      <ExpressionBridge
         birthDay={numbers.birthDay}
         lifePath={numbers.lifePath}
         expression={numbers.expression}
@@ -245,18 +568,54 @@ function LayerVisual({
   }
   if (layer.id === "inner-outer") {
     return (
-      <DualMasks
+      <InnerOuterOverlap
         soulUrge={numbers.soulUrge}
         personality={numbers.personality}
+        alignment={alignment}
       />
     );
   }
   return (
-    <RipeningArc
+    <MaturityConvergence
       lifePath={numbers.lifePath}
       expression={numbers.expression}
       maturity={numbers.maturity}
     />
+  );
+}
+
+function ActionIcon({ kind }: { kind: "dynamics" | "growth" | "practice" }) {
+  if (kind === "dynamics") {
+    return (
+      <svg viewBox="0 0 24 24" className="h-5 w-5 text-sea" aria-hidden>
+        <path
+          d="M4 18 V10 M10 18 V6 M16 18 V12 M20 18"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+  if (kind === "growth") {
+    return (
+      <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold-deep" aria-hidden>
+        <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 text-ink" aria-hidden>
+      <path
+        d="M6 4 H16 A2 2 0 0 1 18 6 V20 L12 17 L6 20 Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
@@ -292,50 +651,37 @@ export function PythagoreanIdentityLayers({
   };
 
   return (
-    <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5 sm:p-6">
+    <div className="rounded-2xl border border-[var(--line)] bg-white/85 p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-            Identity Layers
-          </p>
-          <p className="mt-1 text-sm text-ink-soft">
-            How your name and birth tones interact — Expression, inner want vs
-            outer face, and ripening Maturity.
+          <p className="brand text-lg text-ink sm:text-xl">Identity Layers</p>
+          <p className="mt-1 max-w-[65ch] text-sm text-ink-soft">
+            How your name and birth tones interact — Expression as bridge, inner
+            × outer overlap, and Maturity as convergence.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs text-ink-soft">
-          <span>
-            BD{" "}
-            <GuideNumberLink
-              topic="birth-day"
-              value={birthDay}
-              label="Birth Day"
-              display={birthDay}
-              className="brand text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
-            />
-          </span>
-          <span>·</span>
-          <span>
-            LP{" "}
-            <GuideNumberLink
-              topic="life-path"
-              value={lifePath}
-              label="Life Path"
-              display={lifePath}
-              className="brand text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
-            />
-          </span>
-          <span>·</span>
-          <span>
-            Ex{" "}
-            <GuideNumberLink
-              topic="expression"
-              value={expression}
-              label="Expression"
-              display={expression}
-              className="brand text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
-            />
-          </span>
+        <div className="flex flex-wrap gap-2">
+          <MetaChip
+            code="BD"
+            value={birthDay}
+            topic="birth-day"
+            label="Birth Day"
+            tint="border-ink/15 bg-[rgb(30_58_107/0.08)] text-ink"
+          />
+          <MetaChip
+            code="LP"
+            value={lifePath}
+            topic="life-path"
+            label="Life Path"
+            tint="border-sea/30 bg-[rgb(45_122_120/0.1)] text-ink"
+          />
+          <MetaChip
+            code="EX"
+            value={expression}
+            topic="expression"
+            label="Expression"
+            tint="border-gold/40 bg-[rgb(180_83_9/0.1)] text-ink"
+          />
         </div>
       </div>
 
@@ -345,56 +691,65 @@ export function PythagoreanIdentityLayers({
           return (
             <div
               key={layer.id}
-              className="overflow-hidden rounded-xl border border-[var(--line)] bg-white/60"
+              className="overflow-hidden rounded-xl border border-[var(--line)] bg-white/80 shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
             >
               <button
                 type="button"
                 onClick={() =>
                   setOpen((cur) => (cur === layer.id ? null : layer.id))
                 }
-                className="btn-tactile flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-white/80"
+                className="btn-tactile flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-white"
                 aria-expanded={expanded}
               >
                 <LayerGlyph id={layer.id} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gold-deep">
                     {layer.kicker}
                   </p>
-                  <p className="font-medium text-ink">{layer.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-ink-soft">
+                  <p className="brand text-lg text-ink">{layer.title}</p>
+                  <p className="mt-1 max-w-[65ch] text-sm leading-6 text-ink-soft">
                     {layer.insight}
                   </p>
                 </div>
-                <span className="text-xs text-ink-soft">
-                  {expanded ? "Less" : "More"}
-                </span>
+                <Chevron open={expanded} />
               </button>
-              <div className="border-t border-[var(--line)] px-4 py-3">
-                <LayerVisual layer={layer} numbers={numbers} />
+              <div className="border-t border-[var(--line)] bg-mist/20 px-4 py-4">
+                <LayerVisual
+                  layer={layer}
+                  numbers={numbers}
+                  alignment={model.alignment}
+                />
               </div>
               {expanded ? (
-                <div className="space-y-3 border-t border-[var(--line)] px-4 py-3">
-                  <dl className="grid gap-2 sm:grid-cols-3 text-xs">
-                    <div>
-                      <dt className="uppercase tracking-wider text-ink-soft">
-                        Tone
-                      </dt>
-                      <dd className="mt-0.5 text-ink">{layer.micro.tone}</dd>
-                    </div>
-                    <div>
-                      <dt className="uppercase tracking-wider text-ink-soft">
-                        Tension
-                      </dt>
-                      <dd className="mt-0.5 text-ink">{layer.micro.tension}</dd>
-                    </div>
-                    <div>
-                      <dt className="uppercase tracking-wider text-ink-soft">
-                        Gift
-                      </dt>
-                      <dd className="mt-0.5 text-ink">{layer.micro.gift}</dd>
-                    </div>
-                  </dl>
-                  <p className="text-sm leading-6 text-ink-soft">{layer.deeper}</p>
+                <div className="space-y-3 border-t border-[var(--line)] px-4 py-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+                    Metric index
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <MetricCell
+                      label="Tone"
+                      value={layer.micro.tone}
+                      dot="bg-sea"
+                    />
+                    <MetricCell
+                      label="Tension"
+                      value={layer.micro.tension}
+                      dot="bg-gold-deep"
+                    />
+                    <MetricCell
+                      label="Gift"
+                      value={layer.micro.gift}
+                      dot="bg-ink"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+                      Insight profile
+                    </p>
+                    <p className="mt-1 max-w-[65ch] text-sm leading-6 text-ink">
+                      {layer.deeper}
+                    </p>
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -403,34 +758,37 @@ export function PythagoreanIdentityLayers({
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3 md:col-span-1">
-          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-            Layer dynamics
-          </p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">
-            {model.dynamicsSummary}
-          </p>
+        <div className="rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center gap-2">
+            <ActionIcon kind="dynamics" />
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+              Layer dynamics
+            </p>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-ink">{model.dynamicsSummary}</p>
         </div>
-        <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-            Growth invitation
-          </p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">
-            {model.growthInvitation}
-          </p>
+        <div className="rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center gap-2">
+            <ActionIcon kind="growth" />
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+              Growth invitation
+            </p>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-ink">{model.growthInvitation}</p>
         </div>
-        <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-            Reflective practice
-          </p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">
-            {model.reflectivePractice}
-          </p>
+        <div className="rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center gap-2">
+            <ActionIcon kind="practice" />
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+              Reflective practice
+            </p>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-ink">{model.reflectivePractice}</p>
           <p className="mt-2 text-[11px] text-ink-soft">
             Reflective only —{" "}
             <Link
               href={`/guide/expression/${expression}`}
-              className="text-gold-deep underline underline-offset-2 hover:text-ink"
+              className="btn-tactile inline text-gold-deep underline underline-offset-2 hover:text-ink"
             >
               Expression guide
             </Link>
