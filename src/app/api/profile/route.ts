@@ -7,6 +7,7 @@ import {
   type PersonRecord,
 } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
+import { normalizeNameHistory } from "@/lib/profile/nameHistory";
 import {
   resolveEntitlements,
   type EntitlementRow,
@@ -28,6 +29,7 @@ function emptySelf(user: {
     gender: "",
     purpose: "",
     sort_order: 0,
+    name_history: [],
     identity_edit_count: 0,
   };
 }
@@ -192,6 +194,11 @@ export async function PUT(request: Request) {
       );
     }
 
+    const historyNorm = normalizeNameHistory(p.name_history, date_of_birth);
+    if (historyNorm.error) {
+      return NextResponse.json({ error: historyNorm.error }, { status: 400 });
+    }
+
     const prev = p.id ? existingById.get(p.id) : undefined;
     let identity_edit_count = prev?.identity_edit_count ?? 0;
     let identity_confirmed_at = prev?.identity_confirmed_at ?? null;
@@ -245,6 +252,7 @@ export async function PUT(request: Request) {
       gender,
       purpose,
       sort_order: i,
+      name_history: historyNorm.eras,
       identity_edit_count,
       identity_confirmed_at,
     });
@@ -258,7 +266,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: delError.message }, { status: 500 });
   }
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("people")
     .insert(
       normalized.map((p) => ({
@@ -271,10 +279,40 @@ export async function PUT(request: Request) {
     .order("sort_order", { ascending: true });
 
   if (error) {
+    if (/name_history/i.test(error.message)) {
+      const hadHistory = normalized.some(
+        (p) => (p.name_history?.length ?? 0) > 0,
+      );
+      if (hadHistory) {
+        return NextResponse.json(
+          {
+            error:
+              "Later names need a one-time database update (name_history on people). Run supabase/migrations/20260820_name_history.sql in the Supabase SQL editor, then save again.",
+          },
+          { status: 500 },
+        );
+      }
+      const { data: withoutHistory, error: historyError } = await supabase
+        .from("people")
+        .insert(
+          normalized.map(({ name_history: _h, ...rest }) => ({
+            user_id: user.id,
+            ...rest,
+            updated_at: nowIso,
+          })),
+        )
+        .select("*")
+        .order("sort_order", { ascending: true });
+      if (!historyError) {
+        return NextResponse.json({
+          people: withoutHistory,
+          entitlements,
+        });
+      }
+      error = historyError;
+    }
     // Column may be missing before migration — retry without identity fields
-    if (
-      /identity_edit_count|identity_confirmed_at/i.test(error.message)
-    ) {
+    if (/identity_edit_count|identity_confirmed_at/i.test(error.message)) {
       const { data: fallback, error: fallbackError } = await supabase
         .from("people")
         .insert(

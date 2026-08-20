@@ -1,3 +1,5 @@
+import type { NameEra } from "./nameHistory";
+
 export const GENDER_OPTIONS = [
   "Female",
   "Male",
@@ -36,6 +38,8 @@ export type PersonRecord = {
   gender: string;
   purpose: string;
   sort_order: number;
+  /** Later legal / marriage names. Birth-certificate full_name stays natal. */
+  name_history?: NameEra[];
   /** Changes to full_name / DOB after first confirm (server-managed). */
   identity_edit_count?: number;
   identity_confirmed_at?: string | null;

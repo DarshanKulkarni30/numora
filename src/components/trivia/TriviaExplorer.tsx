@@ -7,9 +7,10 @@ import {
   vedicDestinyFromDob,
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
-import { calculateVedic } from "@/lib/numerology/vedic";
+import { dualNameChart } from "@/lib/numerology/nameLayers";
 import type { PersonRecord } from "@/lib/profile/options";
 import { isValidDob } from "@/lib/profile/date";
+import { NameEraNote } from "@/components/report/NameEraNote";
 import { BirthDateTimeline } from "@/components/trivia/BirthDateTimeline";
 import { CountryCards } from "@/components/trivia/CountryCards";
 import { MatchGallery } from "@/components/trivia/MatchGallery";
@@ -23,6 +24,7 @@ import {
   type DiscoveryPerson,
 } from "@/lib/trivia/discovery";
 import {
+  citiesMatchingDigit,
   matchCitiesByPnDnNn,
   matchCountries,
   matchPeople,
@@ -83,11 +85,17 @@ export function TriviaExplorer({ people }: Props) {
   const matchPsychic = selected
     ? vedicPsychicFromDob(selected.date_of_birth)
     : null;
-  const vedicName = selected
-    ? calculateVedic(
-        selected.full_name || selected.preferred_name || "",
-        selected.date_of_birth,
-      ).nameNumber
+  const nameChart = selected
+    ? dualNameChart({
+        natalName: selected.full_name || selected.preferred_name || "",
+        dateOfBirth: selected.date_of_birth,
+        history: selected.name_history,
+        preferredName: selected.preferred_name,
+      })
+    : null;
+  const vedicName = nameChart?.operating.vedicName ?? null;
+  const natalVedicName = nameChart?.differs
+    ? nameChart.natal.vedicName
     : null;
 
   const discoveryTarget =
@@ -174,6 +182,10 @@ export function TriviaExplorer({ people }: Props) {
           vedicName,
           perLayer: 5,
         })
+      : [];
+  const natalCityRows =
+    natalVedicName != null && natalVedicName !== vedicName
+      ? citiesMatchingDigit(natalVedicName, 5)
       : [];
 
   const filteredPeople = useMemo(() => {
@@ -284,6 +296,19 @@ export function TriviaExplorer({ people }: Props) {
                     then well-known names—not A–Z.
                   </p>
                 ) : null}
+                {nameChart?.differs ? (
+                  <div className="mt-3 max-w-xl">
+                    <NameEraNote
+                      natalName={nameChart.force.natalSpelling}
+                      operatingName={nameChart.force.operatingSpelling}
+                      label={nameChart.force.label}
+                      natalNn={nameChart.natal.vedicName}
+                      operatingNn={nameChart.operating.vedicName}
+                      givenUnchanged={nameChart.force.givenUnchanged}
+                      compact
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-6">
@@ -390,6 +415,15 @@ export function TriviaExplorer({ people }: Props) {
                         <CityTable rows={group.cities} />
                       </div>
                     ))}
+                    {natalCityRows.length ? (
+                      <div>
+                        <p className="text-sm text-ink">
+                          Natal name (NN){" "}
+                          <span className="brand">{natalVedicName}</span>
+                        </p>
+                        <CityTable rows={natalCityRows} />
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <p className="mt-2 text-sm text-ink-soft">

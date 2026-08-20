@@ -59,6 +59,7 @@ import type {
   ReportSection,
   ReportType,
 } from "./types";
+import { dualNameChart } from "./nameLayers";
 import { calculateVedic } from "./vedic";
 
 function reportTypeForAge(age: number): ReportType {
@@ -493,8 +494,13 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         `- Maturity: ${snap.maturity_number}`,
         `- Chaldean Name / Compound: ${snap.chaldean_name_number} / ${snap.compound_number}`,
         `- Vedic Psychic / Destiny / Name: ${snap.vedic_psychic} / ${snap.vedic_destiny} / ${snap.vedic_name}`,
+        snap.natal_vedic_name
+          ? `- Natal (birth-certificate) Expression / Vedic name: ${snap.natal_expression_number} / ${snap.natal_vedic_name} · ${snap.name_era_label ?? "later name in force now"}`
+          : null,
         `- Personal Year / Month: ${snap.personal_year} / ${snap.personal_month}`,
-      ].join("\n"),
+      ]
+        .filter(Boolean)
+        .join("\n"),
     },
     {
       id: "pythagorean",
@@ -520,6 +526,9 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
       title: "5. Vedic Numerology Analysis",
       body: [
         `Psychic ${snap.vedic_psychic} (birth day) · Destiny ${snap.vedic_destiny} (full date) · Name ${snap.vedic_name}`,
+        snap.natal_vedic_name
+          ? `Current legal spelling NN ${snap.vedic_name}; birth-certificate NN ${snap.natal_vedic_name}. Psychic and Destiny are date-only.`
+          : null,
         `• Psychic: ${report.vedic.psychic_number.meaning}`,
         `• Destiny: ${report.vedic.destiny_number.meaning}`,
         report.vedic.unitSystem
@@ -720,13 +729,28 @@ export function generateReport(
 
   const age = calculateAge(input.dateOfBirth, now);
   const report_type = reportTypeForAge(age);
-  const pyth = calculatePythagorean(fullName, input.dateOfBirth);
-  const chald = calculateChaldean(fullName);
-  const vedic = calculateVedic(fullName, input.dateOfBirth);
+  const names = dualNameChart({
+    natalName: fullName,
+    dateOfBirth: input.dateOfBirth,
+    history: input.nameHistory,
+    preferredName: input.preferredName,
+    asOf: now,
+  });
+  const operatingName = names.force.operatingSpelling;
+  const pyth = calculatePythagorean(operatingName, input.dateOfBirth);
+  const natalPyth = names.differs
+    ? calculatePythagorean(fullName, input.dateOfBirth)
+    : pyth;
+  const chald = calculateChaldean(operatingName);
+  const natalChald = names.differs ? calculateChaldean(fullName) : chald;
+  const vedic = calculateVedic(operatingName, input.dateOfBirth);
+  const natalVedic = names.differs
+    ? calculateVedic(fullName, input.dateOfBirth)
+    : vedic;
   const loShu = calculateLoShu(input.dateOfBirth);
   const pyOutlook = currentWesternOutlook(
     input.dateOfBirth,
-    fullName,
+    operatingName,
     now,
   );
   const py = pyOutlook.number;
@@ -853,14 +877,33 @@ export function generateReport(
     },
   };
 
+  const nameChangeNote = names.differs
+    ? `Birth-certificate name ${fullName} (${names.force.label === "Birth name" ? "earlier" : "natal"} NN ${natalVedic.nameNumber}, Expression ${natalPyth.expression}) and current legal name ${operatingName} (${names.force.label}) are both kept. Psychic and Destiny do not change with a name. Reflective spelling layers only—not legal, marriage, or identity advice.`
+    : null;
+  const givenNameNote =
+    names.differs && names.force.givenUnchanged
+      ? `The given name is unchanged; the later layer is mainly a surname shift. Given-name NN stays ${names.operating.givenVedic}.`
+      : names.differs && !names.force.givenUnchanged
+        ? `The given name also changed (natal given NN ${names.natal.givenVedic}, current given NN ${names.operating.givenVedic}).`
+        : null;
+
   const chaldeanAnalysis = assertSafeCopy(
     [
-      `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) offers a traditional vibration reading of the full name.`,
+      `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) offers a traditional vibration reading of the name in force now (${operatingName}).`,
+      names.differs
+        ? `Birth-certificate spelling ${fullName} reads as Chaldean ${natalChald.nameNumber} (compound ${natalChald.compound}).`
+        : null,
       chaldeanCompoundMeaning(chald.compound),
       meaningFor(chald.nameNumber),
       "In Chaldean practice, compound numbers may add nuance before reduction. Interpretations remain reflective possibilities.",
-      ...bookendsAnalysisLines(fullName),
-    ].join(" "),
+      ...bookendsAnalysisLines(operatingName),
+      names.differs && !names.force.givenUnchanged
+        ? bookendsAnalysisLines(fullName).join(" ")
+        : null,
+      nameChangeNote,
+    ]
+      .filter(Boolean)
+      .join(" "),
     "chaldean",
   );
 
@@ -890,7 +933,11 @@ export function generateReport(
       `In Vedic numerology traditions, Psychic Number ${vedic.psychic} (from birth day) may describe temperament tendencies, while Destiny Number ${vedic.destiny} may describe broader life themes.`,
       `Psychic ${vedic.psychic} reads as ${psychicTheme.keyword} (${psychicTheme.planet}): ${psychicTheme.psychicFocus}`,
       `Destiny ${vedic.destiny} reads as ${destinyTheme.keyword} (${destinyTheme.planet}): ${destinyTheme.destinyFocus}`,
-      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses NumoraWisdom’s Chaldean-aligned Vedic map; Unit System name is ${vedic.unitSystemNameNumber} (compound ${vedic.unitSystemNameCompound})—shown side by side because letter maps differ.`,
+      `Name Number ${vedic.nameNumber} (compound ${vedic.nameCompound}) uses NumoraWisdom’s Chaldean-aligned Vedic map on the name in force now (${operatingName}); Unit System name is ${vedic.unitSystemNameNumber} (compound ${vedic.unitSystemNameCompound})—shown side by side because letter maps differ.`,
+      names.differs
+        ? `Natal name ${fullName} reads Vedic NN ${natalVedic.nameNumber} (compound ${natalVedic.nameCompound}). The current trio uses the later spelling; the birth spelling remains a root layer.`
+        : null,
+      givenNameNote,
       vedic.birthDay.note,
       vedic.psychicMeta.psychicNote,
       vedic.destinyMeta.destinyNote,
@@ -969,12 +1016,29 @@ export function generateReport(
     projected_year_calendar: projected.rangeLabel,
     sun_sign: sun?.id,
     sun_sign_label: sun?.name,
+    ...(names.differs
+      ? {
+          operating_name: operatingName,
+          natal_name: fullName,
+          name_era_label: names.force.label,
+          natal_expression_number: String(natalPyth.expression),
+          natal_soul_urge_number: String(natalPyth.soulUrge),
+          natal_personality_number: String(natalPyth.personality),
+          natal_maturity_number: String(natalPyth.maturity),
+          natal_vedic_name: String(natalVedic.nameNumber),
+          natal_vedic_name_compound: String(natalVedic.nameCompound),
+          natal_chaldean_name_number: String(natalChald.nameNumber),
+          natal_unit_name: String(natalVedic.unitSystemNameNumber),
+          given_vedic_name: String(names.operating.givenVedic),
+          natal_given_vedic_name: String(names.natal.givenVedic),
+        }
+      : {}),
   };
 
   const growth_areas = synthesizeGrowthAreas({
     snap: snapshot,
     loShu,
-    fullName,
+    fullName: operatingName,
     growthBank: growth_opportunities,
   });
 
@@ -987,6 +1051,12 @@ export function generateReport(
       report_type,
       gender: input.gender?.trim() || "",
       purpose: input.purpose?.trim() || "",
+      ...(names.differs
+        ? {
+            operating_name: operatingName,
+            name_era_label: names.force.label,
+          }
+        : {}),
     },
     numerology_snapshot: snapshot,
     pythagorean: {

@@ -6,6 +6,8 @@ export type PersonInput = {
   dateOfBirth: string; // DD/MM/YYYY
   gender?: string;
   purpose?: string;
+  /** Later names from profile; natal spelling stays `fullName`. */
+  nameHistory?: unknown;
 };
 
 export type NumberMeaning = {
@@ -38,6 +40,21 @@ export type NumerologySnapshot = {
   /** Tropical sun sign id (aries…pisces), from DOB month/day */
   sun_sign?: string;
   sun_sign_label?: string;
+  /** Current legal / in-force spelling when name history exists */
+  operating_name?: string;
+  /** Birth-certificate spelling when it differs from operating */
+  natal_name?: string;
+  name_era_label?: string;
+  natal_expression_number?: string;
+  natal_soul_urge_number?: string;
+  natal_personality_number?: string;
+  natal_maturity_number?: string;
+  natal_vedic_name?: string;
+  natal_vedic_name_compound?: string;
+  natal_chaldean_name_number?: string;
+  natal_unit_name?: string;
+  given_vedic_name?: string;
+  natal_given_vedic_name?: string;
 };
 
 export type LoShuResult = {
@@ -66,6 +83,8 @@ export type NumerologyReport = {
     report_type: ReportType;
     gender: string;
     purpose: string;
+    operating_name?: string;
+    name_era_label?: string;
   };
   numerology_snapshot: NumerologySnapshot;
   pythagorean: {

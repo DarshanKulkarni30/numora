@@ -21,11 +21,14 @@ import {
 import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
 import { AgeFocusNumberChips } from "@/components/AgeFocusNumberChips";
 import { NameSpellingModePicker } from "@/components/name/NameSpellingModePicker";
+import { NameEraNote } from "@/components/report/NameEraNote";
 import {
   gendersForProfile,
   SUGGESTED_NAMES,
 } from "@/lib/numerology/nameSuggestions";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
+import { dualNameChart } from "@/lib/numerology/nameLayers";
+import { resolveNameInForce, NAME_ERA_REASON_LABEL } from "@/lib/profile/nameHistory";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -173,7 +176,24 @@ export function NameExplorer({ people }: Props) {
   );
 
   const dob = selected?.date_of_birth ?? "";
-  const profileFullName = selected?.full_name || selected?.preferred_name || "";
+  const natalFullName = selected?.full_name || selected?.preferred_name || "";
+  const nameForce = selected
+    ? resolveNameInForce({
+        natalName: natalFullName,
+        dateOfBirth: dob,
+        history: selected.name_history,
+        preferredName: selected.preferred_name,
+      })
+    : null;
+  const profileFullName = nameForce?.operatingSpelling || natalFullName;
+  const nameChart = selected
+    ? dualNameChart({
+        natalName: natalFullName,
+        dateOfBirth: dob,
+        history: selected.name_history,
+        preferredName: selected.preferred_name,
+      })
+    : null;
 
   const psychic = selected ? vedicPsychicFromDob(dob) : null;
   const destiny = selected ? vedicDestinyFromDob(dob) : null;
@@ -440,7 +460,15 @@ export function NameExplorer({ people }: Props) {
                   setTrialFirst("");
                   setTrialLast(
                     splitGivenAndSurname(
-                      next?.full_name || next?.preferred_name || "",
+                      next
+                        ? resolveNameInForce({
+                            natalName:
+                              next.full_name || next.preferred_name || "",
+                            dateOfBirth: next.date_of_birth,
+                            history: next.name_history,
+                            preferredName: next.preferred_name,
+                          }).operatingSpelling
+                        : "",
                     ).surname,
                   );
                   setLetterFilter("All");
@@ -468,6 +496,48 @@ export function NameExplorer({ people }: Props) {
                     }
                     prominence={prominence}
                   />
+                  {nameChart?.differs ? (
+                    <NameEraNote
+                      natalName={nameChart.force.natalSpelling}
+                      operatingName={nameChart.force.operatingSpelling}
+                      label={nameChart.force.label}
+                      natalNn={nameChart.natal.vedicName}
+                      operatingNn={nameChart.operating.vedicName}
+                      givenUnchanged={nameChart.force.givenUnchanged}
+                      compact
+                    />
+                  ) : null}
+                  {nameForce?.differs || (selected.name_history?.length ?? 0) > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const parts = splitGivenAndSurname(natalFullName);
+                          setTrialFirst(parts.given);
+                          setTrialLast(parts.surname);
+                          setSpellingMode("full");
+                        }}
+                        className="btn-tactile rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink hover:bg-white"
+                      >
+                        Score birth name
+                      </button>
+                      {(selected.name_history ?? []).map((era) => (
+                        <button
+                          key={era.id}
+                          type="button"
+                          onClick={() => {
+                            const parts = splitGivenAndSurname(era.full_name);
+                            setTrialFirst(parts.given);
+                            setTrialLast(parts.surname);
+                            setSpellingMode("full");
+                          }}
+                          className="btn-tactile rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink hover:bg-white"
+                        >
+                          Score {NAME_ERA_REASON_LABEL[era.reason]}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                   <p className="text-sm text-ink-soft">
                     Fixed from DOB {selected.date_of_birth}
                     {lifePath != null ? (

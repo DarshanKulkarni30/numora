@@ -372,9 +372,20 @@ export async function downloadReportPdf(
     ["Vedic Psychic", snap.vedic_psychic],
     ["Vedic Destiny", snap.vedic_destiny],
     ["Vedic Name", snap.vedic_name],
+  ];
+  if (snap.natal_vedic_name) {
+    snapRows.push(
+      ["Natal Vedic Name", snap.natal_vedic_name],
+      ["Natal Expression", snap.natal_expression_number ?? "—"],
+    );
+  }
+  if (snap.operating_name) {
+    snapRows.push(["Name in force", snap.operating_name]);
+  }
+  snapRows.push(
     ["Personal Year", snap.personal_year],
     ["Personal Month", snap.personal_month],
-  ];
+  );
   if (snap.projected_year) {
     snapRows.push([
       "Projected Year",

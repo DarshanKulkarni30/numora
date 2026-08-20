@@ -50,6 +50,7 @@ export default async function ProfilePage() {
         gender: "",
         purpose: "",
         sort_order: 0,
+        name_history: [],
         identity_edit_count: 0,
       },
       ...people,

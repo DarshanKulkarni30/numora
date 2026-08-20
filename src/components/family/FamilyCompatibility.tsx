@@ -15,7 +15,7 @@ import {
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
 import { analyzeNameBookends } from "@/lib/numerology/nameBookends";
-import { calculateVedic } from "@/lib/numerology/vedic";
+import { dualNameChart } from "@/lib/numerology/nameLayers";
 import {
   buildVedicCompatibilityMatrix,
   vedicPairTone,
@@ -161,9 +161,16 @@ export function FamilyCompatibility({ people }: Props) {
   const selfLp = lifePathFromDob(self.date_of_birth);
   const selfPsychic = vedicPsychicFromDob(self.date_of_birth);
   const selfDestiny = vedicDestinyFromDob(self.date_of_birth);
-  const selfName = self.full_name?.trim()
-    ? calculateVedic(self.full_name, self.date_of_birth).nameNumber
+  const selfChart = self.full_name?.trim()
+    ? dualNameChart({
+        natalName: self.full_name,
+        dateOfBirth: self.date_of_birth,
+        history: self.name_history,
+        preferredName: self.preferred_name,
+      })
     : null;
+  const selfName = selfChart?.operating.vedicName ?? null;
+  const selfNatalName = selfChart?.differs ? selfChart.natal.vedicName : null;
   const selfLpNote = masterNumberNote(selfLp);
 
   const pairs = [
@@ -191,6 +198,12 @@ export function FamilyCompatibility({ people }: Props) {
               , Name <span className="brand text-ink">{selfName}</span>
             </>
           ) : null}
+          {selfNatalName != null ? (
+            <>
+              {" "}
+              (natal NN <span className="brand text-ink">{selfNatalName}</span>)
+            </>
+          ) : null}
           .
         </p>
         <p className="mt-2 text-xs leading-5 text-ink-soft">
@@ -202,9 +215,19 @@ export function FamilyCompatibility({ people }: Props) {
         const otherLp = lifePathFromDob(person.date_of_birth);
         const otherPsychic = vedicPsychicFromDob(person.date_of_birth);
         const otherDestiny = vedicDestinyFromDob(person.date_of_birth);
-        const otherName = person.full_name?.trim()
-          ? calculateVedic(person.full_name, person.date_of_birth).nameNumber
+        const otherChart = person.full_name?.trim()
+          ? dualNameChart({
+              natalName: person.full_name,
+              dateOfBirth: person.date_of_birth,
+              history: person.name_history,
+              preferredName: person.preferred_name,
+            })
           : null;
+        const otherName = otherChart?.operating.vedicName ?? null;
+        const otherOperatingSpelling =
+          otherChart?.force.operatingSpelling || person.full_name;
+        const selfOperatingSpelling =
+          selfChart?.force.operatingSpelling || self.full_name;
         const py = pythagoreanPairTones(selfLp, otherLp);
         const moolank = vedicPairTones(selfPsychic, otherPsychic);
         const bhagyank = vedicPairTones(selfDestiny, otherDestiny);
@@ -213,8 +236,8 @@ export function FamilyCompatibility({ people }: Props) {
             ? vedicPairTones(selfName, otherName)
             : null;
         const hideRomantic = kind === "Child";
-        const selfCorner = analyzeNameBookends(self.full_name).cornerstone;
-        const otherCorner = analyzeNameBookends(person.full_name).cornerstone;
+        const selfCorner = analyzeNameBookends(selfOperatingSpelling).cornerstone;
+        const otherCorner = analyzeNameBookends(otherOperatingSpelling).cornerstone;
         const approachTone =
           selfCorner && otherCorner
             ? vedicPairTone(selfCorner.group, otherCorner.group)

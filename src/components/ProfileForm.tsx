@@ -14,6 +14,7 @@ import {
   RELATIONSHIP_OPTIONS,
   type PersonRecord,
 } from "@/lib/profile/options";
+import { NameHistoryEditor } from "@/components/profile/NameHistoryEditor";
 
 type Props = {
   email?: string | null;
@@ -34,6 +35,7 @@ function blankFamily(sort_order: number): PersonRecord {
     gender: "",
     purpose: "",
     sort_order,
+    name_history: [],
     identity_edit_count: 0,
   };
 }
@@ -77,6 +79,9 @@ export function ProfileForm({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(() =>
+    (initialPeople[0]?.name_history?.length ?? 0) > 0,
+  );
   const entitlements =
     initialEntitlements ?? resolveEntitlements(email);
 
@@ -103,6 +108,7 @@ export function ProfileForm({
   const locked = person ? identityLocked(person) : false;
   const editsUsed = person?.identity_edit_count ?? 0;
   const gaps = person ? missingFields(person) : [];
+  const eras = person?.name_history ?? [];
 
   const saveHint = useMemo(() => {
     const incomplete = people.filter((p) => !personComplete(p));
@@ -201,7 +207,10 @@ export function ProfileForm({
                   type="button"
                   role="tab"
                   aria-selected={selected}
-                  onClick={() => setActiveIndex(index)}
+                  onClick={() => {
+                    setActiveIndex(index);
+                    setHistoryOpen((people[index]?.name_history?.length ?? 0) > 0);
+                  }}
                   className={`btn-tactile inline-flex max-w-[11rem] items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm ${
                     selected
                       ? "border-ink bg-ink text-paper"
@@ -329,6 +338,34 @@ export function ProfileForm({
               updatePerson(activeIndex, { preferred_name: e.target.value })
             }
           />
+        </div>
+
+        <div>
+          <button
+            type="button"
+            onClick={() => setHistoryOpen((open) => !open)}
+            className="btn-tactile flex w-full items-center justify-between rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3 text-left text-sm text-ink hover:bg-white"
+          >
+            <span>
+              Later names (marriage, legal change…)
+              {eras.length ? (
+                <span className="ml-2 text-ink-soft">({eras.length})</span>
+              ) : null}
+            </span>
+            <span className="text-ink-soft">{historyOpen ? "Hide" : "Show"}</span>
+          </button>
+          {historyOpen ? (
+            <div className="mt-3">
+              <NameHistoryEditor
+                dateOfBirth={person.date_of_birth}
+                natalName={person.full_name}
+                eras={eras}
+                onChange={(name_history) =>
+                  updatePerson(activeIndex, { name_history })
+                }
+              />
+            </div>
+          ) : null}
         </div>
 
         <DobInput

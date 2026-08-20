@@ -38,6 +38,7 @@ type Props = {
   unitName?: string;
   unitCompound?: string;
   nameCompound?: string;
+  natalNameNumber?: string;
   rulingPlanet: string;
   destinyRulingPlanet?: string;
   unitSystem?: UnitSystemBits | null;
@@ -52,7 +53,7 @@ const EASE_LABEL: Record<string, string> = {
 const CARD_SUB: Record<string, string> = {
   Psychic: "Birth number · default wiring",
   Destiny: "Life curriculum · who you are growing into",
-  Name: "Outer face · this spelling",
+  Name: "Outer face · name in force",
 };
 
 export function VedicPanel({
@@ -62,6 +63,7 @@ export function VedicPanel({
   unitName,
   unitCompound,
   nameCompound,
+  natalNameNumber,
   unitSystem,
 }: Props) {
   const cards = [
@@ -236,6 +238,13 @@ export function VedicPanel({
         </p>
         <p className="mt-1 font-medium text-paper">{nameRole.headline}</p>
         <p className="mt-1 text-xs leading-5 text-paper/80">{nameRole.detail}</p>
+        {natalNameNumber && natalNameNumber !== nameNumber ? (
+          <p className="mt-2 text-[11px] leading-5 text-paper/65">
+            Birth-certificate NN {natalNameNumber} stays as a root layer. The
+            triangle above uses the name in force now ({nameNumber}). Psychic
+            and Destiny do not change with a name.
+          </p>
+        ) : null}
       </div>
 
       {maps ? (

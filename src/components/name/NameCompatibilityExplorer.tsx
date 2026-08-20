@@ -28,6 +28,7 @@ import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
 import { AgeFocusNumberChips } from "@/components/AgeFocusNumberChips";
 import { NameSpellingModePicker } from "@/components/name/NameSpellingModePicker";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
+import { operatingFullName } from "@/lib/profile/nameHistory";
 import {
   TRIO_BAND_HINT,
   TRIO_BAND_ICON,
@@ -210,7 +211,11 @@ export function NameCompatibilityExplorer({ people }: Props) {
   const left: SidePerson | null = leftProfile
     ? {
         label: personLabel(leftProfile),
-        fullName: leftProfile.full_name || leftProfile.preferred_name || "",
+        fullName: operatingFullName({
+          natalName: leftProfile.full_name || leftProfile.preferred_name || "",
+          dateOfBirth: leftProfile.date_of_birth,
+          history: leftProfile.name_history,
+        }),
         dob: leftProfile.date_of_birth,
       }
     : null;
@@ -229,7 +234,11 @@ export function NameCompatibilityExplorer({ people }: Props) {
     if (!rightProfile) return null;
     return {
       label: personLabel(rightProfile),
-      fullName: rightProfile.full_name || rightProfile.preferred_name || "",
+      fullName: operatingFullName({
+        natalName: rightProfile.full_name || rightProfile.preferred_name || "",
+        dateOfBirth: rightProfile.date_of_birth,
+        history: rightProfile.name_history,
+      }),
       dob: rightProfile.date_of_birth,
     };
   }, [rightMode, customName, customDob, rightProfile]);

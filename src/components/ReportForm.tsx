@@ -37,6 +37,7 @@ export function ReportForm({ people }: Props) {
 
   const [fullName, setFullName] = useState(selected?.full_name || "");
   const [preferredName, setPreferredName] = useState(selected?.preferred_name || "");
+  const [nameHistory, setNameHistory] = useState(selected?.name_history ?? []);
   const [dateOfBirth, setDateOfBirth] = useState(selected?.date_of_birth || "");
   const [gender, setGender] = useState(selected?.gender || "");
   const [purpose, setPurpose] = useState(selected?.purpose || "");
@@ -47,6 +48,7 @@ export function ReportForm({ people }: Props) {
     setPersonId(p.id || "");
     setFullName(p.full_name);
     setPreferredName(p.preferred_name);
+    setNameHistory(p.name_history ?? []);
     setDateOfBirth(p.date_of_birth);
     setGender(p.gender);
     setPurpose(p.purpose);
@@ -71,6 +73,7 @@ export function ReportForm({ people }: Props) {
           dateOfBirth,
           gender,
           purpose,
+          nameHistory,
         }),
       });
       const data = await res.json();
@@ -142,6 +145,22 @@ export function ReportForm({ people }: Props) {
           required
           className={fieldClass}
         />
+        {nameHistory.length ? (
+          <p className="mt-1 text-xs leading-5 text-ink-soft">
+            This profile has {nameHistory.length} later name
+            {nameHistory.length === 1 ? "" : "s"} (marriage / legal change).
+            The reading keeps this birth-certificate spelling and uses the name
+            in force today for current NN. Edit later names in{" "}
+            <Link href="/profile" className="underline">
+              Profile settings
+            </Link>
+            .
+          </p>
+        ) : (
+          <p className="mt-1 text-xs text-ink-soft">
+            Later names (marriage, legal change) are added in Profile settings.
+          </p>
+        )}
       </div>
 
       <div>

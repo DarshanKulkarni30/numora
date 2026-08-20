@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       dateOfBirth,
       gender,
       purpose,
+      nameHistory: body.nameHistory,
     });
 
     const supabase = await createClient();

@@ -44,6 +44,7 @@ create table if not exists public.people (
   sort_order integer not null default 0,
   identity_edit_count integer not null default 0,
   identity_confirmed_at timestamptz,
+  name_history jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

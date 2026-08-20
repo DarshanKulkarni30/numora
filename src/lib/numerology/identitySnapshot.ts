@@ -122,6 +122,12 @@ function collectTags(snap: NumerologySnapshot): Tagged[] {
     { label: "Destiny", digit: digitCore(snap.vedic_destiny) },
     { label: "Vedic Name", digit: digitCore(snap.vedic_name) },
   ];
+  if (snap.natal_vedic_name) {
+    tags.push({
+      label: "Natal Vedic Name",
+      digit: digitCore(snap.natal_vedic_name),
+    });
+  }
   if (snap.unit_name) {
     tags.push({ label: "Unit Name", digit: digitCore(snap.unit_name) });
   }

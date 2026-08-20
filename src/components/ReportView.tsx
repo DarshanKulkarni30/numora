@@ -24,6 +24,7 @@ import {
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
+import { NameEraNote } from "@/components/report/NameEraNote";
 import { InsightTileCard } from "@/components/report/InsightTileCard";
 import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
 import type { NumerologyReport } from "@/lib/numerology/types";
@@ -236,8 +237,18 @@ export function ReportView({
           label: "Expression",
           topic: "expression" as const,
           value: snap.expression_number,
-          note: `Whole-name craft · ${CORE_TRAIT[Number(snap.expression_number)] ?? ""}`.trim(),
+          note: `Name in force now · ${CORE_TRAIT[Number(snap.expression_number)] ?? ""}`.trim(),
         },
+        ...(snap.natal_expression_number
+          ? [
+              {
+                label: "Natal Expression",
+                topic: "expression" as const,
+                value: snap.natal_expression_number,
+                note: "Birth-certificate spelling — original craft layer",
+              },
+            ]
+          : []),
         {
           label: "Soul Urge",
           topic: "soul-urge" as const,
@@ -301,7 +312,20 @@ export function ReportView({
           label: "Name",
           topic: "vedic-name" as const,
           value: snap.vedic_name,
+          note: snap.operating_name
+            ? `Current legal spelling · ${snap.operating_name}`
+            : undefined,
         },
+        ...(snap.natal_vedic_name
+          ? [
+              {
+                label: "Natal name",
+                topic: "vedic-name" as const,
+                value: snap.natal_vedic_name,
+                note: `Birth-certificate spelling · ${snap.natal_name ?? person.full_name}`,
+              },
+            ]
+          : []),
         ...(snap.unit_name
           ? [
               {
@@ -319,7 +343,7 @@ export function ReportView({
       blurb: "Birthday-cycle Personal Year, month pacing, and Vedic Year outlook — open the Annual rhythm wheel below.",
       actionHref: yearsHrefForPerson({
         dateOfBirth: person.date_of_birth,
-        fullName: person.full_name,
+        fullName: person.operating_name || person.full_name,
       }),
       actionLabel: "View all years",
       rows: [
@@ -419,8 +443,19 @@ export function ReportView({
       topic: "vedic-name" as const,
       value: snap.vedic_name,
       system: "vedic" as const,
-      subtitle: "Name letters",
+      subtitle: snap.operating_name ? "Name in force now" : "Name letters",
     },
+    ...(snap.natal_vedic_name
+      ? [
+          {
+            label: "Natal name",
+            topic: "vedic-name" as const,
+            value: snap.natal_vedic_name,
+            system: "vedic" as const,
+            subtitle: "Birth-certificate spelling",
+          },
+        ]
+      : []),
   ];
 
   const summary = report.sections.find((s) => s.id === "executive-summary");
@@ -508,7 +543,15 @@ export function ReportView({
           <h2 className="text-xl text-ink">Person details</h2>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             {[
-              ["Full name", person.full_name],
+              ["Birth-certificate name", person.full_name],
+              [
+                "Current legal name",
+                person.operating_name && person.operating_name !== person.full_name
+                  ? `${person.operating_name}${
+                      person.name_era_label ? ` · ${person.name_era_label}` : ""
+                    }`
+                  : "Same as birth-certificate name",
+              ],
               ["Preferred name", person.preferred_name || "—"],
               ["Date of birth", person.date_of_birth],
               ["Age", String(person.age)],
@@ -575,11 +618,27 @@ export function ReportView({
 
         <section>
           <h2 className="text-xl text-ink">Vedic number panel</h2>
-          <div className="mt-4">
+          <div className="mt-4 space-y-3">
+            {snap.natal_vedic_name && snap.operating_name ? (
+              <NameEraNote
+                natalName={snap.natal_name || person.full_name}
+                operatingName={snap.operating_name}
+                label={snap.name_era_label || "Later name in force"}
+                natalNn={snap.natal_vedic_name}
+                operatingNn={snap.vedic_name}
+                givenUnchanged={
+                  snap.given_vedic_name != null &&
+                  snap.natal_given_vedic_name != null &&
+                  String(snap.given_vedic_name) ===
+                    String(snap.natal_given_vedic_name)
+                }
+              />
+            ) : null}
             <VedicPanel
               psychic={snap.vedic_psychic}
               destiny={snap.vedic_destiny}
               nameNumber={snap.vedic_name}
+              natalNameNumber={snap.natal_vedic_name}
               unitName={snap.unit_name}
               unitCompound={snap.unit_name_compound}
               nameCompound={snap.vedic_name_compound}
@@ -627,7 +686,7 @@ export function ReportView({
           }
           yearsHref={yearsHrefForPerson({
             dateOfBirth: person.date_of_birth,
-            fullName: person.full_name,
+            fullName: person.operating_name || person.full_name,
             tab: "vedic",
           })}
           lifePath={snap.life_path}
@@ -646,7 +705,7 @@ export function ReportView({
               loShu={report.lo_shu}
               dateOfBirth={person.date_of_birth}
               snap={snap}
-              fullName={person.full_name}
+              fullName={person.operating_name || person.full_name}
             />
           </div>
         </section>
@@ -821,7 +880,7 @@ export function ReportView({
               lifePath={snap.life_path}
               vedicDestiny={snap.vedic_destiny}
               chaldeanName={snap.chaldean_name_number}
-              fullName={person.full_name}
+              fullName={person.operating_name || person.full_name}
             />
           </div>
         </section>
@@ -838,6 +897,7 @@ export function ReportView({
               psychic={snap.vedic_psychic}
               expression={snap.expression_number}
               vedicName={snap.vedic_name}
+              natalVedicName={snap.natal_vedic_name}
               dateOfBirth={person.date_of_birth}
             />
           </div>

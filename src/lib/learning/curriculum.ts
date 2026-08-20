@@ -82,7 +82,7 @@ export const LEARNING_METHODS: LearningMethod[] = [
         title: "Expression",
         blurb: "Full-name letter total on the Pythagorean 1–9 map.",
         detail:
-          "Expression (sometimes called Destiny in Western naming) totals every letter of the full name on the Pythagorean 1–9 chart, then reduces. It is often read as talents and outer craft—the “how you build” tone of a spelling. Compound totals before reduction can add nuance. Type a name below to see letter values and the reduced Expression. Spelling changes change the vibration; that is the point of careful name experiments.",
+          "Expression (sometimes called Destiny in Western naming) totals every letter of the full name on the Pythagorean 1–9 chart, then reduces. It is often read as talents and outer craft—the “how you build” tone of a spelling. A later legal or marriage spelling is a current Expression layer; the birth-certificate total remains the natal craft. Compound totals before reduction can add nuance. Type a name below to see letter values and the reduced Expression. Spelling changes change the vibration; that is the point of careful name experiments.",
         interactive: "name-pythagorean",
         guideTopic: "expression",
       },
@@ -183,7 +183,7 @@ export const LEARNING_METHODS: LearningMethod[] = [
         title: "Vedic name number",
         blurb: "Same Indian-style letter map as Chaldean in NumoraWisdom.",
         detail:
-          "Vedic name number in this product uses the Chaldean-aligned letter chart so spelling experiments stay consistent across Vedic and Chaldean panels. Compound and reduced values both appear in reports. Try a name below and compare with Pythagorean Expression on the same spelling. Letter-map differences are teaching tools, not fights between “correct” systems.",
+          "Vedic name number in this product uses the Chaldean-aligned letter chart so spelling experiments stay consistent across Vedic and Chaldean panels. Compound and reduced values both appear in reports. Birth-certificate spelling is the natal layer; a later legal or marriage name is the name in force from that date—both can be kept. Psychic and Destiny do not change with a name. Try a name below and compare with Pythagorean Expression on the same spelling. Letter-map differences are teaching tools, not fights between “correct” systems.",
         interactive: "name-chaldean",
         guideTopic: "vedic-name",
       },

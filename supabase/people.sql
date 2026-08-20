@@ -11,6 +11,7 @@ create table if not exists public.people (
   gender text not null default '',
   purpose text not null default '',
   sort_order integer not null default 0,
+  name_history jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
