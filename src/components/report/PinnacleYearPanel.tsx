@@ -272,10 +272,23 @@ export function PinnacleYearPanel({
             title={`Age ${model.age}`}
           />
         </div>
-        <div className="mt-1 flex justify-between text-[10px] text-ink-soft">
-          {model.chapters.map((ch) => (
-            <span key={ch.pinnacle.id}>{ch.ageLabel}</span>
-          ))}
+        <div className="relative mt-1.5 h-4 text-[10px] text-ink-soft">
+          {model.chapters.map((ch) => {
+            const start = (ch.pinnacle.ageStart / Math.max(1, maxAge)) * 100;
+            const end =
+              ((ch.pinnacle.ageEnd ?? maxAge) / Math.max(1, maxAge)) * 100;
+            const width = Math.max(4, end - start);
+            return (
+              <span
+                key={ch.pinnacle.id}
+                className="absolute top-0 truncate text-center leading-4"
+                style={{ left: `${start}%`, width: `${width}%` }}
+                title={ch.ageLabel}
+              >
+                {ch.ageLabel}
+              </span>
+            );
+          })}
         </div>
       </div>
 

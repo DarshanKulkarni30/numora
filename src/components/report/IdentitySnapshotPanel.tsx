@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
+import { GuideNumberLink } from "@/components/report/GuideNumberLink";
+import type { GuideTopic } from "@/lib/guides/content";
 import {
   buildIdentitySnapshot,
   type SnapshotCapsule,
@@ -32,73 +34,264 @@ function Capsule({ item }: { item: SnapshotCapsule }) {
   );
 }
 
-function Flower({ petals }: { petals: SnapshotCapsule[] }) {
-  const n = petals.length || 1;
+function guideForPetal(
+  petal: SnapshotCapsule,
+): { topic: GuideTopic; value: string; label: string } | null {
+  switch (petal.id) {
+    case "life-path":
+      return { topic: "life-path", value: petal.value, label: "Life Path" };
+    case "expression":
+      return { topic: "expression", value: petal.value, label: "Expression" };
+    case "destiny":
+      return {
+        topic: "vedic-destiny",
+        value: petal.value,
+        label: "Vedic Destiny",
+      };
+    case "year":
+      return {
+        topic: "personal-year",
+        value: petal.value,
+        label: "Personal Year",
+      };
+    case "sun":
+      return {
+        topic: "sun-sign",
+        value: petal.value.toLowerCase(),
+        label: "Sun Sign",
+      };
+    default:
+      return null;
+  }
+}
+
+function shortLabel(label: string): string {
+  if (label === "Vedic Destiny") return "Vedic Destiny";
+  if (label === "Personal Year") return "Personal Year";
+  if (label === "Life Path") return "Life Path";
+  if (label === "Sun Sign") return "Sun";
+  return label;
+}
+
+function OrbitHotspot({
+  tip,
+  active,
+  dimmed,
+  onFocus,
+  onToggle,
+  children,
+}: {
+  tip: string;
+  active: boolean;
+  dimmed: boolean;
+  onFocus: () => void;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onToggle();
+    }
+  };
   return (
-    <svg
-      viewBox="0 0 200 200"
-      className="mx-auto h-auto w-full max-w-[14rem]"
-      role="img"
-      aria-label="Numerology flower of headline numbers"
+    <g
+      opacity={dimmed ? 0.32 : 1}
+      className="cursor-pointer"
+      role="button"
+      tabIndex={0}
+      aria-label={tip}
+      aria-pressed={active}
+      onClick={onToggle}
+      onMouseEnter={onFocus}
+      onKeyDown={onKeyDown}
     >
-      <circle
-        cx="100"
-        cy="100"
-        r="22"
-        fill="rgb(250 248 243)"
-        stroke="rgb(30 58 107)"
-        strokeWidth="1.2"
-        className="motion-safe:animate-pulse"
-      />
-      <text
-        x="100"
-        y="104"
-        textAnchor="middle"
-        fontSize="8"
-        fill="rgb(30 58 107)"
-        fontWeight="600"
+      <title>{tip}</title>
+      {children}
+    </g>
+  );
+}
+
+/** Interactive orbit — headline tones; repeated digits share a stronger ring. */
+function IdentityOrbit({ petals }: { petals: SnapshotCapsule[] }) {
+  const n = petals.length || 1;
+  const [focusId, setFocusId] = useState<string | null>(null);
+
+  const digitCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const p of petals) {
+      const d = Number(p.value);
+      if (!Number.isFinite(d)) continue;
+      const key = String(d);
+      map.set(key, (map.get(key) ?? 0) + 1);
+    }
+    return map;
+  }, [petals]);
+
+  const active = petals.find((p) => p.id === focusId) ?? null;
+  const activeGuide = active ? guideForPetal(active) : null;
+  const clusterNote = useMemo(() => {
+    const clusters = [...digitCounts.entries()]
+      .filter(([, c]) => c >= 2)
+      .sort((a, b) => b[1] - a[1]);
+    if (!clusters.length) return "Headline tones emphasize different digits.";
+    return clusters
+      .map(([d, c]) => `${d} appears on ${c} petals`)
+      .join(" · ");
+  }, [digitCounts]);
+
+  return (
+    <div>
+      <svg
+        viewBox="0 0 280 280"
+        className="mx-auto h-auto w-full max-w-[22rem]"
+        role="img"
+        aria-label="Identity orbit of headline numbers. Hover or tap a petal for details."
       >
-        Identity
-      </text>
-      {petals.map((p, i) => {
-        const ang = (-90 + (i * 360) / n) * (Math.PI / 180);
-        const cx = 100 + Math.cos(ang) * 58;
-        const cy = 100 + Math.sin(ang) * 58;
-        return (
-          <g key={p.id}>
-            <ellipse
-              cx={cx}
-              cy={cy}
-              rx="22"
-              ry="16"
-              transform={`rotate(${(i * 360) / n} ${cx} ${cy})`}
-              fill="rgb(255 255 255 / 0.85)"
-              stroke="rgb(196 164 108 / 0.7)"
-              strokeWidth="1"
-            />
-            <text
-              x={cx}
-              y={cy - 2}
-              textAnchor="middle"
-              fontSize="9"
-              fontWeight="700"
-              fill="rgb(30 58 107)"
+        <circle
+          cx="140"
+          cy="140"
+          r="92"
+          fill="none"
+          stroke="rgb(196 164 108 / 0.25)"
+          strokeWidth="1"
+          strokeDasharray="4 5"
+        />
+        <circle
+          cx="140"
+          cy="140"
+          r="34"
+          fill="rgb(250 248 243)"
+          stroke="rgb(30 58 107)"
+          strokeWidth="1.4"
+          className="motion-safe:animate-pulse"
+        />
+        <text
+          x="140"
+          y="136"
+          textAnchor="middle"
+          fontSize="11"
+          fill="rgb(30 58 107)"
+          fontWeight="700"
+        >
+          Identity
+        </text>
+        <text
+          x="140"
+          y="150"
+          textAnchor="middle"
+          fontSize="7"
+          fill="rgb(70 82 98)"
+        >
+          Orbit
+        </text>
+
+        {petals.map((p, i) => {
+          const ang = (-90 + (i * 360) / n) * (Math.PI / 180);
+          const cx = 140 + Math.cos(ang) * 92;
+          const cy = 140 + Math.sin(ang) * 92;
+          const digit = Number(p.value);
+          const clustered =
+            Number.isFinite(digit) && (digitCounts.get(String(digit)) ?? 0) >= 2;
+          const tip = `${p.label} ${p.value} · ${p.trait}`;
+          const isFocus = focusId === p.id;
+          return (
+            <OrbitHotspot
+              key={p.id}
+              tip={tip}
+              active={isFocus}
+              dimmed={Boolean(focusId && !isFocus)}
+              onFocus={() => setFocusId(p.id)}
+              onToggle={() =>
+                setFocusId((cur) => (cur === p.id ? null : p.id))
+              }
             >
-              {p.value}
-            </text>
-            <text
-              x={cx}
-              y={cy + 9}
-              textAnchor="middle"
-              fontSize="5.5"
-              fill="rgb(70 82 98)"
-            >
-              {p.label.split(" ")[0]}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+              <line
+                x1="140"
+                y1="140"
+                x2={cx}
+                y2={cy}
+                stroke={
+                  clustered
+                    ? "rgb(180 83 9 / 0.45)"
+                    : "rgb(30 58 107 / 0.18)"
+                }
+                strokeWidth={clustered ? 1.6 : 1}
+              />
+              <ellipse
+                cx={cx}
+                cy={cy}
+                rx={isFocus ? 36 : 32}
+                ry={isFocus ? 24 : 22}
+                transform={`rotate(${(i * 360) / n} ${cx} ${cy})`}
+                fill={
+                  clustered
+                    ? "rgb(180 83 9 / 0.1)"
+                    : "rgb(255 255 255 / 0.95)"
+                }
+                stroke={
+                  clustered ? "rgb(180 83 9)" : "rgb(196 164 108 / 0.85)"
+                }
+                strokeWidth={isFocus ? 2.4 : clustered ? 1.8 : 1.2}
+              />
+              <text
+                x={cx}
+                y={cy - 4}
+                textAnchor="middle"
+                fontSize={isFocus ? 14 : 12}
+                fontWeight="700"
+                fill="rgb(30 40 55)"
+              >
+                {p.value.length > 10 ? `${p.value.slice(0, 8)}…` : p.value}
+              </text>
+              <text
+                x={cx}
+                y={cy + 10}
+                textAnchor="middle"
+                fontSize="7"
+                fill="rgb(70 82 98)"
+              >
+                {shortLabel(p.label)}
+              </text>
+            </OrbitHotspot>
+          );
+        })}
+      </svg>
+
+      {active ? (
+        <div className="mt-2 rounded-xl border border-[var(--line)] bg-mist/45 px-3 py-2.5">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+            {active.label}
+            {Number.isFinite(Number(active.value)) &&
+            (digitCounts.get(String(Number(active.value))) ?? 0) >= 2
+              ? " · clustered tone"
+              : ""}
+          </p>
+          <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2">
+            {activeGuide ? (
+              <GuideNumberLink
+                topic={activeGuide.topic}
+                value={activeGuide.value}
+                label={activeGuide.label}
+                display={active.value}
+                className="brand text-lg text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
+              />
+            ) : (
+              <span className="brand text-lg text-ink">{active.value}</span>
+            )}
+            <span className="text-sm text-ink-soft">{active.trait}</span>
+          </p>
+          <p className="mt-1 text-[11px] leading-5 text-ink-soft">
+            {active.glyph} Headline petal in the Identity Snapshot — tap again
+            to clear.
+          </p>
+        </div>
+      ) : (
+        <p className="mt-2 text-center text-[11px] leading-5 text-ink-soft">
+          Hover or tap a petal · {clusterNote}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -126,7 +319,6 @@ export function IdentitySnapshotPanel({
         </span>
       </div>
 
-      {/* Snapshot bar */}
       <div className="relative">
         <div
           className="pointer-events-none absolute left-4 right-4 top-1/2 hidden h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent md:block"
@@ -139,12 +331,16 @@ export function IdentitySnapshotPanel({
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <div className="rounded-xl border border-[var(--line)] bg-white/60 p-3">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        <div className="rounded-xl border border-[var(--line)] bg-white/70 p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
           <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-            Numerology Flower
+            Identity Orbit
           </p>
-          <Flower petals={model.flowerPetals} />
+          <p className="mt-0.5 text-[11px] text-ink-soft">
+            Where headline tones sit together — clustered digits share a warmer
+            ring.
+          </p>
+          <IdentityOrbit petals={model.flowerPetals} />
         </div>
 
         <div className="space-y-3">
@@ -167,7 +363,9 @@ export function IdentitySnapshotPanel({
             <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-ink-soft">
               {model.toneBalance.map((t) => (
                 <li key={t.id}>
-                  <span className={`mr-1 inline-block h-2 w-2 rounded-full ${t.tint}`} />
+                  <span
+                    className={`mr-1 inline-block h-2 w-2 rounded-full ${t.tint}`}
+                  />
                   {t.label} {t.weight}%
                 </li>
               ))}
@@ -181,7 +379,7 @@ export function IdentitySnapshotPanel({
             <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
               Mini Lo Shu
             </p>
-            <div className="mt-2 grid grid-cols-3 gap-1.5 max-w-[9rem]">
+            <div className="mt-2 grid max-w-[9rem] grid-cols-3 gap-1.5">
               {model.loShuMini.map((cell) => (
                 <div
                   key={cell.number}
@@ -209,7 +407,6 @@ export function IdentitySnapshotPanel({
         </div>
       </div>
 
-      {/* Common threads */}
       <div>
         <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
           Common Threads
@@ -240,7 +437,6 @@ export function IdentitySnapshotPanel({
         )}
       </div>
 
-      {/* Divergences */}
       {model.divergences.length ? (
         <div>
           <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
@@ -275,7 +471,6 @@ export function IdentitySnapshotPanel({
         </div>
       ) : null}
 
-      {/* Core narrative */}
       <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-paper via-white to-mist/40 px-4 py-5">
         <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
           Core Narrative
