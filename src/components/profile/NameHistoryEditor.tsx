@@ -48,8 +48,9 @@ export function NameHistoryEditor({
           <p className="mt-1 text-xs leading-5 text-ink-soft">
             Optional. Birth-certificate name stays{" "}
             <span className="text-ink">{natalName.trim() || "above"}</span>.
-            Add a marriage, legal, or chosen name with the date it started.
-            This does not use the identity-edit budget.
+            Fill date of birth first, then add a marriage, legal, or chosen
+            name with the date it started. This does not use the identity-edit
+            budget.
           </p>
         </div>
         <button
@@ -62,8 +63,9 @@ export function NameHistoryEditor({
         </button>
       </div>
       {!isValidDob(dateOfBirth) ? (
-        <p className="mt-2 text-xs text-ink-soft">
-          Save a valid date of birth first so later names can be dated.
+        <p className="mt-2 text-xs text-amber-900">
+          Enter date of birth above first — Add a later name stays off until
+          that date is valid.
         </p>
       ) : null}
 

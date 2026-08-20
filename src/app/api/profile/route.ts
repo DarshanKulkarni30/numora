@@ -74,7 +74,10 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  let people = (data ?? []) as PersonRecord[];
+  let people = ((data ?? []) as PersonRecord[]).map((p) => ({
+    ...p,
+    name_history: Array.isArray(p.name_history) ? p.name_history : [],
+  }));
   if (!people.some((p) => p.is_self)) {
     people = [emptySelf(user), ...people];
   }
@@ -258,93 +261,91 @@ export async function PUT(request: Request) {
     });
   }
 
-  const { error: delError } = await supabase
-    .from("people")
-    .delete()
-    .eq("user_id", user.id);
-  if (delError) {
-    return NextResponse.json({ error: delError.message }, { status: 500 });
+  const payload = normalized.map((p) => ({
+    user_id: user.id,
+    ...p,
+    updated_at: nowIso,
+  }));
+
+  type InsertResult = {
+    data: PersonRecord[] | null;
+    error: { message: string } | null;
+  };
+
+  const insertRows = async (rows: object[]): Promise<InsertResult> => {
+    const result = await supabase
+      .from("people")
+      .insert(rows)
+      .select("*")
+      .order("sort_order", { ascending: true });
+    return {
+      data: (result.data ?? null) as PersonRecord[] | null,
+      error: result.error,
+    };
+  };
+
+  let inserted = await insertRows(payload);
+  let historyStripped = false;
+
+  if (inserted.error && /name_history/i.test(inserted.error.message)) {
+    historyStripped = true;
+    inserted = await insertRows(
+      payload.map((row) => {
+        const copy = { ...row } as Record<string, unknown>;
+        delete copy.name_history;
+        return copy;
+      }),
+    );
   }
 
-  const insertResult = await supabase
-    .from("people")
-    .insert(
-      normalized.map((p) => ({
-        user_id: user.id,
-        ...p,
-        updated_at: nowIso,
-      })),
-    )
-    .select("*")
-    .order("sort_order", { ascending: true });
+  if (
+    inserted.error &&
+    /identity_edit_count|identity_confirmed_at/i.test(inserted.error.message)
+  ) {
+    inserted = await insertRows(
+      payload.map((row) => {
+        const copy = { ...row } as Record<string, unknown>;
+        delete copy.identity_edit_count;
+        delete copy.identity_confirmed_at;
+        if (historyStripped) delete copy.name_history;
+        return copy;
+      }),
+    );
+  }
 
-  const { data } = insertResult;
-  let { error } = insertResult;
+  if (inserted.error || !inserted.data?.length) {
+    return NextResponse.json(
+      {
+        error:
+          inserted.error?.message ||
+          "Could not save profile. Existing people were left unchanged.",
+      },
+      { status: 500 },
+    );
+  }
 
-  if (error) {
-    if (/name_history/i.test(error.message)) {
-      const hadHistory = normalized.some(
-        (p) => (p.name_history?.length ?? 0) > 0,
-      );
-      if (hadHistory) {
-        return NextResponse.json(
-          {
-            error:
-              "Later names need a one-time database update (name_history on people). Run supabase/migrations/20260820_name_history.sql in the Supabase SQL editor, then save again.",
-          },
-          { status: 500 },
-        );
-      }
-      const { data: withoutHistory, error: historyError } = await supabase
-        .from("people")
-        .insert(
-          normalized.map(({ name_history: _h, ...rest }) => ({
-            user_id: user.id,
-            ...rest,
-            updated_at: nowIso,
-          })),
-        )
-        .select("*")
-        .order("sort_order", { ascending: true });
-      if (!historyError) {
-        return NextResponse.json({
-          people: withoutHistory,
+  const keepIds = inserted.data
+    .map((p) => p.id)
+    .filter((id): id is string => Boolean(id));
+  const staleIds = ((existingRows ?? []) as PersonRecord[])
+    .map((p) => p.id)
+    .filter((id): id is string => Boolean(id) && !keepIds.includes(id));
+  if (staleIds.length) {
+    const { error: delError } = await supabase
+      .from("people")
+      .delete()
+      .eq("user_id", user.id)
+      .in("id", staleIds);
+    if (delError) {
+      return NextResponse.json(
+        {
+          people: inserted.data,
           entitlements,
-        });
-      }
-      error = historyError;
+          warning:
+            "Profile saved, but older duplicate rows could not be removed. Save once more if you see extra people.",
+        },
+      );
     }
-    // Column may be missing before migration — retry without identity fields
-    if (/identity_edit_count|identity_confirmed_at/i.test(error.message)) {
-      const { data: fallback, error: fallbackError } = await supabase
-        .from("people")
-        .insert(
-          normalized.map(
-            ({
-              identity_edit_count: _c,
-              identity_confirmed_at: _a,
-              ...rest
-            }) => ({
-              user_id: user.id,
-              ...rest,
-              updated_at: nowIso,
-            }),
-          ),
-        )
-        .select("*")
-        .order("sort_order", { ascending: true });
-      if (fallbackError) {
-        return NextResponse.json(
-          { error: fallbackError.message },
-          { status: 500 },
-        );
-      }
-      return NextResponse.json({
-        people: fallback,
-        entitlements,
-      });
-    }
-    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   const { recordActivity } = await import("@/lib/admin/audit");
@@ -355,5 +356,13 @@ export async function PUT(request: Request) {
     meta: { count: normalized.length },
   });
 
-  return NextResponse.json({ people: data, entitlements });
+  const hadHistory = normalized.some((p) => (p.name_history?.length ?? 0) > 0);
+  return NextResponse.json({
+    people: inserted.data,
+    entitlements,
+    warning:
+      historyStripped && hadHistory
+        ? "Profile saved. Later names were not stored yet — add the name_history column in Supabase (supabase/migrations/20260820_name_history.sql) and save again."
+        : undefined,
+  });
 }

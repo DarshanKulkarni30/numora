@@ -1,6 +1,7 @@
 import { dualNameChart } from "../src/lib/numerology/nameLayers";
 import { generateReport } from "../src/lib/numerology/report";
 import {
+  nameHistoryIssue,
   normalizeNameHistory,
   resolveNameInForce,
 } from "../src/lib/profile/nameHistory";
@@ -149,5 +150,24 @@ const plain = generateReport({
 });
 eq(plain.person.operating_name, undefined, "no history omits operating name");
 eq(plain.numerology_snapshot.natal_vedic_name, undefined, "no dual NN without history");
+
+const emptyNoDob = normalizeNameHistory([], "");
+eq(emptyNoDob.error, null, "empty later-name list does not require DOB");
+eq(emptyNoDob.eras.length, 0, "empty later-name list stays empty");
+
+const blankCard = normalizeNameHistory(
+  [{ id: "blank", full_name: "", started_on: "", ended_on: "", reason: "marriage" }],
+  dob,
+);
+eq(blankCard.error, null, "blank later-name card is ignored");
+
+eq(
+  nameHistoryIssue(
+    [{ full_name: married, started_on: "", ended_on: "", reason: "marriage" }],
+    dob,
+  ) != null,
+  true,
+  "named later name without start date blocks save",
+);
 
 console.log("name history smoke passed");

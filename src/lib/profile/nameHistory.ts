@@ -113,9 +113,21 @@ export function normalizeNameHistory(
     };
   }
 
+  const namedDrafts = raw.filter((row) => {
+    if (!row || typeof row !== "object") return false;
+    const rec = row as Record<string, unknown>;
+    return Boolean(tidyName(String(rec.full_name ?? rec.fullName ?? "")));
+  });
+  if (namedDrafts.length === 0) {
+    return { eras: [], error: null };
+  }
+
   const dobKey = slashDateKey(dateOfBirth);
   if (dobKey == null) {
-    return { eras: [], error: "Save a valid date of birth before adding later names." };
+    return {
+      eras: [],
+      error: "Enter date of birth before adding later names.",
+    };
   }
 
   const parsed: NameEra[] = [];
@@ -259,4 +271,23 @@ export function operatingFullName(opts: {
   asOf?: Date | string;
 }): string {
   return resolveNameInForce(opts).operatingSpelling;
+}
+
+/** User-facing reason a later-name draft should block Save, or null if OK. */
+export function nameHistoryIssue(
+  history: unknown,
+  dateOfBirth: string,
+): string | null {
+  if (!Array.isArray(history) || history.length === 0) return null;
+  const started = history.some((row) => {
+    if (!row || typeof row !== "object") return false;
+    const rec = row as Record<string, unknown>;
+    return Boolean(
+      tidyName(String(rec.full_name ?? "")) ||
+        String(rec.started_on ?? "").trim() ||
+        String(rec.ended_on ?? "").trim(),
+    );
+  });
+  if (!started) return null;
+  return normalizeNameHistory(history, dateOfBirth).error;
 }

@@ -15,6 +15,7 @@ import {
   type PersonRecord,
 } from "@/lib/profile/options";
 import { NameHistoryEditor } from "@/components/profile/NameHistoryEditor";
+import { nameHistoryIssue } from "@/lib/profile/nameHistory";
 
 type Props = {
   email?: string | null;
@@ -46,7 +47,8 @@ function personComplete(p: PersonRecord): boolean {
       isValidDob(p.date_of_birth) &&
       p.gender &&
       p.purpose &&
-      (p.is_self || p.relationship),
+      (p.is_self || p.relationship) &&
+      !nameHistoryIssue(p.name_history, p.date_of_birth),
   );
 }
 
@@ -57,6 +59,8 @@ function missingFields(p: PersonRecord): string[] {
   if (!isValidDob(p.date_of_birth)) missing.push("date of birth");
   if (!p.gender) missing.push("gender");
   if (!p.purpose) missing.push("purpose");
+  const later = nameHistoryIssue(p.name_history, p.date_of_birth);
+  if (later) missing.push(later);
   return missing;
 }
 
@@ -166,7 +170,7 @@ export function ProfileForm({
       if (!res.ok) throw new Error(data.error || "Could not save profile");
       setPeople(data.people);
       setIdentityConfirmed(false);
-      setMessage("Profile saved.");
+      setMessage(data.warning || "Profile saved.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save profile");
     } finally {
@@ -281,8 +285,13 @@ export function ProfileForm({
           <p className="rounded-xl border border-amber-200/80 bg-amber-50 px-3 py-2 text-xs text-amber-950">
             Still needed: {gaps.join(", ")}.
           </p>
-        ) : (
+        ) : identityConfirmed ? (
           <p className="text-xs text-ink-soft">This profile is ready to save.</p>
+        ) : (
+          <p className="rounded-xl border border-amber-200/80 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+            Tick the name &amp; date check at the bottom of the screen to enable
+            Save.
+          </p>
         )}
 
         {!person.is_self ? (
@@ -340,6 +349,21 @@ export function ProfileForm({
           />
         </div>
 
+        <DobInput
+          id={`dob-${activeIndex}`}
+          value={person.date_of_birth}
+          disabled={locked}
+          onChange={(date_of_birth) =>
+            updatePerson(activeIndex, { date_of_birth })
+          }
+        />
+        {locked ? (
+          <p className="text-xs text-ink-soft">
+            Date of birth is locked with full name after {editLimit} identity
+            edits.
+          </p>
+        ) : null}
+
         <div>
           <button
             type="button"
@@ -365,23 +389,13 @@ export function ProfileForm({
                 }
               />
             </div>
-          ) : null}
+          ) : (
+            <p className="mt-1 text-xs text-ink-soft">
+              Optional. Add this after date of birth so each later name can be
+              dated from when it started.
+            </p>
+          )}
         </div>
-
-        <DobInput
-          id={`dob-${activeIndex}`}
-          value={person.date_of_birth}
-          disabled={locked}
-          onChange={(date_of_birth) =>
-            updatePerson(activeIndex, { date_of_birth })
-          }
-        />
-        {locked ? (
-          <p className="text-xs text-ink-soft">
-            Date of birth is locked with full name after {editLimit} identity
-            edits.
-          </p>
-        ) : null}
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -451,7 +465,7 @@ export function ProfileForm({
               type="button"
               disabled={!canSave || saving}
               onClick={onSave}
-              className="btn-tactile rounded-full bg-sea px-6 py-3 text-paper hover:bg-sea-deep disabled:opacity-50"
+          className="btn-tactile rounded-full bg-sea px-6 py-3 text-paper hover:bg-sea-deep disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-sea"
             >
               {saving ? "Saving…" : "Save profile"}
             </button>
