@@ -20,8 +20,8 @@ type Props = {
 };
 
 /**
- * Unified timing dashboard: Annual rhythm (PY · Month · Outlook rings)
- * plus Year Outlook Mandala (birthday-cycle Vedic tone).
+ * Unified timing dashboard: Annual rhythm (climate clock · month weather ·
+ * Outlook mirror · astro backdrop) plus Pinnacle Year and Year Outlook Mandala.
  */
 export function TimingDashboard({
   personalYear,
@@ -40,8 +40,9 @@ export function TimingDashboard({
       <div>
         <h2 className="text-xl text-ink">Timing dashboard</h2>
         <p className="mt-1 text-sm text-ink-soft">
-          Personal Year, Pinnacle chapters, Personal Month, and Year Outlook as
-          one seasonal map — Western pacing beside Vedic birthday-cycle tone.{" "}
+          Climate (Personal Year), weather (Personal Month), Outlook as a second
+          climate, and astro season as backdrop — Western pacing beside Vedic
+          birthday-cycle tone.{" "}
           <LearningConceptLink conceptKey="personal-year" />
           {" · "}
           <LearningConceptLink conceptKey="personal-month" />
@@ -57,6 +58,7 @@ export function TimingDashboard({
           projectedYear={projectedYear}
           sunSignId={sunSignId}
           sunSignLabel={sunSignLabel}
+          dateOfBirth={dateOfBirth}
           hideSectionTitle
         />
       </div>

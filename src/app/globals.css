@@ -208,6 +208,14 @@ h3,
   animation: year-rhythm-wave 6s ease-in-out infinite;
 }
 
+.year-rhythm-now {
+  filter: brightness(0.97);
+}
+
+.year-rhythm-mix {
+  box-shadow: 0 1px 0 rgba(35, 79, 150, 0.04);
+}
+
 /* Tactile controls — subtle hover / press for all buttons & CTA links */
 button,
 [type="button"],

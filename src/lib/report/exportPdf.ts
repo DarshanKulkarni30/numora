@@ -738,6 +738,7 @@ export async function downloadReportPdf(
     monthTheme: report.personal_month.theme,
     monthAdvice: report.personal_month.advice,
     sunSignId: snap.sun_sign,
+    dateOfBirth: person.date_of_birth,
   });
   for (const line of yearRhythmPdfLines(rhythm)) {
     addBody(line);
