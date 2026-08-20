@@ -3,7 +3,7 @@ const fs = require("fs");
 const { execSync } = require("child_process");
 
 async function main() {
-  // Always start from the known-good closed monogram
+  // Always start from the known-good closed monogram (inner green smile intact)
   execSync("git checkout 802bcef -- public/nw-mark.png", { stdio: "inherit" });
   const buf = fs.readFileSync("public/nw-mark.png");
   const w = 1024;
@@ -23,44 +23,6 @@ async function main() {
       data[i + 1] = 0;
       data[i + 2] = 0;
       data[i + 3] = 0;
-    }
-  }
-
-  // Erase original green smile everywhere (including light mint anti-alias)
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 5) continue;
-    const r0 = data[i];
-    const g0 = data[i + 1];
-    const b0 = data[i + 2];
-    const isGreen =
-      (g0 > r0 + 8 && g0 > b0 + 8 && g0 > 50 && r0 < 200 && b0 < 180) ||
-      (g0 > 180 && r0 > 120 && b0 > 150 && g0 >= r0 && g0 >= b0 && r0 < 250); // mint AA
-    if (isGreen) {
-      data[i] = 0;
-      data[i + 1] = 0;
-      data[i + 2] = 0;
-      data[i + 3] = 0;
-    }
-  }
-
-  // Also clear any leftover non-letter ink in the old smile band (inner bottom arc)
-  for (let y = Math.floor(h * 0.72); y < Math.floor(h * 0.92); y++) {
-    for (let x = Math.floor(w * 0.28); x < Math.floor(w * 0.72); x++) {
-      const rad = Math.hypot(x - cx, y - cy);
-      if (rad < 340 || rad > 410) continue;
-      const i = (y * w + x) * 4;
-      if (data[i + 3] < 5) continue;
-      const r0 = data[i];
-      const g0 = data[i + 1];
-      const b0 = data[i + 2];
-      // keep letter blue; clear green/mint/gray smile remnants
-      const isLetterBlue = b0 > r0 + 40 && b0 > g0 + 20 && b0 > 100 && r0 < 80;
-      if (!isLetterBlue) {
-        data[i] = 0;
-        data[i + 1] = 0;
-        data[i + 2] = 0;
-        data[i + 3] = 0;
-      }
     }
   }
 
@@ -94,7 +56,7 @@ async function main() {
         (ang >= cutA0 - tip && ang < cutA0) || (ang > cutA1 && ang <= cutA1 + tip);
       if (!onTip) continue;
       const dist = Math.abs(ang - (ang < cutA0 ? cutA0 : cutA1));
-      const maxHalf = 4 + 10 * (dist / tip); // thinner at the open end
+      const maxHalf = 4 + 10 * (dist / tip);
       if (Math.abs(rad - rMidRing) > maxHalf) {
         const i = (y * w + x) * 4;
         data[i] = 0;
@@ -105,28 +67,45 @@ async function main() {
     }
   }
 
-  // Single grounded green = bottom of the SAME ring (no inner smile, no detached outer bar)
-  const gA0 = (50 * Math.PI) / 180;
-  const gA1 = (130 * Math.PI) / 180;
-  const GR = 90;
-  const GG = 143;
-  const GB = 106;
-  const rMid = 448;
-  const halfThick = 18;
+  // Subtle plinth under the ring — navy/gold stroke stays; green sits as a stand.
+  // Offset center so the pad reads as a base, not a second ring segment.
+  const pCx = cx;
+  const pCy = cy + 20;
+  const pA0 = (74 * Math.PI) / 180;
+  const pA1 = (106 * Math.PI) / 180;
+  const pMid = (pA0 + pA1) / 2;
+  const pHalf = (pA1 - pA0) / 2;
+  const GR = 62;
+  const GG = 128;
+  const GB = 92;
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      const dx = x - cx;
-      const dy = y - cy;
-      const rad = Math.hypot(dx, dy);
-      if (Math.abs(rad - rMid) > halfThick) continue;
-      const ang = Math.atan2(dy, dx);
-      if (ang < gA0 || ang > gA1) continue;
       const i = (y * w + x) * 4;
+      if (data[i + 3] > 28) continue; // never paint over letters, smile, or ring
+
+      const dx = x - pCx;
+      const dy = y - pCy;
+      const rad = Math.hypot(dx, dy);
+      const ang = Math.atan2(dy, dx);
+      if (ang < pA0 || ang > pA1) continue;
+
+      const t = (ang - pMid) / pHalf; // -1 … 1
+      const taper = Math.pow(Math.cos((t * Math.PI) / 2), 1.15);
+      const rInner = 458;
+      const thick = 11 + 14 * Math.pow(taper, 1.6);
+      const rOuter = rInner + thick;
+      if (rad < rInner || rad > rOuter) continue;
+
+      const edge = Math.min(rad - rInner, rOuter - rad, (1 - Math.abs(t)) * 18);
+      const edgeFade = Math.min(1, edge / 2);
+      const alpha = Math.round(255 * edgeFade);
+      if (alpha < 12) continue;
+
       data[i] = GR;
       data[i + 1] = GG;
       data[i + 2] = GB;
-      data[i + 3] = 255;
+      data[i + 3] = alpha;
     }
   }
 
@@ -141,8 +120,8 @@ async function main() {
   }
 
   let gapGhost = 0;
-  let greenCount = 0;
-  let greenMinY = 9999;
+  let innerGreen = 0;
+  let plinth = 0;
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const i = (y * w + x) * 4;
@@ -151,13 +130,13 @@ async function main() {
       if (rad >= 380 && rad <= 500 && ang >= cutA0 && ang <= cutA1 && data[i + 3] > 0) {
         gapGhost++;
       }
-      if (data[i + 3] > 200 && data[i] === GR && data[i + 1] === GG) {
-        greenCount++;
-        greenMinY = Math.min(greenMinY, y);
+      if (data[i + 3] > 80 && data[i + 1] > data[i] + 20 && data[i + 1] > data[i + 2] + 10) {
+        if (rad < 410) innerGreen++;
+        else plinth++;
       }
     }
   }
-  console.log({ gapGhost, greenCount, greenMinY });
+  console.log({ gapGhost, innerGreen, plinth });
 }
 
 main().catch((e) => {
