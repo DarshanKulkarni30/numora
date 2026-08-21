@@ -91,6 +91,16 @@ function cellFor(dob: string, d: Date, isToday: boolean): DailyCell {
   };
 }
 
+export function dailyCellPrompt(cell: DailyCell): string {
+  const lead = cell.isToday
+    ? "Today is"
+    : `${cell.weekday} ${cell.asOf} is`;
+  return assertSafeCopy(
+    `${lead} Personal Day ${cell.personalDay} (${cell.trait.toLowerCase()}) inside Personal Month ${cell.personalMonth} and Personal Year ${cell.personalYear}. One practice: ${cell.practice}`,
+    `daily.prompt.${cell.asOf}`,
+  );
+}
+
 export function buildDailyLoop(opts: {
   natalName: string;
   dateOfBirth: string;
@@ -112,10 +122,7 @@ export function buildDailyLoop(opts: {
     today,
     week,
     essence: chart.essence,
-    checkInPrompt: assertSafeCopy(
-      `Today is Personal Day ${today.personalDay} (${today.trait.toLowerCase()}) inside Personal Month ${today.personalMonth} and Personal Year ${today.personalYear}. One practice: ${today.practice}`,
-      "daily.prompt",
-    ),
+    checkInPrompt: dailyCellPrompt(today),
     disclaimer: assertSafeCopy(DISCLAIMER, "daily.disclaimer"),
   };
 }

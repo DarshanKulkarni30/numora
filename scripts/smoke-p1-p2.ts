@@ -75,6 +75,11 @@ const daily = buildDailyLoop({
 eq(daily.week.length, 7, "seven-day strip");
 assert(daily.today.isToday, "today flagged");
 assert(daily.today.personalDay >= 1, "personal day");
+assert(daily.checkInPrompt.startsWith("Today is"), "today prompt");
+assert(
+  daily.week[1] && !daily.week[1].isToday,
+  "later cells are not today",
+);
 
 const report = generateReport(
   {
