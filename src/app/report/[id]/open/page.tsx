@@ -44,8 +44,14 @@ export default async function ReportOpenPage({ params }: Props) {
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
-            href={`/report/${id}/enhanced`}
+            href={`/report/${id}/session`}
             className="btn-tactile rounded-full bg-ink px-6 py-3 text-paper"
+          >
+            Present in reading room
+          </Link>
+          <Link
+            href={`/report/${id}/enhanced`}
+            className="btn-tactile rounded-full border border-[var(--line)] bg-white px-6 py-3 text-ink"
           >
             Open enhanced report
           </Link>

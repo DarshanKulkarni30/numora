@@ -31,11 +31,15 @@ import { InsightTileCard } from "@/components/report/InsightTileCard";
 import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
+import { LivingReportBanner } from "@/components/report/LivingReportBanner";
+import { ShareLinkButton } from "@/components/report/ShareLinkButton";
+import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
   report: NumerologyReport;
+  reportId?: string;
   watermarkEmail?: string;
   allowCopy?: boolean;
   allowPdf?: boolean;
@@ -176,11 +180,13 @@ const INSIGHT_SECTIONS = new Set([
 ]);
 
 export function ReportView({
-  report,
+  report: saved,
+  reportId,
   watermarkEmail,
   allowCopy = false,
   allowPdf = false,
 }: Props) {
+  const report = useMemo(() => applyLivingTiming(saved), [saved]);
   useEffect(() => {
     if (allowCopy) return;
     const block = (e: Event) => e.preventDefault();
@@ -533,6 +539,17 @@ export function ReportView({
               </h1>
             </div>
             <div className="flex flex-wrap items-start gap-2">
+              {reportId ? (
+                <>
+                  <ShareLinkButton reportId={reportId} />
+                  <Link
+                    href={`/report/${reportId}/session`}
+                    className="btn-tactile rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink"
+                  >
+                    Reading room
+                  </Link>
+                </>
+              ) : null}
               <ExportTeaserPdfButton report={report} />
               {allowPdf ? (
                 <ExportPdfButton report={report} />
@@ -576,6 +593,8 @@ export function ReportView({
             </Link>
           </p>
         </header>
+
+        <LivingReportBanner />
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Person details</h2>

@@ -10,6 +10,9 @@ import { NameEraNote } from "@/components/report/NameEraNote";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
+import { LivingReportBanner } from "@/components/report/LivingReportBanner";
+import { ShareLinkButton } from "@/components/report/ShareLinkButton";
+import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
@@ -21,6 +24,9 @@ type Props = {
   watermarkEmail?: string;
   allowCopy?: boolean;
   allowPdf?: boolean;
+  mode?: "owner" | "shared";
+  expiresAt?: string | null;
+  sessionHref?: string;
 };
 
 export function EnhancedReportView({
@@ -29,10 +35,14 @@ export function EnhancedReportView({
   watermarkEmail,
   allowCopy = false,
   allowPdf = false,
+  mode = "owner",
+  expiresAt,
+  sessionHref,
 }: Props) {
+  const live = useMemo(() => applyLivingTiming(report), [report]);
   const reading = useMemo(
-    () => buildEnhancedReading(report, { reportId }),
-    [report, reportId],
+    () => buildEnhancedReading(live, { reportId }),
+    [live, reportId],
   );
   const [storyOpen, setStoryOpen] = useState(false);
 
@@ -62,12 +72,14 @@ export function EnhancedReportView({
     };
   }, [allowCopy]);
 
-  const person = report.person;
-  const snap = report.numerology_snapshot;
+  const person = live.person;
+  const snap = live.numerology_snapshot;
   const yearsHref = yearsHrefForPerson({
     dateOfBirth: person.date_of_birth,
     fullName: person.operating_name || person.full_name,
   });
+  const roomHref = sessionHref || `/report/${reportId}/session`;
+  const shared = mode === "shared";
 
   return (
     <article className="report-protected relative mx-auto max-w-3xl px-5 pb-24 pt-4">
@@ -99,11 +111,19 @@ export function EnhancedReportView({
               {label}
             </a>
           ))}
+          {shared ? null : (
+            <Link
+              href={reading.detailedHref}
+              className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
+            >
+              Detailed report
+            </Link>
+          )}
           <Link
-            href={reading.detailedHref}
+            href={roomHref}
             className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
           >
-            Detailed report
+            Reading room
           </Link>
         </div>
       </nav>
@@ -119,19 +139,29 @@ export function EnhancedReportView({
             </h1>
           </div>
           <div className="flex flex-wrap items-start gap-2">
-            <ExportTeaserPdfButton report={report} />
-            {allowPdf ? (
-              <EnhancedExportPdfButton report={report} reportId={reportId} />
-            ) : (
-              <Link
-                href="/pricing"
-                className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
-              >
-                Full PDF on plans
-              </Link>
+            {shared ? null : (
+              <>
+                <ShareLinkButton reportId={reportId} />
+                <ExportTeaserPdfButton report={live} />
+                {allowPdf ? (
+                  <EnhancedExportPdfButton report={live} reportId={reportId} />
+                ) : (
+                  <Link
+                    href="/pricing"
+                    className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
+                  >
+                    Full PDF on plans
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </header>
+
+        <LivingReportBanner
+          variant={shared ? "shared" : "owner"}
+          expiresAt={expiresAt}
+        />
 
         <section
           id="quick"
@@ -359,9 +389,9 @@ export function EnhancedReportView({
               unitCompound={snap.unit_name_compound}
               nameCompound={snap.vedic_name_compound}
               natalNameNumber={snap.natal_vedic_name}
-              rulingPlanet={report.vedic.ruling_planet}
-              destinyRulingPlanet={report.vedic.destiny_ruling_planet}
-              unitSystem={report.vedic.unitSystem}
+              rulingPlanet={live.vedic.ruling_planet}
+              destinyRulingPlanet={live.vedic.destiny_ruling_planet}
+              unitSystem={live.vedic.unitSystem}
             />
           </div>
 
@@ -381,16 +411,16 @@ export function EnhancedReportView({
               ))}
             </ul>
             <div className="mt-4">
-              <LoShuChart loShu={report.lo_shu} dateOfBirth={person.date_of_birth} />
+              <LoShuChart loShu={live.lo_shu} dateOfBirth={person.date_of_birth} />
             </div>
           </div>
 
           <div>
             <h3 className="text-xl text-ink">Timing dashboard</h3>
             <TimingDashboard
-              personalYear={report.personal_year}
-              personalMonth={report.personal_month}
-              projectedYear={report.projected_year}
+              personalYear={live.personal_year}
+              personalMonth={live.personal_month}
+              projectedYear={live.projected_year}
               sunSignId={snap.sun_sign}
               sunSignLabel={snap.sun_sign_label}
               dateOfBirth={person.date_of_birth}
@@ -618,18 +648,22 @@ export function EnhancedReportView({
 
         <footer className="space-y-3 text-sm leading-7 text-ink-soft">
           <p>{reading.disclaimer}</p>
-          {(report.safety_notices ?? []).map((n) => (
+          {(live.safety_notices ?? []).map((n) => (
             <p key={n}>{n}</p>
           ))}
-          <p>
-            <Link href={reading.detailedHref} className="text-gold-deep underline">
-              Open the detailed report
-            </Link>
-            {" · "}
-            <Link href="/dashboard" className="text-gold-deep underline">
-              Dashboard
-            </Link>
-          </p>
+          {shared ? (
+            <p>This shared link is view-only HTML. It is not a downloadable file.</p>
+          ) : (
+            <p>
+              <Link href={reading.detailedHref} className="text-gold-deep underline">
+                Open the detailed report
+              </Link>
+              {" · "}
+              <Link href="/dashboard" className="text-gold-deep underline">
+                Dashboard
+              </Link>
+            </p>
+          )}
         </footer>
       </div>
     </article>

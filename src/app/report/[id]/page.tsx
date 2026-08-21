@@ -54,6 +54,7 @@ export default async function ReportPage({ params }: Props) {
       <SiteHeader email={user?.email} />
       <ReportView
         report={report}
+        reportId={id}
         watermarkEmail={user?.email ?? undefined}
         allowCopy={entitlements.features.copy}
         allowPdf={entitlements.features.pdf}

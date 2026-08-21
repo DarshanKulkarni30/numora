@@ -79,6 +79,8 @@ export async function updateSession(request: NextRequest) {
     "/years",
     "/business",
     "/mobile",
+    "/today",
+    "/place",
     "/learning",
     "/admin",
   ];
@@ -103,6 +105,8 @@ export async function updateSession(request: NextRequest) {
     "/years",
     "/business",
     "/mobile",
+    "/today",
+    "/place",
     "/learning",
     "/api/profile",
     "/api/reports",

@@ -112,7 +112,7 @@ export function buildEnhancedReading(
       [
         "Story first, numbers always shown — nothing is hidden behind a metaphor.",
         "Theme counts are how many chart seats cite a family of digits, not scores or percentages.",
-        "Timing is a pacing season as of the date printed below, not a prediction of events.",
+        "This is a live HTML reading: Personal Year, Month, Day, Essence, and the twelve-month chapter are as of today. A PDF is a snapshot from download time.",
         "The detailed report is the full catalog of methods; this page is the through-line.",
       ],
       "enhanced.howto",
