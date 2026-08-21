@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
+import { pythagoreanChartPdfLines } from "@/lib/numerology/pythagoreanChart";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -183,6 +184,11 @@ export async function downloadEnhancedPdf(
   addBody(reading.loShuLived.summary);
   for (const item of reading.loShuLived.items) {
     addBullet(`${item.kind === "missing" ? "Edge" : "Emphasis"} ${item.number}: ${item.effect}`);
+  }
+
+  addBanner("Pythagorean chart");
+  for (const line of pythagoreanChartPdfLines(reading.pythagoreanChart)) {
+    addBody(line, 9);
   }
 
   addBanner("Lifestyle tendencies");

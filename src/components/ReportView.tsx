@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
@@ -16,6 +16,7 @@ import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { RulingPlanetsPanel } from "@/components/report/RulingPlanetsPanel";
 import { SnapshotBySystem } from "@/components/report/SnapshotBySystem";
 import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
+import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
 import { CORE_TRAIT } from "@/lib/numerology/meanings";
 import {
   chaldeanInsight,
@@ -29,6 +30,7 @@ import { InsightTileCard } from "@/components/report/InsightTileCard";
 import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
+import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
@@ -206,6 +208,7 @@ export function ReportView({
 
   const snap = report.numerology_snapshot;
   const person = report.person;
+  const pyChart = useMemo(() => resolvePythagoreanChart(report), [report]);
 
   const snapshotGroups = [
     {
@@ -356,6 +359,21 @@ export function ReportView({
           label: "Personal Month",
           topic: "personal-month" as const,
           value: snap.personal_month,
+        },
+        {
+          label: "Personal Day",
+          value: String(pyChart.personalDay.number),
+          hint: pyChart.personalDay.asOf,
+        },
+        {
+          label: "Balance",
+          value: String(pyChart.balance.number || "—"),
+          hint: `Initials ${pyChart.balance.initials}`,
+        },
+        {
+          label: "Hidden Passion",
+          value: pyChart.hiddenPassion.numbers.join("/") || "—",
+          hint: "Most repeated letter-value",
         },
         ...(snap.projected_year
           ? [
@@ -584,6 +602,9 @@ export function ReportView({
               personality={snap.personality_number}
               maturity={snap.maturity_number}
             />
+          </div>
+          <div className="mt-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <PythagoreanChartPanel chart={pyChart} />
           </div>
         </section>
 

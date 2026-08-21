@@ -8,6 +8,7 @@ import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { VedicPanel } from "@/components/report/VedicPanel";
+import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
@@ -393,6 +394,21 @@ export function EnhancedReportView({
               lifePath={snap.life_path}
               expression={snap.expression_number}
             />
+          </div>
+
+          <div>
+            <h3 className="text-xl text-ink">Pythagorean chart</h3>
+            <p className="mt-1 text-sm text-ink-soft">
+              Challenges, Period Cycles, Balance, Hidden Passion, missing-letter
+              Lessons, name Planes, Personal Day, and Essence — birth-certificate
+              spelling. Full windows live in the detailed report.
+            </p>
+            <div className="mt-4">
+              <PythagoreanChartPanel
+                chart={reading.pythagoreanChart}
+                compact
+              />
+            </div>
           </div>
 
           <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">

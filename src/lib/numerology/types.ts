@@ -34,6 +34,10 @@ export type NumerologySnapshot = {
   unit_name_compound?: string;
   personal_year: string;
   personal_month: string;
+  /** Pythagorean Personal Day as of report generation (views recompute). */
+  personal_day?: string;
+  balance_number?: string;
+  hidden_passion?: string;
   /** Johari projected year digit for the current birthday cycle */
   projected_year?: string;
   projected_year_calendar?: string;

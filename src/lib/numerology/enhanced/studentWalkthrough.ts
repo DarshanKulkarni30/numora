@@ -95,6 +95,7 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
     [
       "Three schools are shown because they answer different questions—not because one is secretly correct.",
       "Enhanced synthesis counts chart seats; it does not replace the detailed report’s full method notes.",
+      "Pythagorean extras (Challenges, Period Cycles, Balance, Hidden Passion, missing-letter Lessons, name Planes, Personal Day, Essence) use the birth-certificate spelling. Name-letter planes are not Lo Shu date-grid planes.",
       report.disclaimer,
     ],
     "enhanced.student.notes",

@@ -1,6 +1,7 @@
 import { sunSignFromDob } from "@/lib/astrology/sunSign";
 import { calculateChaldean } from "./chaldean";
 import { personalMonth } from "./cycles";
+import { buildPythagoreanChart } from "./pythagoreanChart";
 import {
   currentWesternOutlook,
   LAND_LABEL,
@@ -498,6 +499,9 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
           ? `- Natal (birth-certificate) Expression / Vedic name: ${snap.natal_expression_number} / ${snap.natal_vedic_name} · ${snap.name_era_label ?? "later name in force now"}`
           : null,
         `- Personal Year / Month: ${snap.personal_year} / ${snap.personal_month}`,
+        snap.personal_day ? `- Personal Day: ${snap.personal_day}` : null,
+        snap.balance_number ? `- Balance: ${snap.balance_number}` : null,
+        snap.hidden_passion ? `- Hidden Passion: ${snap.hidden_passion}` : null,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -511,7 +515,12 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         `• Expression: ${py.expression.meaning}`,
         `• Soul Urge: ${py.soul_urge.meaning}`,
         `• Personality: ${py.personality.meaning}`,
-      ].join("\n"),
+        snap.balance_number
+          ? `• Balance ${snap.balance_number} · Hidden Passion ${snap.hidden_passion ?? "—"} · see Pythagorean chart for Challenges, Period Cycles, name-letter Lessons, and Planes of Expression.`
+          : null,
+      ]
+        .filter(Boolean)
+        .join("\n"),
     },
     {
       id: "chaldean",
@@ -994,6 +1003,19 @@ export function generateReport(
 
   const safety_notices = safetyNoticesFor(report_type);
   const sun = sunSignFromDob(input.dateOfBirth.trim());
+  const pyChart = buildPythagoreanChart({
+    natalName: fullName,
+    dateOfBirth: input.dateOfBirth.trim(),
+    coreNumbers: [
+      natalPyth.lifePath,
+      natalPyth.birthDay,
+      natalPyth.expression,
+      natalPyth.soulUrge,
+      natalPyth.personality,
+      natalPyth.maturity,
+    ],
+    asOf: now,
+  });
 
   const snapshot = {
     life_path: String(pyth.lifePath),
@@ -1012,6 +1034,9 @@ export function generateReport(
     unit_name_compound: String(vedic.unitSystemNameCompound),
     personal_year: String(py),
     personal_month: String(pm),
+    personal_day: String(pyChart.personalDay.number),
+    balance_number: String(pyChart.balance.number || ""),
+    hidden_passion: pyChart.hiddenPassion.numbers.join("/") || undefined,
     projected_year: String(projected.number),
     projected_year_calendar: projected.rangeLabel,
     sun_sign: sun?.id,

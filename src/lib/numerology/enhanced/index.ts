@@ -1,4 +1,5 @@
 import { DISCLAIMER } from "@/lib/numerology/meanings";
+import { resolvePythagoreanChart, type PythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { assertSafeList } from "@/lib/numerology/safety";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { buildActionPlan, type ActionPlan } from "./actionPlan";
@@ -57,6 +58,7 @@ export type EnhancedReading = {
   schoolCompare: SchoolRow[];
   radar: RadarAxis[];
   planets: PlanetPresence[];
+  pythagoreanChart: PythagoreanChart;
   disclaimer: string;
   detailedHref: string;
 };
@@ -102,6 +104,7 @@ export function buildEnhancedReading(
     snap.natal_name && snap.operating_name && snap.natal_name !== snap.operating_name
       ? `Natal ${snap.natal_name} · in force ${snap.operating_name}${snap.name_era_label ? ` (${snap.name_era_label})` : ""}`
       : undefined;
+  const pythagoreanChart = resolvePythagoreanChart(report, now);
 
   return {
     asOf,
@@ -121,7 +124,7 @@ export function buildEnhancedReading(
       currentFocus: season.yearFocus.slice(0, 3),
       nameEra,
     },
-    coreStrip: buildCoreStrip(report),
+    coreStrip: buildCoreStrip(report, pythagoreanChart),
     themes,
     tensions,
     narrative,
@@ -136,12 +139,16 @@ export function buildEnhancedReading(
     schoolCompare: SCHOOL_COMPARE,
     radar: buildRadarAxes(themes),
     planets: buildPlanetPresence(snap),
+    pythagoreanChart,
     disclaimer: report.disclaimer || DISCLAIMER,
     detailedHref,
   };
 }
 
-function buildCoreStrip(report: NumerologyReport): CoreStripItem[] {
+function buildCoreStrip(
+  report: NumerologyReport,
+  chart: PythagoreanChart,
+): CoreStripItem[] {
   const s = report.numerology_snapshot;
   const item = (label: string, value: string | undefined, role: string): CoreStripItem => {
     const v = value || "—";
@@ -165,6 +172,17 @@ function buildCoreStrip(report: NumerologyReport): CoreStripItem[] {
     item("Name", s.vedic_name, "Vedic name in force"),
     item("Chaldean", s.chaldean_name_number, "Name essence"),
     item("Personal Year", s.personal_year, "This season’s pacing"),
+    item("Personal Day", String(chart.personalDay.number), "Today’s weather"),
+    item(
+      "Balance",
+      chart.balance.number ? String(chart.balance.number) : "—",
+      "Crisis tone from initials",
+    ),
+    item(
+      "Hidden Passion",
+      chart.hiddenPassion.numbers.join("/") || "—",
+      "Most repeated letter-value",
+    ),
   ];
 }
 

@@ -38,6 +38,10 @@ import {
 import { buildYearOutlookMandala } from "@/lib/numerology/yearOutlookMandala";
 import { projectedYearCycleStarting } from "@/lib/numerology/vedicYearNumber";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
+import {
+  pythagoreanChartPdfLines,
+  resolvePythagoreanChart,
+} from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -330,6 +334,7 @@ export async function downloadReportPdf(
     { id: "personality", label: "Personality & career" },
     { id: "growth", label: "Strengths & growth" },
     { id: "timing", label: "Timing" },
+    { id: "pythagorean-chart", label: "Pythagorean chart" },
     { id: "disclaimer", label: "Disclaimer" },
   ];
   const tocYs: { id: string; y: number; page: number }[] = [];
@@ -837,6 +842,11 @@ export async function downloadReportPdf(
   addBody(
     `Age guidance — ${report.age_guidance.category}: ${report.age_guidance.guidance}`,
   );
+
+  addBanner("Pythagorean chart", "pythagorean-chart");
+  for (const line of pythagoreanChartPdfLines(resolvePythagoreanChart(report))) {
+    addBody(line, 9);
+  }
 
   // —— Disclaimer ——
   addBanner("Disclaimer", "disclaimer");

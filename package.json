@@ -18,7 +18,8 @@
     "smoke:pinnacle-year": "tsx scripts/smoke-pinnacle-year.ts",
     "smoke:strengths": "tsx scripts/smoke-strength-constellation.ts",
     "smoke:name-history": "tsx scripts/smoke-name-history.ts",
-    "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts"
+    "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts",
+    "smoke:pythagorean-chart": "tsx scripts/smoke-pythagorean-chart.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
