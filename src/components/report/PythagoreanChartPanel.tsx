@@ -38,6 +38,8 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
         {[
           ["Balance", String(chart.balance.number || "—"), chart.balance.initials],
           ["Hidden Passion", passion, `${chart.hiddenPassion.numbers.length ? "most repeated letter-value" : "needs Latin letters"}`],
+          ["Attitude", String(chart.attitude.number), "month + day"],
+          ["Subconscious Self", String(chart.subconsciousSelf.number), `${chart.subconsciousSelf.present.length ? chart.subconsciousSelf.present.join(", ") : "needs Latin letters"}`],
           ["Personal Day", String(chart.personalDay.number), chart.personalDay.asOf],
           [
             "Essence",
@@ -65,6 +67,12 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
         {chart.hiddenPassion.summary} {chart.hiddenPassion.practice}
       </p>
       <p className="text-sm leading-7 text-ink-soft">{chart.personalDay.summary}</p>
+      <p className="text-sm leading-7 text-ink-soft">
+        {chart.attitude.summary} {chart.attitude.practice}
+      </p>
+      <p className="text-sm leading-7 text-ink-soft">
+        {chart.subconsciousSelf.summary} {chart.subconsciousSelf.practice}
+      </p>
       <p className="text-sm leading-7 text-ink-soft">{chart.essence.summary}</p>
 
       <div>

@@ -50,6 +50,8 @@ assert(chart.periodCycles.length === 3, "three period cycles");
 assert(chart.planes.length === 4, "four name planes");
 assert(chart.planes.every((p) => typeof p.summary === "string"), "plane copy");
 assert(chart.personalDay.number >= 1, "personal day present");
+eq(chart.attitude.number, 2, "attitude 10+10=20→2");
+eq(chart.subconsciousSelf.number, 7, "subconscious self = 9 minus two lessons");
 assert(chart.essence.transits.length >= 1, "essence transits");
 assert(
   chart.planeNote.toLowerCase().includes("lo shu"),
@@ -82,6 +84,14 @@ assert(
 assert(
   enhanced.coreStrip.some((c) => c.label === "Personal Day"),
   "enhanced core strip includes Personal Day",
+);
+assert(
+  enhanced.coreStrip.some((c) => c.label === "Attitude"),
+  "enhanced core strip includes Attitude",
+);
+assert(
+  enhanced.coreStrip.some((c) => c.label === "Minor Expression"),
+  "enhanced core strip includes Minor Expression",
 );
 
 const emptyish = buildPythagoreanChart({

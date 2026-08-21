@@ -47,10 +47,10 @@ export default async function FamilyPage() {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">Pair compatibility</h1>
           <p className="mt-3 text-ink-soft">
-            Pick any two people from your profile. Optional marriage /
-            together-since date unlocks a bond number and a dual Personal Year
-            timeline—before vs after in digits, not generic advice. Live view
-            only.
+            Pick any two people from your profile for a scored relationship
+            report (five seats + a twelve-month Personal Year overlay) plus the
+            existing compasses. Optional marriage / together-since date unlocks a
+            bond number and a dual Personal Year timeline. Live view only.
           </p>
         </div>
         <div className="mt-10">

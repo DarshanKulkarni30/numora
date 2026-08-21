@@ -54,7 +54,7 @@ export default async function PricingPage() {
                   Up to {plan.maxPeople} profile
                   {plan.maxPeople === 1 ? "" : "s"}
                   {plan.features.business ? " · Business tools" : ""}
-                  {plan.features.pdf ? " · PDF export" : " · View-only"}
+                  {plan.features.pdf ? " · Full PDF export" : " · Teaser PDF"}
                 </p>
                 <p className="mt-4 text-sm leading-6 text-ink-soft">
                   {plan.blurb}
@@ -65,8 +65,9 @@ export default async function PricingPage() {
         </div>
 
         <p className="mt-10 text-sm text-ink-soft">
-          Name, family, trivia, and mobile explorers are included on Free.
-          Business company-name tools and PDF export unlock with paid packs.{" "}
+          Name, family, trivia, mobile, place, and today explorers are included
+          on Free, plus an 8–10 page teaser PDF. Business company-name tools and
+          full PDF export unlock with paid packs.{" "}
           <Link href="/" className="text-gold-deep underline">
             Back home
           </Link>

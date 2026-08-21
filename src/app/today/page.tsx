@@ -1,29 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { YearOutlookExplorer } from "@/components/years/YearOutlookExplorer";
+import { DailyLoopCard } from "@/components/today/DailyLoopCard";
 import { guessNameFromUser, type PersonRecord } from "@/lib/profile/options";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import type { YearSystemTab } from "@/lib/numerology/yearPage";
+import { isValidDob } from "@/lib/profile/date";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
-  searchParams: Promise<{ tab?: string; dob?: string; name?: string }>;
-};
-
-export default async function YearsPage({ searchParams }: Props) {
+export default async function TodayPage() {
   if (!isSupabaseConfigured()) redirect("/login");
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/years");
-
-  const { tab, dob, name } = await searchParams;
-  const initialTab: YearSystemTab = tab === "vedic" ? "vedic" : "western";
+  if (!user) redirect("/login?next=/today");
 
   const { data } = await supabase
     .from("people")
@@ -49,31 +42,37 @@ export default async function YearsPage({ searchParams }: Props) {
     ];
   }
 
+  const self =
+    people.find((p) => p.is_self && isValidDob(p.date_of_birth)) ??
+    people.find((p) => isValidDob(p.date_of_birth));
+
   return (
     <div>
       <SiteHeader email={user.email} />
-      <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
+      <main className="mx-auto max-w-3xl px-5 pb-20 pt-6">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">Personal year</h1>
+          <h1 className="text-4xl text-ink">Today</h1>
           <p className="mt-3 text-ink-soft">
-            See the year number from birth through age 90, plus a written
-            twelve-month chapter from this month. Personal Year and Vedic both
-            default to a birthday-to-birthday cycle. Toggle Calendar year if you
-            want the 1 Jan–31 Dec version. Click a year for the longer reading.
-            For name and mobile fit, open{" "}
-            <Link href="/name" className="text-gold-deep underline">
-              What&apos;s my name
-            </Link>
-            .
+            Personal Day already lives on your chart. This page is the habit
+            loop: today&apos;s number, seven days ahead, and Essence as slower
+            weather. Not a daily horoscope product.
           </p>
         </div>
         <div className="mt-10">
-          <YearOutlookExplorer
-            people={people}
-            initialTab={initialTab}
-            initialDob={dob}
-            initialName={name}
-          />
+          {self ? (
+            <DailyLoopCard
+              natalName={self.full_name || self.preferred_name}
+              dateOfBirth={self.date_of_birth}
+            />
+          ) : (
+            <p className="text-sm text-ink-soft">
+              Add a date of birth on your{" "}
+              <Link href="/profile" className="text-gold-deep underline">
+                profile
+              </Link>{" "}
+              to read today&apos;s Personal Day.
+            </p>
+          )}
         </div>
       </main>
     </div>

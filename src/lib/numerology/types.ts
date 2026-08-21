@@ -49,6 +49,10 @@ export type NumerologySnapshot = {
   /** Birth-certificate spelling when it differs from operating */
   natal_name?: string;
   name_era_label?: string;
+  /** Current-name Expression (Minor Expression when it differs from natal). */
+  minor_expression_number?: string;
+  attitude_number?: string;
+  subconscious_self?: string;
   natal_expression_number?: string;
   natal_soul_urge_number?: string;
   natal_personality_number?: string;

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { EnhancedExportPdfButton } from "@/components/enhanced/EnhancedExportPdfButton";
+import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
@@ -117,16 +118,19 @@ export function EnhancedReportView({
               {reading.hero.displayName}
             </h1>
           </div>
-          {allowPdf ? (
-            <EnhancedExportPdfButton report={report} reportId={reportId} />
-          ) : (
-            <Link
-              href="/pricing"
-              className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
-            >
-              Unlock PDF
-            </Link>
-          )}
+          <div className="flex flex-wrap items-start gap-2">
+            <ExportTeaserPdfButton report={report} />
+            {allowPdf ? (
+              <EnhancedExportPdfButton report={report} reportId={reportId} />
+            ) : (
+              <Link
+                href="/pricing"
+                className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
+              >
+                Full PDF on plans
+              </Link>
+            )}
+          </div>
         </header>
 
         <section

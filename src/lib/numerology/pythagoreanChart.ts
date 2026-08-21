@@ -1,7 +1,7 @@
 /**
  * Pythagorean chart extras: Challenges, Period Cycles, Balance,
  * Hidden Passion, name-letter Karmic Lessons, Planes of Expression,
- * Personal Day, and Essence transits.
+ * Attitude, Subconscious Self, Personal Day, and Essence transits.
  *
  * Birth-certificate spelling is the chart of record for name seats.
  * Personal Day and Essence are as-of the viewing date.
@@ -92,6 +92,15 @@ export type PythagoreanChart = {
   personalDay: {
     number: number;
     asOf: string;
+    summary: string;
+    practice: string;
+  };
+  /** Month + day of birth, reduced. First-impression tone of a season. */
+  attitude: { number: number; summary: string; practice: string };
+  /** Count of letter-values 1–9 present in the natal name (0–9). */
+  subconsciousSelf: {
+    number: number;
+    present: number[];
     summary: string;
     practice: string;
   };
@@ -508,8 +517,47 @@ export function buildPythagoreanChart(opts: {
     ),
   };
 
+  const attitudeNumber = reduceNumber(month + day, [11, 22]);
+  const attitudeTrait = coreTraitFor(attitudeNumber);
+  const attitude = {
+    number: attitudeNumber,
+    summary: assertSafeCopy(
+      `Attitude ${attitudeNumber} is the month+day of birth reduced — how a season often meets you at the door, not the Life Path itself. Tone: ${attitudeTrait.toLowerCase()}.`,
+      "pyth.attitude.summary",
+    ),
+    practice: assertSafeCopy(
+      `When a first impression of a month feels off, ask what ${attitudeTrait.toLowerCase()} would do in the next ten minutes — then return to the Life Path.`,
+      "pyth.attitude.practice",
+    ),
+  };
+
+  const presentDigits = present.map((x) => x.number).sort((a, b) => a - b);
+  const ssNumber = presentDigits.length;
+  const subconsciousSelf = {
+    number: ssNumber,
+    present: presentDigits,
+    summary: assertSafeCopy(
+      ssNumber === 0
+        ? "Subconscious Self needs Latin letters in the birth-certificate name."
+        : `Subconscious Self ${ssNumber} means ${ssNumber} of the nine letter-values appear in the birth name${
+            ssNumber === 9
+              ? " — a complete letter toolkit."
+              : ` (${presentDigits.join(", ")} present).`
+          }`,
+      "pyth.ss.summary",
+    ),
+    practice: assertSafeCopy(
+      ssNumber === 0
+        ? "Add a Latin spelling to read Subconscious Self."
+        : ssNumber === 9
+          ? "Every letter-value is present — practise choosing which tool, not hunting a missing one."
+          : "Subconscious Self counts what the name already holds. Missing letter-values are the Karmic Lessons on this spelling.",
+      "pyth.ss.practice",
+    ),
+  };
+
   const methodNote = assertSafeCopy(
-    "Pythagorean extras on the birth-certificate spelling. Challenges share Pinnacle age windows. Period Cycles use month / day / year digits (Formative / Productive / Harvest). Personal Day and Essence are dated to today.",
+    "Pythagorean extras on the birth-certificate spelling. Challenges share Pinnacle age windows. Period Cycles use month / day / year digits (Formative / Productive / Harvest). Attitude is month+day. Subconscious Self counts which of 1–9 appear as letters. Personal Day and Essence are dated to today.",
     "pyth.method",
   );
 
@@ -529,6 +577,8 @@ export function buildPythagoreanChart(opts: {
     challenges,
     periodCycles,
     personalDay,
+    attitude,
+    subconsciousSelf,
     essence,
   };
 }
@@ -583,6 +633,10 @@ export function pythagoreanChartPdfLines(chart: PythagoreanChart): string[] {
     ),
     chart.personalDay.summary,
     chart.personalDay.practice,
+    chart.attitude.summary,
+    chart.attitude.practice,
+    chart.subconsciousSelf.summary,
+    chart.subconsciousSelf.practice,
     chart.essence.summary,
     chart.essence.practice,
   ];

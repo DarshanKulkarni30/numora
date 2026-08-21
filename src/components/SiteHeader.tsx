@@ -18,8 +18,10 @@ const TOP_LINKS = [
 ] as const;
 
 const EXPLORE_LINKS = [
+  { href: "/today", label: "Today" },
   { href: "/name", label: "Name" },
   { href: "/years", label: "Years" },
+  { href: "/place", label: "Place" },
   { href: "/business", label: "Business" },
   { href: "/trivia", label: "Trivia" },
   { href: "/family", label: "Pairs" },

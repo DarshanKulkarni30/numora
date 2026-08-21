@@ -19,7 +19,8 @@
     "smoke:strengths": "tsx scripts/smoke-strength-constellation.ts",
     "smoke:name-history": "tsx scripts/smoke-name-history.ts",
     "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts",
-    "smoke:pythagorean-chart": "tsx scripts/smoke-pythagorean-chart.ts"
+    "smoke:pythagorean-chart": "tsx scripts/smoke-pythagorean-chart.ts",
+    "smoke:p1-p2": "tsx scripts/smoke-p1-p2.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

@@ -18,6 +18,7 @@ import {
   type YearTag,
 } from "@/lib/numerology/vedicYearNumber";
 import { YearOutlookMandala } from "@/components/report/YearOutlookMandala";
+import { YearForecastPanel } from "@/components/report/YearForecastPanel";
 import {
   defaultExpandedYear,
   VEDIC_BIRTHDAY_NOTE,
@@ -295,6 +296,12 @@ export function YearOutlookExplorer({
               <span className="mt-2 block text-xs">{VEDIC_YEAR_METHOD_NOTE}</span>
             )}
           </p>
+
+          {tab === "western" && selected ? (
+            <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5">
+              <YearForecastPanel dateOfBirth={selected.date_of_birth} />
+            </div>
+          ) : null}
 
           {selected && years.length > 0 ? (
             <div className="space-y-3">

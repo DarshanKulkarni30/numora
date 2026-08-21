@@ -81,7 +81,7 @@ export default async function HomePage() {
             ],
             [
               "Free to start",
-              "One Self profile, full personal report, name/family/trivia explorers, and mobile fit. Premium unlocks more family slots, business tools, and PDF export.",
+              "One Self profile, full personal report, name/family/trivia explorers, mobile and place tools, today's Personal Day, and an 8–10 page teaser PDF. Premium unlocks more family slots, business tools, and the full PDF.",
             ],
           ].map(([title, copy]) => (
             <div key={title}>

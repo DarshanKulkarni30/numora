@@ -4,6 +4,7 @@ import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { ProjectedYearPanel } from "@/components/report/ProjectedYearPanel";
 import { PinnacleYearPanel } from "@/components/report/PinnacleYearPanel";
 import { YearRhythmPanel } from "@/components/report/YearRhythmPanel";
+import { YearForecastPanel } from "@/components/report/YearForecastPanel";
 import type { NumerologyReport } from "@/lib/numerology/types";
 
 type Props = {
@@ -78,6 +79,10 @@ export function TimingDashboard({
         yearsHref={yearsHref}
         embedded
       />
+
+      <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+        <YearForecastPanel dateOfBirth={dateOfBirth} />
+      </div>
     </section>
   );
 }

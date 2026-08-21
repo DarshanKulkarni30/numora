@@ -45,7 +45,7 @@ export const PLANS: Record<PlanId, PlanDef> = {
     features: { business: false, pdf: false, copy: false, learningFull: false },
     priceUsd: 0,
     blurb:
-      "One Self profile, personal report, name/family/trivia explorers, and mobile fit. View-only reports.",
+      "One Self profile, personal report, name/family/trivia explorers, mobile fit, and an 8–10 page teaser PDF. View-only full reports.",
   },
   week_pass: {
     id: "week_pass",

@@ -50,6 +50,8 @@ export default async function NamePage() {
           <p className="mt-3 text-ink-soft">
             <span className="font-medium text-ink">My name</span> — try
             first/last spellings for someone on your profile.{" "}
+            <span className="font-medium text-ink">Ranked spellings</span> —
+            variants of this given name ranked against Birth×Destiny.{" "}
             <span className="font-medium text-ink">Name compatibility</span> —
             pair two people (profile or custom partner) with method matrices and
             Amazing / Favourable summary tones. Reflective only, not legal naming

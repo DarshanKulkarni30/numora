@@ -55,6 +55,10 @@ export default async function MobilePage() {
             <a href="/business" className="text-gold-deep underline">
               Business numbers
             </a>
+            . For the vibration of a street line or phone by itself, open{" "}
+            <a href="/place" className="text-gold-deep underline">
+              Address &amp; phone
+            </a>
             .
           </p>
         </div>

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  ReportsList,
-  type DashboardReport,
-} from "@/components/dashboard/ReportsList";
+import { ReportsList, type DashboardReport } from "@/components/dashboard/ReportsList";
+import { DailyLoopCard } from "@/components/today/DailyLoopCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+
+import { isValidDob } from "@/lib/profile/date";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +26,7 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false });
 
   const list = (reports ?? []) as DashboardReport[];
+  const dailyFrom = list.find((r) => isValidDob(r.date_of_birth));
 
   return (
     <div>
@@ -40,11 +41,26 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/report/new"
-            className="rounded-full bg-ink px-5 py-2.5 text-paper hover:bg-sea-deep"
+            className="btn-tactile rounded-full bg-ink px-5 py-2.5 text-paper"
           >
             New report
           </Link>
         </div>
+
+        {dailyFrom ? (
+          <div className="mt-8">
+            <DailyLoopCard
+              natalName={dailyFrom.full_name}
+              dateOfBirth={dailyFrom.date_of_birth}
+              compact
+            />
+            <p className="mt-2 text-sm text-ink-soft">
+              <Link href="/today" className="text-gold-deep underline">
+                Open the seven-day loop
+              </Link>
+            </p>
+          </div>
+        ) : null}
 
         <div className="mt-10">
           <ReportsList initialReports={list} />

@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import type { NumerologyReport } from "@/lib/numerology/types";
-import { downloadReportPdf } from "@/lib/report/exportPdf";
+import { downloadTeaserPdf } from "@/lib/report/exportTeaserPdf";
 
 type Props = {
   report: NumerologyReport;
 };
 
-export function ExportPdfButton({ report }: Props) {
+export function ExportTeaserPdfButton({ report }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,7 +16,7 @@ export function ExportPdfButton({ report }: Props) {
     setBusy(true);
     setError(null);
     try {
-      await downloadReportPdf(report);
+      await downloadTeaserPdf(report);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not create PDF");
     } finally {
@@ -30,9 +30,9 @@ export function ExportPdfButton({ report }: Props) {
         type="button"
         disabled={busy}
         onClick={onClick}
-        className="btn-tactile rounded-full bg-sea px-4 py-2 text-sm text-paper"
+        className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
       >
-        {busy ? "Preparing…" : "Export PDF"}
+        {busy ? "Preparing…" : "Teaser PDF"}
       </button>
       {error ? <p className="text-xs text-rose-800">{error}</p> : null}
     </div>

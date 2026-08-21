@@ -7,6 +7,7 @@ import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { ExportPdfButton } from "@/components/report/ExportPdfButton";
+import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
@@ -253,6 +254,14 @@ export function ReportView({
             ]
           : []),
         {
+          label: "Minor Expression",
+          topic: "expression" as const,
+          value: snap.minor_expression_number || snap.expression_number,
+          note: snap.natal_expression_number
+            ? "Current-name Expression — the in-force spelling"
+            : "Same as Expression — no later name in force",
+        },
+        {
           label: "Soul Urge",
           topic: "soul-urge" as const,
           value: snap.soul_urge_number,
@@ -374,6 +383,16 @@ export function ReportView({
           label: "Hidden Passion",
           value: pyChart.hiddenPassion.numbers.join("/") || "—",
           hint: "Most repeated letter-value",
+        },
+        {
+          label: "Attitude",
+          value: String(pyChart.attitude.number),
+          hint: "Month + day of birth",
+        },
+        {
+          label: "Subconscious Self",
+          value: String(pyChart.subconsciousSelf.number),
+          hint: "Letter-values 1–9 present",
         },
         ...(snap.projected_year
           ? [
@@ -513,15 +532,16 @@ export function ReportView({
                 {person.preferred_name || person.full_name}
               </h1>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-start gap-2">
+              <ExportTeaserPdfButton report={report} />
               {allowPdf ? (
                 <ExportPdfButton report={report} />
               ) : (
                 <Link
                   href="/pricing"
-                  className="rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink hover:bg-emerald/15"
+                  className="btn-tactile rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm text-ink"
                 >
-                  Unlock PDF
+                  Full PDF on plans
                 </Link>
               )}
             </div>
@@ -948,8 +968,8 @@ export function ReportView({
               ) : null}
               <p>
                 {allowPdf
-                  ? "PDF export is available on your plan. Guide links open standard reference pages."
-                  : "On-screen viewing only. Copying, downloading, and printing are disabled on free reports. Guide links open standard reference pages."}
+                  ? "Teaser and full PDF export are available on your plan. Guide links open standard reference pages."
+                  : "A short teaser PDF is available on Free. Copying the screen and the full PDF stay on paid plans. Guide links open standard reference pages."}
               </p>
             </div>
           </details>

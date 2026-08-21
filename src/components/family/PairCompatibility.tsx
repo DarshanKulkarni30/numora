@@ -16,6 +16,8 @@ import {
   pairYearThemeLine,
   type PairYearCell,
 } from "@/lib/numerology/pairBond";
+import { buildCoupleReport } from "@/lib/numerology/coupleReport";
+import { CoupleScorePanel } from "@/components/family/CoupleScorePanel";
 import { buildVedicCompatibilityMatrix } from "@/lib/numerology/vedicCompatibility";
 import {
   formatDobInput,
@@ -170,6 +172,22 @@ export function PairCompatibility({ people }: Props) {
     });
   }, [selA, selB, keyA, keyB, togetherOk, togetherNorm]);
 
+  const couple = useMemo(() => {
+    if (!selA || !selB || keyA === keyB) return null;
+    return buildCoupleReport(
+      {
+        label: personName(selA),
+        fullName: selA.full_name || personName(selA),
+        dateOfBirth: normalizeDobToSlash(selA.date_of_birth)!,
+      },
+      {
+        label: personName(selB),
+        fullName: selB.full_name || personName(selB),
+        dateOfBirth: normalizeDobToSlash(selB.date_of_birth)!,
+      },
+    );
+  }, [selA, selB, keyA, keyB]);
+
   const focusCell: PairYearCell | null =
     model?.timeline.find((c) => c.calendarYear === focusYear) ?? null;
 
@@ -246,6 +264,7 @@ export function PairCompatibility({ people }: Props) {
         <p className="text-sm text-ink-soft">Select two different people.</p>
       ) : (
         <>
+          {couple ? <CoupleScorePanel report={couple} /> : null}
           <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5">
             <h2 className="brand text-xl text-ink">
               {model.a.label} × {model.b.label}

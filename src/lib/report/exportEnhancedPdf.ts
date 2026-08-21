@@ -1,6 +1,10 @@
 import { jsPDF } from "jspdf";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
 import { pythagoreanChartPdfLines } from "@/lib/numerology/pythagoreanChart";
+import {
+  buildYearForecast,
+  yearForecastPdfLines,
+} from "@/lib/numerology/yearForecast";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -164,6 +168,13 @@ export async function downloadEnhancedPdf(
   for (const x of reading.season.doThis) addBullet(x);
   addH("Ease off");
   for (const x of reading.season.easeOff) addBullet(x);
+
+  addBanner("Twelve-month chapter");
+  for (const line of yearForecastPdfLines(
+    buildYearForecast(report.person.date_of_birth),
+  )) {
+    addBody(line, 9);
+  }
 
   addBanner("How numbers work together");
   addBody(

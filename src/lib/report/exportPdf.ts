@@ -42,6 +42,10 @@ import {
   pythagoreanChartPdfLines,
   resolvePythagoreanChart,
 } from "@/lib/numerology/pythagoreanChart";
+import {
+  buildYearForecast,
+  yearForecastPdfLines,
+} from "@/lib/numerology/yearForecast";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -749,6 +753,12 @@ export async function downloadReportPdf(
   addBody(
     `Personal month ${report.personal_month.number}: ${report.personal_month.theme}. ${report.personal_month.advice}`,
   );
+  addBanner("Twelve-month chapter", "timing");
+  for (const line of yearForecastPdfLines(
+    buildYearForecast(person.date_of_birth),
+  )) {
+    addBody(line, 9);
+  }
   if (report.projected_year) {
     addBody(
       `Projected year ${report.projected_year.number} (${

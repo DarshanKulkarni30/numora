@@ -163,6 +163,11 @@ function buildCoreStrip(
   return [
     item("Life Path", s.life_path, "Why the journey exists"),
     item("Expression", s.expression_number, "How you build and contribute"),
+    item(
+      "Minor Expression",
+      s.minor_expression_number || s.expression_number,
+      "Name in force — same as Expression until a later spelling",
+    ),
     item("Birth Day", s.birth_day, "Native heat of the day"),
     item("Soul Urge", s.soul_urge_number, "Inner wish"),
     item("Personality", s.personality_number, "First impression"),
@@ -182,6 +187,12 @@ function buildCoreStrip(
       "Hidden Passion",
       chart.hiddenPassion.numbers.join("/") || "—",
       "Most repeated letter-value",
+    ),
+    item("Attitude", String(chart.attitude.number), "Month + day of birth"),
+    item(
+      "Subconscious Self",
+      String(chart.subconsciousSelf.number),
+      "How many of 1–9 appear as letters",
     ),
   ];
 }
