@@ -1,0 +1,171 @@
+import { DISCLAIMER } from "@/lib/numerology/meanings";
+import { assertSafeList } from "@/lib/numerology/safety";
+import type { NumerologyReport } from "@/lib/numerology/types";
+import { buildActionPlan, type ActionPlan } from "./actionPlan";
+import { archetypeFor } from "./archetypes";
+import { buildChaldeanStory, type ChaldeanStory } from "./chaldeanStory";
+import { formatAsOf, parseChartNumber } from "./digits";
+import { buildLifestyleInsights, type LifestyleInsights } from "./lifestyleInsights";
+import { buildLoShuLived, type LoShuLived } from "./loShuLived";
+import { buildPlanetPresence, type PlanetPresence } from "./planetPresence";
+import { buildProfileNarrative, type ProfileNarrative } from "./profileNarrative";
+import { buildRadarAxes, type RadarAxis } from "./radarModel";
+import { buildRelationshipFlow, type RelationshipFlow } from "./relationshipFlow";
+import { SCHOOL_COMPARE, type SchoolRow } from "./schoolCompare";
+import { buildSeasonBrief, type SeasonBrief } from "./seasonBrief";
+import { buildStudentWalkthrough, type StudentWalkthrough } from "./studentWalkthrough";
+import { buildTensions, type Tension } from "./tensions";
+import {
+  buildThemeGraph,
+  traitLabel,
+  type ChartSeat,
+  type ThemeHit,
+} from "./themeGraph";
+import { buildTriviaEnergies, type TriviaEnergies } from "./triviaEnergies";
+
+export type CoreStripItem = {
+  label: string;
+  value: string;
+  role: string;
+  trait: string;
+};
+
+export type EnhancedHero = {
+  displayName: string;
+  archetype: string;
+  throughline: string;
+  currentFocus: string[];
+  nameEra?: string;
+};
+
+export type EnhancedReading = {
+  asOf: string;
+  howToRead: string[];
+  hero: EnhancedHero;
+  coreStrip: CoreStripItem[];
+  themes: ThemeHit[];
+  tensions: Tension[];
+  narrative: ProfileNarrative;
+  season: SeasonBrief;
+  flow: RelationshipFlow;
+  actionPlan: ActionPlan;
+  lifestyle: LifestyleInsights;
+  trivia: TriviaEnergies;
+  chaldean: ChaldeanStory;
+  loShuLived: LoShuLived;
+  student: StudentWalkthrough;
+  schoolCompare: SchoolRow[];
+  radar: RadarAxis[];
+  planets: PlanetPresence[];
+  disclaimer: string;
+  detailedHref: string;
+};
+
+export function buildEnhancedReading(
+  report: NumerologyReport,
+  opts?: { reportId?: string; now?: Date },
+): EnhancedReading {
+  const now = opts?.now ?? new Date();
+  const asOf = formatAsOf(now);
+  const snap = report.numerology_snapshot;
+  const displayName =
+    report.person.preferred_name?.trim() || report.person.full_name;
+  const { themes } = buildThemeGraph(snap, report.lo_shu);
+  const lp = parseChartNumber(snap.life_path) ?? 9;
+  const hasStructure = themes.some((t) => t.id === "structure" && t.count > 0);
+  const arch = archetypeFor({
+    dominant: themes[0] ?? null,
+    lifePath: lp,
+    hasStructure,
+  });
+  const tensions = buildTensions(snap, report.lo_shu);
+  const season = buildSeasonBrief(report, asOf);
+  const narrative = buildProfileNarrative({
+    report,
+    displayName,
+    archetypeTitle: arch.title,
+    throughline: arch.throughline,
+    themes,
+    tensions,
+    season,
+  });
+  const actionPlan = buildActionPlan({ report, season, themes });
+  const lifestyle = buildLifestyleInsights(report);
+  const trivia = buildTriviaEnergies({
+    report,
+    themes,
+    archetypeTitle: arch.title,
+  });
+  const detailedHref = opts?.reportId ? `/report/${opts.reportId}` : "/dashboard";
+
+  const nameEra =
+    snap.natal_name && snap.operating_name && snap.natal_name !== snap.operating_name
+      ? `Natal ${snap.natal_name} · in force ${snap.operating_name}${snap.name_era_label ? ` (${snap.name_era_label})` : ""}`
+      : undefined;
+
+  return {
+    asOf,
+    howToRead: assertSafeList(
+      [
+        "Story first, numbers always shown — nothing is hidden behind a metaphor.",
+        "Theme counts are how many chart seats cite a family of digits, not scores or percentages.",
+        "Timing is a pacing season as of the date printed below, not a prediction of events.",
+        "The detailed report is the full catalog of methods; this page is the through-line.",
+      ],
+      "enhanced.howto",
+    ),
+    hero: {
+      displayName,
+      archetype: arch.title,
+      throughline: arch.throughline,
+      currentFocus: season.yearFocus.slice(0, 3),
+      nameEra,
+    },
+    coreStrip: buildCoreStrip(report),
+    themes,
+    tensions,
+    narrative,
+    season,
+    flow: buildRelationshipFlow(snap),
+    actionPlan,
+    lifestyle,
+    trivia,
+    chaldean: buildChaldeanStory(report),
+    loShuLived: buildLoShuLived(report.lo_shu),
+    student: buildStudentWalkthrough(report),
+    schoolCompare: SCHOOL_COMPARE,
+    radar: buildRadarAxes(themes),
+    planets: buildPlanetPresence(snap),
+    disclaimer: report.disclaimer || DISCLAIMER,
+    detailedHref,
+  };
+}
+
+function buildCoreStrip(report: NumerologyReport): CoreStripItem[] {
+  const s = report.numerology_snapshot;
+  const item = (label: string, value: string | undefined, role: string): CoreStripItem => {
+    const v = value || "—";
+    const n = parseChartNumber(v);
+    return {
+      label,
+      value: v,
+      role,
+      trait: n != null ? traitLabel(n) : "",
+    };
+  };
+  return [
+    item("Life Path", s.life_path, "Why the journey exists"),
+    item("Expression", s.expression_number, "How you build and contribute"),
+    item("Birth Day", s.birth_day, "Native heat of the day"),
+    item("Soul Urge", s.soul_urge_number, "Inner wish"),
+    item("Personality", s.personality_number, "First impression"),
+    item("Maturity", s.maturity_number, "What deepens with practice"),
+    item("Psychic", s.vedic_psychic, "Day temperament"),
+    item("Destiny", s.vedic_destiny, "Longer Vedic path"),
+    item("Name", s.vedic_name, "Vedic name in force"),
+    item("Chaldean", s.chaldean_name_number, "Name essence"),
+    item("Personal Year", s.personal_year, "This season’s pacing"),
+  ];
+}
+
+export type { ActionPlan, ChartSeat, ThemeHit, Tension, SeasonBrief };

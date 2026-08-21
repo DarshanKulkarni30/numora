@@ -87,7 +87,7 @@ export function ReportsList({ initialReports }: Props) {
               className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-4"
             >
               <Link
-                href={`/report/${r.id}`}
+                href={`/report/${r.id}/open`}
                 className="min-w-0 flex-1 transition hover:opacity-90"
               >
                 <p className="text-lg text-ink">{name}</p>
@@ -95,7 +95,19 @@ export function ReportsList({ initialReports }: Props) {
                   {r.date_of_birth} · Age {r.age} · {r.report_type}
                 </p>
               </Link>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href={`/report/${r.id}/enhanced`}
+                  className="btn-tactile rounded-full bg-ink px-3 py-1.5 text-sm text-paper"
+                >
+                  Enhanced
+                </Link>
+                <Link
+                  href={`/report/${r.id}`}
+                  className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
+                >
+                  Detailed
+                </Link>
                 <Link href={`/report/${r.id}`} className="text-right">
                   <div className="flex items-end justify-end gap-3">
                     <div className="text-center">

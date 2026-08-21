@@ -78,7 +78,7 @@ export function ReportForm({ people }: Props) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not create report");
-      router.push(`/report/${data.id}`);
+      router.push(`/report/${data.id}/open`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
