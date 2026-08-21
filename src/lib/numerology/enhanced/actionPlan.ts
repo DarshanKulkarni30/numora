@@ -124,7 +124,7 @@ function unique(items: (string | undefined)[]): string[] {
   const seen = new Set<string>();
   const out: string[] = [];
   for (const item of items) {
-    if (!item) continue;
+    if (typeof item !== "string") continue;
     const key = item.trim().toLowerCase();
     if (!key || seen.has(key)) continue;
     seen.add(key);

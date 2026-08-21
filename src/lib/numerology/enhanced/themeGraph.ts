@@ -76,7 +76,7 @@ function seat(label: string, raw: string | number | undefined): ChartSeat | null
 
 export function collectSeats(
   snap: NumerologySnapshot,
-  loShu: LoShuResult,
+  loShu?: LoShuResult | null,
 ): ChartSeat[] {
   const seats: ChartSeat[] = [];
   const push = (s: ChartSeat | null) => {
@@ -102,7 +102,7 @@ export function collectSeats(
     push(seat("Natal Expression", snap.natal_expression_number));
   }
 
-  for (const r of loShu.repeated_numbers ?? []) {
+  for (const r of loShu?.repeated_numbers ?? []) {
     if (r.count >= 2) {
       push(seat(`Lo Shu emphasis ${r.number}`, r.number));
     }
@@ -113,7 +113,7 @@ export function collectSeats(
 
 export function buildThemeGraph(
   snap: NumerologySnapshot,
-  loShu: LoShuResult,
+  loShu?: LoShuResult | null,
 ): { seats: ChartSeat[]; themes: ThemeHit[]; dominant: ThemeHit | null } {
   const seats = collectSeats(snap, loShu);
   const themes: ThemeHit[] = THEME_FAMILIES.map((f) => {

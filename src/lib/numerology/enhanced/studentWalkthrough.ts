@@ -18,7 +18,8 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
   const name =
     report.numerology_snapshot.operating_name ||
     report.person.operating_name ||
-    report.person.full_name;
+    report.person.full_name ||
+    "";
   const natal = report.numerology_snapshot.natal_name || report.person.full_name;
 
   let lifePathSteps: CalcStep[] = [

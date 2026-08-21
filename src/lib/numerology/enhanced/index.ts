@@ -82,15 +82,24 @@ export function buildEnhancedReading(
   });
   const tensions = buildTensions(snap, report.lo_shu);
   const season = buildSeasonBrief(report, asOf);
-  const narrative = buildProfileNarrative({
-    report,
-    displayName,
-    archetypeTitle: arch.title,
-    throughline: arch.throughline,
-    themes,
-    tensions,
-    season,
-  });
+  let narrative;
+  try {
+    narrative = buildProfileNarrative({
+      report,
+      displayName,
+      archetypeTitle: arch.title,
+      throughline: arch.throughline,
+      themes,
+      tensions,
+      season,
+    });
+  } catch {
+    narrative = {
+      teaser: arch.throughline,
+      full: arch.throughline,
+      wordCount: arch.throughline.split(/\s+/).filter(Boolean).length,
+    };
+  }
   const actionPlan = buildActionPlan({ report, season, themes });
   const lifestyle = buildLifestyleInsights(report);
   const trivia = buildTriviaEnergies({

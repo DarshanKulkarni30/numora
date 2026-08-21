@@ -11,7 +11,7 @@ export type Tension = {
 
 export function buildTensions(
   snap: NumerologySnapshot,
-  loShu: LoShuResult,
+  loShu?: LoShuResult | null,
 ): Tension[] {
   const out: Tension[] = [];
   const lp = parseChartNumber(snap.life_path);
@@ -58,7 +58,7 @@ export function buildTensions(
     });
   }
 
-  const missing = loShu.missing_numbers ?? [];
+  const missing = loShu?.missing_numbers ?? [];
   if (missing.length) {
     const shown = missing.slice(0, 3).join(", ");
     out.push({

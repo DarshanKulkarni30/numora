@@ -100,11 +100,12 @@ export function buildSeasonBrief(
   report: NumerologyReport,
   asOf: string,
 ): SeasonBrief {
-  const py = parseChartNumber(report.personal_year.number) ?? 9;
-  const pm = parseChartNumber(report.personal_month.number);
+  const py = parseChartNumber(report.personal_year?.number) ?? 9;
+  const pm = parseChartNumber(report.personal_month?.number);
   const yMeta = YEAR_IMAGE[py] ?? YEAR_IMAGE[coreFallback(py)];
   const mMeta = pm != null ? MONTH_IMAGE[pm] ?? MONTH_IMAGE[coreFallback(pm)] : null;
   const young = isYoung(report.person.report_type);
+  const monthly = report.monthly_guidance;
 
   const combined = assertSafeCopy(
     mMeta
@@ -117,7 +118,7 @@ export function buildSeasonBrief(
     unique([
       ...yMeta.focus.slice(0, 2),
       ...(mMeta?.focus ?? []),
-      ...(report.monthly_guidance.focus_areas ?? []).slice(0, 2),
+      ...(monthly?.focus_areas ?? []).slice(0, 2),
       ...youngChildDo(young),
     ]).slice(0, 5),
     "enhanced.season.do",
@@ -125,7 +126,7 @@ export function buildSeasonBrief(
 
   const easeOff = assertSafeList(
     unique([
-      ...(report.monthly_guidance.avoid ?? []).slice(0, 3),
+      ...(monthly?.avoid ?? []).slice(0, 3),
       ...defaultEase(py, young),
     ]).slice(0, 4),
     "enhanced.season.ease",
@@ -144,7 +145,7 @@ export function buildSeasonBrief(
     combined,
     doThis,
     easeOff,
-    pinnacle: report.personal_year.pinnacle,
+    pinnacle: report.personal_year?.pinnacle,
     projected: report.projected_year
       ? `Projected year ${report.projected_year.number} (${report.projected_year.calendar_year})`
       : undefined,
@@ -180,10 +181,11 @@ function joinSoft(parts: string[]): string {
   return `${parts.slice(0, -1).join(", ")}, and ${parts[parts.length - 1]}`;
 }
 
-function unique(items: string[]): string[] {
+function unique(items: (string | undefined | null)[]): string[] {
   const seen = new Set<string>();
   const out: string[] = [];
   for (const item of items) {
+    if (typeof item !== "string") continue;
     const key = item.trim().toLowerCase();
     if (!key || seen.has(key)) continue;
     seen.add(key);

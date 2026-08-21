@@ -14,9 +14,9 @@ export type ChaldeanStory = {
 };
 
 export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
-  const compound = parseChartNumber(report.chaldean.compound_number) ?? 0;
+  const compound = parseChartNumber(report.chaldean?.compound_number) ?? 0;
   const reduced =
-    parseChartNumber(report.chaldean.reduced_number) ??
+    parseChartNumber(report.chaldean?.reduced_number) ??
     parseChartNumber(report.numerology_snapshot.chaldean_name_number) ??
     9;
   const expr = parseChartNumber(report.numerology_snapshot.expression_number) ?? 9;

@@ -86,8 +86,8 @@ export function buildProfileNarrative(opts: {
     );
   }
 
-  const loMissing = (report.lo_shu.missing_numbers ?? []).slice(0, 3);
-  const loRepeat = (report.lo_shu.repeated_numbers ?? []).filter((r) => r.count >= 2);
+  const loMissing = (report.lo_shu?.missing_numbers ?? []).slice(0, 3);
+  const loRepeat = (report.lo_shu?.repeated_numbers ?? []).filter((r) => r.count >= 2);
   if (loMissing.length || loRepeat.length) {
     paras.push(
       `The Lo Shu grid, built from date digits, adds a lived map rather than another personality label. ${

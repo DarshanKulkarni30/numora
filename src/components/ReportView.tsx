@@ -38,8 +38,12 @@ import { ReadingLegend } from "@/components/report/ReadingLegend";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
-import { buildEnhancedReading } from "@/lib/numerology/enhanced";
+import { buildChaldeanStory } from "@/lib/numerology/enhanced/chaldeanStory";
+import { formatAsOf } from "@/lib/numerology/enhanced/digits";
 import { HOW_TO_READ_DETAILED } from "@/lib/numerology/enhanced/howToRead";
+import { buildLoShuLived } from "@/lib/numerology/enhanced/loShuLived";
+import { SCHOOL_COMPARE } from "@/lib/numerology/enhanced/schoolCompare";
+import { buildStudentWalkthrough } from "@/lib/numerology/enhanced/studentWalkthrough";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -192,11 +196,28 @@ export function ReportView({
   allowCopy = false,
   allowPdf = false,
 }: Props) {
-  const report = useMemo(() => applyLivingTiming(saved), [saved]);
-  const enhancedBits = useMemo(
-    () => buildEnhancedReading(report, { reportId }),
-    [report, reportId],
-  );
+  const report = useMemo(() => {
+    try {
+      return applyLivingTiming(saved);
+    } catch (err) {
+      console.error("Living timing skipped", err);
+      return saved;
+    }
+  }, [saved]);
+  const extras = useMemo(() => {
+    try {
+      return {
+        chaldean: buildChaldeanStory(report),
+        loShuLived: buildLoShuLived(report.lo_shu),
+        student: buildStudentWalkthrough(report),
+        schoolCompare: SCHOOL_COMPARE,
+        asOf: formatAsOf(),
+      };
+    } catch (err) {
+      console.error("Detailed report extras skipped", err);
+      return null;
+    }
+  }, [report]);
   useEffect(() => {
     if (allowCopy) return;
     const block = (e: Event) => e.preventDefault();
@@ -511,16 +532,22 @@ export function ReportView({
       : []),
   ];
 
-  const summary = report.sections.find((s) => s.id === "executive-summary");
-  const closing = report.sections.find((s) => s.id === "closing");
-  const detailSections = report.sections.filter(
+  const sections = report.sections ?? [];
+  const summary = sections.find((s) => s.id === "executive-summary");
+  const closing = sections.find((s) => s.id === "closing");
+  const detailSections = sections.filter(
     (s) =>
       s.id !== "executive-summary" &&
       s.id !== "snapshot" &&
       s.id !== "compatibility" &&
       s.id !== "closing",
   );
-  const insightPack = buildDetailedInsightCards(report);
+  let insightPack: ReturnType<typeof buildDetailedInsightCards> | null = null;
+  try {
+    insightPack = buildDetailedInsightCards(report);
+  } catch (err) {
+    console.error("Insight tiles skipped", err);
+  }
 
   return (
     <article className="report-protected relative mx-auto max-w-3xl px-5 pb-20 pt-4">
@@ -665,7 +692,7 @@ export function ReportView({
           </div>
         </section>
 
-        <ChaldeanEssenceStrip story={enhancedBits.chaldean} />
+        {extras ? <ChaldeanEssenceStrip story={extras.chaldean} /> : null}
 
         <section>
           <h2 className="text-xl text-ink">Core numbers at a glance</h2>
@@ -771,7 +798,7 @@ export function ReportView({
           })}
           lifePath={snap.life_path}
           expression={snap.expression_number}
-          asOf={enhancedBits.season.asOf}
+          asOf={extras?.asOf}
         />
 
         <section>
@@ -782,7 +809,7 @@ export function ReportView({
             <LearningConceptLink conceptKey="lo-shu" />
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <LoShuLivedNotes lived={enhancedBits.loShuLived} />
+            {extras ? <LoShuLivedNotes lived={extras.loShuLived} /> : null}
             <BirthChartsPanel
               loShu={report.lo_shu}
               dateOfBirth={person.date_of_birth}
@@ -821,7 +848,7 @@ export function ReportView({
           </section>
         ) : null}
 
-        {report.strengths.length ? (
+        {report.strengths?.length ? (
           <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h2 className="text-xl text-ink">Strengths at a glance</h2>
             <div className="mt-4">
@@ -861,7 +888,7 @@ export function ReportView({
             >
               {section.id === "career" && report.career_suggestions ? (
                 <div className="space-y-4">
-                  {(insightPack.career ?? []).map((card) => (
+                  {(insightPack?.career ?? []).map((card) => (
                     <InsightTileCard key={card.key} card={card} />
                   ))}
                   <div>
@@ -885,7 +912,7 @@ export function ReportView({
                 </div>
               ) : INSIGHT_SECTIONS.has(section.id) ? (
                 <div className="space-y-4">
-                  {(insightPack[section.id] ?? []).map((card) => (
+                  {(insightPack?.[section.id] ?? []).map((card) => (
                     <InsightTileCard key={card.key} card={card} />
                   ))}
                   <ClassicProseToggle text={section.body} />
@@ -985,10 +1012,12 @@ export function ReportView({
           </div>
         </section>
 
-        <StudentCalcDrawer
-          student={enhancedBits.student}
-          schoolCompare={enhancedBits.schoolCompare}
-        />
+        {extras ? (
+          <StudentCalcDrawer
+            student={extras.student}
+            schoolCompare={extras.schoolCompare}
+          />
+        ) : null}
 
         <footer className="border-t border-[var(--line)] pt-6">
           <details className="group">

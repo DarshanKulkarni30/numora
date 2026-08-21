@@ -112,4 +112,21 @@ assert(
   "child plan uses purpose lens",
 );
 
+const sparse = generateReport({
+  fullName: "Darshan Kulkarni",
+  preferredName: "Darshan",
+  dateOfBirth: "10/10/1980",
+  purpose: "Self-reflection",
+}) as ReturnType<typeof generateReport> & {
+  monthly_guidance?: unknown;
+  chaldean?: unknown;
+};
+delete sparse.monthly_guidance;
+delete sparse.chaldean;
+const sparseReading = buildEnhancedReading(sparse, {
+  now: new Date("2026-08-21"),
+});
+assert(sparseReading.season.asOf.includes("2026"), "sparse report still builds a season");
+assert(sparseReading.chaldean.reduced > 0, "sparse chaldean falls back to snapshot");
+
 console.log("smoke:enhanced-report passed");

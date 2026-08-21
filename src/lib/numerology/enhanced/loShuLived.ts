@@ -29,8 +29,18 @@ const LIVED_MISSING: Record<number, string> = {
   9: "Endings may linger. Completing a small cycle on purpose trains the larger release.",
 };
 
-export function buildLoShuLived(loShu: LoShuResult): LoShuLived {
+export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLived {
   const items: LoShuLivedItem[] = [];
+  if (!loShu) {
+    return {
+      items,
+      planes: { mental: "", emotional: "", practical: "" },
+      summary: assertSafeCopy(
+        "Lo Shu planes are not stored on this older report, so lived-effect lines are skipped.",
+        "enhanced.loshu.summary",
+      ),
+    };
+  }
 
   for (const r of loShu.repeated_numbers ?? []) {
     if (r.count < 2) continue;
@@ -57,7 +67,7 @@ export function buildLoShuLived(loShu: LoShuResult): LoShuLived {
 
   const present = loShu.present_numbers ?? [];
   const summary = assertSafeCopy(
-    `Planes in this grid read as mental ${loShu.mental_plane.toLowerCase()}, emotional ${loShu.emotional_plane.toLowerCase()}, practical ${loShu.practical_plane.toLowerCase()}. Present digits: ${present.join(", ") || "none listed"}. The user-facing question is effect, not the missing digit itself.`,
+    `Planes in this grid read as mental ${(loShu.mental_plane ?? "").toLowerCase() || "unlisted"}, emotional ${(loShu.emotional_plane ?? "").toLowerCase() || "unlisted"}, practical ${(loShu.practical_plane ?? "").toLowerCase() || "unlisted"}. Present digits: ${present.join(", ") || "none listed"}. The user-facing question is effect, not the missing digit itself.`,
     "enhanced.loshu.summary",
   );
 

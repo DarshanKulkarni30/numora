@@ -695,7 +695,8 @@ export function buildDetailedInsightCards(report: NumerologyReport): Record<
   ];
 
   const mg = report.monthly_guidance;
-  const currentMonth = [
+  const currentMonth = mg
+    ? [
     softCard({
       key: "current-month",
       systemTag: "This month",
@@ -704,15 +705,16 @@ export function buildDetailedInsightCards(report: NumerologyReport): Record<
       keyword: "Focus",
       glyph: "→",
       geometry: "compass",
-      core: mg.focus_areas.slice(0, 2).join(" · ") || mg.career,
+      core: (mg.focus_areas ?? []).slice(0, 2).join(" · ") || mg.career,
       showsUp: `Work/learn: ${firstSentence(mg.career)} Relations: ${firstSentence(mg.relationships)}`,
-      growth: mg.avoid[0]
+      growth: mg.avoid?.[0]
         ? `Ease off: ${mg.avoid[0]}`
         : firstSentence(mg.wellbeing),
       narrative: firstSentence(mg.wellbeing),
-      strengths: mg.focus_areas.slice(0, 4),
+      strengths: (mg.focus_areas ?? []).slice(0, 4),
     }),
-  ];
+  ]
+    : [];
 
   const recommendations = [
     softCard({
@@ -723,11 +725,11 @@ export function buildDetailedInsightCards(report: NumerologyReport): Record<
       keyword: "Practice list",
       glyph: "◎",
       geometry: "compass",
-      core: report.recommendations.slice(0, 2).join(" ") || "Stay with reflective practice.",
-      showsUp: report.recommendations.slice(0, 3).map((r, i) => `${i + 1}. ${r}`).join(" "),
-      growth: report.recommendations[0] ?? "Choose one focus for the next fortnight.",
+      core: (report.recommendations ?? []).slice(0, 2).join(" ") || "Stay with reflective practice.",
+      showsUp: (report.recommendations ?? []).slice(0, 3).map((r, i) => `${i + 1}. ${r}`).join(" "),
+      growth: report.recommendations?.[0] ?? "Choose one focus for the next fortnight.",
       narrative: "Focus areas are invitations — pick what fits this season.",
-      strengths: report.recommendations.slice(0, 4),
+      strengths: (report.recommendations ?? []).slice(0, 4),
     }),
   ];
 
