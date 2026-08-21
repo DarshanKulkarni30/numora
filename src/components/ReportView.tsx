@@ -10,6 +10,7 @@ import { ExportPdfButton } from "@/components/report/ExportPdfButton";
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
+import { ChaldeanEssenceStrip } from "@/components/report/ChaldeanEssenceStrip";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
 import { IdentitySnapshotPanel } from "@/components/report/IdentitySnapshotPanel";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
@@ -32,8 +33,13 @@ import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { LivingReportBanner } from "@/components/report/LivingReportBanner";
+import { LoShuLivedNotes } from "@/components/report/LoShuLivedNotes";
+import { ReadingLegend } from "@/components/report/ReadingLegend";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
+import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
+import { buildEnhancedReading } from "@/lib/numerology/enhanced";
+import { HOW_TO_READ_DETAILED } from "@/lib/numerology/enhanced/howToRead";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -187,6 +193,10 @@ export function ReportView({
   allowPdf = false,
 }: Props) {
   const report = useMemo(() => applyLivingTiming(saved), [saved]);
+  const enhancedBits = useMemo(
+    () => buildEnhancedReading(report, { reportId }),
+    [report, reportId],
+  );
   useEffect(() => {
     if (allowCopy) return;
     const block = (e: Event) => e.preventDefault();
@@ -541,6 +551,12 @@ export function ReportView({
             <div className="flex flex-wrap items-start gap-2">
               {reportId ? (
                 <>
+                  <Link
+                    href={`/report/${reportId}/enhanced`}
+                    className="btn-tactile rounded-full bg-ink px-4 py-2 text-sm text-paper"
+                  >
+                    Enhanced report
+                  </Link>
                   <ShareLinkButton reportId={reportId} />
                   <Link
                     href={`/report/${reportId}/session`}
@@ -596,6 +612,8 @@ export function ReportView({
 
         <LivingReportBanner />
 
+        <ReadingLegend lines={HOW_TO_READ_DETAILED} />
+
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Person details</h2>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -646,6 +664,8 @@ export function ReportView({
             <PythagoreanChartPanel chart={pyChart} />
           </div>
         </section>
+
+        <ChaldeanEssenceStrip story={enhancedBits.chaldean} />
 
         <section>
           <h2 className="text-xl text-ink">Core numbers at a glance</h2>
@@ -751,6 +771,7 @@ export function ReportView({
           })}
           lifePath={snap.life_path}
           expression={snap.expression_number}
+          asOf={enhancedBits.season.asOf}
         />
 
         <section>
@@ -761,6 +782,7 @@ export function ReportView({
             <LearningConceptLink conceptKey="lo-shu" />
           </p>
           <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <LoShuLivedNotes lived={enhancedBits.loShuLived} />
             <BirthChartsPanel
               loShu={report.lo_shu}
               dateOfBirth={person.date_of_birth}
@@ -962,6 +984,11 @@ export function ReportView({
             />
           </div>
         </section>
+
+        <StudentCalcDrawer
+          student={enhancedBits.student}
+          schoolCompare={enhancedBits.schoolCompare}
+        />
 
         <footer className="border-t border-[var(--line)] pt-6">
           <details className="group">

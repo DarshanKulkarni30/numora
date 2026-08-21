@@ -18,6 +18,7 @@ type Props = {
   initialOutlookYear?: number;
   lifePath: string;
   expression: string;
+  asOf?: string;
 };
 
 /**
@@ -35,6 +36,7 @@ export function TimingDashboard({
   initialOutlookYear,
   lifePath,
   expression,
+  asOf,
 }: Props) {
   return (
     <section className="space-y-6">
@@ -43,7 +45,8 @@ export function TimingDashboard({
         <p className="mt-1 text-sm text-ink-soft">
           Climate (Personal Year), weather (Personal Month), Outlook as a second
           climate, and astro season as backdrop — Western pacing beside Vedic
-          birthday-cycle tone.{" "}
+          birthday-cycle tone.
+          {asOf ? ` Season as of ${asOf}.` : ""}{" "}
           <LearningConceptLink conceptKey="personal-year" />
           {" · "}
           <LearningConceptLink conceptKey="personal-month" />

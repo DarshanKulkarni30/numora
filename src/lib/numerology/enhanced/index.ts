@@ -1,6 +1,6 @@
 import { DISCLAIMER } from "@/lib/numerology/meanings";
+import { HOW_TO_READ_ENHANCED } from "./howToRead";
 import { resolvePythagoreanChart, type PythagoreanChart } from "@/lib/numerology/pythagoreanChart";
-import { assertSafeList } from "@/lib/numerology/safety";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { buildActionPlan, type ActionPlan } from "./actionPlan";
 import { archetypeFor } from "./archetypes";
@@ -108,15 +108,7 @@ export function buildEnhancedReading(
 
   return {
     asOf,
-    howToRead: assertSafeList(
-      [
-        "Story first, numbers always shown — nothing is hidden behind a metaphor.",
-        "Theme counts are how many chart seats cite a family of digits, not scores or percentages.",
-        "This is a live HTML reading: Personal Year, Month, Day, Essence, and the twelve-month chapter are as of today. A PDF is a snapshot from download time.",
-        "The detailed report is the full catalog of methods; this page is the through-line.",
-      ],
-      "enhanced.howto",
-    ),
+    howToRead: HOW_TO_READ_ENHANCED,
     hero: {
       displayName,
       archetype: arch.title,

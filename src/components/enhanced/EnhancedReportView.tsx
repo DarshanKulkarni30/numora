@@ -5,9 +5,15 @@ import Link from "next/link";
 import { EnhancedExportPdfButton } from "@/components/enhanced/EnhancedExportPdfButton";
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
+import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
+import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
+import { ReadingLegend } from "@/components/report/ReadingLegend";
+import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
+import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
+import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
 import { LivingReportBanner } from "@/components/report/LivingReportBanner";
@@ -163,17 +169,9 @@ export function EnhancedReportView({
           expiresAt={expiresAt}
         />
 
-        <section
-          id="quick"
-          className="scroll-mt-16 space-y-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5"
-        >
-          <h2 className="text-xl text-ink">How to read this</h2>
-          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-ink-soft">
-            {reading.howToRead.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </section>
+        <div id="quick" className="scroll-mt-16">
+          <ReadingLegend lines={reading.howToRead} />
+        </div>
 
         <section className="space-y-4">
           <p className="text-sm uppercase tracking-[0.18em] text-gold-deep">
@@ -201,22 +199,101 @@ export function EnhancedReportView({
         <section>
           <h2 className="text-xl text-ink">Core numbers</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Every seat is shown. Visual story never replaces the data.
+            Same calculated seats as the detailed report. Click a tile for its guide.
           </p>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {reading.coreStrip.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-[var(--line)] bg-white/55 px-3 py-3"
-              >
-                <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                  {item.label}
-                </p>
-                <p className="brand mt-1 text-2xl text-ink">{item.value}</p>
-                <p className="mt-1 text-xs text-ink-soft">{item.trait}</p>
-                <p className="mt-0.5 text-[11px] text-ink-soft">{item.role}</p>
-              </div>
-            ))}
+          <div className="mt-4 space-y-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <CoreNumbersChart
+              items={[
+                {
+                  label: "Life Path",
+                  topic: "life-path",
+                  value: snap.life_path,
+                  system: "pythagorean",
+                },
+                {
+                  label: "Expression",
+                  topic: "expression",
+                  value: snap.expression_number,
+                  system: "pythagorean",
+                },
+                {
+                  label: "Soul Urge",
+                  topic: "soul-urge",
+                  value: snap.soul_urge_number,
+                  system: "pythagorean",
+                },
+                {
+                  label: "Personality",
+                  topic: "personality",
+                  value: snap.personality_number,
+                  system: "pythagorean",
+                },
+                {
+                  label: "Maturity",
+                  topic: "maturity",
+                  value: snap.maturity_number,
+                  system: "pythagorean",
+                },
+              ]}
+            />
+            <CoreNumbersChart
+              items={[
+                {
+                  label: "Psychic",
+                  topic: "vedic-psychic",
+                  value: snap.vedic_psychic,
+                  system: "vedic",
+                  subtitle: "Birth day",
+                },
+                {
+                  label: "Destiny",
+                  topic: "vedic-destiny",
+                  value: snap.vedic_destiny,
+                  system: "vedic",
+                  subtitle: "Full date",
+                },
+                {
+                  label: "Name",
+                  topic: "vedic-name",
+                  value: snap.vedic_name,
+                  system: "vedic",
+                  subtitle: snap.operating_name
+                    ? "Name in force now"
+                    : "Name letters",
+                },
+              ]}
+              intro="Day, full date, and name digits from the Vedic layer."
+            />
+          </div>
+          <p className="mt-4 text-sm text-ink-soft">Also in this chart</p>
+          <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {reading.coreStrip
+              .filter(
+                (item) =>
+                  ![
+                    "Life Path",
+                    "Expression",
+                    "Soul Urge",
+                    "Personality",
+                    "Maturity",
+                    "Psychic",
+                    "Destiny",
+                    "Name",
+                  ].includes(item.label),
+              )
+              .map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-[var(--line)] bg-white/55 px-3 py-3"
+                >
+                  <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                    {item.label}
+                  </p>
+                  <p className="brand mt-1 text-2xl text-ink">{item.value}</p>
+                  <p className="mt-1 text-xs text-ink-soft">{item.trait}</p>
+                  <p className="mt-0.5 text-[11px] text-ink-soft">{item.role}</p>
+                </div>
+              ))}
           </div>
         </section>
 
@@ -225,23 +302,38 @@ export function EnhancedReportView({
           <p className="mt-1 text-sm text-ink-soft">
             Strength is a count of independent chart seats, not a star rating.
           </p>
-          <div className="mt-4 space-y-3">
-            {reading.themes.map((t) => (
-              <div
-                key={t.id}
-                className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3"
-              >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="text-lg text-ink">{t.label}</h3>
-                  <p className="text-sm text-ink-soft">
-                    {t.count} seat{t.count === 1 ? "" : "s"}
-                  </p>
-                </div>
-                <p className="mt-1 text-sm text-ink-soft">
-                  Appears in: {t.appearsIn.join(" · ")}
-                </p>
-              </div>
-            ))}
+          <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-start">
+            <div className="space-y-3">
+              {reading.themes.map((t) => {
+                const max = reading.themes[0]?.count || 1;
+                return (
+                  <div
+                    key={t.id}
+                    className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <h3 className="text-lg text-ink">{t.label}</h3>
+                      <p className="text-sm text-ink-soft">
+                        {t.count} seat{t.count === 1 ? "" : "s"}
+                      </p>
+                    </div>
+                    <div
+                      className="mt-2 h-1.5 overflow-hidden rounded-full bg-mist"
+                      aria-hidden
+                    >
+                      <div
+                        className="h-full rounded-full bg-sea"
+                        style={{ width: `${Math.round((t.count / max) * 100)}%` }}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-ink-soft">
+                      Appears in: {t.appearsIn.join(" · ")}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <EnhancedThemeRadar axes={reading.radar} />
           </div>
         </section>
 
@@ -315,17 +407,16 @@ export function EnhancedReportView({
 
           <div>
             <h3 className="text-xl text-ink">How your numbers work together</h3>
-            <ol className="mt-4 space-y-2">
-              {reading.flow.primary.map((n, i) => (
-                <li key={n.id} className="flex items-center gap-3 text-sm text-ink">
-                  <span className="brand w-8 text-2xl">{n.number}</span>
-                  <span>
-                    {n.label} · {n.trait}
-                    {i < reading.flow.primary.length - 1 ? " →" : ""}
-                  </span>
-                </li>
-              ))}
-            </ol>
+            <div className="mt-4">
+              <PythagoreanIdentityLayers
+                birthDay={snap.birth_day}
+                lifePath={snap.life_path}
+                expression={snap.expression_number}
+                soulUrge={snap.soul_urge_number}
+                personality={snap.personality_number}
+                maturity={snap.maturity_number}
+              />
+            </div>
             <p className="mt-3 text-sm leading-7 text-ink-soft">
               {reading.flow.primaryNarrative}
             </p>
@@ -339,6 +430,21 @@ export function EnhancedReportView({
               {reading.flow.secondaryNarrative}
             </p>
           </div>
+
+          {live.strengths.length ? (
+            <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+              <h3 className="text-xl text-ink">Strengths at a glance</h3>
+              <div className="mt-4">
+                <StrengthsConstellation
+                  strengths={live.strengths}
+                  lifePath={snap.life_path}
+                  expression={snap.expression_number}
+                  soulUrge={snap.soul_urge_number}
+                  vedicPsychic={snap.vedic_psychic}
+                />
+              </div>
+            </div>
+          ) : null}
 
           {reading.tensions.length ? (
             <div>
@@ -427,6 +533,7 @@ export function EnhancedReportView({
               yearsHref={yearsHref}
               lifePath={snap.life_path}
               expression={snap.expression_number}
+              asOf={reading.season.asOf}
             />
           </div>
 
@@ -515,6 +622,24 @@ export function EnhancedReportView({
             </p>
           </div>
 
+          <div
+            id="trivia-similar"
+            className="rounded-2xl border border-[var(--line)] bg-white/55 p-5"
+          >
+            <h3 className="text-xl text-ink">Trivia · similar numbers</h3>
+            <div className="mt-4">
+              <TriviaPanel
+                lifePath={snap.life_path}
+                destiny={snap.vedic_destiny}
+                psychic={snap.vedic_psychic}
+                expression={snap.expression_number}
+                vedicName={snap.vedic_name}
+                natalVedicName={snap.natal_vedic_name}
+                dateOfBirth={person.date_of_birth}
+              />
+            </div>
+          </div>
+
           <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h3 className="text-xl text-ink">Personal action plan</h3>
             <p className="mt-1 text-xs text-ink-soft">{reading.actionPlan.purposeNote}</p>
@@ -553,75 +678,21 @@ export function EnhancedReportView({
         <section id="expert" className="scroll-mt-16 space-y-4">
           <h2 className="text-2xl text-ink">Expert mode</h2>
           <p className="text-sm text-ink-soft">
-            Calculation details, school comparison, and chart-presence maps.
+            Calculation details, school comparison, and planet seat counts.
             Closed by default so a first read can stay short.
           </p>
 
-          <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <summary className="cursor-pointer text-lg text-ink">
-              Why these numbers were calculated
-            </summary>
-            <div className="mt-4 space-y-4 text-sm text-ink-soft">
-              <p className="font-medium text-ink">Life Path steps</p>
-              <ol className="list-decimal space-y-1 pl-5">
-                {reading.student.lifePathSteps.map((s) => (
-                  <li key={s.label}>
-                    <span className="text-ink">{s.label}:</span> {s.detail}
-                  </li>
-                ))}
-              </ol>
-              <p className="font-medium text-ink">Name mapping</p>
-              <ul className="list-disc space-y-1 pl-5">
-                {reading.student.nameSteps.map((s) => (
-                  <li key={s.label}>
-                    <span className="text-ink">{s.label}:</span> {s.detail}
-                  </li>
-                ))}
-              </ul>
-              <p className="font-medium text-ink">Master-number rules</p>
-              <ul className="list-disc space-y-1 pl-5">
-                {reading.student.masterRules.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
-              </ul>
-            </div>
-          </details>
+          <StudentCalcDrawer
+            student={reading.student}
+            schoolCompare={reading.schoolCompare}
+          />
 
           <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <summary className="cursor-pointer text-lg text-ink">
-              Compare schools
-            </summary>
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[32rem] text-left text-sm">
-                <thead>
-                  <tr className="text-ink-soft">
-                    <th className="pb-2 pr-3 font-medium">Topic</th>
-                    <th className="pb-2 pr-3 font-medium">Pythagorean</th>
-                    <th className="pb-2 pr-3 font-medium">Chaldean</th>
-                    <th className="pb-2 font-medium">Vedic</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reading.schoolCompare.map((row) => (
-                    <tr key={row.topic} className="border-t border-[var(--line)] align-top">
-                      <td className="py-2 pr-3 text-ink">{row.topic}</td>
-                      <td className="py-2 pr-3 text-ink-soft">{row.pythagorean}</td>
-                      <td className="py-2 pr-3 text-ink-soft">{row.chaldean}</td>
-                      <td className="py-2 text-ink-soft">{row.vedic}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </details>
-
-          <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <summary className="cursor-pointer text-lg text-ink">
-              Chart presence (themes and planets)
+              Planet chart presence
             </summary>
             <div className="mt-4">
-              <EnhancedThemeRadar axes={reading.radar} />
-              <ul className="mt-4 space-y-2 text-sm text-ink-soft">
+              <ul className="space-y-2 text-sm text-ink-soft">
                 {reading.planets.map((p) => (
                   <li key={p.name}>
                     <span className="text-ink">
