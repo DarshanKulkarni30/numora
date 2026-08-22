@@ -11,7 +11,7 @@ export function StudentCalcDrawer({ student, schoolCompare }: Props) {
     <section className="space-y-3">
       <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
         <summary className="cursor-pointer text-lg text-ink">
-          Why these numbers were calculated
+          How these numbers were worked out
         </summary>
         <div className="mt-4 space-y-4 text-sm text-ink-soft">
           <p className="font-medium text-ink">Life Path steps</p>

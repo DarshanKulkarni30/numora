@@ -44,24 +44,24 @@ function buildSteps(reading: EnhancedReading): Step[] {
     {
       kicker: "Session",
       title: reading.hero.archetype,
-      body: `${reading.hero.throughline} Current focus: ${reading.hero.currentFocus.join(" · ")}.`,
+      body: `${reading.hero.throughline} Right now: ${reading.hero.currentFocus.join("; ")}.`,
     },
     {
       kicker: "Identity seats",
       title: "The long walk",
-      body: "Life Path, day talent, and how the name builds. Click nothing — sit with one number at a time.",
+      body: "These are the date and name numbers that stay with the person. Read one number. What is the job? What should you try this week?",
       chips: identity.map((c) => ({ label: c.label, value: c.value })),
     },
     {
       kicker: "Inner / outer",
-      title: "Want, face, maturity",
-      body: "Soul Urge is the inner ask. Personality is the first impression. Maturity is what deepens with practice.",
+      title: "Inside, outside, later",
+      body: "Soul Urge is what can feel true inside. Personality is what people may notice first. Maturity is the habit that can grow with practice — not a fate.",
       chips: inner.map((c) => ({ label: c.label, value: c.value })),
     },
     {
       kicker: "Vedic + Chaldean",
-      title: "Day, path, name vibration",
-      body: "Psychic and Destiny from the date; name seats from the spelling in force.",
+      title: "Day, path, and name",
+      body: "Psychic and Destiny come from the birth date. Name numbers come from the spelling in force now. A later name can change name seats; it does not change the date numbers.",
       chips: vedic.map((c) => ({ label: c.label, value: c.value })),
     },
     {

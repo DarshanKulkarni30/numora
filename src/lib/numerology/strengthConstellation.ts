@@ -5,6 +5,7 @@
 
 import { STRENGTH_BANK } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
+import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 
 export type StrengthWeight = "core" | "supporting" | "stretch";
 
@@ -20,6 +21,10 @@ export type StrengthNode = {
   sources: string[];
   weight: StrengthWeight;
   fromLifePath: boolean;
+  meaning: string;
+  tryLine: string;
+  watchLine: string;
+  sourceLine: string;
 };
 
 export type StrengthConstellationModel = {
@@ -85,6 +90,20 @@ export function buildStrengthConstellation(opts: {
       : matched.length >= 2
         ? "supporting"
         : "stretch";
+    const sourceBits = matched.map((b) => {
+      const n = Number(b.raw);
+      return `${b.name} ${b.raw} (${plainTrait(n)})`;
+    });
+    const firstNum = Number(matched[0]?.raw ?? opts.lifePath ?? 0);
+    const meaning =
+      weight === "core"
+        ? `This sits next to Life Path ${opts.lifePath ?? ""}. It may show up a lot.`
+        : weight === "supporting"
+          ? "This shows up in more than one seat. It is familiar, not the whole self."
+          : "This is quieter on this chart. It is in the mix, not a hole.";
+    const sourceLine = sourceBits.length
+      ? `Tied to ${sourceBits.join("; ")}.`
+      : "Tied to more than one seat on this chart.";
     return {
       label,
       title,
@@ -92,6 +111,13 @@ export function buildStrengthConstellation(opts: {
       sources: sources.length ? sources : ["Chart mix"],
       weight,
       fromLifePath,
+      meaning,
+      tryLine: `Try: ${plainJob(firstNum)}.`,
+      watchLine:
+        weight === "stretch"
+          ? `A useful practice is ${plainJob(firstNum)}.`
+          : `Watch: ${plainWatch(firstNum)}.`,
+      sourceLine,
     };
   });
 
@@ -108,7 +134,7 @@ export function buildStrengthConstellation(opts: {
 }
 
 export function strengthWeightLabel(weight: StrengthWeight): string {
-  if (weight === "core") return "Core · around Life Path";
-  if (weight === "supporting") return "Supporting · more than one chart";
-  return "Also in the mix";
+  if (weight === "core") return "Loud · next to Life Path";
+  if (weight === "supporting") return "Familiar · more than one seat";
+  return "Quiet · also in the mix";
 }

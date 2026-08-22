@@ -249,7 +249,7 @@ function tensionNarrative(
   if (bn === dn) {
     return {
       label: `BN ${bn} ≈ DN ${dn}`,
-      narrative: `Birth and destiny tones meet on ${bn}. Inner temperament and longer path may reinforce each other—watch for over-identification with a single mode.`,
+      narrative: `Birth-day number and long-path number are both ${bn}. That habit may show a lot. Try one finish or one pause so it does not become the whole self. The slider is feeling-digits vs doing-digits on the grid — not a score of this ${bn}.`,
     };
   }
   const bnTrait = LO_SHU_NUMBER_META[bn]?.trait ?? String(bn);
@@ -262,7 +262,7 @@ function tensionNarrative(
         : "sits near the middle of the BN–DN span";
   return {
     label: `BN ${bn} ↔ DN ${dn}`,
-    narrative: `Lifelong push–pull between ${bnTrait.toLowerCase()} (BN ${bn}, inward) and ${dnTrait.toLowerCase()} (DN ${dn}, outward). This chart ${lean}. Balancing intuition with communication is a recurring theme—reflective, not fixed fate.`,
+    narrative: `Birth-day ${bn} (${bnTrait.toLowerCase()}) and long path ${dn} (${dnTrait.toLowerCase()}) are different. This chart ${lean}. The slider is a rough mix of those two plus feeling vs doing digits — not a percentage of tension.`,
   };
 }
 

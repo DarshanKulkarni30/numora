@@ -52,9 +52,9 @@ const EASE_LABEL: Record<string, string> = {
 };
 
 const CARD_SUB: Record<string, string> = {
-  Psychic: "Birth number · default wiring",
-  Destiny: "Life curriculum · who you are growing into",
-  Name: "Outer face · name in force",
+  Psychic: "Birth day · first habit",
+  Destiny: "Full date · longer path",
+  Name: "Spelling in force now",
 };
 
 export function VedicPanel({
@@ -90,9 +90,8 @@ export function VedicPanel({
         Vedic numbers
       </p>
       <p className="mt-2 text-sm text-paper/75">
-        Three layers from day, full date, and name spelling. Birth is the
-        starting tone, Destiny is the long walk, Name is how you are introduced.
-        Tap a number for its character guide.
+        Three layers: birth-day habit, longer date path, and the name in force.
+        Tap a number for what it means and what to try.
       </p>
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => {

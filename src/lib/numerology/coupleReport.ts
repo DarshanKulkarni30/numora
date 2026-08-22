@@ -4,8 +4,9 @@
  */
 
 import { pairTone, type CompatTone } from "./compatibility";
-import { personalYearCycleAt } from "./cycles";
+import { personalMonth, personalYearCycleAt } from "./cycles";
 import { vedicPsychicFromDob } from "./dateNumbers";
+import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 import { CORE_TRAIT, coreTraitFor } from "./meanings";
 import { calculatePythagorean } from "./pythagorean";
 import { assertSafeCopy, assertSafeList } from "./safety";
@@ -33,8 +34,20 @@ export type CoupleMonth = {
   isCurrent: boolean;
   aYear: number;
   bYear: number;
+  aMonth: number;
+  bMonth: number;
   tone: CompatTone;
   note: string;
+};
+
+export type CoupleYear = {
+  calendarYear: number;
+  isCurrent: boolean;
+  aYear: number;
+  bYear: number;
+  tone: CompatTone;
+  note: string;
+  months: CoupleMonth[];
 };
 
 export type CouplePersonView = {
@@ -55,6 +68,7 @@ export type CoupleReport = {
   headline: string;
   summary: string;
   months: CoupleMonth[];
+  years: CoupleYear[];
   disclaimer: string;
 };
 
@@ -66,7 +80,38 @@ const TONE_POINTS: Record<CompatTone, number> = {
 };
 
 const DISCLAIMER =
-  "A pair score is a weighted reading of five number seats plus a year overlay. It is not a verdict on love, marriage, or friendship, and it does not predict outcomes.";
+  "A pair score is a weighted reading of five number seats plus year and month overlays. It is not a verdict on love, marriage, or friendship, and it does not predict events.";
+
+function toneJob(tone: CompatTone): { tryLine: string; watchLine: string } {
+  if (tone === "Amazing" || tone === "Favourable") {
+    return {
+      tryLine: "Pick one shared plan you can both keep.",
+      watchLine: "Do not treat an easy year as a promise that nothing will be hard.",
+    };
+  }
+  if (tone === "Challenging") {
+    return {
+      tryLine: "Put one check-in on the calendar each month.",
+      watchLine: "Assuming the other person is being difficult, rather than moving at a different pace.",
+    };
+  }
+  return {
+    tryLine: "Name one thing each person needs this window.",
+    watchLine: "Waiting for the numbers to agree before you talk.",
+  };
+}
+
+function overlayNote(
+  label: string,
+  aName: string,
+  aNum: number,
+  bName: string,
+  bNum: number,
+  tone: CompatTone,
+): string {
+  const job = toneJob(tone);
+  return `${label}: ${aName} is in ${plainTrait(aNum)} (${aNum}). ${bName} is in ${plainTrait(bNum)} (${bNum}). ${job.tryLine} Watch: ${job.watchLine}`;
+}
 
 function addMonths(asOf: Date, offset: number): Date {
   return new Date(asOf.getFullYear(), asOf.getMonth() + offset, 12, 12, 0, 0);
@@ -144,28 +189,53 @@ export function buildCoupleReport(
       ease.length ? `Easier seats: ${ease.join(", ")}.` : ""
     } ${
       stretch.length ? `Stretch seats: ${stretch.join(", ")}.` : "No stretch seat on this pairing."
-    } Life Path ${a.lifePath} (${(CORE_TRAIT[a.lifePath] ?? coreTraitFor(a.lifePath)).toLowerCase()}) beside Life Path ${b.lifePath} is the long-walk overlay; Personal Years colour the next twelve months without rewriting either chart.`,
+    } Life Path ${a.lifePath} (${(CORE_TRAIT[a.lifePath] ?? coreTraitFor(a.lifePath)).toLowerCase()}) beside Life Path ${b.lifePath} is the long walk. Year and month numbers below are pacing for each person — not a forecast of the relationship.`,
     "couple.summary",
   );
 
   const months: CoupleMonth[] = [];
   for (let i = 0; i < 12; i++) {
-    const d = addMonths(asOf, i);
-    const aYear = personalYearCycleAt(personA.dateOfBirth, d).number;
-    const bYear = personalYearCycleAt(personB.dateOfBirth, d).number;
+    months.push(
+      buildCoupleMonth(personA, personB, a.label, b.label, addMonths(asOf, i), i === 0, i, "year"),
+    );
+  }
+
+  const startYear = asOf.getFullYear();
+  const years: CoupleYear[] = [];
+  for (let i = 0; i < 10; i++) {
+    const calendarYear = startYear + i;
+    const mid = new Date(calendarYear, 6, 1, 12, 0, 0);
+    const aYear = personalYearCycleAt(personA.dateOfBirth, mid).number;
+    const bYear = personalYearCycleAt(personB.dateOfBirth, mid).number;
     const tone = pairTone(aYear, bYear);
-    months.push({
-      label: monthLabel(d),
-      calendarYear: d.getFullYear(),
-      calendarMonth: d.getMonth() + 1,
+    const job = toneJob(tone);
+    const yearMonths: CoupleMonth[] = [];
+    for (let m = 0; m < 12; m++) {
+      const d = new Date(calendarYear, m, 12, 12, 0, 0);
+      yearMonths.push(
+        buildCoupleMonth(
+          personA,
+          personB,
+          a.label,
+          b.label,
+          d,
+          calendarYear === startYear && m === asOf.getMonth(),
+          i * 12 + m,
+          "month",
+        ),
+      );
+    }
+    years.push({
+      calendarYear,
       isCurrent: i === 0,
       aYear,
       bYear,
       tone,
       note: assertSafeCopy(
-        `${monthLabel(d)}: ${a.label} in Personal Year ${aYear}, ${b.label} in Personal Year ${bYear} — ${tone.toLowerCase()} year overlay.`,
-        `couple.m.${i}`,
+        `${calendarYear}: ${a.label} — ${plainJob(aYear)}. ${b.label} — ${plainJob(bYear)}. ${job.tryLine} Watch: ${job.watchLine} ${a.label} watch: ${plainWatch(aYear)}.`,
+        `couple.y.${i}`,
       ),
+      months: yearMonths,
     });
   }
 
@@ -177,7 +247,42 @@ export function buildCoupleReport(
     headline: assertSafeCopy(headlineFor(score), "couple.headline"),
     summary,
     months,
+    years,
     disclaimer: assertSafeCopy(DISCLAIMER, "couple.disclaimer"),
+  };
+}
+
+function buildCoupleMonth(
+  personA: CouplePersonInput,
+  personB: CouplePersonInput,
+  aLabel: string,
+  bLabel: string,
+  d: Date,
+  isCurrent: boolean,
+  key: number,
+  pair: "year" | "month",
+): CoupleMonth {
+  const aYear = personalYearCycleAt(personA.dateOfBirth, d).number;
+  const bYear = personalYearCycleAt(personB.dateOfBirth, d).number;
+  const aM = personalMonth(aYear, d);
+  const bM = personalMonth(bYear, d);
+  const left = pair === "month" ? aM : aYear;
+  const right = pair === "month" ? bM : bYear;
+  const tone = pairTone(left, right);
+  return {
+    label: monthLabel(d),
+    calendarYear: d.getFullYear(),
+    calendarMonth: d.getMonth() + 1,
+    isCurrent,
+    aYear,
+    bYear,
+    aMonth: aM,
+    bMonth: bM,
+    tone,
+    note: assertSafeCopy(
+      overlayNote(monthLabel(d), aLabel, left, bLabel, right, tone),
+      `couple.m.${key}`,
+    ),
   };
 }
 
@@ -191,6 +296,7 @@ export function coupleReportPdfLines(report: CoupleReport): string[] {
           `${x.label} ${x.a} × ${x.b} · ${x.tone} · weight ${x.weight}%`,
       ),
       ...report.months.map((m) => m.note),
+      ...report.years.map((y) => y.note),
       report.disclaimer,
     ],
     "couple.pdf",

@@ -67,7 +67,7 @@ export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLiv
 
   const present = loShu.present_numbers ?? [];
   const summary = assertSafeCopy(
-    `Planes in this grid read as mental ${(loShu.mental_plane ?? "").toLowerCase() || "unlisted"}, emotional ${(loShu.emotional_plane ?? "").toLowerCase() || "unlisted"}, practical ${(loShu.practical_plane ?? "").toLowerCase() || "unlisted"}. Present digits: ${present.join(", ") || "none listed"}. The user-facing question is effect, not the missing digit itself.`,
+    `From the birth date: thinking digits ${loShu.mental_plane || "not listed"}, feeling digits ${loShu.emotional_plane || "not listed"}, doing digits ${loShu.practical_plane || "not listed"}. Present numbers: ${present.join(", ") || "none listed"}. Quiet numbers below are practice, not a hole.`,
     "enhanced.loshu.summary",
   );
 
@@ -84,7 +84,7 @@ export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLiv
 
 export function loShuItemLines(lived: LoShuLived): string[] {
   return assertSafeList(
-    lived.items.map((i) => `${i.kind === "missing" ? "Edge" : "Emphasis"} ${i.number}: ${i.effect}`),
+    lived.items.map((i) => `${i.kind === "missing" ? "Quiet" : "Loud"} ${i.number}: ${i.effect}`),
     "enhanced.loshu.lines",
   );
 }

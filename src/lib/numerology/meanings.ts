@@ -64,7 +64,7 @@ const CHALDEAN_COMPOUND: Record<number, string> = {
   40: "Compound 40 may suggest structure that supports long-term security.",
   41: "Compound 41 may suggest innovative independence with practical checks.",
   42: "Compound 42 may suggest collaborative systems that endure.",
-  43: "Compound 43 may suggest inventive problem-solving under pressure.",
+  43: "43 is the long total of the name. When the usual way stalls, try one new step — not a whole new plan.",
   44: "The total 44 means 4 + 4. In this school that is a “builder” name: slow work, systems, and finishing heavy jobs. Useful — and tiring if everyone expects you to carry the load.",
   45: "Compound 45 may suggest versatile mastery when curiosity is channeled.",
   46: "Compound 46 may suggest caring leadership with clear standards.",

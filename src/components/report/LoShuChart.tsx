@@ -224,8 +224,9 @@ function YearTimeline({
         Yearly timeline
       </p>
       <p className="mt-1 text-[11px] text-ink-soft">
-        Personal year digits beside Lo Shu catalysts—reflective pairing only,
-        not Lo Shu year math.
+        Each card is that calendar year’s Personal Year. “Quiet-digit year”
+        means the year number matches a quiet Lo Shu cell — a year to practice
+        that skill, not a special fate.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {years.map(({ year, py }) => {
@@ -244,9 +245,13 @@ function YearTimeline({
               <p className="text-[10px] text-ink-soft">{year}</p>
               <p className="brand text-lg text-ink">{py}</p>
               {hit ? (
-                <p className="text-[9px] text-gold-deep">Catalyst year</p>
+                <p className="text-[9px] text-gold-deep">
+                  Quiet-digit year
+                </p>
               ) : (
-                <p className="text-[9px] text-ink-soft">Personal year</p>
+                <p className="text-[9px] text-ink-soft">
+                  {year === new Date().getFullYear() ? "This year" : "Personal year"}
+                </p>
               )}
             </div>
           );
@@ -380,6 +385,11 @@ export function LoShuChart({
             <p className="brand mt-1 text-xl text-ink">
               {architecture.decisionFlowLabel}
             </p>
+            <p className="mt-1 text-xs leading-5 text-ink-soft">
+              Loudest date-grid plane first, quietest last — not advice on how
+              you should decide. First = more filled digits (Act = doing, Feel =
+              feeling, Think = planning).
+            </p>
           </div>
         </div>
       ) : null}
@@ -474,6 +484,16 @@ export function LoShuChart({
             })}
 
             {/* BN | DN center */}
+            <g
+              onMouseEnter={() =>
+                setTip(
+                  loShu.birth_number === loShu.destiny_number
+                    ? `Day number and long path are both ${loShu.birth_number}. That habit may show a lot. Try: finish one thing you started. Watch: treating this number as the whole self.`
+                    : `Day number ${loShu.birth_number ?? "—"} is the first habit. Long path ${loShu.destiny_number ?? "—"} is the longer walk. They are date numbers, not a third Lo Shu digit.`,
+                )
+              }
+              onMouseLeave={() => setTip(null)}
+            >
             <circle
               cx={cx}
               cy={cy}
@@ -513,6 +533,7 @@ export function LoShuChart({
             >
               BN | DN
             </text>
+            </g>
 
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => {
               const count = loShu.grid[n] ?? 0;
@@ -522,18 +543,35 @@ export function LoShuChart({
               const size = missing ? 4.2 : Math.min(8, 4 + count * 1.4);
               const meta = LO_SHU_NUMBER_META[n];
               const catalyst = architecture?.catalysts.find((c) => c.number === n);
+              const dateCount = Math.max(
+                0,
+                count -
+                  (loShu.birth_number === n ? 1 : 0) -
+                  (loShu.destiny_number === n ? 1 : 0),
+              );
+              const status =
+                count === 0
+                  ? "Quiet"
+                  : count >= 3
+                    ? "Very loud"
+                    : count === 2
+                      ? "Loud"
+                      : "Present";
               const tileTip = [
-                `${n} · ${meta.trait} (${meta.vedic})`,
-                `Plane: ${plane}`,
+                `${n} · ${meta.trait} · ${status}`,
+                `Plane: ${plane} (${plane === "emotional" ? "feeling" : plane === "mental" ? "planning" : "doing"})`,
                 missing
-                  ? catalyst
-                    ? `Growth catalyst · ${catalyst.keyword}`
-                    : "Quiet in this birth grid — a growth invite."
-                  : `Present ×${count} — ${meta.theme}.`,
-                loShu.birth_number === n ? `Includes BN ${loShu.birth_number}.` : null,
-                loShu.destiny_number === n
-                  ? `Includes DN ${loShu.destiny_number}.`
+                  ? `Quiet on the date grid. Try: ${meta.growth}. Not a hole.`
+                  : `Date digits show ${dateCount}×. ${
+                      loShu.birth_number === n || loShu.destiny_number === n
+                        ? "Birth-day and/or long-path also sit here, so the circle looks louder."
+                        : `${meta.theme}.`
+                    }`,
+                count >= 2 && !missing
+                  ? `Watch: let other planes in so ${meta.trait.toLowerCase()} is not the whole week.`
                   : null,
+                loShu.birth_number === n ? `Birth-day number is ${n}.` : null,
+                loShu.destiny_number === n ? `Long-path number is ${n}.` : null,
               ]
                 .filter(Boolean)
                 .join("\n");

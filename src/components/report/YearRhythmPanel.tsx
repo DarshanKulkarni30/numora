@@ -127,8 +127,8 @@ export function YearRhythmPanel({
         <div>
           <h2 className="text-xl text-ink">Annual rhythm</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Climate (Personal Year), this month’s weather, Outlook as a second
-            climate, and astro season as backdrop. {rhythm.weatherPrinciple}{" "}
+            Year clock, this month, and a second birthday-year clock.{" "}
+            {rhythm.weatherPrinciple}{" "}
             <LearningConceptLink conceptKey="personal-year" />
             {" · "}
             <LearningConceptLink conceptKey="personal-month" />
@@ -157,15 +157,13 @@ export function YearRhythmPanel({
         </p>
         <p className="brand mt-1 text-2xl text-ink">{rhythm.mix.mixLabel}</p>
         <p className="mt-1 text-sm text-ink">
-          Climate {year.raw} {year.season.verb}
-          <span className="text-ink-soft"> · </span>
-          Weather {month.raw} {month.season.verb}
-          {rhythm.sunVerb ? (
-            <>
-              <span className="text-ink-soft"> · </span>
-              Backdrop {rhythm.sunVerb}
-            </>
-          ) : null}
+          Year {year.raw}: {year.season.scan}
+        </p>
+        <p className="text-sm text-ink">
+          Month {month.raw}: {month.season.scan}
+        </p>
+        <p className="mt-1 text-xs text-ink-soft">
+          Together: {rhythm.mix.bestUse} Watch: {rhythm.mix.watchFor}
         </p>
         <p className="mt-1 text-xs text-ink-soft">{rhythm.mix.outlookNote}</p>
       </div>

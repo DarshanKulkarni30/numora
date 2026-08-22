@@ -34,7 +34,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "△",
     stroke: "rgba(217, 119, 6, 0.7)",
     fill: "#F59E0B",
-    scan: "One clear start may serve better than ten openings.",
+    scan: "Start one small thing. Not ten openings.",
   },
   2: {
     season: "Tide season",
@@ -45,7 +45,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "☽",
     stroke: "rgba(100, 116, 139, 0.7)",
     fill: "#94A3B8",
-    scan: "Patience and partnership may set a slower, useful tempo.",
+    scan: "Go slow with people. Wait before you push.",
   },
   3: {
     season: "Voice season",
@@ -56,7 +56,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "✧",
     stroke: "rgba(14, 116, 144, 0.65)",
     fill: "#7DD3FC",
-    scan: "Sharing one finished thing may beat ten drafts.",
+    scan: "Finish and share one thing. Not ten drafts.",
   },
   4: {
     season: "Earth season",
@@ -67,7 +67,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "□",
     stroke: "rgba(120, 53, 15, 0.65)",
     fill: "#A8A29E",
-    scan: "Practical structure and routine may be the useful tempo.",
+    scan: "Write one repeating plan and keep it this week.",
   },
   5: {
     season: "Wind season",
@@ -78,7 +78,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "⬠",
     stroke: "rgba(15, 118, 110, 0.7)",
     fill: "#2DD4BF",
-    scan: "Exploration may fit better than rigid plans.",
+    scan: "Try one small change. Do not rewrite the whole plan.",
   },
   6: {
     season: "Hearth season",
@@ -89,7 +89,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "♡",
     stroke: "rgba(190, 24, 93, 0.55)",
     fill: "#F9A8D4",
-    scan: "Care and duty may ask for a protected rest beside the yeses.",
+    scan: "Keep one promise. Keep one hour that is for you.",
   },
   7: {
     season: "Still-water season",
@@ -100,7 +100,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "◇",
     stroke: "rgba(67, 56, 202, 0.6)",
     fill: "#818CF8",
-    scan: "Quiet study may serve better than forcing loud expansion.",
+    scan: "Take quiet time. Do not force a loud push.",
   },
   8: {
     season: "Summit season",
@@ -111,7 +111,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "⬡",
     stroke: "rgba(30, 58, 107, 0.7)",
     fill: "#1E3A5F",
-    scan: "One durable result plus recovery may be the honest load.",
+    scan: "Finish one real result, then rest.",
   },
   9: {
     season: "Harvest season",
@@ -122,7 +122,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "○",
     stroke: "rgba(185, 28, 28, 0.6)",
     fill: "#E07A5F",
-    scan: "Closing and consolidating may be the climate of this window.",
+    scan: "Close one loop before you open another.",
   },
 };
 
@@ -263,15 +263,15 @@ const CROSS_ELEMENT: Record<string, ElementMix> = {
     watchFor: "Pushing through mood until something snaps.",
   },
   "Water-Fire": {
-    tension: "The inner tide may meet a call to act.",
-    opportunity: "Feeling can become one clear gesture.",
-    bestUse: "Let insight choose one start or one release.",
-    watchFor: "Staying in reflection until the window passes.",
+    tension: "A slow year meets a month that wants a start.",
+    opportunity: "Notice first, then start one small thing.",
+    bestUse: "Start one small thing this month, then wait and check it.",
+    watchFor: "Thinking until the month is gone, or starting ten things.",
   },
 };
 
 export const WEATHER_PRINCIPLE =
-  "These cycles describe the quality of the period — weather for pacing, not events written in advance.";
+  "Year, month, and outlook are pacing clocks — not events written in advance.";
 
 export type RhythmLayer = {
   id: RhythmLayerId;
@@ -506,12 +506,12 @@ export function buildYearRhythm(opts: {
     ? sunCopy(sun, yearDigit)
     : "Sun sign is read from month and day only — add a complete date to place the astro season.";
 
-  const summary = sun
-    ? `A year of ${yearSeason.season.toLowerCase()}, shaped by a month of ${monthSeason.season.toLowerCase()}, expressed through ${sun.name}’s ${sun.element.toLowerCase()}.`
-    : `A year of ${yearSeason.season.toLowerCase()}, shaped by a month of ${monthSeason.season.toLowerCase()}.`;
+  const summary = `Year ${yearDigit}: ${yearSeason.scan} Month ${monthDigit}: ${monthSeason.scan}${
+    sun ? ` ${sun.name} is calendar backdrop only — not a numerology number.` : ""
+  }`;
 
-  const seasonal = `Year ${yearDigit} reads as ${yearSeason.season} (${yearSeason.visual}). Month ${monthDigit} reads as ${monthSeason.season} (${monthSeason.visual}).${
-    sun ? ` ${sun.name} adds ${sun.element.toLowerCase()} symmetry as backdrop.` : ""
+  const seasonal = `Year ${yearDigit}: ${yearSeason.scan} Month ${monthDigit}: ${monthSeason.scan}${
+    sun ? ` ${sun.name} is a calendar backdrop, not a numerology number.` : ""
   }`;
 
   const practice =
@@ -521,8 +521,8 @@ export function buildYearRhythm(opts: {
 
   const outlookNote =
     outlookDigit != null && outlookDigit !== yearDigit
-      ? `Outlook ${opts.outlook} (${outlookSeason.verb}) colors the same window as a second climate — two weathers, not a vote.`
-      : `Outlook currently rhymes with Year ${yearDigit} (${yearSeason.verb}).`;
+      ? `Outlook ${opts.outlook} is a second year clock (${outlookSeason.scan}) It is not a vote against year ${yearDigit}.`
+      : `Outlook matches year ${yearDigit}: ${yearSeason.scan}`;
 
   const mix: RhythmMix = {
     mixLabel: `${yearSeason.verb} → ${monthSeason.verb}`,

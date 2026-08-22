@@ -45,6 +45,9 @@ const couple = buildCoupleReport(
 assert(couple.score >= 0 && couple.score <= 100, "score 0–100");
 eq(couple.axes.length, 5, "five seats");
 eq(couple.months.length, 12, "couple year overlay");
+eq(couple.years.length, 10, "couple ten-year overlay");
+eq(couple.years[0]?.months.length, 12, "couple year has twelve months");
+assert(couple.years[0]?.calendarYear === 2026, "decade starts this year");
 assert(couple.axes.every((x) => x.weight > 0), "weights");
 assert(!couple.summary.toLowerCase().includes("decoz"), "couple copy original");
 

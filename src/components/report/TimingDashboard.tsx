@@ -41,12 +41,10 @@ export function TimingDashboard({
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-xl text-ink">Timing dashboard</h2>
         <p className="mt-1 text-sm text-ink-soft">
-          Climate (Personal Year), weather (Personal Month), Outlook as a second
-          climate, and astro season as backdrop — Western pacing beside Vedic
-          birthday-cycle tone.
-          {asOf ? ` Season as of ${asOf}.` : ""}{" "}
+          Year clock, this month, and a second birthday-year clock. Star sign is
+          backdrop only.
+          {asOf ? ` As of ${asOf}.` : ""}{" "}
           <LearningConceptLink conceptKey="personal-year" />
           {" · "}
           <LearningConceptLink conceptKey="personal-month" />

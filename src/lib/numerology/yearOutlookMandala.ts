@@ -4,6 +4,8 @@
  */
 
 import { personalYearForCalendarYear } from "./cycles";
+import { reduceToSingleDigit } from "./dateNumbers";
+import { plainJob, plainTrait } from "./layeredCopy";
 import { planetForVedic, type PlanetInfo } from "./planets";
 import {
   projectedYearMeta,
@@ -42,6 +44,7 @@ export type YearOutlookMandalaModel = {
   season: YearSeason;
   tiles: YearInsightTile[];
   synergy: YearSynergy;
+  combined: string;
   calcCapsules: { id: string; label: string; value: string }[];
   reflectivePractice: string;
   blueprintLines: string[];
@@ -120,7 +123,7 @@ function synergyFor(outlook: number, personalYear: number): YearSynergy {
       outlook,
       mode: "harmony",
       label: "Aligned",
-      summary: `Personal Year ${personalYear} and Year Outlook ${outlook} rhyme — Western pacing and Vedic birthday tone support one story.`,
+      summary: `Western year ${personalYear} and this birthday-year ${outlook} match. Same job: ${plainJob(outlook)}.`,
     };
   }
   const gap = Math.abs(outlook - personalYear);
@@ -130,7 +133,7 @@ function synergyFor(outlook: number, personalYear: number): YearSynergy {
       outlook,
       mode: "near",
       label: "Near tones",
-      summary: `Personal Year ${personalYear} sits beside Outlook ${outlook} — related pacing with a soft shift in emphasis.`,
+      summary: `Western year ${personalYear} sits next to this birthday-year ${outlook}. Do both jobs in small steps: ${plainJob(personalYear)}; ${plainJob(outlook)}.`,
     };
   }
   return {
@@ -138,7 +141,7 @@ function synergyFor(outlook: number, personalYear: number): YearSynergy {
     outlook,
     mode: "contrast",
     label: "Contrast",
-    summary: `Personal Year ${personalYear} and Year Outlook ${outlook} differ — hold both as mirrors: monthly Western pacing vs birthday-cycle Vedic tone.`,
+    summary: `Two year clocks. Western year ${personalYear} is ${plainTrait(personalYear)}. This birthday-year ${outlook} is ${plainTrait(outlook)}. They are not a vote. Try the Western job this calendar year, and the birthday-year job from birthday to birthday.`,
   };
 }
 
@@ -153,7 +156,10 @@ export function buildYearOutlookMandala(
     dob,
     cycle.calendarYearUsed,
   );
-  const synergy = synergyFor(cycle.number, personalYear);
+  const synergy = {
+    ...synergyFor(cycle.number, reduceToSingleDigit(personalYear)),
+    personalYear,
+  };
 
   const coreGlyph =
     cycle.number === 8
@@ -179,16 +185,16 @@ export function buildYearOutlookMandala(
     {
       id: "planet",
       title: "Planet Tone",
-      headline: `${planet.name} · stamina & responsibility`,
+      headline: `${planet.name}`,
       glyph: planet.symbol,
-      insight: `${planet.name} emphasizes ${meta.strengths[0]?.toLowerCase() ?? "durable pacing"} — patience and responsible action over haste.`,
+      insight: `${planet.name} here points to ${meta.strengths[0]?.toLowerCase() ?? plainTrait(cycle.number)}. Not a purchase or remedy.`,
     },
     {
       id: "practice",
-      title: "Practice Cue",
-      headline: meta.practice.split(/[.。]/)[0] ?? meta.practice,
+      title: "Try this year",
+      headline: meta.practice,
       glyph: "→",
-      insight: meta.practice,
+      insight: `Watch: ${meta.watchouts[0] ?? "treating the year as a prediction"}.`,
     },
   ];
   const calcCapsules = [
@@ -206,7 +212,8 @@ export function buildYearOutlookMandala(
     },
   ];
 
-  const reflectivePractice = `Reflective practice for ${season.name}: ${meta.practice}`;
+  const combined = `Combined: Western year ${personalYear} — ${plainJob(personalYear)}. This birthday-year ${cycle.number} — ${plainJob(cycle.number)}. ${meta.practice} Not a prediction.`;
+  const reflectivePractice = combined;
 
   const blueprintLines = [
     `Year Outlook Mandala · ${cycle.rangeLabel} · ${cycle.number} (${planet.name})`,
@@ -224,6 +231,7 @@ export function buildYearOutlookMandala(
     season,
     tiles,
     synergy,
+    combined,
     calcCapsules,
     reflectivePractice,
     blueprintLines,

@@ -194,7 +194,7 @@ export async function downloadEnhancedPdf(
   addBanner("Lo Shu lived effects");
   addBody(reading.loShuLived.summary);
   for (const item of reading.loShuLived.items) {
-    addBullet(`${item.kind === "missing" ? "Edge" : "Emphasis"} ${item.number}: ${item.effect}`);
+    addBullet(`${item.kind === "missing" ? "Quiet" : "Loud"} ${item.number}: ${item.effect}`);
   }
 
   addBanner("Pythagorean chart");

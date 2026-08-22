@@ -1,6 +1,6 @@
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 import { parseChartNumber } from "./digits";
-import { plainTrait } from "@/lib/numerology/layeredCopy";
+import { plainJob, plainTrait } from "@/lib/numerology/layeredCopy";
 
 export type Tension = {
   id: string;
@@ -27,7 +27,7 @@ export function buildTensions(
       id: "inner-outer",
       title: "Inner wish and outer manner",
       values: [`Soul Urge ${soul}`, `Personality ${pers}`],
-      insight: `Soul Urge ${soul} (${plainTrait(soul)}) is what can feel true inside. Personality ${pers} (${plainTrait(pers)}) is what people may notice first. You do not have to hide one to keep the other.`,
+      insight: `Inside you may want ${plainTrait(soul)} (Soul Urge ${soul}). People may first notice ${plainTrait(pers)} (Personality ${pers}). When those pull apart, pick one move: ${plainJob(soul)} or ${plainJob(pers)}. Watch: using the outer manner to hide the inner wish.`,
     });
   }
 
@@ -36,7 +36,7 @@ export function buildTensions(
       id: "path-destiny",
       title: "Life Path and Destiny tones",
       values: [`Life Path ${lp}`, `Destiny ${destiny}`],
-      insight: `Pythagorean Life Path ${lp} and Vedic Destiny ${destiny} are two school views of the longer path. Read both. They are not a contest.`,
+      insight: `Life Path ${lp} is ${plainTrait(lp)}. Destiny ${destiny} is ${plainTrait(destiny)}. They are two maps of the same date, not a contest. Try: ${plainJob(lp)} this week, and ${plainJob(destiny)} as the longer habit.`,
     });
   }
 
@@ -45,7 +45,7 @@ export function buildTensions(
       id: "psychic-destiny",
       title: "Day temperament and longer path",
       values: [`Psychic ${psychic}`, `Destiny ${destiny}`],
-      insight: `Psychic ${psychic} is closer to the day’s first habit. Destiny ${destiny} is the longer walk. Notice when a day’s reaction pulls against a longer aim, then take one small bridging step.`,
+      insight: `The day’s first habit is ${plainTrait(psychic)} (Psychic ${psychic}). The longer walk is ${plainTrait(destiny)} (Destiny ${destiny}). If a day’s reaction pulls against the longer aim, take one small step: ${plainJob(destiny)}.`,
     });
   }
 
@@ -54,18 +54,18 @@ export function buildTensions(
       id: "name-schools",
       title: "Two name-school readings",
       values: [`Pythagorean Expression ${expr}`, `Chaldean Name ${chal}`],
-      insight: `Expression ${expr} is the Pythagorean all-letter name number. Chaldean ${chal} is a different letter map of the same name. One is how you build. The other is how the name may feel. Hold both.`,
+      insight: `Same name, two letter maps. Expression ${expr} is ${plainTrait(expr)}. Chaldean ${chal} is ${plainTrait(chal)}. You do not pick a winner. A useful day: ${plainJob(expr)}, then ${plainJob(chal)}.`,
     });
   }
 
   const missing = loShu?.missing_numbers ?? [];
   if (missing.length) {
-    const shown = missing.slice(0, 3).join(", ");
+    const jobs = missing.map((n) => `${n}: ${plainJob(n)}`).join("; ");
     out.push({
       id: "lo-shu-gaps",
-      title: "Lo Shu development edges",
-      values: missing.map((n) => `Missing ${n}`),
-      insight: `The Lo Shu grid does not show ${shown} as strongly as other digits. Treat that as extra practice, not a hole in the person.`,
+      title: "Lo Shu quiet digits",
+      values: missing.map((n) => `Quiet ${n}`),
+      insight: `These digits are quiet on the date grid, not a hole in the person: ${missing.join(", ")}. Try one: ${jobs}. Watch: calling a quiet digit a flaw.`,
     });
   }
 
@@ -81,7 +81,7 @@ export function buildTensions(
         `Operating Expression ${snap.expression_number}`,
       ],
       insight:
-        "Birth-certificate spelling stays the natal layer. The later name in force may shift Expression and name numbers while date-based numbers stay the same. Both layers belong in a complete reading.",
+        "Birth-certificate spelling stays as the first name layer. The later name in force may change Expression and other name numbers. Date numbers (Life Path, year, day) stay the same. Read both layers; do not throw the first name away.",
     });
   }
 

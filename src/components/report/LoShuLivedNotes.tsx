@@ -14,7 +14,7 @@ export function LoShuLivedNotes({ lived }: Props) {
         {lived.items.map((item) => (
           <li key={`${item.kind}-${item.number}`}>
             <span className="font-medium text-ink">
-              {item.kind === "missing" ? "Edge" : "Emphasis"} {item.number}.
+              {item.kind === "missing" ? "Quiet" : "Loud"} {item.number}.
             </span>{" "}
             {item.effect}
           </li>

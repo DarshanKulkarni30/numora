@@ -97,9 +97,9 @@ const SAME: Record<number, TransitionDraft> = {
     invitation: "Honor feeling without disappearing; practice patience as strength.",
   },
   3: {
-    feel: "Expression is both starting point and destination.",
-    atmosphere: "Conversation, teaching-in-ordinary-life, creative output as daily weather.",
-    invitation: "Finish what you start sharing; let joy have a container.",
+    feel: "Day habit and long path are the same: talking, play, and sharing ideas.",
+    atmosphere: "Home, work, and friends may keep handing you speaking or making work.",
+    invitation: "Finish one thing you started saying. Watch: starting many talks and closing none.",
   },
   4: {
     feel: "Structure deepens; the lesson is to keep building.",
@@ -417,8 +417,8 @@ export function nameOnBnDnPath(
         : "and is a third color beside Birth";
 
   return {
-    headline: "Name is a third color on the path",
-    detail: `Name ${nn} is neither Birth ${bn} nor Destiny ${dn}. Think of it as the vehicle: it ${ease}, ${birthEase}. Use contrast as nuance — how you are introduced can speed, soften, or complicate the Birth → Destiny walk.`,
+      headline: "Name is a third habit on the path",
+      detail: `Name ${nn} is not Birth ${bn} and not Destiny ${dn}. People may meet ${VEDIC_DIGIT_THEMES[nn]?.keyword ?? nn} first. It ${ease}, ${birthEase}. Try one name habit, then return to the day habit. Not a second destiny.`,
     nnEqualsBn,
     nnEqualsDn,
   };

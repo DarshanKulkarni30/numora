@@ -67,9 +67,9 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       focus: ["release", "mentoring", "finishing what still matters"],
     },
     11: {
-      title: "An insight year",
-      image: "like a clear night for noticing patterns",
-      focus: ["inspiration", "rest", "sharing ideas without rushing them"],
+      title: "A noticing year",
+      image: "a year to notice, think, and rest",
+      focus: ["notice patterns", "rest", "share one idea without rushing it"],
     },
     22: {
       title: "A building year",
@@ -109,8 +109,8 @@ export function buildSeasonBrief(
 
   const combined = assertSafeCopy(
     mMeta
-      ? `As of ${asOf}, Personal Year ${py} may feel ${yMeta.image}, while Personal Month ${pm} may feel ${mMeta.image}. Together, the current season may favour ${joinSoft(yMeta.focus.slice(0, 2))} through ${joinSoft(mMeta.focus)}.`
-      : `As of ${asOf}, Personal Year ${py} may feel ${yMeta.image}. The invitation is ${joinSoft(yMeta.focus)}.`,
+      ? `As of ${asOf}: year ${py} is for ${joinSoft(yMeta.focus.slice(0, 2))}. This month (${pm}) is for ${joinSoft(mMeta.focus)}. Do the month job inside the year job — not a prediction.`
+      : `As of ${asOf}: year ${py} is for ${joinSoft(yMeta.focus)}. Not a prediction.`,
     "enhanced.season.combined",
   );
 

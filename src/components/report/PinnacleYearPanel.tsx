@@ -7,6 +7,17 @@ import {
   type PinnacleInsight,
 } from "@/lib/numerology/pinnacleYear";
 import type { PinnacleId } from "@/lib/numerology/pinnacles";
+import { parseDob } from "@/lib/numerology/reduce";
+
+function yearAtAge(dob: string, age: number): number | null {
+  try {
+    const { year } = parseDob(dob);
+    if (!year) return null;
+    return year + age;
+  } catch {
+    return null;
+  }
+}
 
 type Props = {
   dateOfBirth: string;
@@ -156,7 +167,7 @@ export function PinnacleYearPanel({
                     className="fill-[var(--ink)]"
                     style={{ fontSize: 10, fontWeight: 600 }}
                   >
-                    P{id} · {chapter.pinnacle.number} {chapter.chapterTitle}
+                    P{id} · {chapter.pinnacle.number} {chapter.title}
                   </text>
                 </g>
               );
@@ -171,7 +182,7 @@ export function PinnacleYearPanel({
                 aria-label={`Pinnacle ${ch.pinnacle.id}, number ${ch.pinnacle.number}, ${ch.ageLabel}`}
                 title={`${ch.ageLabel} · ${ch.coreTone}`}
                 onClick={() => setSelectedId(ch.pinnacle.id)}
-                className={`rounded-lg border px-1 py-1.5 text-[10px] leading-tight ${
+                className={`btn-tactile rounded-lg border px-1 py-1.5 text-[10px] leading-tight ${
                   selectedId === ch.pinnacle.id
                     ? "border-gold bg-white text-ink ring-2 ring-gold/40"
                     : "border-[var(--line)] bg-white/80 text-ink-soft"
@@ -189,8 +200,14 @@ export function PinnacleYearPanel({
             {selected.pinnacle.number} {selected.title}
           </p>
           <p className="text-sm text-ink-soft">
-            Chapter {selected.pinnacle.id} · {selected.chapterTitle} ·{" "}
-            {selected.ageLabel} · {selected.season.season} · {selected.planet.name}
+            Chapter {selected.pinnacle.id} · {selected.ageLabel}
+            {yearAtAge(dateOfBirth, selected.pinnacle.ageStart) != null
+              ? ` · from about ${yearAtAge(dateOfBirth, selected.pinnacle.ageStart)}`
+              : ""}
+            {selected.pinnacle.ageEnd != null &&
+            yearAtAge(dateOfBirth, selected.pinnacle.ageEnd) != null
+              ? ` to ${yearAtAge(dateOfBirth, selected.pinnacle.ageEnd)}`
+              : ""}
           </p>
           <div className="grid gap-2 sm:grid-cols-3">
             <div className="rounded-xl border border-[var(--line)] bg-mist/70 px-3 py-2.5">
@@ -274,20 +291,23 @@ export function PinnacleYearPanel({
             title={`Age ${model.age}`}
           />
         </div>
-        <div className="relative mt-1.5 h-4 text-[10px] text-ink-soft">
+        <div className="relative mt-1.5 h-8 text-[10px] text-ink-soft">
           {model.chapters.map((ch) => {
             const start = (ch.pinnacle.ageStart / Math.max(1, maxAge)) * 100;
-            const end =
-              ((ch.pinnacle.ageEnd ?? maxAge) / Math.max(1, maxAge)) * 100;
-            const width = Math.max(4, end - start);
+            const y = yearAtAge(dateOfBirth, ch.pinnacle.ageStart);
             return (
               <span
                 key={ch.pinnacle.id}
-                className="absolute top-0 truncate text-center leading-4"
-                style={{ left: `${start}%`, width: `${width}%` }}
-                title={ch.ageLabel}
+                className="absolute top-0 max-w-[28%] leading-3"
+                style={{ left: `${start}%` }}
+                title={
+                  y
+                    ? `P${ch.pinnacle.id} starts about age ${ch.pinnacle.ageStart} (${y})`
+                    : ch.ageLabel
+                }
               >
-                {ch.ageLabel}
+                {ch.pinnacle.ageStart}
+                {y ? ` · ${y}` : ""}
               </span>
             );
           })}

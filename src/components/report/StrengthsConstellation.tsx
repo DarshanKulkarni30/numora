@@ -78,8 +78,9 @@ export function StrengthsConstellation({
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        Gifts clustered around Life Path {lifePath ?? "tone"} — not a complete
-        inventory of who you are. Larger nodes sit closer to that path.
+        Five gifts around Life Path {lifePath ?? "—"}. The number on a circle is
+        only the slot (1–5), not a chart number. Larger circles sit closer to
+        that Life Path. This is not a full list of who you are.
       </p>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,1fr)] lg:items-stretch">
@@ -206,12 +207,10 @@ export function StrengthsConstellation({
           {active.detail ? (
             <p className="mt-2 text-sm leading-6 text-ink-soft">{active.detail}</p>
           ) : null}
-          <p className="mt-3 text-xs text-ink-soft">
-            {active.sources.join(" · ")}
-          </p>
-          <p className="mt-auto pt-4 text-sm leading-6 text-ink-soft">
-            When this gift overextends, borrow one catalyst practice from Growth
-            Mode rather than treating the constellation as a complete self.
+          <p className="mt-3 text-sm leading-6 text-ink">{active.meaning}</p>
+          <p className="mt-2 text-xs text-ink-soft">{active.sourceLine}</p>
+          <p className="mt-auto pt-4 text-sm leading-6 text-ink">
+            {active.tryLine} {active.watchLine}
           </p>
         </article>
       </div>
@@ -219,15 +218,20 @@ export function StrengthsConstellation({
       {model.extra.length ? (
         <div>
           <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-            Also in the mix
+            Also on this chart
+          </p>
+          <p className="mt-1 text-xs text-ink-soft">
+            Quieter gifts that did not fit the five circles. Read the full
+            phrase — they are not buttons.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {model.extra.map((n) => (
               <span
                 key={n.label}
-                className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink-soft"
+                title={`${n.label}. ${n.tryLine}`}
+                className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink"
               >
-                {n.title}
+                {n.label}
               </span>
             ))}
           </div>

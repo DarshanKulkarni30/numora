@@ -39,8 +39,8 @@ export function ProjectedYearPanel({
             Year Outlook
           </h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Your birthday-cycle Vedic tone — Year Cycle Mandala with season,
-            planet, and practice cues.
+            Birthday-year clock (date + weekday of that birthday). Hover a ring
+            for what that layer is. Combined job is under the graphic.
           </p>
           <p className="mt-2 text-xs leading-5 text-ink-soft">
             <span className="font-medium text-ink">Personal Year</span> =

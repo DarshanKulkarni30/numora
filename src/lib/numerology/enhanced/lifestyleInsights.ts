@@ -66,7 +66,7 @@ function leadershipStyle(lp: number, expr: number): string {
   if (lp === 1) {
     return "May lead by starting, then needing others who can finish the system.";
   }
-  return `May lead in the tone of Life Path ${lp} (${traitLabel(lp)}) expressed through ${traitLabel(expr)}.`;
+  return `May lead by ${traitLabel(lp)}, using ${traitLabel(expr)} to get the work done.`;
 }
 
 function communicationStyle(pers: number, expr: number, young: boolean): string {

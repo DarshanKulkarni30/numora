@@ -448,7 +448,7 @@ export function EnhancedReportView({
 
           {reading.tensions.length ? (
             <div>
-              <h3 className="text-xl text-ink">Productive stretch</h3>
+              <h3 className="text-xl text-ink">Where two readings differ</h3>
               <div className="mt-3 space-y-3">
                 {reading.tensions.map((t) => (
                   <div
@@ -510,7 +510,7 @@ export function EnhancedReportView({
               {reading.loShuLived.items.map((item) => (
                 <li key={`${item.kind}-${item.number}`}>
                   <span className="font-medium text-ink">
-                    {item.kind === "missing" ? "Edge" : "Emphasis"} {item.number}.
+                    {item.kind === "missing" ? "Quiet" : "Loud"} {item.number}.
                   </span>{" "}
                   {item.effect}
                 </li>

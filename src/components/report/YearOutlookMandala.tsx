@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import {
   buildYearOutlookMandala,
@@ -23,7 +23,13 @@ const SYNERGY_CHIP: Record<string, string> = {
   contrast: "border-amber-300 bg-amber-50 text-amber-950",
 };
 
-function MandalaWheel({ model }: { model: YearOutlookMandalaModel }) {
+function MandalaWheel({
+  model,
+  onLayer,
+}: {
+  model: YearOutlookMandalaModel;
+  onLayer?: (text: string) => void;
+}) {
   const { cycle, planet, season, synergy } = model;
   const stroke = season.stroke;
 
@@ -64,7 +70,12 @@ function MandalaWheel({ model }: { model: YearOutlookMandalaModel }) {
         stroke={stroke}
         strokeWidth="3.5"
         strokeDasharray="4 6"
-        className="motion-safe:animate-pulse"
+        className="motion-safe:animate-pulse cursor-pointer"
+        onMouseEnter={() =>
+          onLayer?.(
+            `Center ${cycle.number} is this birthday-year. Job: ${model.tiles[0]?.insight ?? ""}.`,
+          )
+        }
       />
       <circle
         cx="110"
@@ -91,6 +102,12 @@ function MandalaWheel({ model }: { model: YearOutlookMandalaModel }) {
         textAnchor="middle"
         fontSize="7"
         fill="rgb(70 82 98)"
+        className="cursor-pointer"
+        onMouseEnter={() =>
+          onLayer?.(
+            `Weekday of that year’s birthday (${cycle.weekdayLabel}) counts as ${cycle.weekdayDigit} in this school.`,
+          )
+        }
       >
         {cycle.weekdayLabel} → {cycle.weekdayDigit}
       </text>
@@ -114,6 +131,18 @@ function MandalaWheel({ model }: { model: YearOutlookMandalaModel }) {
       >
         M{cycle.month} · D{cycle.day}
       </text>
+      <circle
+        cx="110"
+        cy="110"
+        r="56"
+        fill="transparent"
+        className="cursor-pointer"
+        onMouseEnter={() =>
+          onLayer?.(
+            `Birth month ${cycle.month} and day ${cycle.day} go into this year sum. They do not change if you change your name.`,
+          )
+        }
+      />
 
       {/* Inner — Personal Year synergy */}
       <circle
@@ -141,6 +170,14 @@ function MandalaWheel({ model }: { model: YearOutlookMandalaModel }) {
       >
         PY {synergy.personalYear} · {synergy.label}
       </text>
+      <circle
+        cx="110"
+        cy="110"
+        r="42"
+        fill="transparent"
+        className="cursor-pointer"
+        onMouseEnter={() => onLayer?.(synergy.summary)}
+      />
 
       {/* Center */}
       <circle
@@ -184,6 +221,7 @@ export function YearOutlookMandala({
     () => buildYearOutlookMandala(cycle, dob),
     [cycle, dob],
   );
+  const [layerTip, setLayerTip] = useState<string | null>(null);
 
   return (
     <div className={`space-y-4 ${className}`}>
@@ -193,9 +231,9 @@ export function YearOutlookMandala({
         <div className="flex flex-wrap items-center justify-between gap-2 px-1">
           <div>
             <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-              {model.season.name}
+              Birthday-year {model.cycle.number}
             </p>
-            <p className="text-sm text-ink">{model.season.metaphor}</p>
+            <p className="text-sm text-ink">{model.tiles[2]?.headline}</p>
           </div>
           <span
             className={`rounded-full border px-2.5 py-1 text-[10px] font-medium ${SYNERGY_CHIP[model.synergy.mode]}`}
@@ -203,12 +241,14 @@ export function YearOutlookMandala({
             {model.synergy.label}
           </span>
         </div>
-        <MandalaWheel model={model} />
+        <MandalaWheel model={model} onLayer={setLayerTip} />
         <div className="mt-1 flex justify-center">
           <PlanetIcon planet={model.planet} size="sm" />
         </div>
-        <p className="mt-2 text-center text-xs text-ink-soft">
-          {model.season.visualHint}
+        <p className="mt-2 text-center text-sm text-ink">{model.combined}</p>
+        <p className="mt-1 text-center text-xs text-ink-soft">
+          {layerTip ??
+            "Tap or hover a ring: weekday, birth month/day, Western year, or the center birthday-year."}
         </p>
       </div>
 
