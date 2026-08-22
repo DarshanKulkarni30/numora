@@ -16,6 +16,11 @@ import {
 } from "@/lib/profile/options";
 import { NameHistoryEditor } from "@/components/profile/NameHistoryEditor";
 import { nameHistoryIssue } from "@/lib/profile/nameHistory";
+import {
+  buildPersonExport,
+  mergePersonImport,
+  parsePersonBackup,
+} from "@/lib/profile/personBackup";
 
 type Props = {
   email?: string | null;
@@ -86,6 +91,7 @@ export function ProfileForm({
   const [historyOpen, setHistoryOpen] = useState(() =>
     (initialPeople[0]?.name_history?.length ?? 0) > 0,
   );
+  const [importing, setImporting] = useState(false);
   const entitlements =
     initialEntitlements ?? resolveEntitlements(email);
 
@@ -156,6 +162,51 @@ export function ProfileForm({
     });
   }
 
+  function exportPeople() {
+    const file = buildPersonExport(people);
+    const blob = new Blob([JSON.stringify(file, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `numora-people-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setMessage("Person list downloaded. Keep this file if you want to restore later.");
+    setError(null);
+  }
+
+  async function onImportFile(file: File | null) {
+    if (!file || importing) return;
+    setImporting(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const raw = JSON.parse(await file.text()) as unknown;
+      const incoming = parsePersonBackup(raw);
+      const merged = mergePersonImport(people, incoming, entitlements.maxPeople);
+      if (merged.replaced === 0 && merged.added === 0) {
+        throw new Error(
+          merged.skipped
+            ? "Nothing could be imported. Check name, date of birth, gender, and purpose in the file."
+            : "This file has no people to add.",
+        );
+      }
+      setPeople(merged.people);
+      setIdentityConfirmed(false);
+      setMessage(
+        `Import ready: ${merged.replaced} replaced (exact name + date of birth), ${merged.added} added${
+          merged.skipped ? `, ${merged.skipped} skipped` : ""
+        }. Tick the name & date check and save to keep it.`,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not read this JSON file.");
+    } finally {
+      setImporting(false);
+    }
+  }
+
   async function onSave() {
     setSaving(true);
     setError(null);
@@ -194,6 +245,34 @@ export function ProfileForm({
           {people.length === 1 ? "" : "s"} ready.
         </p>
       ) : null}
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={exportPeople}
+          className="btn-tactile rounded-full border border-[var(--line)] bg-white px-4 py-1.5 text-sm text-ink"
+        >
+          Export people JSON
+        </button>
+        <label className="btn-tactile inline-flex cursor-pointer rounded-full border border-[var(--line)] bg-white px-4 py-1.5 text-sm text-ink">
+          {importing ? "Importing…" : "Import people JSON"}
+          <input
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            disabled={importing}
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+              e.target.value = "";
+              void onImportFile(file);
+            }}
+          />
+        </label>
+        <p className="w-full text-xs text-ink-soft">
+          Backup Self and family. On import, an exact full name + date of
+          birth replaces that person. New names are added. Then save.
+        </p>
+      </div>
 
       <div className="sticky top-0 z-20 -mx-1 mt-4 border-b border-[var(--line)] bg-paper/95 px-1 py-3 backdrop-blur">
         <div className="flex flex-wrap items-center gap-2">

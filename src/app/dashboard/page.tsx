@@ -36,7 +36,8 @@ export default async function DashboardPage() {
           <div>
             <h1 className="text-4xl text-ink">Your readings</h1>
             <p className="mt-2 text-ink-soft">
-              Signed in as {user?.email}. Reports stay private to this account.
+              Signed in as {user?.email}. Filter by person name, select
+              readings to delete, and keep reports private to this account.
             </p>
           </div>
           <Link

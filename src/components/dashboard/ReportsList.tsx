@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
+import { normalizeDobToSlash } from "@/lib/profile/date";
 
 export type DashboardReport = {
   id: string;
@@ -23,42 +24,131 @@ type Props = {
   initialReports: DashboardReport[];
 };
 
+type PersonOption = {
+  key: string;
+  label: string;
+  count: number;
+};
+
+function displayName(r: DashboardReport): string {
+  return (r.preferred_name || r.full_name).trim() || r.full_name;
+}
+
+function personKey(r: DashboardReport): string {
+  const dob = normalizeDobToSlash(r.date_of_birth) ?? r.date_of_birth.trim();
+  return `${r.full_name.trim()}|${dob}`;
+}
+
 export function ReportsList({ initialReports }: Props) {
   const router = useRouter();
   const titleId = useId();
+  const filterId = useId();
+  const personId = useId();
   const [reports, setReports] = useState(initialReports);
-  const [pending, setPending] = useState<DashboardReport | null>(null);
+  const [query, setQuery] = useState("");
+  const [personFilter, setPersonFilter] = useState("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [pendingIds, setPendingIds] = useState<string[] | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setReports(initialReports);
+    setSelected(new Set());
   }, [initialReports]);
 
+  const people = useMemo<PersonOption[]>(() => {
+    const map = new Map<string, PersonOption>();
+    for (const r of reports) {
+      const key = personKey(r);
+      const cur = map.get(key);
+      if (cur) {
+        cur.count += 1;
+      } else {
+        map.set(key, {
+          key,
+          label: `${displayName(r)} · ${r.date_of_birth}`,
+          count: 1,
+        });
+      }
+    }
+    return [...map.values()].sort((a, b) => a.label.localeCompare(b.label));
+  }, [reports]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return reports.filter((r) => {
+      if (personFilter !== "all" && personKey(r) !== personFilter) return false;
+      if (!q) return true;
+      return (
+        r.full_name.toLowerCase().includes(q) ||
+        (r.preferred_name || "").toLowerCase().includes(q)
+      );
+    });
+  }, [reports, query, personFilter]);
+
+  const visibleIds = visible.map((r) => r.id);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selected.has(id));
+
   useEffect(() => {
-    if (!pending) return;
+    if (!pendingIds) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !deleting) setPending(null);
+      if (e.key === "Escape" && !deleting) setPendingIds(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pending, deleting]);
+  }, [pendingIds, deleting]);
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleVisible() {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        for (const id of visibleIds) next.delete(id);
+      } else {
+        for (const id of visibleIds) next.add(id);
+      }
+      return next;
+    });
+  }
 
   async function confirmDelete() {
-    if (!pending || deleting) return;
+    if (!pendingIds?.length || deleting) return;
     setDeleting(true);
     setError(null);
     try {
-      const res = await fetch(`/api/reports/${pending.id}`, { method: "DELETE" });
-      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      const res = await fetch("/api/reports/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: pendingIds }),
+      });
+      const body = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        deleted?: string[];
+      };
       if (!res.ok) {
-        throw new Error(body.error || "Could not delete report.");
+        throw new Error(body.error || "Could not delete reports.");
       }
-      setReports((prev) => prev.filter((r) => r.id !== pending.id));
-      setPending(null);
+      const gone = new Set(body.deleted ?? pendingIds);
+      setReports((prev) => prev.filter((r) => !gone.has(r.id)));
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (const id of gone) next.delete(id);
+        return next;
+      });
+      setPendingIds(null);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not delete report.");
+      setError(err instanceof Error ? err.message : "Could not delete reports.");
     } finally {
       setDeleting(false);
     }
@@ -76,115 +166,230 @@ export function ReportsList({ initialReports }: Props) {
     );
   }
 
+  const pendingReports = pendingIds
+    ? reports.filter((r) => pendingIds.includes(r.id))
+    : [];
+
   return (
     <>
-      <div className="space-y-3">
-        {reports.map((r) => {
-          const name = r.preferred_name || r.full_name;
-          return (
-            <div
-              key={r.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white/55 px-5 py-4"
-            >
-              <Link
-                href={`/report/${r.id}/open`}
-                className="min-w-0 flex-1 transition hover:opacity-90"
-              >
-                <p className="text-lg text-ink">{name}</p>
-                <p className="text-sm text-ink-soft">
-                  {r.date_of_birth} · Age {r.age} · {r.report_type}
-                </p>
-              </Link>
-              <div className="flex flex-wrap items-center gap-2">
-                <Link
-                  href={`/report/${r.id}/enhanced`}
-                  className="btn-tactile rounded-full bg-ink px-3 py-1.5 text-sm text-paper"
-                >
-                  Enhanced
-                </Link>
-                <Link
-                  href={`/report/${r.id}`}
-                  className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
-                >
-                  Detailed
-                </Link>
-                <Link href={`/report/${r.id}`} className="text-right">
-                  <div className="flex items-end justify-end gap-3">
-                    <div className="text-center">
-                      <p className="brand text-xl text-ink">
-                        {r.snapshot?.life_path ?? "—"}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                        Life Path
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <p className="brand text-xl text-ink">
-                        {r.snapshot?.vedic_destiny ?? "—"}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                        Destiny
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <p className="brand text-xl text-ink">
-                        {r.snapshot?.vedic_psychic ?? "—"}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                        Psychic
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mt-1 text-xs text-ink-soft">
-                    {new Date(r.created_at).toLocaleString()}
-                  </p>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setError(null);
-                    setPending(r);
-                  }}
-                  className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm text-rose-800 hover:bg-rose-100"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          );
-        })}
+      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-[var(--line)] bg-white/55 p-4 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="min-w-[12rem] flex-1">
+          <label htmlFor={filterId} className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
+            Filter by name
+          </label>
+          <input
+            id={filterId}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Type a person name"
+            className="w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm text-ink outline-none ring-gold focus:ring-2"
+          />
+        </div>
+        <div className="min-w-[14rem] flex-1">
+          <label htmlFor={personId} className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
+            Person
+          </label>
+          <select
+            id={personId}
+            value={personFilter}
+            onChange={(e) => setPersonFilter(e.target.value)}
+            className="w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm text-ink outline-none ring-gold focus:ring-2"
+          >
+            <option value="all">All people ({reports.length})</option>
+            {people.map((p) => (
+              <option key={p.key} value={p.key}>
+                {p.label}
+                {p.count > 1 ? ` · ${p.count} reports` : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={toggleVisible}
+            disabled={visible.length === 0}
+            className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-2 text-sm text-ink disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {allVisibleSelected ? "Clear visible" : "Select visible"}
+          </button>
+          <button
+            type="button"
+            disabled={selected.size === 0}
+            onClick={() => {
+              setError(null);
+              setPendingIds([...selected]);
+            }}
+            className="btn-tactile rounded-full border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Delete selected ({selected.size})
+          </button>
+        </div>
       </div>
 
-      {pending ? (
+      <p className="mb-3 text-sm text-ink-soft">
+        Showing {visible.length} of {reports.length} reading
+        {reports.length === 1 ? "" : "s"}
+        {personFilter !== "all" || query.trim()
+          ? " · same person can have more than one report"
+          : ""}
+        .
+      </p>
+
+      {visible.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-[var(--line)] bg-white/40 px-6 py-10 text-center text-ink-soft">
+          No readings match this name.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {visible.map((r) => {
+            const name = displayName(r);
+            const checked = selected.has(r.id);
+            return (
+              <div
+                key={r.id}
+                className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-5 py-4 ${
+                  checked
+                    ? "border-rose-200 bg-rose-50/70"
+                    : "border-[var(--line)] bg-white/55"
+                }`}
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1.5"
+                    checked={checked}
+                    onChange={() => toggleOne(r.id)}
+                    aria-label={`Select reading for ${name}`}
+                  />
+                  <Link
+                    href={`/report/${r.id}/open`}
+                    className="min-w-0 flex-1 transition hover:opacity-90"
+                  >
+                    <p className="text-lg text-ink">{name}</p>
+                    <p className="text-sm text-ink-soft">
+                      {r.date_of_birth} · Age {r.age} · {r.report_type}
+                    </p>
+                  </Link>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    href={`/report/${r.id}/enhanced`}
+                    className="btn-tactile rounded-full bg-ink px-3 py-1.5 text-sm text-paper"
+                  >
+                    Enhanced
+                  </Link>
+                  <Link
+                    href={`/report/${r.id}`}
+                    className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
+                  >
+                    Detailed
+                  </Link>
+                  <Link href={`/report/${r.id}`} className="text-right">
+                    <div className="flex items-end justify-end gap-3">
+                      <div className="text-center">
+                        <p className="brand text-xl text-ink">
+                          {r.snapshot?.life_path ?? "—"}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                          Life Path
+                        </p>
+                      </div>
+                      <div className="text-center">
+                        <p className="brand text-xl text-ink">
+                          {r.snapshot?.vedic_destiny ?? "—"}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                          Destiny
+                        </p>
+                      </div>
+                      <div className="text-center">
+                        <p className="brand text-xl text-ink">
+                          {r.snapshot?.vedic_psychic ?? "—"}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                          Psychic
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      {new Date(r.created_at).toLocaleString()}
+                    </p>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setError(null);
+                      setPendingIds([r.id]);
+                    }}
+                    className="btn-tactile rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm text-rose-800"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {pendingIds ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4"
           role="presentation"
           onClick={() => {
-            if (!deleting) setPending(null);
+            if (!deleting) setPendingIds(null);
           }}
         >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="w-full max-w-md rounded-2xl border border-[var(--line)] bg-paper p-6 shadow-xl"
+            className="w-full max-w-md rounded-2xl border border-[var(--line)] bg-paper p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 id={titleId} className="text-2xl text-ink">
-              Delete this reading?
+              {pendingReports.length === 1
+                ? "Delete this reading?"
+                : `Delete ${pendingReports.length} readings?`}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-ink-soft">
               This will{" "}
               <span className="font-semibold text-rose-800">
                 permanently delete
               </span>{" "}
-              the report for{" "}
-              <span className="font-medium text-ink">
-                {pending.preferred_name || pending.full_name}
-              </span>{" "}
-              ({pending.date_of_birth}). This is a hard delete — the reading
-              cannot be recovered.
+              {pendingReports.length === 1 ? (
+                <>
+                  the report for{" "}
+                  <span className="font-medium text-ink">
+                    {displayName(pendingReports[0]!)}
+                  </span>{" "}
+                  ({pendingReports[0]?.date_of_birth}).
+                </>
+              ) : (
+                <>
+                  {pendingReports.length} saved reports. The same person can
+                  appear more than once if you generated more than one reading.
+                </>
+              )}{" "}
+              This is a hard delete — the reading
+              {pendingReports.length === 1 ? "" : "s"} cannot be recovered.
             </p>
+            {pendingReports.length > 1 ? (
+              <ul className="mt-3 max-h-40 overflow-auto text-sm text-ink">
+                {pendingReports.slice(0, 8).map((r) => (
+                  <li key={r.id}>
+                    {displayName(r)} · {r.date_of_birth}
+                  </li>
+                ))}
+                {pendingReports.length > 8 ? (
+                  <li className="text-ink-soft">
+                    and {pendingReports.length - 8} more
+                  </li>
+                ) : null}
+              </ul>
+            ) : null}
             {error ? (
               <p className="mt-3 text-sm text-rose-700" role="alert">
                 {error}
@@ -194,8 +399,8 @@ export function ReportsList({ initialReports }: Props) {
               <button
                 type="button"
                 disabled={deleting}
-                onClick={() => setPending(null)}
-                className="rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink hover:bg-white/80 disabled:opacity-50"
+                onClick={() => setPendingIds(null)}
+                className="btn-tactile rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -203,9 +408,13 @@ export function ReportsList({ initialReports }: Props) {
                 type="button"
                 disabled={deleting}
                 onClick={confirmDelete}
-                className="rounded-full bg-rose-700 px-4 py-2 text-sm text-white hover:bg-rose-800 disabled:opacity-50"
+                className="btn-tactile rounded-full bg-rose-700 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {deleting ? "Deleting…" : "Delete permanently"}
+                {deleting
+                  ? "Deleting…"
+                  : pendingReports.length === 1
+                    ? "Delete permanently"
+                    : `Delete ${pendingReports.length} permanently`}
               </button>
             </div>
           </div>
