@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { personalYearForCalendarYear } from "@/lib/numerology/cycles";
+import { PY_NATURE, pyNatureMeta } from "@/lib/numerology/personalYearOutlook";
+import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import type { PublicFigureRow, ResearchEvent } from "@/lib/research/publicFigures";
 
 const PIN_COLOR: Record<number, string> = {
@@ -33,6 +35,30 @@ function eventDot(type: string): string {
   return "bg-gold-deep";
 }
 
+/** 11/22/33 keep their face but read as the reduced digit, as on /years. */
+function pyLabel(n: number): string {
+  const digit = reduceToSingleDigit(n);
+  return digit === n ? String(n) : `${n} (reads as ${digit})`;
+}
+
+function PyDefinition({ number }: { number: number }) {
+  const meta = pyNatureMeta(number);
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-3">
+      <p className="text-sm text-ink">
+        <span className="brand text-lg">Personal Year {pyLabel(number)}</span>{" "}
+        · {meta.nature}
+      </p>
+      <p className="mt-1 text-sm text-ink-soft">{meta.short}</p>
+      <p className="mt-1 text-sm text-ink-soft">{meta.typical}</p>
+      {meta.later ? (
+        <p className="mt-1 text-sm text-ink-soft">{meta.later}</p>
+      ) : null}
+      <p className="mt-2 text-sm text-ink">Practice: {meta.practice}</p>
+    </div>
+  );
+}
+
 export function FigureLifePanel({
   figure,
   onClose,
@@ -41,6 +67,7 @@ export function FigureLifePanel({
   onClose: () => void;
 }) {
   const [focusYear, setFocusYear] = useState<number | null>(null);
+  const [showKey, setShowKey] = useState(false);
   const start = birthYear(figure.dobIso);
   const end = figure.deathIso
     ? Number(figure.deathIso.slice(0, 4))
@@ -179,8 +206,8 @@ export function FigureLifePanel({
                 }`}
                 title={
                   marked
-                    ? `${row.year}: PY ${row.py}. ${row.events.map((e) => e.label).join("; ")}`
-                    : `${row.year}: PY ${row.py}`
+                    ? `${row.year}: Personal Year ${pyLabel(row.py)} — ${pyNatureMeta(row.py).nature}. ${row.events.map((e) => e.label).join("; ")}`
+                    : `${row.year}: Personal Year ${pyLabel(row.py)} — ${pyNatureMeta(row.py).nature}`
                 }
               >
                 <span className="block text-ink-soft/80">{row.year}</span>
@@ -199,6 +226,35 @@ export function FigureLifePanel({
             );
           })}
         </div>
+
+        {focusYear ? (
+          <div className="mt-3">
+            <PyDefinition
+              number={personalYearForCalendarYear(figure.dob, focusYear)}
+            />
+          </div>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => setShowKey((v) => !v)}
+          aria-expanded={showKey}
+          className="btn-tactile mt-3 rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs text-ink"
+        >
+          {showKey ? "Hide" : "Show"} what each Personal Year number means
+        </button>
+        {showKey ? (
+          <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
+            {Object.entries(PY_NATURE).map(([digit, meta]) => (
+              <li key={digit}>
+                <span className="text-ink">
+                  {digit} · {meta.nature}
+                </span>{" "}
+                — {meta.short}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
       <div className="mt-8">
@@ -227,8 +283,15 @@ export function FigureLifePanel({
                   {e.label}
                 </p>
                 <p className="mt-0.5 text-xs">
-                  {e.type.replaceAll("_", " ")} · Personal Year {e.personalYear}{" "}
-                  (birthday cycle) · Pinnacle {e.pinnacleId} ({e.pinnacleNumber})
+                  {e.type.replaceAll("_", " ")} · Personal Year{" "}
+                  {pyLabel(e.personalYear)} (birthday cycle) · Pinnacle{" "}
+                  {e.pinnacleId} ({e.pinnacleNumber})
+                </p>
+                <p className="mt-1 text-xs">
+                  <span className="font-medium">
+                    {pyNatureMeta(e.personalYear).nature}
+                  </span>{" "}
+                  — {pyNatureMeta(e.personalYear).short}
                 </p>
               </li>
             ))
