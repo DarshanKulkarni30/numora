@@ -17,744 +17,744 @@ type Map = Record<string, StoredBlurb>;
 /** Lifelong growth arc from the full birth date (Pythagorean). */
 export const LIFE_PATH: Map = {
   "1": {
-    theme: "A life-long invitation to lead from self-trust",
+    theme: "A life that grows by starting things and deciding for yourself",
     strengths: [
-      "Learning through initiating chapters",
-      "Growing identity via independence",
-      "Courage as a repeating life lesson",
+      "You can begin when others wait",
+      "You can say a clear yes or no",
+      "You can stand on your own when it matters",
     ],
     practice:
-      "Notice when independence becomes isolation—invite allies into goals you start alone.",
+      "Start one thing, then ask one person to help finish it. Watch: doing everything alone.",
   },
   "2": {
-    theme: "A life path shaped by partnership and timing",
+    theme: "A life that grows by working with others and waiting for the right time",
     strengths: [
-      "Growth through cooperation",
-      "Sensitivity as a lifelong skill",
-      "Patience with unfolding plans",
+      "You can work with people without pushing",
+      "You notice how others feel",
+      "You can wait instead of forcing a plan",
     ],
     practice:
-      "Name your needs early in collaborations so harmony does not mean self-erasure.",
+      "Say what you need in one plain sentence. Watch: keeping peace by saying nothing.",
   },
   "3": {
-    theme: "A life devoted to expressive growth and connection",
+    theme: "A life that grows by talking, making, and sharing with people",
     strengths: [
-      "Storytelling as a life skill",
-      "Social learning across decades",
-      "Creative risk as a growth engine",
+      "You can explain an idea so others get it",
+      "You learn well with people, not only alone",
+      "You can try a new idea without waiting for it to be perfect",
     ],
     practice:
-      "Finish a few creative arcs each year so expression becomes craft, not only spark.",
+      "Finish a few things you start each year. Watch: starting many talks and closing none.",
   },
   "4": {
-    theme: "A life of building durable foundations",
+    theme: "A life that grows by plans, routines, and work that lasts",
     strengths: [
-      "Mastery through steady systems",
-      "Reliability as a life signature",
-      "Progress measured in structures that last",
+      "You can make a plan other people can follow",
+      "People can count on you to show up",
+      "You finish the boring steps that make a thing last",
     ],
     practice:
-      "Schedule deliberate flexibility so order supports life rather than freezing it.",
+      "Write one repeating plan, and leave one day a little loose. Watch: planning so long the week never starts.",
   },
   "5": {
-    theme: "A life path of freedom, change, and experiential wisdom",
+    theme: "A life that grows by change, freedom, and trying new things",
     strengths: [
-      "Growth through variety and movement",
-      "Lessons earned by trying paths",
-      "Freedom balanced with chosen commitments",
+      "You can change course when a plan is stuck",
+      "You learn by trying, not only by sitting still",
+      "You can keep one promise while you still explore",
     ],
     practice:
-      "Pick one multi-year craft to deepen while keeping room for exploration.",
+      "Pick one skill to keep for years, and one new thing to try. Watch: changing so often nothing grows.",
   },
   "6": {
-    theme: "A life oriented to care, duty, and harmony",
+    theme: "A life that grows by care, home, and keeping promises",
     strengths: [
-      "Service as a recurring theme",
-      "Family and community gravity",
-      "Beauty and responsibility intertwined",
+      "People can count on you to help",
+      "You notice what a home or group needs",
+      "You can keep a promise when it is dull",
     ],
     practice:
-      "Practice receiving help so caretaking stays sustainable across decades.",
+      "Keep one promise, and keep one hour that is for you. Watch: saying yes until you have no rest.",
   },
   "7": {
-    theme: "A life of inquiry, solitude, and inner knowing",
+    theme: "A life that grows by quiet thinking and study",
     strengths: [
-      "Truth-seeking as a long arc",
-      "Depth over noise",
-      "Wisdom refined in quiet seasons",
+      "You can sit with a hard question",
+      "You prefer a true answer over a fast one",
+      "Quiet time actually helps you think",
     ],
     practice:
-      "Share one insight regularly so solitude feeds connection, not withdrawal.",
+      "Share one clear thought after you study. Watch: going so quiet people think you do not care.",
   },
   "8": {
-    theme: "A life of stewardship, power, and material accountability",
+    theme: "A life that grows by plans, money, and results you can measure",
     strengths: [
-      "Authority learned through responsibility",
-      "Resource mastery over time",
-      "Ethical ambition as a life exam",
+      "You can hold a budget, a team, or a long job",
+      "You finish work people can see",
+      "You can take charge without needing a title first",
     ],
     practice:
-      "Define success metrics that include integrity, rest, and impact—not status alone.",
+      "Finish one real result, then rest. Watch: treating money or status as the whole self.",
   },
   "9": {
-    theme: "A life of completion, compassion, and wide vision",
+    theme: "A life that grows by finishing things and helping a wider group",
     strengths: [
-      "Cycles of release and renewal",
-      "Service beyond the personal circle",
-      "Wisdom gathered to be given away",
+      "You can close a chapter so the next one can start",
+      "You care about people beyond your own house",
+      "You can give away what you already learned",
     ],
     practice:
-      "Close chapters cleanly before collecting new causes or projects.",
+      "Close one loop before you open another. Watch: holding an ending that is already done.",
   },
   "11": {
-    theme: "A master life path of inspired illumination",
+    theme: "A life that grows by noticing patterns and inspiring others — with rest",
     strengths: [
-      "Intuition as a lifelong current",
-      "Uplifting others through insight",
-      "Sensitivity requiring grounded habits",
+      "You often see a pattern before others name it",
+      "Your words can lift a room",
+      "You feel more than you always show",
     ],
     practice:
-      "Pair visionary flashes with sleep, body care, and simple verification.",
+      "Write the idea down, sleep, then share one piece. Watch: thinking until the month is gone.",
   },
   "22": {
-    theme: "A master builder life path of practical vision",
+    theme: "A life that grows by building large plans in small steps",
     strengths: [
-      "Large dreams with engineering patience",
-      "Systems that outlast moods",
-      "Leadership through durable construction",
+      "You can hold a big plan and a daily step",
+      "You build things that last past a mood",
+      "You can organize people around a real build",
     ],
     practice:
-      "Break decade-scale visions into quarterly builds and celebrate milestones.",
+      "Turn the big plan into this quarter’s three steps. Watch: drawing a plan that never meets a calendar.",
   },
   "33": {
-    theme: "A master teacher life path of compassionate guidance",
+    theme: "A life that grows by teaching and care — without emptying yourself",
     strengths: [
-      "Care elevated into teaching",
-      "Influence through example",
-      "Service with emotional maturity",
+      "You can teach by how you treat people",
+      "Others come to you for help",
+      "You can care and still set a limit",
     ],
     practice:
-      "Teach boundaries as part of care—model the balance you hope others learn.",
+      "Help one person, and keep one rest block. Watch: teaching everyone except yourself to rest.",
   },
 };
 
 /** Day-of-month specialty flavor within the Life Path. */
 export const BIRTH_DAY: Map = {
   "1": {
-    theme: "A day-number gift for decisive starts",
+    theme: "A birth-day gift for starting in your own lane",
     strengths: [
-      "Quick personal initiative",
-      "Comfort going first in a skill area",
-      "Specialty in sparking momentum",
+      "You can go first in a skill you care about",
+      "You get things moving",
+      "You decide without a long committee",
     ],
     practice:
-      "Use your start-energy on one craft lane so initiative becomes expertise.",
+      "Put that start-energy on one skill, not ten. Watch: starting and walking away.",
   },
   "2": {
-    theme: "A day-number gift for tact and support",
+    theme: "A birth-day gift for tact and support",
     strengths: [
-      "Specialty in reading the room",
-      "Helpful timing instincts",
-      "Skill at bridging people",
+      "You can read a room",
+      "You pick a good time to speak",
+      "You help two people meet in the middle",
     ],
     practice:
-      "Claim credit kindly for quiet work that made collaboration succeed.",
+      "Say the quiet work you did, kindly. Watch: doing the glue work with no credit and no rest.",
   },
   "3": {
-    theme: "A day-number gift for lively communication",
+    theme: "A birth-day gift for words, humor, and making ideas stick",
     strengths: [
-      "Specialty in words, humor, or design",
-      "Ease with social warmth",
-      "Talent for making ideas memorable",
+      "You can say it in a way people remember",
+      "Warm talk comes easily",
+      "Humor can open a stuck room",
     ],
     practice:
-      "Ship drafts on a schedule so communicative gifts leave finished artifacts.",
+      "Finish one draft on a set day. Watch: talking more than you ship.",
   },
   "4": {
-    theme: "A day-number gift for method and craft",
+    theme: "A birth-day gift for method and craft",
     strengths: [
-      "Specialty in reliable process",
-      "Hands-on problem solving",
-      "Skill at making plans usable",
+      "You can make a process others can reuse",
+      "You fix things with your hands or a list",
+      "You turn a vague plan into steps",
     ],
     practice:
-      "Document one personal system others can reuse—your gift multiplies.",
+      "Write one system down so it outlives your memory. Watch: never starting until the system is perfect.",
   },
   "5": {
-    theme: "A day-number gift for versatile skill and quick learning",
+    theme: "A birth-day gift for quick learning and change",
     strengths: [
-      "Specialty in adapting under change",
-      "Talent for sampling then synthesizing",
-      "Skill at reading emerging trends",
+      "You adapt when the plan changes",
+      "You try, then pull the useful bits together",
+      "You notice what is new before others do",
     ],
     practice:
-      "Convert variety into a portfolio: name three lanes you will keep practicing.",
+      "Name three skills you will keep. Watch: sampling forever and owning none.",
   },
   "6": {
-    theme: "A day-number gift for caretaking craft",
+    theme: "A birth-day gift for care and follow-through",
     strengths: [
-      "Specialty in support and design for others",
-      "Talent for soothing environments",
-      "Skill at responsible follow-through",
+      "You make a place or person feel looked after",
+      "You notice what would make a room kinder",
+      "You finish the duty you took on",
     ],
     practice:
-      "Protect creative or rest time so your care gift stays warm, not depleted.",
+      "Keep a rest or make-time block. Watch: care with no refill.",
   },
   "7": {
-    theme: "A day-number gift for analysis and research",
+    theme: "A birth-day gift for study and careful questions",
     strengths: [
-      "Specialty in studying beneath surfaces",
-      "Talent for precise questions",
-      "Skill at solitary deep work",
+      "You look under the surface",
+      "You ask a precise question",
+      "You can do deep work alone",
     ],
     practice:
-      "Publish or teach a small finding so research skills meet the world.",
+      "Share one small finding. Watch: research that never leaves the desk.",
   },
   "8": {
-    theme: "A day-number gift for organizing results",
+    theme: "A birth-day gift for organizing results",
     strengths: [
-      "Specialty in managing outcomes",
-      "Talent for spotting leverage",
-      "Skill at accountable leadership in a niche",
+      "You can run an outcome, not only an idea",
+      "You see where effort pays off",
+      "You can lead a niche job and own the number",
     ],
     practice:
-      "Mentor someone in your operational strengths—authority becomes legacy.",
+      "Show one person how you do it. Watch: holding every result yourself.",
   },
   "9": {
-    theme: "A day-number gift for broad empathy and completion",
+    theme: "A birth-day gift for seeing the whole story and closing it",
     strengths: [
-      "Specialty in seeing the whole story",
-      "Talent for mentoring or arts with heart",
-      "Skill at finishing what others abandon",
+      "You see more than one person’s side",
+      "You can mentor or make with heart",
+      "You finish what others drop",
     ],
     practice:
-      "Choose causes carefully; depth beats scattering across every need.",
+      "Pick fewer causes. Watch: helping everyone a little and no one fully.",
   },
   "11": {
-    theme: "A day-number gift for intuitive spark",
+    theme: "A birth-day gift for a sudden clear insight",
     strengths: [
-      "Specialty flashes of insight",
-      "Talent for inspiring a moment",
-      "Skill at sensing unspoken needs",
+      "A useful hunch can arrive fast",
+      "You can lift a moment with a few words",
+      "You notice what is not being said",
     ],
     practice:
-      "Write insights down immediately—then test one in ordinary practice.",
+      "Write the insight, then test one piece in ordinary life. Watch: sharing every flash untested.",
   },
   "22": {
-    theme: "A day-number gift for scalable building",
+    theme: "A birth-day gift for large, practical builds",
     strengths: [
-      "Specialty in ambitious practical projects",
-      "Talent for coordinating parts into wholes",
-      "Skill at durable design",
+      "You can hold a big project",
+      "You join parts into one working whole",
+      "You design for lasting use",
     ],
     practice:
-      "Pick infrastructure-style projects where your day gift compounds for years.",
+      "Pick builds that last years, not weekends. Watch: size with no first brick.",
   },
   "33": {
-    theme: "A day-number gift for uplifting care",
+    theme: "A birth-day gift for kind teaching",
     strengths: [
-      "Specialty in teaching through kindness",
-      "Talent for creative nurture",
-      "Skill at elevating a room’s tone",
+      "You teach by being kind, not only by talking",
+      "You can care and still make something",
+      "You can warm a room",
     ],
     practice:
-      "Offer guidance with consent—ask what help is wanted before giving it.",
+      "Ask what help is wanted before you give it. Watch: helping without consent.",
   },
 };
 
 /** Full-name talents (Expression / Destiny of the name). */
 export const EXPRESSION: Map = {
   "1": {
-    theme: "Outward talent for original leadership and invention",
+    theme: "Name talent for starting and leading",
     strengths: [
-      "Presenting as a starter and director",
-      "Skills in pioneering roles",
-      "Capability shown through decisive action",
+      "People see you as someone who begins",
+      "You can invent a way when there is no map",
+      "You act when a choice is needed",
     ],
     practice:
-      "Let others own pieces of what you launch so leadership scales beyond you.",
+      "Let someone else own one piece of what you start. Watch: launching more than you can hand off.",
   },
   "2": {
-    theme: "Outward talent for diplomacy and supportive craft",
+    theme: "Name talent for calm teamwork and detail",
     strengths: [
-      "Skills in mediation and detail",
-      "Capability shown through partnership",
-      "Presenting as a calm collaborator",
+      "You can settle a clash and keep the details",
+      "The work shows in the partnership",
+      "People meet you as a steady teammate",
     ],
     practice:
-      "Make your behind-the-scenes excellence visible in portfolios and reviews.",
+      "Show the quiet work in one list or sample. Watch: being useful and invisible.",
   },
   "3": {
-    theme: "Outward talent for creative communication",
+    theme: "Name talent for talking, writing, and making",
     strengths: [
-      "Skills in writing, speaking, or performance",
-      "Capability shown through charm and ideas",
-      "Presenting as imaginative and social",
+      "You can write, speak, or perform so people stay with you",
+      "Ideas and charm show in the work",
+      "People meet you as imaginative and social",
     ],
     practice:
-      "Build a body of finished work—talent becomes reputation through delivery.",
+      "Keep a pile of finished pieces, not only ideas. Watch: charm covering a late delivery.",
   },
   "4": {
-    theme: "Outward talent for structure and dependable delivery",
+    theme: "Name talent for structure and delivery",
     strengths: [
-      "Skills in systems, ops, and craftsmanship",
-      "Capability shown through consistency",
-      "Presenting as the person who makes it real",
+      "You can build a system and keep it",
+      "People see that you show up again",
+      "You are the person who makes it real",
     ],
     practice:
-      "Market your reliability with case studies, not only quiet excellence.",
+      "Show one finished case, not only quiet excellence. Watch: never telling anyone what you built.",
   },
   "5": {
-    theme: "Outward talent for versatility, persuasion, and adaptive skill",
+    theme: "Name talent for change, talk, and many skills",
     strengths: [
-      "Skills across sales, media, travel, or change work",
-      "Capability shown through quick learning on stage",
-      "Presenting as resourceful and free-moving",
+      "You can sell, travel, or switch lanes and still learn",
+      "You pick up a new tool fast",
+      "People meet you as resourceful",
     ],
     practice:
-      "Choose a signature specialty inside your versatility so the world knows what to hire you for.",
+      "Name one thing you are for hire to do. Watch: many skills, no clear offer.",
   },
   "6": {
-    theme: "Outward talent for care, design, and responsible service",
+    theme: "Name talent for care, design, and reliable help",
     strengths: [
-      "Skills in counseling, teaching, aesthetics, or hospitality",
-      "Capability shown through nurturing excellence",
-      "Presenting as trustworthy and warm",
+      "You can teach, host, design, or counsel with warmth",
+      "People trust you to look after a thing",
+      "You show up as kind and responsible",
     ],
     practice:
-      "Price and pace your care work sustainably—talent includes healthy limits.",
+      "Set a price and an end time for care work. Watch: talent with no limits.",
   },
   "7": {
-    theme: "Outward talent for expertise, research, and refined skill",
+    theme: "Name talent for study and careful skill",
     strengths: [
-      "Skills in analysis, tech, or specialized study",
-      "Capability shown through depth",
-      "Presenting as thoughtful and precise",
+      "You can analyse, code, or research with care",
+      "Depth is what people hire",
+      "You come across as precise",
     ],
     practice:
-      "Translate expertise into clear teaching so depth becomes shareable value.",
+      "Teach the skill in plain words. Watch: depth nobody else can use.",
   },
   "8": {
-    theme: "Outward talent for executive skill and resource leadership",
+    theme: "Name talent for business, money, and organized results",
     strengths: [
-      "Skills in business, finance, or organized power",
-      "Capability shown through results",
-      "Presenting as ambitious and capable",
+      "You can run money, a team, or a plan",
+      "Results are how the talent shows",
+      "People meet you as capable",
     ],
     practice:
-      "Pair ambition with transparent ethics—reputation is part of the talent.",
+      "Keep the numbers honest. Watch: ambition that skips fairness.",
   },
   "9": {
-    theme: "Outward talent for humanitarian expression and mentorship",
+    theme: "Name talent for arts, help, and mentoring",
     strengths: [
-      "Skills in arts, advocacy, or broad service",
-      "Capability shown through compassion in public roles",
-      "Presenting as wise and generous",
+      "You can serve a wider group through art or advocacy",
+      "Compassion shows in public work",
+      "People meet you as generous",
     ],
     practice:
-      "Focus gifts where your impact is measurable; avoid diffuse over-giving.",
+      "Help where you can see a finish line. Watch: giving everywhere and thinning out.",
   },
   "11": {
-    theme: "Outward talent for inspirational influence",
+    theme: "Name talent for lifting people with an idea",
     strengths: [
-      "Skills in motivating and illuminating ideas",
-      "Capability shown through visionary presence",
-      "Presenting as intuitive and catalytic",
+      "You can motivate with a clear picture",
+      "Presence can change a room",
+      "People meet you as intuitive",
     ],
     practice:
-      "Ground public inspiration with rehearsed craft and recovery rituals.",
+      "Rehearse, then rest after you speak. Watch: inspiring with no recovery.",
   },
   "22": {
-    theme: "Outward talent for building at scale",
+    theme: "Name talent for building large, real projects",
     strengths: [
-      "Skills in architecture of projects and teams",
-      "Capability shown through lasting institutions",
-      "Presenting as a practical visionary",
+      "You can design a project or a team that lasts",
+      "The work outlives a single week",
+      "People meet you as a practical builder",
     ],
     practice:
-      "Delegate operations early so vision talent is not buried in minutiae.",
+      "Hand off daily ops early. Watch: vision buried in tiny tasks.",
   },
   "33": {
-    theme: "Outward talent for compassionate teaching",
+    theme: "Name talent for teaching with care",
     strengths: [
-      "Skills in guidance, healing arts, or creative nurture",
-      "Capability shown through elevating others",
-      "Presenting as a caring mentor",
+      "You can guide without crushing people",
+      "Others grow when you teach",
+      "People meet you as a mentor",
     ],
     practice:
-      "Teach methods, not only comfort—empower students to stand without you.",
+      "Teach a method they can use without you. Watch: comfort with no skill left behind.",
   },
 };
 
 /** Vowels — inner motivation (Soul Urge). */
 export const SOUL_URGE: Map = {
   "1": {
-    theme: "Inner desire for autonomy and recognition of self",
+    theme: "Inside, you want to decide for yourself and be seen as you",
     strengths: [
-      "Privately wanting to lead",
-      "Craving self-directed purpose",
-      "Motivated by originality",
+      "You want to lead, even if you stay quiet about it",
+      "You want work you chose",
+      "A new idea of your own lights you up",
     ],
     practice:
-      "Admit when you need solo time—soul urge 1 thrives when independence is planned, not stolen.",
+      "Put solo time on the calendar. Watch: stealing time instead of asking for it.",
   },
   "2": {
-    theme: "Inner desire for harmony, love, and belonging",
+    theme: "Inside, you want peace, closeness, and to belong",
     strengths: [
-      "Privately wanting peace in relationships",
-      "Motivated by partnership",
-      "Craving emotional attunement",
+      "You want calm between people",
+      "A real partner matters more than a crowd",
+      "You want to feel understood",
     ],
     practice:
-      "Ask for reassurance directly instead of hoping others will guess.",
+      "Ask for the kind word. Watch: hoping they will guess.",
   },
   "3": {
-    theme: "Inner desire for joy, creativity, and being heard",
+    theme: "Inside, you want joy, making, and to be heard",
     strengths: [
-      "Privately wanting playful expression",
-      "Motivated by applause and delight",
-      "Craving outlets for imagination",
+      "Play and making feel like home",
+      "You light up when someone listens",
+      "You need a place for ideas, not only duty",
     ],
     practice:
-      "Schedule creative joy that is not performance for others’ approval alone.",
+      "Make something that is not only for applause. Watch: performing instead of enjoying.",
   },
   "4": {
-    theme: "Inner desire for security, order, and earned stability",
+    theme: "Inside, you want solid ground and a clear plan",
     strengths: [
-      "Privately wanting solid ground",
-      "Motivated by clear plans",
-      "Craving dependable routines",
+      "A stable base calms you",
+      "A written plan feels like care",
+      "Routines make you feel safe",
     ],
     practice:
-      "Allow one intentional unknown each season so security does not become rigidity.",
+      "Leave one small unknown on purpose. Watch: safety becoming a cage.",
   },
   "5": {
-    theme: "Inner desire for freedom, novelty, and sensory experience",
+    theme: "Inside, you want freedom, newness, and movement",
     strengths: [
-      "Privately wanting open options",
-      "Motivated by adventure and learning",
-      "Craving change when life feels static",
+      "Open options feel like air",
+      "Adventure and learning feed you",
+      "Stillness too long makes you itch",
     ],
     practice:
-      "Negotiate freedom inside commitments—travel, study, or flexible hours—rather than fleeing structure entirely.",
+      "Ask for travel, study, or flex hours inside a promise. Watch: fleeing instead of asking.",
   },
   "6": {
-    theme: "Inner desire to nurture and be needed",
+    theme: "Inside, you want to care and to be needed",
     strengths: [
-      "Privately wanting to care and beautify",
-      "Motivated by family or community roles",
-      "Craving harmonious homes and bonds",
+      "Looking after people or a home feels true",
+      "Family or a group role matters",
+      "A kind, fair house is the goal",
     ],
     practice:
-      "Notice when “being needed” replaces mutual care—receive as much as you give.",
+      "Receive help as well as give it. Watch: being needed replacing mutual care.",
   },
   "7": {
-    theme: "Inner desire for truth, privacy, and meaning",
+    theme: "Inside, you want truth, quiet, and meaning",
     strengths: [
-      "Privately wanting depth over small talk",
-      "Motivated by understanding",
-      "Craving solitude to think",
+      "Small talk drains you; depth fills you",
+      "You want to understand, not only react",
+      "You need alone time to think",
     ],
     practice:
-      "Protect study time without ghosting loved ones—name your need for quiet.",
+      "Say “I need quiet” instead of disappearing. Watch: study used as hiding.",
   },
   "8": {
-    theme: "Inner desire for achievement, respect, and material mastery",
+    theme: "Inside, you want results, respect, and things you can measure",
     strengths: [
-      "Privately wanting tangible success",
-      "Motivated by influence and resources",
-      "Craving recognition for capability",
+      "A real win matters more than a compliment",
+      "You want influence you earned",
+      "You want people to see you can do it",
     ],
     practice:
-      "Define enough—celebrate non-status wins so desire for mastery stays healthy.",
+      "Name what “enough” is. Watch: only counting status wins.",
   },
   "9": {
-    theme: "Inner desire to serve a larger story",
+    theme: "Inside, you want to help a wider story and finish it",
     strengths: [
-      "Privately wanting to help humanity or arts",
-      "Motivated by compassion",
-      "Craving meaningful completion",
+      "Helping beyond your house feels true",
+      "Compassion is a motor, not a slogan",
+      "You want endings that mean something",
     ],
     practice:
-      "Serve from overflow; keep personal dreams on the list, not only others’ needs.",
+      "Keep one personal dream on the list. Watch: only other people’s needs.",
   },
   "11": {
-    theme: "Inner desire to inspire and channel insight",
+    theme: "Inside, you want to share a clear insight — after rest",
     strengths: [
-      "Privately wanting to illuminate",
-      "Motivated by intuitive purpose",
-      "Craving spiritual or creative voltage",
+      "You want to light something up for others",
+      "A true hunch matters to you",
+      "You want meaning, not only tasks",
     ],
     practice:
-      "Ground inspiration in body care before sharing every flash of insight.",
+      "Sleep, then share one insight. Watch: dumping every flash on people.",
   },
   "22": {
-    theme: "Inner desire to build something lasting for many",
+    theme: "Inside, you want to build something that lasts for many",
     strengths: [
-      "Privately wanting legacy structures",
-      "Motivated by practical idealism",
-      "Craving impact at scale",
+      "A lasting build feels like the point",
+      "You want a big idea that still works on Tuesday",
+      "Scale matters if it is real",
     ],
     practice:
-      "Feed the desire with weekly brick-laying, not only grand future movies.",
+      "Lay one brick each week. Watch: only watching the future movie.",
   },
   "33": {
-    theme: "Inner desire to heal and teach through love",
+    theme: "Inside, you want to help and teach without losing yourself",
     strengths: [
-      "Privately wanting to uplift suffering",
-      "Motivated by compassionate service",
-      "Craving sacred caretaking roles",
+      "Easing someone’s load feels true",
+      "Care is how you love",
+      "You want a role where help is the job",
     ],
     practice:
-      "Remember: your urge to heal others includes allowing yourself to be human.",
+      "Be human first. Watch: healing everyone except you.",
   },
 };
 
 /** Consonants — social first impression (Personality). */
 export const PERSONALITY: Map = {
   "1": {
-    theme: "First impression of confidence and self-direction",
+    theme: "People may first see you as sure and self-directed",
     strengths: [
-      "Appearing decisive or bold",
-      "Social mask of independence",
-      "Others may expect you to take charge",
+      "You can look like you already decided",
+      "Independence shows on the surface",
+      "Others may wait for you to take charge",
     ],
     practice:
-      "Soften openings with curiosity questions so strength does not read as distance.",
+      "Ask one question first. Watch: looking so sure that people stay away.",
   },
   "2": {
-    theme: "First impression of gentleness and approachability",
+    theme: "People may first see you as gentle and easy to approach",
     strengths: [
-      "Appearing diplomatic or quiet",
-      "Social mask of cooperativeness",
-      "Others may expect you to yield",
+      "You can look calm in a group",
+      "People read you as willing to work together",
+      "Others may expect you to give way",
     ],
     practice:
-      "State preferences early so kindness is not mistaken for agreement.",
+      "Say your preference early. Watch: kindness being taken as agreement.",
   },
   "3": {
-    theme: "First impression of charm and expressive warmth",
+    theme: "People may first see you as warm, funny, and creative",
     strengths: [
-      "Appearing witty or creative",
-      "Social mask of optimism",
-      "Others may expect entertainment",
+      "Wit or making shows quickly",
+      "You can look hopeful even on a hard day",
+      "Others may expect you to entertain",
     ],
     practice:
-      "Allow quieter moods in public—you need not perform brightness every entrance.",
+      "You do not have to be “on” at every door. Watch: acting cheerful when you are not.",
   },
   "4": {
-    theme: "First impression of steadiness and practicality",
+    theme: "People may first see you as steady and practical",
     strengths: [
-      "Appearing reliable or reserved",
-      "Social mask of seriousness",
-      "Others may expect structure from you",
+      "You can look reliable",
+      "Seriousness shows before play",
+      "Others may expect you to hold the plan",
     ],
     practice:
-      "Show a playful detail occasionally so reliability does not read as rigidity.",
+      "Show one light detail. Watch: looking so firm that people stop asking.",
   },
   "5": {
-    theme: "First impression of energy, restlessness, and open curiosity",
+    theme: "People may first see you as restless, curious, and free",
     strengths: [
-      "Appearing adventurous or changeable",
-      "Social mask of freedom-loving wit",
-      "Others may expect spontaneity",
+      "You can look ready to go",
+      "Wit and change show fast",
+      "Others may expect a spontaneous yes",
     ],
     practice:
-      "Signal follow-through early in new connections so versatility reads as trustable.",
+      "Say one thing you will actually do. Watch: looking fun and not trustable.",
   },
   "6": {
-    theme: "First impression of warmth, care, and aesthetic sense",
+    theme: "People may first see you as warm, able, and responsible",
     strengths: [
-      "Appearing nurturing or stylish",
-      "Social mask of responsibility",
-      "Others may expect you to host or help",
+      "You can look like the helper or the host",
+      "Care shows in how you dress or speak",
+      "Others may expect you to take the duty",
     ],
     practice:
-      "Set help boundaries kindly so your warmth is not endlessly recruited.",
+      "Set a kind limit on help. Watch: being recruited every time.",
   },
   "7": {
-    theme: "First impression of mystery, intellect, or reserve",
+    theme: "People may first see you as private, thoughtful, or hard to read",
     strengths: [
-      "Appearing thoughtful or distant",
-      "Social mask of privacy",
-      "Others may expect depth—or misread aloofness",
+      "You can look like you are thinking",
+      "Privacy shows before small talk",
+      "Others may want depth — or think you are cold",
     ],
     practice:
-      "Offer a small personal detail early to invite connection without oversharing.",
+      "Offer one small personal fact. Watch: silence read as “I do not care.”",
   },
   "8": {
-    theme: "First impression of authority and competence",
+    theme: "People may first see you as capable and in charge",
     strengths: [
-      "Appearing ambitious or polished",
-      "Social mask of power",
-      "Others may expect leadership or status cues",
+      "You can look polished and ambitious",
+      "Competence shows first",
+      "Others may expect you to lead or to have status",
     ],
     practice:
-      "Lead with listening so competence does not intimidate allies.",
+      "Listen first. Watch: looking so strong that allies stay quiet.",
   },
   "9": {
-    theme: "First impression of breadth, kindness, or worldliness",
+    theme: "People may first see you as kind, wide, or worldly",
     strengths: [
-      "Appearing wise or artistic",
-      "Social mask of generosity",
-      "Others may expect counsel or idealism",
+      "You can look wise or artistic",
+      "Generosity shows on the surface",
+      "Others may expect advice or a cause",
     ],
     practice:
-      "You may decline emotional labor—compassion includes choosing when to engage.",
+      "You may say no to extra feeling-work. Watch: being the counselor in every room.",
   },
   "11": {
-    theme: "First impression of intensity and inspired presence",
+    theme: "People may first see you as intense and inspired",
     strengths: [
-      "Appearing magnetic or sensitive",
-      "Social mask of visionary energy",
-      "Others may expect insight on demand",
+      "Presence can feel strong",
+      "Sensitivity shows",
+      "Others may want a deep answer on the spot",
     ],
     practice:
-      "Protect nervous energy in crowds; intensity needs recovery after contact.",
+      "Leave the crowd and rest. Watch: giving insight on demand until you are empty.",
   },
   "22": {
-    theme: "First impression of capable ambition at scale",
+    theme: "People may first see you as the one who can make a big thing happen",
     strengths: [
-      "Appearing as a builder or organizer",
-      "Social mask of big-picture practicality",
-      "Others may expect you to “make it happen”",
+      "You can look like a builder",
+      "People assume you see the whole job",
+      "Others may dump a large ask on you",
     ],
     practice:
-      "Clarify scope before accepting every large ask that your presence attracts.",
+      "Name the scope before you say yes. Watch: accepting every large ask.",
   },
   "33": {
-    theme: "First impression of nurturing wisdom",
+    theme: "People may first see you as a teacher or a safe person to tell",
     strengths: [
-      "Appearing as a natural counselor or teacher",
-      "Social mask of elevated care",
-      "Others may unload problems quickly",
+      "You can look like a counselor",
+      "Care shows before you speak",
+      "Others may unload fast",
     ],
     practice:
-      "Ask “Do you want advice or company?” before stepping into helper mode.",
+      "Ask: advice or company? Watch: stepping into helper mode unasked.",
   },
 };
 
 /** Life Path + Expression blend for later-life emphasis. */
 export const MATURITY: Map = {
   "1": {
-    theme: "Later-life emphasis on self-authored leadership",
+    theme: "Later years: deciding for yourself, with less need for permission",
     strengths: [
-      "Maturity clarifying personal authority",
-      "Less need for external permission",
-      "Initiative refined by experience",
+      "You know your own yes and no",
+      "You start with less fear of looking new",
+      "Experience makes the first step cleaner",
     ],
     practice:
-      "Mentor starters—your mature 1 energy teaches courage without competition.",
+      "Help one starter. Watch: competing with the people you mentor.",
   },
   "2": {
-    theme: "Later-life emphasis on wise partnership",
+    theme: "Later years: partnership with clearer limits",
     strengths: [
-      "Maturity softening ego into alliance",
-      "Diplomacy with clearer boundaries",
-      "Patience that has earned its calm",
+      "You can work with people without losing yourself",
+      "You wait, and you also say the limit",
+      "Patience is earned, not fake",
     ],
     practice:
-      "Choose partnerships that honor your pace; maturity 2 need not absorb chaos.",
+      "Choose partners who respect your pace. Watch: absorbing their chaos.",
   },
   "3": {
-    theme: "Later-life emphasis on seasoned creative voice",
+    theme: "Later years: talking and making as a finished craft",
     strengths: [
-      "Expression matured into craft",
-      "Joy with less performance anxiety",
-      "Communication used to uplift",
+      "You can finish what younger you only started",
+      "Joy needs less performance",
+      "Your words can lift without showing off",
     ],
     practice:
-      "Publish or teach what younger you practiced—maturity 3 shares the archive.",
+      "Share one finished piece from the years of practice. Watch: still starting and never shipping.",
   },
   "4": {
-    theme: "Later-life emphasis on lasting systems and legacy structure",
+    theme: "Later years: keeping the systems that still work",
     strengths: [
-      "Foundations that outlive urgency",
-      "Craftsmanship as identity",
-      "Order serving loved ones’ security",
+      "Your plans outlast a busy week",
+      "Craft is who you are, not only a job",
+      "Order can keep people you love safer",
     ],
     practice:
-      "Simplify outdated routines; mature 4 keeps what works and retires the rest.",
+      "Drop the routines that no longer help. Watch: keeping every old rule.",
   },
   "5": {
-    theme: "Later-life emphasis on freedom with wisdom",
+    theme: "Later years: freedom you choose, not freedom you chase",
     strengths: [
-      "Change chosen rather than chased",
-      "Travel or learning as mature enrichment",
-      "Adaptability without restless escape",
+      "You change on purpose",
+      "Travel or study can enrich a stable life",
+      "You adapt without running away",
     ],
     practice:
-      "Design freedom rituals (study trips, sabbaticals) inside stable roots.",
+      "Book one trip or course inside a home base. Watch: restlessness with no root.",
   },
   "6": {
-    theme: "Later-life emphasis on responsible love and stewardship of home",
+    theme: "Later years: care at home, with healthier limits",
     strengths: [
-      "Care refined by experience",
-      "Family or community elder roles",
-      "Harmony with healthier limits",
+      "You help from experience, not only duty",
+      "An elder or host role can fit",
+      "You can keep peace and still rest",
     ],
     practice:
-      "Pass skills on; mature 6 multiplies care by teaching, not only doing.",
+      "Teach the skill; do not do every task. Watch: still saying yes to all of it.",
   },
   "7": {
-    theme: "Later-life emphasis on distilled wisdom and quiet mastery",
+    theme: "Later years: quiet knowing you can hand on",
     strengths: [
-      "Insight less noisy, more useful",
-      "Spiritual or intellectual harvest",
-      "Solitude as chosen richness",
+      "Insight is simpler and more useful",
+      "Study has a harvest",
+      "Alone time is a choice, not a hide",
     ],
     practice:
-      "Write memoirs of method—mature 7 leaves maps, not only mysteries.",
+      "Write the method down. Watch: leaving only mystery.",
   },
   "8": {
-    theme: "Later-life emphasis on ethical power and resource legacy",
+    theme: "Later years: results and fairness, then handing on",
     strengths: [
-      "Ambition tempered into stewardship",
-      "Recognition earned through character",
-      "Material mastery serving others",
+      "Ambition can look after people, not only rank",
+      "Respect comes from how you worked",
+      "Money skill can serve others",
     ],
     practice:
-      "Plan succession and generosity while you still enjoy building.",
+      "Plan who takes over, while you still like building. Watch: never letting go.",
   },
   "9": {
-    theme: "Later-life emphasis on completion and wide-hearted mentoring",
+    theme: "Later years: closing chapters and mentoring",
     strengths: [
-      "Release of outdated identities",
-      "Service as natural maturity",
-      "Compassion with less attachment",
+      "You can drop an old role",
+      "Helping feels natural",
+      "You care without gripping",
     ],
     practice:
-      "Ritualize endings—mature 9 thrives when chapters close with gratitude.",
+      "Close one chapter on purpose. Watch: starting new causes in the leftover mess.",
   },
   "11": {
-    theme: "Later-life emphasis on grounded inspiration",
+    theme: "Later years: insight with rest",
     strengths: [
-      "Intuition steadied by decades",
-      "Teaching through presence",
-      "Sensitivity managed with wisdom",
+      "Hunches are steadier",
+      "Presence can teach",
+      "You know when sensitivity needs sleep",
     ],
     practice:
-      "Offer inspiration in measured doses; protect rest as sacred duty.",
+      "Share less, rest more. Watch: inspiring until you crash.",
   },
   "22": {
-    theme: "Later-life emphasis on institutions and lasting builds",
+    theme: "Later years: the large build finally has a calendar",
     strengths: [
-      "Vision finally resourced",
-      "Practical idealism realized",
-      "Legacy architecture",
+      "The vision has tools now",
+      "Big ideas meet Tuesday",
+      "You can leave a working structure",
     ],
     practice:
-      "Document blueprints so your mature 22 outlives any single project.",
+      "Write the blueprint so it outlives you. Watch: one more giant project with no team.",
   },
   "33": {
-    theme: "Later-life emphasis on masterful compassionate teaching",
+    theme: "Later years: teaching care without disappearing",
     strengths: [
-      "Care become curriculum",
-      "Healing presence refined",
-      "Service without self-erasure",
+      "Care has a method now",
+      "Your presence can settle a room",
+      "You can serve and still exist",
     ],
     practice:
-      "Let students carry the work—mature 33 multiplies by releasing control.",
+      "Let students carry the work. Watch: still doing it all yourself.",
   },
 };
 
@@ -910,12 +910,12 @@ export const VEDIC_PSYCHIC: Map = {
     theme:
       "Creativity · Jupiter Moolank—expressiveness, humor, and the urge to share ideas aloud",
     strengths: [
-      "Lively communication",
-      "Idea generation and storytelling",
-      "Social ease that opens doors",
+      "You can talk so people stay with you",
+      "Ideas come, and you can share them",
+      "Warmth in a room can open a door",
     ],
     practice:
-      "Ask before advising—creative warmth lands best with consent and follow-through.",
+      "Ask before you advise. Finish one idea. Watch: talking with no follow-through.",
   },
   "4": {
     theme:
@@ -1275,124 +1275,124 @@ export const VEDIC_NAME: Map = {
 /** Personal Year / Month timing cycles (shared map; lens text differs). */
 export const PERSONAL_CYCLE: Map = {
   "1": {
-    theme: "A cycle of beginnings and self-directed planting",
+    theme: "A year or month to start one small thing",
     strengths: [
-      "Timing for initiative",
-      "Fresh identity experiments",
-      "Less waiting, more starting",
+      "Good time to begin",
+      "You can try a new role",
+      "Waiting less, starting more",
     ],
     practice:
-      "Launch one meaningful start; do not overload the cycle with ten openings.",
+      "Start one real thing. Watch: ten openings and no second day.",
   },
   "2": {
-    theme: "A cycle of patience, alliance, and quiet progress",
+    theme: "A year or month to wait and work with someone",
     strengths: [
-      "Timing for collaboration",
-      "Emotional attunement windows",
-      "Slower visible results",
+      "Good time for teamwork",
+      "Feelings are easier to notice",
+      "Results may look slow and still be useful",
     ],
     practice:
-      "Measure progress in relationships and prep work, not only headlines.",
+      "Count prep and people, not only headlines. Watch: forcing a launch.",
   },
   "3": {
-    theme: "A cycle of expression, learning, and social exchange",
+    theme: "A year or month to talk, learn, and share",
     strengths: [
-      "Timing for creative output",
-      "Networking and study",
-      "Lighter, more vocal months/years",
+      "Good time to make or speak",
+      "Study and people mix well",
+      "The window is lighter and more social",
     ],
     practice:
-      "Publish or perform something small—cycles of 3 love visible expression.",
+      "Finish one small public thing. Watch: talking with nothing to show.",
   },
   "4": {
-    theme: "A cycle of foundations, routines, and practical building",
+    theme: "A year or month for routines and practical building",
     strengths: [
-      "Timing for systems and health habits",
-      "Work-before-reward pacing",
-      "Simplifying commitments",
+      "Good time to fix sleep, money, or tools",
+      "Work now, reward later",
+      "Fewer promises, stronger ones",
     ],
     practice:
-      "Fix one infrastructure item (budget, sleep, tools) this cycle.",
+      "Fix one base item. Watch: adding more jobs instead of a system.",
   },
   "5": {
-    theme: "A cycle of change, movement, and experimentation",
+    theme: "A year or month to try one change",
     strengths: [
-      "Timing for travel, pivots, and trials",
-      "Freedom themes in the calendar",
-      "Less tolerance for stagnation",
+      "Good time to travel, pivot, or test",
+      "Freedom is on the calendar",
+      "Stuck plans feel heavier",
     ],
     practice:
-      "Choose conscious change—update plans deliberately rather than scattering energy.",
+      "Choose the change. Watch: scattering into five new lives.",
   },
   "6": {
-    theme: "A cycle of home, care, and relationship harmony",
+    theme: "A year or month for home, care, and promises",
     strengths: [
-      "Timing for family and duty",
-      "Aesthetic or domestic focus",
-      "Service requests increase",
+      "Good time for family and duty",
+      "Home and looks may ask for attention",
+      "More people may ask for help",
     ],
     practice:
-      "Balance yeses with rest; caretaking cycles need scheduled recovery.",
+      "Say some yeses and keep a rest day. Watch: a full calendar of other people’s needs.",
   },
   "7": {
-    theme: "A cycle of reflection, skill refinement, and inner clarity",
+    theme: "A year or month to think, study, and go quieter",
     strengths: [
-      "Timing for study and assessment",
-      "Quieter social appetite",
-      "Quality over quantity",
+      "Good time to learn and review",
+      "Less need for a loud social life",
+      "Quality beats quantity",
     ],
     practice:
-      "Protect deep-work blocks; avoid forcing loud productivity in a 7 cycle.",
+      "Protect quiet work blocks. Watch: forcing a loud productive show.",
   },
   "8": {
-    theme: "A cycle of recognition, stewardship, and measurable progress",
+    theme: "A year or month for results you can measure",
     strengths: [
-      "Timing for business and authority themes",
-      "Results come into view",
-      "Resource decisions matter more",
+      "Good time for work, money, and duty",
+      "Results show more",
+      "Resource choices matter more",
     ],
     practice:
-      "Track numbers ethically; ambition cycles reward organized effort.",
+      "Track the numbers fairly. Watch: pushing with no rest.",
   },
   "9": {
-    theme: "A cycle of completion, generosity, and release",
+    theme: "A year or month to finish and let go",
     strengths: [
-      "Timing for endings and clear-outs",
-      "Mentoring or giving back",
-      "Space-making before the next 1",
+      "Good time to end and clear out",
+      "Mentoring or giving back fits",
+      "Space before the next start",
     ],
     practice:
-      "Close loops—projects, clutter, outdated roles—before forcing new starts.",
+      "Close loops first. Watch: forcing a new start in the leftover mess.",
   },
   "11": {
-    theme: "A heightened inspirational cycle (often lived with 2 undertones)",
+    theme: "A year or month to notice and rest (often feels like a 2 as well)",
     strengths: [
-      "Timing for insight and visibility of ideas",
-      "Nervous-system sensitivity up",
-      "Inspiration needing rest",
+      "Ideas want to be seen",
+      "You may feel more",
+      "Inspiration needs sleep",
     ],
     practice:
-      "Share ideas, then recover—11 cycles punish chronic overstimulation.",
+      "Share one idea, then recover. Watch: too much noise, too little rest.",
   },
   "22": {
-    theme: "A practical visionary cycle (often lived with 4 undertones)",
+    theme: "A year or month for a large plan in small steps (often feels like a 4)",
     strengths: [
-      "Timing for large yet grounded builds",
-      "Coordination of many parts",
-      "Patience with scale",
+      "Good time for a real build",
+      "Many parts can be joined",
+      "Patience with size pays",
     ],
     practice:
-      "Use project plans; 22 cycles reward engineering, not only dreaming.",
+      "Use a written plan. Watch: dreaming with no engineering.",
   },
   "33": {
-    theme: "A compassionate teaching cycle (often lived with 6 undertones)",
+    theme: "A year or month to teach and care (often feels like a 6)",
     strengths: [
-      "Timing for guidance and care roles",
-      "Emotional labor themes",
-      "Service opportunities",
+      "Good time to guide",
+      "Help requests may rise",
+      "Service is on the calendar",
     ],
     practice:
-      "Teach with boundaries; 33 cycles can overfill the calendar with others’ needs.",
+      "Teach with a time limit. Watch: a calendar filled only with others.",
   },
 };
 

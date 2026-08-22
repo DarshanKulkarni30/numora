@@ -106,37 +106,37 @@ const TOPIC_LENSES: Record<
     system: "Pythagorean",
     aspect: "Life Path",
     focus:
-      "Life Path is drawn from the full birth date and is often treated as a lifelong learning theme—how you may tend to grow, choose challenges, and make meaning over decades.",
+      "Life Path comes from the full birth date. It is a long habit — how you may grow and choose work over many years. Not a prediction and not a grade.",
   },
   "birth-day": {
     system: "Pythagorean",
     aspect: "Birth Day",
     focus:
-      "Birth Day comes from the day of the month alone. Traditions often read it as a talent or specialty flavor within the broader Life Path—how gifts may show up in daily skill and style.",
+      "Birth Day comes from the day of the month only. It is a skill flavor next to Life Path — how a gift may show in daily work.",
   },
   expression: {
     system: "Pythagorean",
     aspect: "Expression",
     focus:
-      "Expression (Destiny of the name in some schools) is calculated from all letters of the full name. It is often framed as outward talents, skills you may develop, and how you present capability in the world.",
+      "Expression uses all letters of the name in force. It is how talent may show in work and how people see what you can do.",
   },
   "soul-urge": {
     system: "Pythagorean",
     aspect: "Soul Urge",
     focus:
-      "Soul Urge uses the vowels of the name. It is often described as inner motivation—what you may privately want, value, or feel drawn toward beneath public roles.",
+      "Soul Urge uses the vowels of the name. It is what can feel true inside — what you want, even if you do not say it first.",
   },
   personality: {
     system: "Pythagorean",
     aspect: "Personality",
     focus:
-      "Personality uses the consonants of the name. Traditions often treat it as first impressions and the social “mask”—how others may initially experience your style.",
+      "Personality uses the consonants of the name. It is what people may notice first — not the whole self.",
   },
   maturity: {
     system: "Pythagorean",
     aspect: "Maturity",
     focus:
-      "Maturity blends Life Path and Expression. Many readers treat it as a later-life emphasis—themes that may become clearer with experience rather than a childhood label.",
+      "Maturity blends Life Path and Expression. It is a later habit that can grow with practice — not a childhood label.",
   },
   "chaldean-name": {
     system: "Chaldean",
@@ -166,13 +166,13 @@ const TOPIC_LENSES: Record<
     system: "Pythagorean cycles",
     aspect: "Personal Year",
     focus:
-      "Personal Year cycles the birth month and day with the current calendar year. It is often used as a temporary annual emphasis—timing flavor for the year, not a permanent personality rewrite.",
+      "Personal Year uses birth month, birth day, and the calendar year. It is this year’s pacing — not a new personality.",
   },
   "personal-month": {
     system: "Pythagorean cycles",
     aspect: "Personal Month",
     focus:
-      "Personal Month narrows the Personal Year into a monthly tone. Treat it as a short reflective window for pacing and focus—not a prediction of events.",
+      "Personal Month is this month’s pacing inside the year. A short window for what to try — not a prediction of events.",
   },
 };
 
