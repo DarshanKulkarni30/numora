@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useId, useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
+import { LayeredNote } from "@/components/report/LayeredNote";
 import type { GuideTopic } from "@/lib/guides/content";
 import {
   buildPythagoreanIdentityLayers,
@@ -781,9 +782,9 @@ export function PythagoreanIdentityLayers({
         <div>
           <p className="brand text-lg text-ink sm:text-xl">Identity Layers</p>
           <p className="mt-1 max-w-[65ch] text-sm text-ink-soft">
-            How your name and birth tones interact — Expression as bridge, inner
-            × outer overlap, and Maturity as convergence. Tap diagram nodes for
-            a closer look.
+            How your name numbers sit with your birth numbers. Expression is
+            how you show up. Inner want vs outer face. Maturity is what may
+            grow over many years. Tap a diagram node for a closer look.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -849,32 +850,33 @@ export function PythagoreanIdentityLayers({
               {expanded ? (
                 <div className="space-y-3 border-t border-[var(--line)] px-4 py-4">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
-                    Metric index
+                    In simple words
                   </p>
                   <div className="grid gap-2 sm:grid-cols-3">
                     <MetricCell
-                      label="Tone"
+                      label="What this can look like"
                       value={layer.micro.tone}
                       dot="bg-sea"
                     />
                     <MetricCell
-                      label="Tension"
+                      label="What to watch"
                       value={layer.micro.tension}
                       dot="bg-gold-deep"
                     />
                     <MetricCell
-                      label="Gift"
+                      label="What can help"
                       value={layer.micro.gift}
                       dot="bg-ink"
                     />
                   </div>
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
-                      Insight profile
+                      More about this
                     </p>
                     <p className="mt-1 max-w-[65ch] text-sm leading-6 text-ink">
                       {layer.deeper}
                     </p>
+                    <LayeredNote student={layer.student} expert={layer.expert} />
                   </div>
                 </div>
               ) : null}

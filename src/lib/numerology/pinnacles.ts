@@ -24,48 +24,48 @@ const PINNACLE_THEME: Record<number, { name: string; theme: string; shadow: stri
   {
     1: {
       name: "Leadership",
-      theme: "Independence, career-building, self-direction.",
-      shadow: "Ego, loneliness, or conflict when forcing pace.",
+      theme: "Starting things on your own and building what you choose.",
+      shadow: "Pushing so hard that you feel alone, or fight people for speed.",
     },
     2: {
       name: "Partnership",
-      theme: "Diplomacy, teamwork, and close cooperation.",
-      shadow: "Oversensitivity or leaning too hard on others.",
+      theme: "Working with others, waiting, and close teamwork.",
+      shadow: "Feeling too much, or leaning too hard on other people.",
     },
     3: {
       name: "Creativity",
-      theme: "Speaking, writing, and artistic growth.",
-      shadow: "Scattered energy or unfinished expression.",
+      theme: "Talking, writing, and sharing ideas.",
+      shadow: "Starting many things and finishing few.",
     },
     4: {
       name: "Structure",
-      theme: "Hard work, systems, and discipline.",
-      shadow: "Delays and frustration when shortcuts fail.",
+      theme: "Hard work, plans, and steady habits.",
+      shadow: "Getting stuck or angry when a shortcut fails.",
     },
     5: {
       name: "Change",
-      theme: "Travel, relocation, and career or lifestyle shifts.",
-      shadow: "Instability or disruption without a rebuild plan.",
+      theme: "Movement, new places, and trying a different life shape.",
+      shadow: "Changing so often that nothing has time to grow.",
     },
     6: {
       name: "Responsibility",
-      theme: "Family, service, and leadership through care.",
-      shadow: "Burden when yeses outrun rest.",
+      theme: "Family, service, and care that people can count on.",
+      shadow: "Saying yes until you have no rest.",
     },
     7: {
       name: "Learning",
-      theme: "Study, inner work, and spiritual or technical depth.",
-      shadow: "Isolation if the inner season is forced outward.",
+      theme: "Study, quiet thinking, and going deeper.",
+      shadow: "Hiding so long that people cannot reach you.",
     },
     8: {
       name: "Power and money",
-      theme: "Stewardship, authority, and measurable results.",
-      shadow: "Pressure and overwork without recovery.",
+      theme: "Plans, money, and results you can measure.",
+      shadow: "Working without rest until the numbers own you.",
     },
     9: {
       name: "Completion",
-      theme: "Closing cycles and releasing what no longer fits.",
-      shadow: "Endings that feel like loss before the next chapter.",
+      theme: "Finishing chapters and letting go of what no longer fits.",
+      shadow: "An ending that feels like loss before the next start.",
     },
   };
 

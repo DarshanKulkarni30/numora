@@ -6,6 +6,7 @@
 import { CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { bnDnTransition, nameOnBnDnPath } from "./bnDnPath";
+import { plainTrait } from "./layeredCopy";
 
 export type IdentityMicroInsight = {
   tone: string;
@@ -20,6 +21,8 @@ export type IdentityLayerCard = {
   insight: string;
   micro: IdentityMicroInsight;
   deeper: string;
+  student?: string;
+  expert?: string;
 };
 
 export type InnerOuterAlignment = {
@@ -57,14 +60,6 @@ export function identityTraitBullets(n: number | string): string {
     .trim();
 }
 
-function trait(n: number | string): string {
-  return identityTrait(n);
-}
-
-function traitBullets(n: number | string): string {
-  return identityTraitBullets(n);
-}
-
 function buildAlignment(su: string, pe: string): InnerOuterAlignment {
   const suN = reduceToSingleDigit(Number(su));
   const peN = reduceToSingleDigit(Number(pe));
@@ -74,20 +69,20 @@ function buildAlignment(su: string, pe: string): InnerOuterAlignment {
     return {
       band: "aligned",
       label: "High alignment",
-      note: "Inner motivation and outward style reinforce each other — stay congruent under pressure.",
+      note: "What you want inside and how you look outside use the same number. Stay honest when things get hard.",
     };
   }
   if (gap <= 2 || gap === 8) {
     return {
       band: "complementary",
       label: "Complementary dynamic",
-      note: "External style and inner motivations differ, yet can work as complementary tones.",
+      note: "Outside style and inside want are different. They can still help each other.",
     };
   }
   return {
     band: "tension",
     label: "Inner–outer tension",
-    note: "The person others meet may differ substantially from the person you feel yourself to be.",
+    note: "The person others meet may not match how you feel inside. That is information, not a flaw.",
   };
 }
 
@@ -108,47 +103,55 @@ export function buildPythagoreanIdentityLayers(opts: {
 
   const path = bnDnTransition(bd, lp);
   const vehicle = nameOnBnDnPath(bd, lp, ex);
-  const suN = reduceToSingleDigit(Number(su));
-  const peN = reduceToSingleDigit(Number(pe));
-  const bdN = reduceToSingleDigit(Number(bd));
-  const exN = reduceToSingleDigit(Number(ex));
+  const suRaw = Number(su);
+  const peRaw = Number(pe);
+  const bdRaw = Number(bd);
+  const exRaw = Number(ex);
+  const lpRaw = Number(lp);
+  const matRaw = Number(mat);
+  const suN = reduceToSingleDigit(suRaw);
+  const peN = reduceToSingleDigit(peRaw);
+  const bdN = reduceToSingleDigit(bdRaw);
+  const exN = reduceToSingleDigit(exRaw);
   const echoesBirth = exN === bdN;
   const alignment = buildAlignment(su, pe);
 
   const expressionInsight = echoesBirth
-    ? `Expression ${ex} (${trait(ex)}) echoes Birth Day ${bd}, amplifying ${traitBullets(ex).toLowerCase()} as the style through which you pursue Life Path ${lp} (${trait(lp)}).`
-    : `Expression ${ex} (${trait(ex)}) is the bridge — how your natural style colors the walk from Birth Day ${bd} (${trait(bd)}) toward Life Path ${lp} (${trait(lp)}).`;
+    ? `Your name number (Expression ${ex}) is the same as your birth day (${bd}). You come across as someone who likes ${plainTrait(exRaw)}. Your longer path is ${lp}: ${plainTrait(lpRaw)}.`
+    : `Expression ${ex} is how you show your name: ${plainTrait(exRaw)}. Birth Day ${bd} is ${plainTrait(bdRaw)}. Life Path ${lp} is the longer walk: ${plainTrait(lpRaw)}.`;
 
-  const expressionDeeper = vehicle.detail
-    .replaceAll("Psychic", "Birth Day")
-    .replaceAll("Destiny", "Life Path")
-    .replaceAll("Name", "Expression");
+  const expressionDeeper = echoesBirth
+    ? `Expression ${ex} matches Birth Day ${bd}, so the way you show up may feel familiar. Life Path ${lp} is still the longer lesson: ${plainTrait(lpRaw)}. You do not have to drop the name style to grow.`
+    : vehicle.detail
+        .replaceAll("Psychic", "Birth Day")
+        .replaceAll("Destiny", "Life Path")
+        .replaceAll("Name", "Expression");
 
   const expressionMicro: IdentityMicroInsight = echoesBirth
     ? {
-        tone: traitBullets(ex),
-        tension: `Repeated ${ex} energy can intensify restlessness or the need for freedom`,
-        gift: `Makes Life Path ${lp} leadership more adaptable and flexible`,
+        tone: plainTrait(exRaw),
+        tension: `Using ${plainTrait(exRaw)} a lot can leave ${plainTrait(lpRaw)} unfinished`,
+        gift: `You can use ${plainTrait(exRaw)} to help with ${plainTrait(lpRaw)}`,
       }
     : {
-        tone: traitBullets(ex),
-        tension: `Can color or complicate Birth Day ${bd} (${trait(bd)}) habits`,
-        gift: `Gives Life Path ${lp} a ${traitBullets(ex).toLowerCase()} style`,
+        tone: plainTrait(exRaw),
+        tension: `The name style can change how Birth Day ${bd} habits show up`,
+        gift: `Gives Life Path ${lp} a style of ${plainTrait(exRaw)}`,
       };
 
   const innerOuterInsight =
     suN === peN
-      ? `Soul Urge and Personality share ${su}. Inner want and outer face often rhyme — still a theme to live honestly, not a guarantee of ease.`
-      : `People meet your outer face (${pe} · ${trait(pe)}), while your inner want (${su} · ${trait(su)}) quietly seeks its own depth.`;
+      ? `Soul Urge and Personality are both ${su}. What you want inside and what people see first use the same number: ${plainTrait(suRaw)}. This can feel simple. It is still something to live honestly.`
+      : `People first see Personality ${pe} (${plainTrait(peRaw)}). Inside, Soul Urge ${su} wants ${plainTrait(suRaw)}. These can work together. They do not have to match.`;
 
   const innerOuterDeeper =
     suN === peN
-      ? `When Soul Urge and Personality land on the same digit, rooms may read you quickly. The work is staying congruent under pressure — not performing the tone. ${alignment.note}`
-      : `Soul Urge ${su} (${trait(su)}) is what you privately want; Personality ${pe} (${trait(pe)}) is how you are seen. The overlap is where you meet the world — use the gap as nuance, not a split to “fix.” ${alignment.note}`;
+      ? `When both numbers match, people may read you quickly. The work is staying honest when things get hard — not acting the number. ${alignment.note}`
+      : `Soul Urge ${su} is what you want when no one is watching: ${plainTrait(suRaw)}. Personality ${pe} is what people meet first: ${plainTrait(peRaw)}. Use the gap as extra information, not a problem to fix. ${alignment.note}`;
 
-  const maturityInsight = `Maturity ${mat} (${trait(mat)}) represents the integration of Life Path ${lp} and Expression ${ex} — gradually shifting toward ${traitBullets(mat).toLowerCase()}.`;
+  const maturityInsight = `Maturity ${mat} is Life Path ${lp} plus Expression ${ex}, added. Over many years the mix may look more like ${plainTrait(matRaw)}. This does not switch on at a birthday.`;
 
-  const maturityDeeper = `Maturity is synthesis, not a calendar flip: Life Path ${lp} (${trait(lp)}) plus Expression ${ex} (${trait(ex)}) converge into Maturity ${mat} (${trait(mat)}). Birth Day ${bd} still colors the journey; the ripening is how path and craft learn to steward together.`;
+  const maturityDeeper = `Maturity is a later mix, not a flip on a birthday. Life Path ${lp} (${plainTrait(lpRaw)}) plus Expression ${ex} (${plainTrait(exRaw)}) add toward Maturity ${mat} (${plainTrait(matRaw)}). Birth Day ${bd} still colors daily habits.`;
 
   const layers: IdentityLayerCard[] = [
     {
@@ -160,11 +163,11 @@ export function buildPythagoreanIdentityLayers(opts: {
       deeper: `${vehicle.headline
         .replaceAll("Name", "Expression")
         .replaceAll("Birth", "Birth Day")
-        .replaceAll("Destiny", "Life Path")}. ${
-        echoesBirth
-          ? `Expression ${ex} echoes Birth Day ${bd}, so outward style may feel familiar while Life Path ${lp} remains the growing edge: ${traitBullets(lp).toLowerCase()}.`
-          : expressionDeeper
-      }`,
+        .replaceAll("Destiny", "Life Path")}. ${expressionDeeper}`,
+      student:
+        "Expression is the Pythagorean name number (all letters). Birth Day is the calendar day reduced. Life Path is the full date reduced.",
+      expert:
+        "When Expression equals Birth Day, style and day-tone share a digit. Life Path remains the longer walk. Not a prediction of job or family.",
     },
     {
       id: "inner-outer",
@@ -172,19 +175,21 @@ export function buildPythagoreanIdentityLayers(opts: {
       kicker: "Inner × outer",
       insight: innerOuterInsight,
       micro: {
-        tone: `Want ${traitBullets(su)} · Seen as ${traitBullets(pe)}`,
+        tone: `Want ${plainTrait(suRaw)} · Seen as ${plainTrait(peRaw)}`,
         tension:
           alignment.band === "aligned"
-            ? "Congruence can hide the need for honest rest"
-            : alignment.band === "tension"
-              ? "You may appear more structured or conventional than you feel inside"
-              : "Hidden depth behind the social face",
+            ? "When they match, you may forget to rest"
+            : "People may see one thing while you feel another",
         gift:
           alignment.band === "aligned"
-            ? "Readable presence when lived honestly"
-            : "Quiet wisdom behind an open first impression",
+            ? "People can see what you want if you stay honest"
+            : "You can greet people one way, then give the inner want some quiet time",
       },
       deeper: innerOuterDeeper,
+      student:
+        "Soul Urge uses vowels. Personality uses consonants. Same chart, two jobs.",
+      expert:
+        "Alignment band is a teaching gap (same digit / close / far), not a compatibility score. Masters such as 11 stay visible; gap math may reduce them.",
     },
     {
       id: "maturity",
@@ -192,11 +197,15 @@ export function buildPythagoreanIdentityLayers(opts: {
       kicker: "Path + expression → maturity",
       insight: maturityInsight,
       micro: {
-        tone: `${traitBullets(mat)}`,
-        tension: "Over-giving or holding chapters open too long",
-        gift: "Stewardship emerging from path + expression craft",
+        tone: plainTrait(matRaw),
+        tension: "Trying to help everyone, or leaving things open too long",
+        gift: "Path and name style can grow into one habit over time",
       },
       deeper: maturityDeeper,
+      student:
+        "Maturity = Life Path + Expression, then reduce. It is a later-life tone, not a birthday switch.",
+      expert:
+        "Some schools read Maturity after about age 35–45. Numora shows it as synthesis of path + name, always visible, never a forecast.",
     },
   ];
 

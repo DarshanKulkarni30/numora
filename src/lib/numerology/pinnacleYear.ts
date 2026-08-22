@@ -39,6 +39,8 @@ export type PinnacleInsight = {
   palette: ChapterPalette;
   related: { label: string; value: string }[];
   synergies: { label: string; kind: "aligned" | "complementary" | "contrasting" }[];
+  student?: string;
+  expert?: string;
 };
 
 export type PinnacleYearModel = {
@@ -80,72 +82,72 @@ const NUMBER_COPY: Record<
 > = {
   1: {
     title: "Leadership",
-    coreTone: "Independence, initiative, and self-directed building.",
-    manifestation: ["You start more of your own chapters", "Pace wants a clean yes"],
+    coreTone: "Starting things on your own, and building what you choose.",
+    manifestation: ["You start more of your own work", "You want a clear yes or no"],
     practiceCue: "Name one project and protect its first 90 days.",
-    narrative: "This chapter asks you to trust a beginning you can finish.",
+    narrative: "This chapter asks you to trust a start you can finish.",
     keywords: ["Start", "Agency", "Spark"],
   },
   2: {
     title: "Partnership",
-    coreTone: "Diplomacy, teamwork, and close cooperation.",
-    manifestation: ["Decisions want a second voice", "Timing matters more than speed"],
+    coreTone: "Working with others, waiting, and close teamwork.",
+    manifestation: ["Hard choices want a second voice", "Timing matters more than speed"],
     practiceCue: "Ask for one clear yes before adding a new yes.",
     narrative: "This chapter asks you to build with someone, not only for them.",
     keywords: ["Listen", "Pace", "Bond"],
   },
   3: {
     title: "Creative expansion",
-    coreTone: "Expression, visibility, and creative momentum.",
-    manifestation: ["Ideas multiply quickly", "Public work finds more room"],
+    coreTone: "Talking, showing work, and sharing ideas.",
+    manifestation: ["Ideas come quickly", "Your work may be more public"],
     practiceCue: "Finish and share one creative project this year.",
-    narrative: "This chapter asks you to make visible what you already know.",
+    narrative: "This chapter asks you to show what you already know.",
     keywords: ["Voice", "Play", "Share"],
   },
   4: {
     title: "Structure",
-    coreTone: "Systems, craft, and durable follow-through.",
-    manifestation: ["Routines carry more weight", "Shortcuts cost more later"],
+    coreTone: "Plans, routines, and work that lasts.",
+    manifestation: ["Daily habits matter more", "Shortcuts cost more later"],
     practiceCue: "Keep one weekly structure that outlives mood.",
     narrative: "This chapter asks you to build something that lasts past the week.",
     keywords: ["Craft", "Order", "Steady"],
   },
   5: {
     title: "Change",
-    coreTone: "Movement, variety, and a wider field of trial.",
-    manifestation: ["Plans want extra air", "New rooms open if you travel them"],
+    coreTone: "Movement, variety, and trying different things.",
+    manifestation: ["Plans may change more often", "New places and trials feel closer"],
     practiceCue: "Pick one change to finish; let the rest wait.",
-    narrative: "This chapter asks you to move with a chosen craft, not scatter.",
+    narrative: "This chapter asks you to change with a plan, not to jump every day.",
     keywords: ["Move", "Try", "Air"],
   },
   6: {
     title: "Responsibility",
-    coreTone: "Care, harmony, and leadership through service.",
-    manifestation: ["People lean on your steadiness", "Home and duty share the stage"],
+    coreTone: "Care, home, and helping through service.",
+    manifestation: ["People ask you to be steady", "Home and duty share your time"],
     practiceCue: "Care includes you — schedule one receiving hour weekly.",
-    narrative: "This chapter asks you to keep harmony without erasing yourself.",
+    narrative: "This chapter asks you to keep care without erasing yourself.",
     keywords: ["Care", "Home", "Duty"],
   },
   7: {
     title: "Learning",
-    coreTone: "Study, inner work, and unhurried depth.",
-    manifestation: ["Quiet becomes productive", "Surface noise costs more"],
+    coreTone: "Study, quiet thinking, and unhurried depth.",
+    manifestation: ["Quiet time becomes useful", "Noise costs more"],
     practiceCue: "Protect two study or rest blocks on the calendar.",
     narrative: "This chapter asks you to go inward without disappearing.",
     keywords: ["Study", "Quiet", "Depth"],
   },
   8: {
     title: "Stewardship",
-    coreTone: "Authority, resources, and measurable follow-through.",
-    manifestation: ["Results get more visible", "Pressure rises with the ledger"],
+    coreTone: "Plans, money, and results you can measure.",
+    manifestation: ["Results are more visible", "Pressure can rise with money and duty"],
     practiceCue: "Define success with rest and integrity, not status alone.",
     narrative: "This chapter asks you to hold power as care for what you tend.",
     keywords: ["Steward", "Measure", "Hold"],
   },
   9: {
     title: "Completion",
-    coreTone: "Closing cycles and releasing what no longer fits.",
-    manifestation: ["Endings arrive as invitations", "The next chapter wants space"],
+    coreTone: "Finishing chapters and letting go of what no longer fits.",
+    manifestation: ["Endings may ask for your time", "The next chapter needs space"],
     practiceCue: "Close one loop this season before opening three more.",
     narrative: "This chapter asks you to finish cleanly so the next start is honest.",
     keywords: ["Close", "Give", "Clear"],
@@ -207,6 +209,14 @@ export function buildPinnacleInsight(
       synergyChip("Personal Year", pinnacle.number, related.personalYear),
       synergyChip("Expression", pinnacle.number, related.expression),
     ],
+    student: assertSafeCopy(
+      `A Pinnacle is a life chapter from the birth date. There are four. This chapter’s number is ${pinnacle.number}. Ages: ${ageLabel(pinnacle)}. It is pacing, not a list of events.`,
+      "pinnacle.student",
+    ),
+    expert: assertSafeCopy(
+      "P1 = reduce(month+day), P2 = reduce(day+year), P3 = reduce(P1+P2), P4 = reduce(month+year). First chapter ends around age 36 minus Life Path. Same age windows as Challenges. Reflective only.",
+      "pinnacle.expert",
+    ),
   };
 }
 

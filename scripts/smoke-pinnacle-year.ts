@@ -53,6 +53,7 @@ eq(model.current.pinnacle.number, 5, "current number 5");
 eq(model.current.chapterTitle, "Partnership", "chapter 2 title");
 eq(model.current.title, "Change", "number 5 title");
 has(model.current.coreTone, "movement", "core tone for 5");
+lacks(model.current.manifestation.join(" "), "rooms open", "no room metaphor");
 eq(model.current.manifestation.length, 2, "two how-it-shows bullets");
 has(model.current.practiceCue, "pick one change", "practice cue is imperative");
 has(model.current.narrative, "this chapter asks", "one-line narrative");

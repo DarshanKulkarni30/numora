@@ -94,7 +94,7 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
 
   const methodNotes = assertSafeList(
     [
-      "Three schools are shown because they answer different questions—not because one is secretly correct.",
+      "Three schools are shown because they answer different questions — not because one is secretly correct. Texture means the larger name total. Essence means the single digit after that.",
       "Enhanced synthesis counts chart seats; it does not replace the detailed report’s full method notes.",
       "Pythagorean extras (Challenges, Period Cycles, Balance, Hidden Passion, missing-letter Lessons, name Planes, Personal Day, Essence) use the birth-certificate spelling. Name-letter planes are not Lo Shu date-grid planes.",
       report.disclaimer,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { LayeredNote } from "@/components/report/LayeredNote";
 import {
   buildPinnacleYearModel,
   type PinnacleInsight,
@@ -194,13 +195,13 @@ export function PinnacleYearPanel({
           <div className="grid gap-2 sm:grid-cols-3">
             <div className="rounded-xl border border-[var(--line)] bg-mist/70 px-3 py-2.5">
               <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                Core tone
+                In simple words
               </p>
               <p className="mt-1 text-sm leading-6 text-ink">{selected.coreTone}</p>
             </div>
             <div className="rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5">
               <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                How it may show up
+                What this can look like
               </p>
               <ul className="mt-1 space-y-1 text-sm leading-6 text-ink">
                 {selected.manifestation.map((line) => (
@@ -210,7 +211,7 @@ export function PinnacleYearPanel({
             </div>
             <div className="rounded-xl border border-amber-200 bg-amber-50/90 px-3 py-2.5">
               <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                Practice cue
+                Something you can try
               </p>
               <p className="pinnacle-practice mt-1 text-sm font-medium leading-6 text-ink">
                 {selected.practiceCue}
@@ -218,6 +219,7 @@ export function PinnacleYearPanel({
             </div>
           </div>
           <p className="text-sm italic leading-6 text-ink">{selected.narrative}</p>
+          <LayeredNote student={selected.student} expert={selected.expert} />
           <div className="flex flex-wrap items-center gap-2">
             {selected.keywords.map((k, i) => (
               <span

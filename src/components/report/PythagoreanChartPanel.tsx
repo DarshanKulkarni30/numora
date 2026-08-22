@@ -64,10 +64,24 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
       </div>
 
       <p className="text-sm leading-7 text-ink-soft">{chart.balance.summary}</p>
-      <p className="text-sm leading-7 text-ink-soft">
-        {chart.hiddenPassion.summary} {chart.hiddenPassion.practice}
-      </p>
-      <p className="text-sm leading-7 text-ink-soft">{chart.personalDay.summary}</p>
+      <div>
+        <p className="text-sm leading-7 text-ink-soft">
+          {chart.hiddenPassion.summary} {chart.hiddenPassion.practice}
+        </p>
+        <LayeredNote
+          student={chart.hiddenPassion.student}
+          expert={chart.hiddenPassion.expert}
+        />
+      </div>
+      <div>
+        <p className="text-sm leading-7 text-ink-soft">
+          {chart.personalDay.summary} {chart.personalDay.practice}
+        </p>
+        <LayeredNote
+          student={chart.personalDay.student}
+          expert={chart.personalDay.expert}
+        />
+      </div>
       <div>
         <p className="text-sm leading-7 text-ink-soft">
           {chart.attitude.summary} {chart.attitude.practice}
@@ -80,7 +94,14 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
       <p className="text-sm leading-7 text-ink-soft">
         {chart.subconsciousSelf.summary} {chart.subconsciousSelf.practice}
       </p>
-      <p className="text-sm leading-7 text-ink-soft">{chart.essence.summary}</p>
+      <div>
+        <p className="text-sm leading-7 text-ink-soft">{chart.essence.summary}</p>
+        <p className="text-sm leading-7 text-ink-soft">{chart.essence.practice}</p>
+        <LayeredNote
+          student={chart.essence.student}
+          expert={chart.essence.expert}
+        />
+      </div>
 
       <div>
         <h3 className="text-lg text-ink">Karmic Lessons (missing letters)</h3>

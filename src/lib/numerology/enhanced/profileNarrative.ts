@@ -4,7 +4,7 @@ import type { ThemeHit } from "./themeGraph";
 import type { Tension } from "./tensions";
 import type { SeasonBrief } from "./seasonBrief";
 import { parseChartNumber, wordCount } from "./digits";
-import { traitLabel } from "./themeGraph";
+import { plainTrait } from "@/lib/numerology/layeredCopy";
 
 export type ProfileNarrative = {
   teaser: string;
@@ -44,26 +44,26 @@ export function buildProfileNarrative(opts: {
   const paras: string[] = [];
 
   paras.push(
-    `${displayName} reads, in Numora’s language, as ${archetypeTitle}. ${throughline} This is not a verdict and not a forecast. It is a way of noticing how several independent numbers rhyme—and where they stretch.`,
+    `${displayName}, in this report, is called ${archetypeTitle}. ${throughline} This is not a grade and not a forecast. It is a way to notice where several numbers say a similar thing, and where they pull in different directions.`,
   );
 
   paras.push(
-    `Life Path ${lp} (${traitLabel(lp)}) describes the longer walk: why the journey exists. Birth Day ${bd} (${traitLabel(bd)}) is closer to the native heat of the calendar day. Expression ${expr} (${traitLabel(expr)}) is how the spelling in force may shape craft and contribution. Together they often sketch a sequence: early emphasis through ${bd}, a working style through ${expr}, and a longer curriculum through ${lp}. Maturity ${mat} (${traitLabel(mat)}) may describe what deepens after practice, not a switch that waits for a birthday.`,
+    `Life Path ${lp} (${plainTrait(lp)}) is the longer walk: the kind of work this life keeps returning to. Birth Day ${bd} (${plainTrait(bd)}) is closer to the mood of the calendar day you were born. Expression ${expr} (${plainTrait(expr)}) is how the spelling you use now may shape how you show up and contribute. Together they often sketch a sequence: early emphasis through ${bd}, a working style through ${expr}, and a longer lesson through ${lp}. Maturity ${mat} (${plainTrait(mat)}) may describe what deepens after practice. It is not a switch that waits for a birthday.`,
   );
 
   paras.push(
-    `Inside the profile, Soul Urge ${soul} (${traitLabel(soul)}) may name what feels true when no one is watching. Personality ${pers} (${traitLabel(pers)}) may color the first impression. ${
+    `Inside the profile, Soul Urge ${soul} (${plainTrait(soul)}) may name what feels true when no one is watching. Personality ${pers} (${plainTrait(pers)}) may color the first impression. ${
       soul === pers
-        ? "When these two agree, inner wish and outer manner may feel like the same room."
-        : "When they differ, the work is translation: letting the inner wish be visible without asking the outer manner to vanish."
+        ? "When these two agree, what you want inside and what people see first may feel like the same thing."
+        : "When they differ, the work is translation: let the inner wish be visible without asking the outer manner to vanish."
     } None of this predicts how relationships will go. It only suggests a style of closeness to notice with care.`,
   );
 
   paras.push(
-    `A second school sits beside the first. Vedic Psychic ${psychic} (${traitLabel(psychic)}) is often read as day temperament—the default wiring of the birth day. Destiny ${destiny} (${traitLabel(destiny)}) is the longer path number from the full date. ${
+    `A second school sits beside the first. Vedic Psychic ${psychic} (${plainTrait(psychic)}) is often read as day temperament — the first habit of the birth day. Destiny ${destiny} (${plainTrait(destiny)}) is the longer path number from the full date. ${
       psychic === destiny
-        ? "Here the two agree, which some readers treat as a simpler through-line from daily habit to longer aim."
-        : "Here they differ, which can feel like a productive stretch: the day’s reaction and the longer aim are not always the same instrument."
+        ? "Here the two agree, which some readers treat as a simpler line from daily habit to longer aim."
+        : "Here they differ. The day’s first reaction and the longer aim are not always the same tool."
     } Name numbers in this school (Vedic Name ${snap.vedic_name}, Chaldean ${chal}) describe spelling in force, not fate.`,
   );
 
@@ -74,15 +74,15 @@ export function buildProfileNarrative(opts: {
   }
 
   paras.push(
-    `Across Pythagorean, Chaldean, Vedic, and this year’s timing, recurring themes include ${themeSentence}. Counts are not scores and not percentages. They simply mark how many independent chart seats cite a family of digits. A theme that appears often may feel like home weather. A quieter theme may still matter on the days it is needed.`,
+    `Across Pythagorean, Chaldean, Vedic, and this year’s timing, repeating themes include ${themeSentence}. Counts are not scores and not percentages. They only mark how many independent chart seats point to a family of digits. A theme that appears often may feel familiar. A quieter theme may still matter on the days it is needed.`,
   );
 
   if (tensions[0]) {
     paras.push(
-      `The profile also holds productive stretch. ${tensions
+      `The profile also holds useful stretch. ${tensions
         .slice(0, 3)
         .map((t) => t.insight)
-        .join(" ")} Stretch is not failure. In Numora’s reading it is often the place where skill is earned.`,
+        .join(" ")} Stretch is not failure. In this reading it is often the place where skill is earned.`,
     );
   }
 
@@ -91,19 +91,19 @@ export function buildProfileNarrative(opts: {
   if (loMissing.length || loRepeat.length) {
     paras.push(
       `The Lo Shu grid, built from date digits, adds a lived map rather than another personality label. ${
-        loRepeat.length
-          ? `Repeated digits (${loRepeat.map((r) => `${r.number}×${r.count}`).join(", ")}) may feel like emphasis—useful when they become craft, tiring when they become the only gear.`
-          : ""
-      } ${
-        loMissing.length
-          ? `Digits that do not appear (${loMissing.join(", ")}) are treated as practice edges: habits to grow, not holes in character.`
-          : ""
-      }`.replace(/\s+/g, " ").trim(),
+          loRepeat.length
+            ? `Repeated digits (${loRepeat.map((r) => `${r.number}×${r.count}`).join(", ")}) may feel like emphasis — useful when they become craft, tiring when they become the only gear.`
+            : ""
+        } ${
+          loMissing.length
+            ? `Digits that do not appear (${loMissing.join(", ")}) are treated as extra practice: habits to grow, not holes in character.`
+            : ""
+        }`.replace(/\s+/g, " ").trim(),
     );
   }
 
   paras.push(
-    `Timing is calendar-bound. ${season.combined} Personal Year and Personal Month are pacing themes for how a cycle may feel to work with. They do not announce events, luck, or guaranteed outcomes. The as-of date is printed so a later reader can see which season this paragraph described.`,
+    `Timing is tied to the calendar. ${season.combined} Personal Year and Personal Month are pacing themes for how a cycle may feel to work with. They do not announce events, luck, or guaranteed outcomes. The as-of date is printed so a later reader can see which season this paragraph described.`,
   );
 
   paras.push(
@@ -113,11 +113,11 @@ export function buildProfileNarrative(opts: {
   paras.push(
     young
       ? `For a young person, this story is a mirror for curiosity—not a sorting hat. Adults around ${displayName} may use it to notice strengths and preferred pace, then offer choices rather than labels. The detailed report remains the catalog of every method; this enhanced reading is the through-line.`
-      : `Achievement may motivate early chapters, while meaning often motivates the longer ones. Structure, when it appears, is frequently the bridge between ambition and wisdom. Growth tends to land when insight is converted into one small action and, when it is kind to do so, shared. ${displayName} can treat this story as a working poem: return to the numbers, test them against lived days, and keep what is useful.`,
+      : `Early chapters may care about achievement. Later chapters often care about meaning. Structure, when it appears, is often the bridge between wanting more and growing wiser. Growth tends to land when an insight becomes one small action and, when it is kind to do so, is shared. ${displayName} can treat this story as a working note: return to the numbers, test them against real days, and keep what is useful.`,
   );
 
   paras.push(
-    `If a section below feels like a dictionary entry, look back here. The value of the enhanced report is not more charts. It is this question: given these rhymes and these stretches, what is one honest next practice in the current season?`,
+    `If a section below feels like a dictionary entry, look back here. The value of the enhanced report is not more charts. It is this question: given these repeating themes and these stretches, what is one honest next practice in the current season?`,
   );
 
   let full = paras.map((p) => p.trim()).join("\n\n");
@@ -138,7 +138,7 @@ export function buildProfileNarrative(opts: {
     count = wordCount(full);
   }
 
-  const teaser = `${throughline} Recurring themes include ${themeSentence}. Current season: Personal Year ${season.yearNumber}${season.monthNumber != null ? ` · Personal Month ${season.monthNumber}` : ""}.`;
+  const teaser = `${throughline} Repeating themes include ${themeSentence}. Current season: Personal Year ${season.yearNumber}${season.monthNumber != null ? ` · Personal Month ${season.monthNumber}` : ""}.`;
 
   return {
     teaser: assertSafeCopy(teaser, "enhanced.narrative.teaser"),
@@ -157,15 +157,15 @@ function purposeParagraph(
   const p = (purpose || "").toLowerCase();
   const young = reportType === "child" || reportType === "adolescent";
   if (young || p.includes("family")) {
-    return `The stated lens for this reading is ${purpose || "family and self-understanding"}. In that light, Life Path ${lp} and Expression ${expr} are most useful as a description of pace and contribution at home: how ${name} may like to help, learn, and repair—not as a ranking of family members.`;
+    return `This reading was asked for ${purpose || "family and self-understanding"}. In that light, Life Path ${lp} and Expression ${expr} are most useful as a description of pace and help at home: how ${name} may like to help, learn, and repair — not as a ranking of family members.`;
   }
   if (p.includes("career")) {
-    return `The stated lens is career reflection. Expression ${expr} may describe craft; Life Path ${lp} may describe the longer why. Treat profession lists as invitations to experiment, never as assigned jobs or promises of status.`;
+    return `This reading was asked for career reflection. Expression ${expr} may describe craft; Life Path ${lp} may describe the longer why. Treat job lists as ideas to try, never as assigned jobs or promises of status.`;
   }
   if (p.includes("relationship")) {
-    return `The stated lens is relationships. Soul Urge and Personality are the more useful pair here: what feels true inside, and what others may meet first. Compatibility language elsewhere is a tone map, not a prediction of who will stay.`;
+    return `This reading was asked for relationships. Soul Urge and Personality are the more useful pair here: what feels true inside, and what others may meet first. Compatibility language elsewhere is a tone map, not a prediction of who will stay.`;
   }
-  return `The stated lens is ${purpose || "self-reflection"}. Use the numbers as questions: Where does ${name} already live this pattern? Where does it ask for a gentler pace?`;
+  return `This reading was asked for ${purpose || "self-reflection"}. Use the numbers as questions: Where does ${name} already live this pattern? Where does it ask for a gentler pace?`;
 }
 
 function padParagraph(

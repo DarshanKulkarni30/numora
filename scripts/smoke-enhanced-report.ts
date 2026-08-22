@@ -74,6 +74,14 @@ assert(
   enhanced.narrative.wordCount >= 500 && enhanced.narrative.wordCount <= 1100,
   `narrative length ${enhanced.narrative.wordCount}`,
 );
+assert(
+  !enhanced.narrative.full.toLowerCase().includes("working poem"),
+  "enhanced story is not high-english poetry",
+);
+assert(
+  !enhanced.narrative.full.toLowerCase().includes("rhyme"),
+  "enhanced story does not say rhyme",
+);
 assert(enhanced.season.asOf.includes("2026"), "season as-of date");
 assert(enhanced.season.doThis.length >= 1, "season practise list");
 assert(enhanced.flow.primary.length === 4, "primary flow has four nodes");

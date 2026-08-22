@@ -7,6 +7,7 @@ import {
   resolvePythagoreanChart,
 } from "../src/lib/numerology/pythagoreanChart";
 import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
+import { buildPythagoreanIdentityLayers } from "../src/lib/numerology/pythagoreanIdentityLayers";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -70,6 +71,50 @@ assert(
 );
 eq(chart.subconsciousSelf.number, 7, "subconscious self = 9 minus two lessons");
 assert(chart.essence.transits.length >= 1, "essence transits");
+assert(
+  !chart.hiddenPassion.summary.toLowerCase().includes("native appetite"),
+  "passion copy is plain",
+);
+assert(
+  chart.hiddenPassion.summary.toLowerCase().includes("letter number") ||
+    chart.hiddenPassion.summary.toLowerCase().includes("habit in the name"),
+  "passion explains the number in simple words",
+);
+assert(
+  !chart.essence.practice.toLowerCase().includes("colour the year"),
+  "essence copy is plain",
+);
+assert(
+  chart.personalDay.summary.toLowerCase().includes("today"),
+  "personal day names today",
+);
+
+const magnusLayers = buildPythagoreanIdentityLayers({
+  birthDay: "3",
+  lifePath: "6",
+  expression: "3",
+  soulUrge: "1",
+  personality: "11",
+  maturity: "9",
+});
+assert(
+  !magnusLayers.layers[0]!.micro.gift.toLowerCase().includes("leadership more adaptable"),
+  "expression gift does not call Life Path 6 leadership",
+);
+assert(
+  magnusLayers.layers[0]!.micro.gift.toLowerCase().includes("care") ||
+    magnusLayers.layers[0]!.micro.gift.toLowerCase().includes("promises"),
+  "expression gift names Life Path 6 in plain words",
+);
+assert(
+  magnusLayers.layers[0]!.insight.toLowerCase().includes("talk") ||
+    magnusLayers.layers[0]!.insight.toLowerCase().includes("ideas"),
+  "expression insight is amateur-plain for 3",
+);
+assert(
+  magnusLayers.layers[2]!.insight.toLowerCase().includes("does not switch"),
+  "maturity is not a birthday switch",
+);
 assert(
   chart.planeNote.toLowerCase().includes("lo shu"),
   "planes distinguished from Lo Shu",

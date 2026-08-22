@@ -35,16 +35,16 @@ export function archetypeFor(opts: {
 
   const throughline =
     theme === "wisdom"
-      ? "The repeated theme throughout this profile is understanding earned through disciplined experience."
+      ? "This chart often comes back to learning from real experience."
       : theme === "leadership"
-        ? "The repeated theme throughout this profile is direction held with responsibility."
+        ? "This chart often comes back to leading while staying responsible."
         : theme === "service"
-          ? "The repeated theme throughout this profile is care that stays practical."
+          ? "This chart often comes back to care that stays useful."
           : theme === "structure"
-            ? "The repeated theme throughout this profile is making insight usable."
+            ? "This chart often comes back to turning ideas into something you can use."
             : theme === "freedom"
-              ? "The repeated theme throughout this profile is learning through movement, then choosing a form."
-              : "The repeated theme throughout this profile is giving inner life a clear voice.";
+              ? "This chart often comes back to trying new things, then choosing a shape."
+              : "This chart often comes back to saying what is inside in a clear way.";
 
   return { title, throughline };
 }

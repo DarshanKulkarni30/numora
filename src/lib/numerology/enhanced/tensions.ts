@@ -1,6 +1,6 @@
 import type { LoShuResult, NumerologySnapshot } from "@/lib/numerology/types";
 import { parseChartNumber } from "./digits";
-import { traitLabel } from "./themeGraph";
+import { plainTrait } from "@/lib/numerology/layeredCopy";
 
 export type Tension = {
   id: string;
@@ -27,7 +27,7 @@ export function buildTensions(
       id: "inner-outer",
       title: "Inner wish and outer manner",
       values: [`Soul Urge ${soul}`, `Personality ${pers}`],
-      insight: `Soul Urge ${soul} (${traitLabel(soul)}) may describe what feels true inside, while Personality ${pers} (${traitLabel(pers)}) may color first impressions. The stretch is letting the inner pace be visible without forcing the outer style to disappear.`,
+      insight: `Soul Urge ${soul} (${plainTrait(soul)}) is what can feel true inside. Personality ${pers} (${plainTrait(pers)}) is what people may notice first. You do not have to hide one to keep the other.`,
     });
   }
 
@@ -36,7 +36,7 @@ export function buildTensions(
       id: "path-destiny",
       title: "Life Path and Destiny tones",
       values: [`Life Path ${lp}`, `Destiny ${destiny}`],
-      insight: `Pythagorean Life Path ${lp} and Vedic Destiny ${destiny} are different school lenses on the longer journey. Read them as two maps of the same terrain—not a contest.`,
+      insight: `Pythagorean Life Path ${lp} and Vedic Destiny ${destiny} are two school views of the longer path. Read both. They are not a contest.`,
     });
   }
 
@@ -45,7 +45,7 @@ export function buildTensions(
       id: "psychic-destiny",
       title: "Day temperament and longer path",
       values: [`Psychic ${psychic}`, `Destiny ${destiny}`],
-      insight: `Psychic ${psychic} may describe default daily wiring, while Destiny ${destiny} may describe the longer curriculum. A useful practice is noticing when a day’s reaction pulls against a longer aim, then choosing one bridging habit.`,
+      insight: `Psychic ${psychic} is closer to the day’s first habit. Destiny ${destiny} is the longer walk. Notice when a day’s reaction pulls against a longer aim, then take one small bridging step.`,
     });
   }
 
@@ -54,7 +54,7 @@ export function buildTensions(
       id: "name-schools",
       title: "Two name-school readings",
       values: [`Pythagorean Expression ${expr}`, `Chaldean Name ${chal}`],
-      insight: `Expression ${expr} is the Pythagorean all-letter craft of the spelling in force. Chaldean ${chal} is a different letter map of the same name. Together they often read as how you build (${expr}) and how the name may feel to others (${chal}).`,
+      insight: `Expression ${expr} is the Pythagorean all-letter name number. Chaldean ${chal} is a different letter map of the same name. One is how you build. The other is how the name may feel. Hold both.`,
     });
   }
 
@@ -65,7 +65,7 @@ export function buildTensions(
       id: "lo-shu-gaps",
       title: "Lo Shu development edges",
       values: missing.map((n) => `Missing ${n}`),
-      insight: `The Lo Shu grid does not show ${shown} as strongly as other digits. Traditions treat this as a practice edge—habits to grow—not a lack in the person.`,
+      insight: `The Lo Shu grid does not show ${shown} as strongly as other digits. Treat that as extra practice, not a hole in the person.`,
     });
   }
 

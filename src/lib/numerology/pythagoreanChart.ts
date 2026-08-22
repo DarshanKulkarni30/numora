@@ -11,7 +11,7 @@
 import { personalMonth, personalYearCycleAt } from "./cycles";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { PYTHAGOREAN } from "./mappings";
-import { CORE_TRAIT, coreTraitFor, yearMonthMeaning } from "./meanings";
+import { coreTraitFor } from "./meanings";
 import { pinnacleAtAge, pinnaclesForDob } from "./pinnacles";
 import {
   calculateAge,
@@ -81,6 +81,8 @@ export type PythagoreanChart = {
     counts: { number: number; count: number }[];
     summary: string;
     practice: string;
+    student?: string;
+    expert?: string;
   };
   karmicLessons: {
     numbers: number[];
@@ -99,6 +101,8 @@ export type PythagoreanChart = {
     asOf: string;
     summary: string;
     practice: string;
+    student?: string;
+    expert?: string;
   };
   /** Month + day of birth, reduced. First-impression tone of a season. */
   attitude: {
@@ -121,6 +125,8 @@ export type PythagoreanChart = {
     transits: LetterTransit[];
     summary: string;
     practice: string;
+    student?: string;
+    expert?: string;
   };
 };
 
@@ -405,15 +411,23 @@ export function buildPythagoreanChart(opts: {
     counts: present,
     summary: assertSafeCopy(
       passionNums.length
-        ? `Hidden Passion ${passionNums.join(" / ")} is the letter-value you repeat most (${max}×) — a native appetite, not a grade.`
+        ? `Hidden Passion is the letter number you use most in your birth name. Yours is ${passionNums.join(" / ")} (it appears ${max} time${max === 1 ? "" : "s"}). This is a habit in the name, not a score. It often feels like something you want to do again and again: ${passionNums.map((n) => plainTrait(n)).join(" and ")}.`
         : "Hidden Passion needs Latin letters in the birth-certificate name.",
       "pyth.passion.summary",
     ),
     practice: assertSafeCopy(
       passionNums.length
-        ? `Give ${passionNums.map((n) => coreTraitFor(n).toLowerCase()).join(" and ")} a weekly outlet so the repeated pattern has somewhere honest to go.`
+        ? `This week, give that habit a small honest place to go: ${passionNums.map((n) => plainTrait(n)).join(" and ")}.`
         : "Add a Latin spelling to map Hidden Passion.",
       "pyth.passion.practice",
+    ),
+    student: assertSafeCopy(
+      "We count how often each letter-value 1–9 appears in the birth-certificate name. The highest count is Hidden Passion. If two numbers tie, both stay.",
+      "pyth.passion.student",
+    ),
+    expert: assertSafeCopy(
+      "Pythagorean A=1…I=9, then J=1 again. Hidden Passion is the modal letter-value, not a destiny claim or a grade.",
+      "pyth.passion.expert",
     ),
   };
 
@@ -483,17 +497,26 @@ export function buildPythagoreanChart(opts: {
 
   const pyCycle = personalYearCycleAt(dob, asOf);
   const dayNumber = personalDayNumber(pyCycle.number, asOf);
-  const dayTrait = CORE_TRAIT[dayNumber] ?? coreTraitFor(reduceToSingleDigit(dayNumber));
+  const dayReduced = reduceToSingleDigit(dayNumber);
+  const monthNumber = personalMonth(pyCycle.number, asOf);
   const personalDay = {
     number: dayNumber,
     asOf: formatAsOf(asOf),
     summary: assertSafeCopy(
-      `Personal Day ${dayNumber} (${dayTrait}) on ${formatAsOf(asOf)} — today’s weather inside Personal Month ${personalMonth(pyCycle.number, asOf)} and Personal Year ${pyCycle.number}.`,
+      `Personal Day ${dayNumber} is today’s small timing number (as of ${formatAsOf(asOf)}). It sits inside Personal Month ${monthNumber} and Personal Year ${pyCycle.number}. Today’s mood: ${plainTrait(dayReduced)}.`,
       "pyth.day.summary",
     ),
     practice: assertSafeCopy(
-      yearMonthMeaning(reduceToSingleDigit(dayNumber)),
+      `Try one small step today that matches ${plainTrait(dayReduced)}. Then go back to your longer Life Path work.`,
       "pyth.day.practice",
+    ),
+    student: assertSafeCopy(
+      "Personal Day = reduce(Personal Month + calendar day). Personal Month = reduce(Personal Year + calendar month). It is timing, not character.",
+      "pyth.day.student",
+    ),
+    expert: assertSafeCopy(
+      "Same Pythagorean year–month–day stack as classic universal-year cycles. Numora prints the as-of date. Reflective pacing only — not events or luck.",
+      "pyth.day.expert",
     ),
   };
 
@@ -535,7 +558,6 @@ export function buildPythagoreanChart(opts: {
   const essenceCompound = transits.reduce((s, t) => s + t.value, 0);
   const essenceReduced =
     essenceCompound > 0 ? reduceNumber(essenceCompound) : 0;
-  const essenceTrait = essenceReduced ? coreTraitFor(essenceReduced) : "quiet";
   const transitLine = transits
     .map((t) => `${t.role} ${t.letter}=${t.value}`)
     .join(" · ");
@@ -545,15 +567,23 @@ export function buildPythagoreanChart(opts: {
     transits,
     summary: assertSafeCopy(
       transits.length
-        ? `Essence ${essenceCompound}/${essenceReduced} (${essenceTrait}) from this year’s name transits: ${transitLine}. Each letter lasts as many years as its Pythagorean value, looping the birth-certificate name.`
+        ? `Essence is a slower name number for this year of your life. We walk through the letters of your birth name; each letter lasts as many years as its number. This year the letters add to ${essenceCompound}, which becomes ${essenceReduced}. That mood is: ${plainTrait(essenceReduced)}. Current letters: ${transitLine}. It is slower than Personal Day. It does not replace Life Path.`
         : "Essence needs Latin letters in the birth-certificate name.",
       "pyth.essence.summary",
     ),
     practice: assertSafeCopy(
       essenceReduced
-        ? `Let ${essenceTrait.toLowerCase()} colour the year-long name weather — it is slower than Personal Day and should not override the Life Path.`
+        ? `Let this year’s slower name mood (${plainTrait(essenceReduced)}) sit beside Life Path. Do not let it replace the longer path.`
         : "Add a Latin spelling to read Essence transits.",
       "pyth.essence.practice",
+    ),
+    student: assertSafeCopy(
+      "Physical, mental, and spiritual name parts can each hold a current letter. Add those letter values for Essence compound, then reduce. Each letter lasts as many years as its Pythagorean value, then the name part loops.",
+      "pyth.essence.student",
+    ),
+    expert: assertSafeCopy(
+      "Transit duration = Pythagorean letter value in years, looping each name part. Essence = sum of current transit values, then reduce. Not a forecast and not a Life Path override.",
+      "pyth.essence.expert",
     ),
   };
 
