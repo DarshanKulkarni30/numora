@@ -222,6 +222,8 @@ export function VedicPanel({
             looksLike={path.looksLike}
             helps={path.helps}
             watch={path.watch}
+            student={path.student}
+            expert={path.expert}
           />
         </div>
         <p className="mt-3 text-[11px] text-paper/60">

@@ -21,6 +21,8 @@ export type PathCard = {
   looksLike?: string;
   helps?: string[];
   watch?: string[];
+  student?: string;
+  expert?: string;
 };
 
 export type SystemInsight = {
@@ -99,6 +101,8 @@ export function pythagoreanInsight(opts: {
       looksLike: path.looksLike,
       helps: path.helps,
       watch: path.watch,
+      student: path.student,
+      expert: path.expert,
     },
     extras: [
       {
@@ -119,12 +123,12 @@ export function pythagoreanInsight(opts: {
 
 export const CHALDEAN_LAYER_MAP: LayerCard[] = [
   {
-    title: "Compound (before reduce)",
-    body: "Every letter is scored on the older 1–8 Chaldean chart (9 is not given to a letter). The raw total is the texture of this spelling — two names can share a reduced digit and still feel different here.",
+    title: "Compound (the full total)",
+    body: "Each letter gets a number from 1 to 8 (this old chart does not give 9 to a letter). Add them up. That total is the compound. Two names can become the same small number and still have different totals.",
   },
   {
-    title: "Name number (reduced)",
-    body: "The compound folded to 1–9 (or 11/22 when they appear). The simple name vibration — how this spelling may feel as a keyword.",
+    title: "Name number (the short number)",
+    body: "Keep adding the digits of the total until you get one number from 1 to 9 (sometimes 11 or 22). That short number is the easy label for the name.",
   },
 ];
 
@@ -156,6 +160,8 @@ export function chaldeanInsight(opts: {
       looksLike: shift.looksLike,
       helps: shift.helps,
       watch: shift.watch,
+      student: shift.student,
+      expert: shift.expert,
     },
     extras,
   };
@@ -171,41 +177,49 @@ function chaldeanCompoundShift(compound: number, reduced: number): PathCard {
     return {
       kicker: "",
       heading: "",
-      feel: "The spelling totals 44, then settles on 8. 44 is often read as doubled structure — load-bearing work, persistence, a name that can carry weight. 8 is the keyword rooms may hear faster: stewardship, resources, long-range aims.",
-      atmosphere: `${texture} Keep 44 for texture (how heavy the build feels) and 8 for the simple keyword. They are one spelling, two zoom levels — not two people.`,
+      feel: "The letters in this name add up to 44. Then 4 + 4 = 8. 44 means a builder name: slow, steady work. 8 means people may see you as someone who can handle plans, money, or duty. Same name, two steps — not two people.",
+      atmosphere: `${texture} Keep 44 to understand the “heavy work” feeling. Keep 8 as the short label.`,
       invitation:
-        "Ask whether this name is being used to hold a project, a team, or a family’s practical load. If yes, pair the 8 with rest. If the 8 feels like a costume, the compound is describing pressure, not a job title.",
+        "If this name is on a project, a team, or family duties, rest as well as work. 8 is a label, not a job title you must wear all day.",
       looksLike:
-        "A short, strong name that people treat as capable before they know you. Being handed the budget, the deadline, or the 'you decide' moment. Pride in finishing what others start — and fatigue when every room assumes you will carry it.",
+        "People may treat you as capable before they know you. You may be given the budget, the deadline, or the final decision. That can feel proud — and tiring.",
       helps: [
-        "Stamina for unfinished builds — 44 is persistence, not a sprint",
-        "Others may read the name as someone who can hold the books",
-        "8 can give a lighter Expression (speech, play, ideas) a spine",
+        "You can stay with long work and finish it",
+        "Others may trust you with money or plans",
+        "If your other name number is lighter (like 3), 8 can add backbone",
       ],
       watch: [
-        "44 can feel heavy: over-responsibility dressed as competence",
-        "Confusing stewardship with status or being needed",
-        "A Pythagorean Expression that is lighter (often 3 or 5) may feel truer inside than this 8 sounds",
+        "Doing everyone’s hard work because you look able",
+        "Mixing “I am useful” with “I must be in charge”",
+        "Feeling that 8 is a costume if another chart on the same name reads as 3 or 5",
       ],
+      student:
+        "Chaldean letters use values 1–8 (no letter is 9). The compound is the raw sum of the letters. The name number is that sum reduced to one digit (here 8).",
+      expert:
+        "44 is often taught as a master compound (4 + 4). Pythagorean Expression on the same spelling can differ because that chart uses 1–9. Compare the two maps; do not pick a winner.",
     };
   }
 
   return {
     kicker: "",
     heading: "",
-    feel: `The spelling totals ${compound}, then reduces to ${reduced} (${traitR}). The compound is the grain of the letters; the reduced digit is the simple name vibration.`,
+    feel: `The letters add up to ${compound}. That sum becomes ${reduced} (${traitR}). ${compound} is the full total. ${reduced} is the short name number.`,
     atmosphere: texture,
     invitation:
-      "Read both numbers: compound for texture, reduced for a keyword. Neither is a verdict on the person.",
-    looksLike: `In rooms, people may meet the ${traitR.toLowerCase()} of ${reduced} first. The compound ${compound} is the longer flavor of the same spelling — how the name may feel to live in, not a second destiny.`,
+      "Read both numbers. The big total is extra detail. The small number is the easy label. Neither judges the person.",
+    looksLike: `People may first notice the ${reduced} feeling (${traitR.toLowerCase()}). The total ${compound} is more detail about the same name — not a second life path.`,
     helps: [
-      `A clear name keyword (${reduced} · ${traitR}) you can actually remember`,
-      "Compound texture that distinguishes this spelling from others that reduce to the same digit",
+      `A short label you can remember: ${reduced} (${traitR})`,
+      `The total ${compound} shows this spelling is not the same as every other name that also becomes ${reduced}`,
     ],
     watch: [
-      "Treating the reduced digit as the whole story and ignoring the compound",
-      "Fighting Pythagorean Expression when the two charts disagree — they are two maps, not two fates",
+      "Using only the small number and ignoring the total",
+      "Arguing with Pythagorean Expression if it is a different digit — two counting methods, one name",
     ],
+    student:
+      "Chaldean: add letter values (1–8 chart), keep the compound, then reduce. Pythagorean Expression uses a 1–9 letter chart on the same spelling.",
+    expert:
+      "Disagreement between Chaldean reduced and Pythagorean Expression is expected when letter values differ (for example E, H, S). It is not a second destiny.",
   };
 }
 
@@ -218,9 +232,9 @@ function pythagoreanBesideChaldean(opts: {
     return "Compare this name number with Pythagorean Expression on the same spelling when you want a second mirror.";
   }
   if (opts.pythExpression === opts.reduced) {
-    return `Pythagorean Expression is also ${opts.reduced} on this spelling — both letter charts agree on the reduced digit. The compound ${opts.compound} is extra Chaldean texture Pythagorean does not keep. Agreement is worth noticing; it is still not a prediction.`;
+    return `The other letter chart (Pythagorean Expression) also gives ${opts.reduced} for this name. Both methods agree on the short number. The total ${opts.compound} is extra detail that Pythagorean does not keep. Agreement is interesting — not a prediction.`;
   }
-  return `Same letters, two jobs. Pythagorean Expression ${opts.pythExpression} (${trait(opts.pythExpression)}) totals every letter on a 1–9 chart — craft, how you build and are introduced. Chaldean ${opts.reduced} (${trait(opts.reduced)}) uses the older 1–8 chart and keeps compound ${opts.compound} as texture. If they differ, ask which room you are in: the ${opts.pythExpression}-voice (how you make and speak) or the ${opts.reduced}-keyword (how the older map hears the spelling). Not a fight over which is correct.`;
+  return `Same name, two counts. Pythagorean Expression ${opts.pythExpression} (${trait(opts.pythExpression)}) uses letters A=1 to I=9. Chaldean ${opts.reduced} (${trait(opts.reduced)}) uses an older 1–8 letter list and also keeps the total ${opts.compound}. If the two numbers differ, they are two ways to count, not two different people.`;
 }
 
 function chaldeanOnDatePath(opts: {
@@ -239,13 +253,13 @@ function chaldeanOnDatePath(opts: {
   const path = bnDnTransition(bd, lp);
   const echo =
     ex != null && ex === bd
-      ? ` Pythagorean Expression ${ex} echoes Birth Day ${bd}, so the starting voice is loud in the name as well as the date.`
+      ? ` Pythagorean Expression is also ${ex}, the same as Birth Day ${bd}. The “start” number is in the date and in the name.`
       : "";
   if (ch === lp) {
-    return `Chaldean ${ch} already matches Life Path ${lp}. The name may advertise the longer curriculum (${path.feel}) while Birth Day ${bd} stays the private default.${echo}`;
+    return `Chaldean name number ${ch} is the same as Life Path ${lp}. The name already points to the longer lesson. Birth Day ${bd} is still the starting style. ${path.feel}${echo}`;
   }
   if (ch === bd) {
-    return `Chaldean ${ch} echoes Birth Day ${bd}. The older name chart repeats the starting tone; Life Path ${lp} is still the growing edge (${path.feel}).${echo}`;
+    return `Chaldean name number ${ch} is the same as Birth Day ${bd}. The name repeats the starting style. Life Path ${lp} is the longer lesson. ${path.feel}${echo}`;
   }
-  return `The date path on this chart is Birth Day ${bd} → Life Path ${lp}: ${path.feel} Chaldean ${ch} (${trait(ch)}) is a third job for the same spelling — neither the start nor the destination. Useful question: is the name being asked to hold ${trait(ch).toLowerCase()} while the person is still practicing the ${bd}→${lp} stretch? A pacing cue, not a verdict.${echo}`;
+  return `On this chart the date path is Birth Day ${bd} → Life Path ${lp}. ${path.feel} The Chaldean name number is ${ch} (${trait(ch)}) — a third number for the same spelling. Question to sit with: does the name ask for ${trait(ch).toLowerCase()} while you are still practicing ${bd} → ${lp}? This is a pacing note, not a verdict.${echo}`;
 }

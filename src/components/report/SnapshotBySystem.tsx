@@ -192,6 +192,8 @@ function InsightBlock({
             looksLike={insight.path.looksLike}
             helps={insight.path.helps}
             watch={insight.path.watch}
+            student={insight.path.student}
+            expert={insight.path.expert}
           />
         </div>
         <p className={`mt-2 text-[11px] ${muted}`}>

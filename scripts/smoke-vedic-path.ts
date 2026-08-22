@@ -35,11 +35,15 @@ if (t73.helps.length < 2 || t73.watch.length < 2 || t73.looksLike.length < 40) {
 console.log("ok 7→3 feel", t73.feel);
 
 const t36 = bnDnTransition(3, 6);
-if (!t36.feel.toLowerCase().includes("container")) {
-  console.error("FAIL 3→6 should explain the container, not a slogan", t36.feel);
+if (!t36.feel.toLowerCase().includes("talk") || !t36.feel.toLowerCase().includes("promises")) {
+  console.error("FAIL 3→6 should be plain: talk + promises", t36.feel);
   process.exit(1);
 }
-if (!t36.watch.some((w) => w.toLowerCase().includes("resent"))) {
+if (t36.feel.toLowerCase().includes("3-voice") || t36.feel.toLowerCase().includes("container")) {
+  console.error("FAIL 3→6 should not use high metaphor", t36.feel);
+  process.exit(1);
+}
+if (!t36.watch.some((w) => w.toLowerCase().includes("angry") || w.toLowerCase().includes("hard talk"))) {
   console.error("FAIL 3→6 watch should name a real friction", t36.watch);
   process.exit(1);
 }
@@ -99,8 +103,12 @@ const mag = chaldeanInsight({
   birthDay: "3",
   lifePath: "6",
 });
-if (!mag.path.feel.includes("44") || !mag.path.watch?.length) {
-  console.error("FAIL 44→8 should be specific", mag.path);
+if (
+  !mag.path.feel.includes("44") ||
+  !mag.path.feel.toLowerCase().includes("builder") ||
+  mag.path.feel.toLowerCase().includes("zoom")
+) {
+  console.error("FAIL 44→8 should be plain and specific", mag.path);
   process.exit(1);
 }
 const onChart = mag.extras.find((e) => e.title === "On this chart");

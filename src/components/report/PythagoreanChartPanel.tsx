@@ -1,5 +1,6 @@
 "use client";
 
+import { LayeredNote } from "@/components/report/LayeredNote";
 import type { PythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 
 type Props = {
@@ -67,9 +68,15 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
         {chart.hiddenPassion.summary} {chart.hiddenPassion.practice}
       </p>
       <p className="text-sm leading-7 text-ink-soft">{chart.personalDay.summary}</p>
-      <p className="text-sm leading-7 text-ink-soft">
-        {chart.attitude.summary} {chart.attitude.practice}
-      </p>
+      <div>
+        <p className="text-sm leading-7 text-ink-soft">
+          {chart.attitude.summary} {chart.attitude.practice}
+        </p>
+        <LayeredNote
+          student={chart.attitude.student}
+          expert={chart.attitude.expert}
+        />
+      </div>
       <p className="text-sm leading-7 text-ink-soft">
         {chart.subconsciousSelf.summary} {chart.subconsciousSelf.practice}
       </p>
@@ -80,13 +87,17 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
         <p className="mt-2 text-sm leading-7 text-ink-soft">
           {chart.karmicLessons.summary}
         </p>
+        <LayeredNote
+          student={chart.karmicLessons.student}
+          expert={chart.karmicLessons.expert}
+        />
         {chart.karmicLessons.items.length ? (
           <ul className="mt-3 space-y-2 text-sm text-ink-soft">
             {chart.karmicLessons.items.map((i) => (
               <li key={i.number}>
                 <span className="font-medium text-ink">
                   {i.number}
-                  {i.softened ? " · softened" : ""}
+                  {i.softened ? " · easier (also in main numbers)" : ""}
                 </span>
                 {" — "}
                 {i.practice}
@@ -143,6 +154,7 @@ export function PythagoreanChartPanel({ chart, compact = false }: Props) {
                     {c.isCurrent ? " · now" : ""}
                   </p>
                   <p className="mt-1 text-sm text-ink-soft">{c.practice}</p>
+                  <LayeredNote student={c.student} expert={c.expert} />
                 </li>
               ))}
             </ul>

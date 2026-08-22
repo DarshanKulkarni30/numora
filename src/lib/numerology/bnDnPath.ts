@@ -20,10 +20,12 @@ export type BnDnTransition = {
   helps: string[];
   /** Common friction — pacing cues, not character verdicts. */
   watch: string[];
+  student?: string;
+  expert?: string;
 };
 
 type TransitionDraft = Pick<BnDnTransition, "feel" | "atmosphere" | "invitation"> &
-  Partial<Pick<BnDnTransition, "looksLike" | "helps" | "watch">>;
+  Partial<Pick<BnDnTransition, "looksLike" | "helps" | "watch" | "student" | "expert">>;
 
 export type VedicLayerId = "bn" | "dn" | "nn";
 
@@ -158,6 +160,12 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
     looksLike,
     helps,
     watch,
+    student:
+      draft.student ??
+      `Number ${bn} comes from the birth day. Number ${dn} comes from the full birth date (day + month + year), then reduced to one digit. This page reads a path from ${bn} toward ${dn}. The first number does not become “wrong.”`,
+    expert:
+      draft.expert ??
+      `Vedic: Psychic (Moolank) ${bn} → Destiny (Bhagyank) ${dn}. Pythagorean Life Path uses the same full-date idea and may keep 11, 22, or 33 before reducing. Copy here is reflective, not a prediction.`,
   };
 }
 
@@ -184,41 +192,41 @@ const CURATED: Record<string, TransitionDraft> = {
     invitation: "Trust intuition; cultivate inner stillness without cutting all ties.",
   },
   "3-6": {
-    feel: "The 3-voice (speech, play, ideas) is asked to grow a container. Care and responsibility become the classroom — not the end of creativity.",
+    feel: "You like to talk, play, and share ideas (3). Over time, life also asks you to take care of people and keep promises (6). You do not have to stop being creative.",
     atmosphere:
-      "Home, loyalty, teaching, hosting, and work that other people rely on. The gift is still expression; the test is whether it feeds someone or something that lasts the week, not only the moment.",
+      "This often shows up at home, in a team, or in any job where other people rely on you. Your gift is still words and ideas. The extra work is using them to help someone, not only to entertain.",
     invitation:
-      "Keep one creative practice that is yours alone, and one place where that gift actually holds people. Duty without joy dries out; joy without a vessel scatters.",
+      "Keep one hobby that is only for you. Also keep one place where you really help others. Both matter.",
     looksLike:
-      "A lively talker who becomes the person a family or team calls when something breaks. A designer, teacher, or performer who starts running the studio, the classroom, or the household calendar. Wit that used to entertain is asked to soothe, explain, or stay. It can also look like saying yes to every need because you can make it sound easy.",
+      "You become the person family or coworkers call when something breaks. Or you run a class, a home, or a small shop — not only perform or joke. It can also look like saying yes to everyone because you can make it sound easy.",
     helps: [
-      "Warmth that can actually hold people, not only charm a room",
-      "Ideas that find a use — art, teaching, or a product someone lives with",
-      "Social ease that builds loyalty instead of a string of first impressions",
-      "Humor that makes duty bearable for you and for others",
+      "Your words can comfort people, not only make them laugh",
+      "Your ideas can be useful in daily life",
+      "People may stay because they trust you",
     ],
     watch: [
-      "Resentment if care swallows play and you never get the stage back",
-      "Performing helpfulness (sounding responsible) instead of keeping the promise",
-      "Using charm to dodge a hard conversation the 6-path still needs",
-      "Guilt when you want solitude or applause — both are allowed; neither is the whole job",
+      "You may feel angry if all your time is for others",
+      "You may sound helpful but not finish the job",
+      "You may avoid a hard talk by being funny or charming",
     ],
+    student:
+      "3 is the birth day reduced (Psychic / Birth Day). 6 is the full date reduced (Destiny / Life Path). The report reads “from 3 toward 6.” Creativity is the start; care is the longer lesson.",
+    expert:
+      "Vedic Moolank 3 (Jupiter) → Bhagyank 6 (Venus). Pythagorean Birth Day 3 → Life Path 6 is the same date math with optional master numbers on the path. Not a prediction of family or career.",
   },
   "3-9": {
-    feel: "Expression is asked to serve a wider circle. The 3-voice still talks and makes; the 9-path asks what the gift is for when the room is larger than friends.",
-    atmosphere: "Teaching, mentoring, finishing chapters, and causes that pull you past personal applause.",
-    invitation: "Share knowledge as hospitality, not performance. Close loops so the next creative start is clean.",
+    feel: "You like to talk and share ideas (3). Life also asks you to finish things and help a wider group (9). Keep creating — and ask who it is for.",
+    atmosphere: "Teaching, mentoring, and closing old chapters. Help that goes past close friends.",
+    invitation: "Teach what you know in simple words. Finish one thing before you start a new cause.",
     looksLike:
-      "A storyteller who becomes a mentor. A brand or hobby that turns into unpaid counseling. Heat for people you will never fully know. It can also look like collecting new missions before the last one is finished.",
+      "A storyteller who starts teaching. A hobby that turns into helping strangers. It can also look like starting many “good” projects and finishing none.",
     helps: [
-      "Communication that actually lifts someone, not only entertains",
-      "Permission to end a chapter without calling it failure",
-      "Creative fire with a moral aim",
+      "Your words can help someone, not only entertain",
+      "You can end a chapter without calling it failure",
     ],
     watch: [
-      "Saving the world in talk while one nearby relationship waits",
-      "Scattered causes that feel noble and finish nothing",
-      "Burnout from being 'on' for everyone",
+      "Talking about helping the world while one nearby person waits",
+      "Too many causes, nothing finished",
     ],
   },
   "4-1": {
@@ -242,20 +250,18 @@ const CURATED: Record<string, TransitionDraft> = {
     invitation: "Commit to a path; turn scattered ideas into one honest action.",
   },
   "5-6": {
-    feel: "Curiosity is asked to stay. Variety does not vanish; someone or some place starts needing you on Tuesdays, not only on adventures.",
-    atmosphere: "Home, partnership, and reliability themes rise beside a mind that still wants movement.",
-    invitation: "Choose a few people and practices to be loyal to. Freedom with a return ticket is still freedom.",
+    feel: "You like change and new things (5). Life also asks you to stay and take care of people or a home (6). You can still explore — and someone may need you on ordinary days, not only on trips.",
+    atmosphere: "Home, partnership, and being reliable, while your mind still wants movement.",
+    invitation: "Choose a few people or habits to stay with. Freedom is still freedom if you come back.",
     looksLike:
-      "The traveler who starts keeping house. The job-hopper who is asked to manage a team. A restless mind that now has dependents — children, clients, a lease, a reputation. It can also look like picking fights with 'boring' duty.",
+      "Someone who used to move jobs or cities now keeps a home or a team. It can also look like getting angry at “boring” duty.",
     helps: [
-      "Adaptability that makes care less rigid",
-      "Loyalty that still knows how to play",
-      "A home or practice that can survive a change of plans",
+      "You can care for people without becoming rigid",
+      "You can keep play inside a stable life",
     ],
     watch: [
-      "Resenting the people you chose to stay for",
-      "Secret exits (new crushes, new cities, new jobs) when care feels heavy",
-      "Calling restlessness honesty when it is only escape",
+      "Blaming the people you chose to stay with",
+      "Leaving (new job, new city, new crush) when care feels heavy",
     ],
   },
   "5-8": {
@@ -336,9 +342,9 @@ function generatedDraft(bn: number, dn: number): TransitionDraft {
   const fromKw = VEDIC_DIGIT_THEMES[bn]?.keyword ?? String(bn);
   const toKw = VEDIC_DIGIT_THEMES[dn]?.keyword ?? String(dn);
   return {
-    feel: `A shift from ${from} (${fromKw}) toward ${toward} (${toKw}). The starting tone does not vanish; it becomes the soil the next lesson grows in.`,
-    atmosphere: `${VEDIC_DIGIT_THEMES[dn]?.destinyFocus ?? "Path themes of the Destiny digit."} Birth ${bn} (${fromKw}) is the habit you already know; Destiny ${dn} (${toKw}) is the chapter that keeps repeating.`,
-    invitation: `${VEDIC_DIGIT_THEMES[dn]?.practice ?? "Work with the Destiny theme as weather, not a verdict."} Keep what is true in Birth ${bn} — the stretch is to add ${toKw.toLowerCase()}, not to erase ${fromKw.toLowerCase()}.`,
+    feel: `You start with ${from} (number ${bn}, ${fromKw}). Over time, life also asks for ${toward} (number ${dn}, ${toKw}). The first number does not go away.`,
+    atmosphere: `Day to day you may still act like ${fromKw}. The longer lesson is ${toKw}. This can show up at home, at work, or with close people.`,
+    invitation: `Keep what is true about number ${bn}. Add practice for number ${dn}. Do not try to erase the first number.`,
   };
 }
 

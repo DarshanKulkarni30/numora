@@ -21,6 +21,7 @@ import {
 } from "./reduce";
 import { assertSafeCopy, assertSafeList } from "./safety";
 import type { NumerologyReport } from "./types";
+import { ageSpan, plainTrait } from "./layeredCopy";
 
 export const NAME_PLANE_LETTERS = {
   physical: "DEMW",
@@ -39,6 +40,8 @@ export type ChartChallenge = {
   isCurrent: boolean;
   title: string;
   practice: string;
+  student?: string;
+  expert?: string;
 };
 
 export type PeriodCycle = {
@@ -83,6 +86,8 @@ export type PythagoreanChart = {
     numbers: number[];
     softened: number[];
     summary: string;
+    student?: string;
+    expert?: string;
     items: { number: number; softened: boolean; practice: string }[];
   };
   planes: NamePlane[];
@@ -96,7 +101,13 @@ export type PythagoreanChart = {
     practice: string;
   };
   /** Month + day of birth, reduced. First-impression tone of a season. */
-  attitude: { number: number; summary: string; practice: string };
+  attitude: {
+    number: number;
+    summary: string;
+    practice: string;
+    student?: string;
+    expert?: string;
+  };
   /** Count of letter-values 1–9 present in the natal name (0–9). */
   subconsciousSelf: {
     number: number;
@@ -115,60 +126,73 @@ export type PythagoreanChart = {
 
 const CHALLENGE_COPY: Record<
   number,
-  { title: string; practice: string }
+  { title: string; doThis: string; student: string }
 > = {
   0: {
-    title: "Open window",
-    practice: "No extra Challenge digit here — let the Pinnacle set the weather and keep one simple habit.",
+    title: "No extra lesson number",
+    doThis: "There is no extra Challenge number here. Keep one simple habit and follow the Pinnacle theme for these years.",
+    student: "Challenge 0 means the month / day / year difference reduced to 0. Some teachers skip a special lesson and point you to the Pinnacle instead.",
   },
   1: {
-    title: "Self-trust under pressure",
-    practice: "When this window is on, choose one independent step before asking the room to decide.",
+    title: "Learning to trust yourself",
+    doThis: "Practice deciding one small thing on your own before you ask other people what to do.",
+    student: "Challenge 1 is about self-trust. The skill is starting without waiting for the group. It is a practice period, not a punishment.",
   },
   2: {
-    title: "Patience with others",
-    practice: "Slow the reply. Name what you heard before you add what you want.",
+    title: "Learning patience with people",
+    doThis: "Wait a few seconds before you answer. First say what you heard. Then say what you want.",
+    student: "Challenge 2 is about patience and listening. The skill is not “being quiet forever.” It is hearing the other person before you add your point.",
   },
   3: {
-    title: "Scattered expression",
-    practice: "Finish one small piece of communication instead of starting three.",
+    title: "Learning to finish what you say",
+    doThis: "Finish one short message, note, or talk before you start three new ones.",
+    student: "Challenge 3 is scattered speech or ideas. The practice is one finished piece of communication.",
   },
   4: {
-    title: "Resistance to structure",
-    practice: "Keep one weekly container (a list, a slot, a tool) even when mood argues otherwise.",
+    title: "Learning to keep a simple plan",
+    doThis: "Keep one weekly list or time slot, even when you do not feel like it.",
+    student: "Challenge 4 is resistance to structure. A small routine is enough. You do not need a perfect system.",
   },
   5: {
-    title: "Restlessness",
-    practice: "Give change a craft: one new input a week, not a new life every day.",
+    title: "Learning to change without chaos",
+    doThis: "Try one new thing this week — not a whole new life every day.",
+    student: "Challenge 5 is restlessness. The skill is giving change a start and an end.",
   },
   6: {
-    title: "Over-responsibility",
-    practice: "Let one yes wait. Care lands better when it is chosen, not automatic.",
+    title: "Learning not to over-help",
+    doThis: "Let one “yes” wait. Help when you choose to, then rest.",
+    student: "Challenge 6 is too much duty. Care is still good. Automatic yes is the strain.",
   },
   7: {
-    title: "Withdrawal vs insight",
-    practice: "Protect study time, then bring one finding back to ordinary conversation.",
+    title: "Learning to think, then share",
+    doThis: "Keep study or quiet time. Then tell one trusted person one thing you learned.",
+    student: "Challenge 7 is hiding in thought. Insight needs a small return to ordinary talk.",
   },
   8: {
-    title: "Force vs stewardship",
-    practice: "Measure one result honestly. Authority grows from clean accounts, not speed.",
+    title: "Learning honest results",
+    doThis: "Check one number or result honestly (time, money, or a promise). Do not only work faster.",
+    student: "Challenge 8 is force versus clean accounts. Authority here means clear facts, not speed.",
   },
   9: {
-    title: "Holding on past the close",
-    practice: "Name one ending that is already done and stop reopening it this week.",
+    title: "Learning to let an ending stay ended",
+    doThis: "Name one thing that is already finished. Do not reopen it this week.",
+    student: "Challenge 9 is holding on after a close. The practice is one clean ending.",
   },
 };
 
+const CHALLENGE_EXPERT =
+  "Pythagorean Challenges are reduced differences: C1 = |month − day|, C2 = |day − year|, C3 = |C1 − C2|, C4 = |month − year| (each part first reduced). Age windows match the four Pinnacles. The same digit can return later. Reflective practice only — not a forecast.";
+
 const LESSON_PRACTICE: Record<number, string> = {
-  1: "Practise a clean ask: one preference stated without apology.",
-  2: "Practise pairing — share a draft before it feels finished.",
-  3: "Practise light expression: a note, a sketch, a spoken thanks.",
-  4: "Practise one durable routine that survives a messy day.",
-  5: "Practise a bounded experiment — change with a start and end.",
-  6: "Practise care with a boundary: help, then rest.",
-  7: "Practise quiet study that is allowed to stay unfinished overnight.",
-  8: "Practise stewardship of one resource (time, money, or attention).",
-  9: "Practise a small completion — close a loop you have been circling.",
+  1: "Practice saying one clear preference: “I would like …”",
+  2: "Practice sharing a draft with someone before it feels perfect.",
+  3: "Practice one small expression: a note, a sketch, or a thank-you.",
+  4: "Practice one daily or weekly routine that still works on a messy day.",
+  5: "Practice one change with a start date and an end date.",
+  6: "Practice helping, then stopping to rest.",
+  7: "Practice quiet study, even if you do not finish it tonight.",
+  8: "Practice looking after one resource: time, money, or attention.",
+  9: "Practice closing one open loop you keep circling.",
 };
 
 const PLANE_LABEL: Record<NamePlaneId, string> = {
@@ -219,7 +243,7 @@ function coreDigits(cores: number[]): number[] {
   return [...out];
 }
 
-function challengeCopy(n: number): { title: string; practice: string } {
+function challengeCopy(n: number): { title: string; doThis: string; student: string } {
   return CHALLENGE_COPY[n] ?? CHALLENGE_COPY[0];
 }
 
@@ -284,14 +308,22 @@ export function buildPythagoreanChart(opts: {
   const challenges: ChartChallenge[] = pinSet.pinnacles.map((p) => {
     const number = p.id === 1 ? c1 : p.id === 2 ? c2 : p.id === 3 ? c3 : c4;
     const copy = challengeCopy(number);
+    const current = currentPin.id === p.id;
+    const ages = ageSpan(p.ageStart, p.ageEnd);
+    const nowBit = current ? " You are in this period now." : "";
     return {
       id: p.id,
       number,
       ageStart: p.ageStart,
       ageEnd: p.ageEnd,
-      isCurrent: currentPin.id === p.id,
+      isCurrent: current,
       title: copy.title,
-      practice: assertSafeCopy(copy.practice, `pyth.challenge.${p.id}`),
+      practice: assertSafeCopy(
+        `${ages}.${nowBit} ${copy.doThis}`,
+        `pyth.challenge.${p.id}`,
+      ),
+      student: assertSafeCopy(copy.student, `pyth.challenge.student.${p.id}`),
+      expert: CHALLENGE_EXPERT,
     };
   });
 
@@ -392,21 +424,29 @@ export function buildPythagoreanChart(opts: {
     softened,
     summary: assertSafeCopy(
       missing.length === 0
-        ? "Every letter-value 1–9 appears in the birth name — there is no missing-letter Karmic Lesson on this spelling."
-        : `Karmic Lessons (missing letter-values): ${missing.join(", ")}. ${
+        ? "Every number from 1 to 9 appears at least once in the letters of the birth name. In this method there is no missing-letter lesson on this spelling."
+        : `We give each letter a number (A=1, B=2, … I=9, then J=1 again). If a number from 1 to 9 never appears in the birth name, this method calls it a Karmic Lesson. Yours are ${missing.join(", ")}. This does not judge your character. It only means those skills may need extra practice.${
             softened.length
-              ? `Softened by a core seat: ${softened.join(", ")}.`
-              : "None of these are already sitting in a core number, so they ask for extra practice."
-          } This is Pythagorean name math, not a verdict on character.`,
+              ? ` ${softened.join(" and ")} also appear in your main chart numbers (for example Life Path or Birth Day), so those lessons are usually easier.`
+              : " None of these missing numbers already sit in your main chart, so they may need a little more practice."
+          }`,
       "pyth.lessons.summary",
+    ),
+    student: assertSafeCopy(
+      "This is Pythagorean name math (letters 1–9), not Vedic or Chaldean. “Easier” means the same digit already appears in a main number such as Life Path, Birth Day, or Expression.",
+      "pyth.lessons.student",
+    ),
+    expert: assertSafeCopy(
+      "Traditional Pythagorean Karmic Lessons are the absent letter-values 1–9 in the natal spelling. Softening when the digit is already a core seat is a Numora teaching note, not a universal rule.",
+      "pyth.lessons.expert",
     ),
     items: missing.map((number) => ({
       number,
       softened: cores.includes(number),
       practice: assertSafeCopy(
-        `${LESSON_PRACTICE[number] ?? "Give this missing tone a small weekly practice."}${
+        `${LESSON_PRACTICE[number] ?? "Give this missing number a small weekly practice."}${
           cores.includes(number)
-            ? " A core number already carries this digit, so treat the lesson as lighter homework."
+            ? " This number is already in your main chart, so treat the practice as lighter."
             : ""
         }`,
         `pyth.lesson.${number}`,
@@ -522,12 +562,20 @@ export function buildPythagoreanChart(opts: {
   const attitude = {
     number: attitudeNumber,
     summary: assertSafeCopy(
-      `Attitude ${attitudeNumber} is the month+day of birth reduced — how a season often meets you at the door, not the Life Path itself. Tone: ${attitudeTrait.toLowerCase()}.`,
+      `Attitude is a small extra number: add your birth month and birth day, then keep adding until you get one digit (sometimes 11 or 22). Yours is ${attitudeNumber}. This is not your Life Path. It is more like a first mood: ${plainTrait(attitudeNumber)}.`,
       "pyth.attitude.summary",
     ),
     practice: assertSafeCopy(
-      `When a first impression of a month feels off, ask what ${attitudeTrait.toLowerCase()} would do in the next ten minutes — then return to the Life Path.`,
+      `If a month feels strange, try one small step that matches this mood (${plainTrait(attitudeNumber)}). Then go back to your main Life Path work.`,
       "pyth.attitude.practice",
+    ),
+    student: assertSafeCopy(
+      `Attitude = reduce(month + day). Teachers use it for first impression or how a season may feel at the start. It does not replace Life Path, Expression, or Soul Urge. The keyword on this chart is “${attitudeTrait}.”`,
+      "pyth.attitude.student",
+    ),
+    expert: assertSafeCopy(
+      "Some schools keep 11 or 22 on Attitude before a 1–9 read in tables. Numora reduces with masters 11 and 22 allowed. Reflective only.",
+      "pyth.attitude.expert",
     ),
   };
 
