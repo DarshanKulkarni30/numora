@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T06:32:12.939Z",
+  "generatedAt": "2026-08-22T07:58:10.733Z",
   "source": "wikidata",
   "disclaimer": "Public Wikidata dates only. Personal Year is birthday-to-birthday, not calendar year. Counts calibrate copy. They are not a prediction product and not customer data.",
   "figures": [
@@ -11,6 +11,7 @@
       "country": "United States",
       "dob": "28/06/1971",
       "dobIso": "1971-06-28",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 7,
       "psychic": 1,
@@ -137,6 +138,166 @@
           "personalYear": 1,
           "pinnacleId": 3,
           "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Living Legends of Aviation",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "Heinlein Prize for Advances in Space Commercialization",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "union_ended",
+          "year": 2012,
+          "month": null,
+          "label": "Union ended with Talulah Riley",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2012,
+          "month": null,
+          "label": "Gold Medal of the Royal Aeronautical Society",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "marriage",
+          "year": 2013,
+          "month": null,
+          "label": "Union with Talulah Riley",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": null,
+          "label": "Edison Awards",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "honorary doctor of Yale University",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2016,
+          "month": 7,
+          "label": "Office: co-president",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "union_ended",
+          "year": 2016,
+          "month": null,
+          "label": "Union ended with Talulah Riley",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Fellow of the Royal Society",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": null,
+          "label": "Stephen Hawking Medal For Science Communication",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2020,
+          "month": null,
+          "label": "Axel Springer Award",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2021,
+          "month": null,
+          "label": "Time Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2022,
+          "month": 10,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2025,
+          "month": 1,
+          "label": "Office: Senior Advisor to the President of the United States",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
         }
       ]
     },
@@ -148,6 +309,7 @@
       "country": "United States",
       "dob": "12/01/1964",
       "dobIso": "1964-01-12",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 6,
       "psychic": 3,
@@ -274,6 +436,46 @@
           "personalYear": 6,
           "pinnacleId": 4,
           "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Gerard K. O’Neill Memorial Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "union_ended",
+          "year": 2019,
+          "month": null,
+          "label": "Union ended with MacKenzie Scott",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2023,
+          "month": 2,
+          "label": "Knight of the Legion of Honour",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "marriage",
+          "year": 2025,
+          "month": 6,
+          "label": "Union with Lauren Sánchez",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
         }
       ]
     },
@@ -285,6 +487,7 @@
       "country": "India",
       "dob": "19/04/1957",
       "dobIso": "1957-04-19",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 9,
       "psychic": 1,
@@ -353,6 +556,7 @@
       "country": "India",
       "dob": "24/06/1962",
       "dobIso": "1962-06-24",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 3,
       "psychic": 6,
@@ -420,6 +624,7 @@
       "country": "United States",
       "dob": "30/08/1930",
       "dobIso": "1930-08-30",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 6,
       "psychic": 3,
@@ -524,6 +729,7 @@
       "country": "United States",
       "dob": "28/10/1955",
       "dobIso": "1955-10-28",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 4,
       "psychic": 1,
@@ -650,6 +856,166 @@
           "personalYear": 5,
           "pinnacleId": 3,
           "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": 3,
+          "label": "Knight Commander of the Order of the British Empire",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 3,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": 1,
+          "label": "Grand Cross of the Order of Prince Henry",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": 3,
+          "label": "Order of the Aztec Eagle",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Commander of the Order of the Star of Romania",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "honorary doctor of the Tsinghua University",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "honorary doctor of Harvard University",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": 1,
+          "label": "Honorary Doctor at Karolinska Institutet",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": 10,
+          "label": "Cross of Recognition",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "J. William Fulbright Prize",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Silver Buffalo Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "United Nations Population Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Bower Award for Business Leadership",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Bower Award and Prize for Achievement in Science",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": 11,
+          "label": "Bambi Award",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Lasker-Bloomberg Public Service Award",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "union_ended",
+          "year": 2021,
+          "month": 8,
+          "label": "Union ended with Melinda Gates",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
         }
       ]
     },
@@ -661,6 +1027,7 @@
       "country": "United States",
       "dob": "14/05/1984",
       "dobIso": "1984-05-14",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 5,
       "psychic": 5,
@@ -803,6 +1170,7 @@
       "country": "France",
       "dob": "05/03/1949",
       "dobIso": "1949-03-05",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 4,
       "psychic": 5,
@@ -934,6 +1302,46 @@
           "personalYear": 7,
           "pinnacleId": 4,
           "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2012,
+          "month": null,
+          "label": "Knight Commander of the Order of the British Empire",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "Pushkin Medal",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2022,
+          "month": null,
+          "label": "Office: director",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2023,
+          "month": 12,
+          "label": "Grand Cross of the Legion of Honour",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
         }
       ]
     },
@@ -945,6 +1353,7 @@
       "country": "India",
       "dob": "11/10/1942",
       "dobIso": "1942-10-11",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 1,
       "psychic": 2,
@@ -1005,20 +1414,20 @@
           "pinnacleNumber": 9
         },
         {
-          "type": "award",
+          "type": "office_start",
           "year": 1984,
           "month": null,
-          "label": "Padma Shri in arts",
+          "label": "Office: Member of the Lok Sabha",
           "source": "Wikidata",
           "personalYear": 6,
           "pinnacleId": 2,
           "pinnacleNumber": 9
         },
         {
-          "type": "office_start",
+          "type": "award",
           "year": 1984,
           "month": null,
-          "label": "Office: Member of the Lok Sabha",
+          "label": "Padma Shri in arts",
           "source": "Wikidata",
           "personalYear": 6,
           "pinnacleId": 2,
@@ -1073,6 +1482,26 @@
           "personalYear": 6,
           "pinnacleId": 4,
           "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "Padma Vibhushan",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": null,
+          "label": "Dadasaheb Phalke Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
         }
       ]
     },
@@ -1084,6 +1513,7 @@
       "country": "India",
       "dob": "02/11/1965",
       "dobIso": "1965-11-02",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 7,
       "psychic": 2,
@@ -1210,6 +1640,116 @@
           "personalYear": 4,
           "pinnacleId": 2,
           "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2001,
+          "month": null,
+          "label": "Filmfare Critics Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Padma Shri in arts",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Officer of Arts and Letters",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2013,
+          "month": null,
+          "label": "Office: UNICEF Goodwill Ambassador",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": 7,
+          "label": "Knight of the Legion of Honour",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Crystal Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2023,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2024,
+          "month": null,
+          "label": "Dadasaheb Phalke Award",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 5
         }
       ]
     },
@@ -1221,6 +1761,7 @@
       "country": "India",
       "dob": "18/07/1982",
       "dobIso": "1982-07-18",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 9,
       "psychic": 9,
@@ -1343,6 +1884,7 @@
       "country": "India",
       "dob": "14/03/1965",
       "dobIso": "1965-03-14",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 11,
       "psychic": 5,
@@ -1479,6 +2021,7 @@
       "country": "United States",
       "dob": "11/11/1974",
       "dobIso": "1974-11-11",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 7,
       "psychic": 2,
@@ -1606,6 +2149,66 @@
           "personalYear": 1,
           "pinnacleId": 3,
           "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": null,
+          "label": "MTV Movie Award for Best Jaw Dropping Moment",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "Alliance of Women Film Journalists Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": 2,
+          "label": "Academy Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Golden Globe Award for Best Actor – Motion Picture Drama",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "BAFTA Award for Best Actor in a Leading Role",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Crystal Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
         }
       ]
     },
@@ -1617,6 +2220,7 @@
       "country": "United States",
       "dob": "22/06/1949",
       "dobIso": "1949-06-22",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 33,
       "psychic": 4,
@@ -1752,6 +2356,166 @@
           "personalYear": 3,
           "pinnacleId": 2,
           "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1983,
+          "month": 4,
+          "label": "Academy Award for Best Actress",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1983,
+          "month": null,
+          "label": "Golden Globe Award for Best Actress – Motion Picture Drama",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1989,
+          "month": null,
+          "label": "AACTA Award for Best Actress in a Leading Role",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1989,
+          "month": null,
+          "label": "Cannes Film Festival Award for Best Actress",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1993,
+          "month": null,
+          "label": "Rungstedlund Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 3,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1998,
+          "month": null,
+          "label": "Crystal Award",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": 2,
+          "label": "Silver Bear for Best Actress",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Honorary César",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Golden Globe Award for Best Supporting Actress – Motion Picture",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Golden Globe Award for Best Actress – Miniseries or Television Film",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2004,
+          "month": null,
+          "label": "AFI Life Achievement Award",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2004,
+          "month": null,
+          "label": "Primetime Emmy Award for Outstanding Lead Actress in a Miniseries or a Movie",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "Golden Globe Award for Best Actress in a Motion Picture – Musical or Comedy",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "Satellite Award for Best Actress – Motion Picture Musical or Comedy",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "London Film Critics Circle Award for Actress of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "union_ended",
+          "year": 2017,
+          "month": null,
+          "label": "Union ended with Don Gummer",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
         }
       ]
     },
@@ -1763,6 +2527,7 @@
       "country": "India",
       "dob": "24/04/1973",
       "dobIso": "1973-04-24",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 3,
       "psychic": 6,
@@ -1899,6 +2664,7 @@
       "country": "India",
       "dob": "05/11/1988",
       "dobIso": "1988-11-05",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 6,
       "psychic": 5,
@@ -2021,6 +2787,7 @@
       "country": "India",
       "dob": "05/07/1995",
       "dobIso": "1995-07-05",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 9,
       "psychic": 5,
@@ -2150,6 +2917,7 @@
       "country": "United States",
       "dob": "17/02/1963",
       "dobIso": "1963-02-17",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 11,
       "psychic": 8,
@@ -2275,6 +3043,166 @@
           "personalYear": 6,
           "pinnacleId": 1,
           "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1987,
+          "month": null,
+          "label": "All-NBA Team",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1988,
+          "month": 5,
+          "label": "NBA All-Defensive Team",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1988,
+          "month": null,
+          "label": "NBA Most Valuable Player Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1988,
+          "month": null,
+          "label": "NBA All-Star Game Kobe Bryant Most Valuable Player Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1988,
+          "month": null,
+          "label": "NBA Defensive Player of the Year Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1988,
+          "month": null,
+          "label": "All-NBA Team",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "marriage",
+          "year": 1989,
+          "month": null,
+          "label": "Union with Juanita Vanoy",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1989,
+          "month": null,
+          "label": "NBA All-Defensive Team",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1989,
+          "month": null,
+          "label": "All-NBA Team",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1990,
+          "month": null,
+          "label": "All-NBA Team",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1990,
+          "month": null,
+          "label": "NBA All-Defensive Team",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1991,
+          "month": null,
+          "label": "NBA Most Valuable Player Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1991,
+          "month": null,
+          "label": "NBA All-Defensive Team",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1991,
+          "month": null,
+          "label": "Sports Illustrated Sportsperson of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "union_ended",
+          "year": 2002,
+          "month": null,
+          "label": "Union ended with Juanita Vanoy",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "marriage",
+          "year": 2013,
+          "month": null,
+          "label": "Union with Yvette Prieto",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 1
         }
       ]
     },
@@ -2286,6 +3214,7 @@
       "country": "United States",
       "dob": "26/09/1981",
       "dobIso": "1981-09-26",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 9,
       "psychic": 8,
@@ -2417,6 +3346,166 @@
           "personalYear": 7,
           "pinnacleId": 1,
           "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Associated Press Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Laureus World Sports Award for Sportswoman of the Year",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "California Hall of Fame",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2012,
+          "month": null,
+          "label": "Michigan Women's Hall of Fame",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Best Female Athlete ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Associated Press Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "L'Équipe Champion of Champions",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "Associated Press Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "marriage",
+          "year": 2017,
+          "month": null,
+          "label": "Union with Alexis Ohanian",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Associated Press Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2025,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
         }
       ]
     },
@@ -2428,6 +3517,7 @@
       "country": "Argentina",
       "dob": "24/06/1987",
       "dobIso": "1987-06-24",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 1,
       "psychic": 6,
@@ -2553,6 +3643,166 @@
           "personalYear": 3,
           "pinnacleId": 1,
           "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "FIFA FIFPro World XI",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Premios Protagonistas",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "UEFA Team of the Year",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Ballon d'Or",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "FIFA World Player of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Onze d'Or",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Trofeo Alfredo Di Stéfano",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "UEFA Club Footballer of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Marca Leyenda",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "list of UEFA Champions League top scorers",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "LFP Awards",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "World Soccer Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "UEFA Club Football Awards",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "El País King of European Soccer",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "office_start",
+          "year": 2010,
+          "month": null,
+          "label": "Office: UNICEF Goodwill Ambassador",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "marriage",
+          "year": 2017,
+          "month": 6,
+          "label": "Union with Antonela Roccuzzo",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
         }
       ]
     },
@@ -2564,6 +3814,7 @@
       "country": "India",
       "dob": "17/09/1950",
       "dobIso": "1950-09-17",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 5,
       "psychic": 8,
@@ -2695,6 +3946,156 @@
           "personalYear": 5,
           "pinnacleId": 4,
           "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": 4,
+          "label": "Collar of the Order of Abdul Aziz Al Saud",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": 6,
+          "label": "Amir Amanullah Khan Award",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": 2,
+          "label": "Knight Grand Cordon with Collar of the Order of Palestine",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Seoul Peace Prize",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": 4,
+          "label": "Order of St. Andrew the Apostle the First-Called",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2019,
+          "month": 5,
+          "label": "Office: Member of the 17th Lok Sabha",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2019,
+          "month": 5,
+          "label": "Office: Leader of the House in Lok Sabha",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": 6,
+          "label": "Order of the Distinguished Rule of Izzuddin",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": 8,
+          "label": "Order of Zayed",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2020,
+          "month": 12,
+          "label": "Legion of Merit",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2020,
+          "month": null,
+          "label": "Ig Nobel Prize",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2021,
+          "month": 12,
+          "label": "Order of the Dragon King",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2021,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2024,
+          "month": null,
+          "label": "Office: Member of the Lok Sabha",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2026,
+          "month": 6,
+          "label": "Order of the White Double Cross",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
         }
       ]
     },
@@ -2706,6 +4107,7 @@
       "country": "United States",
       "dob": "04/08/1961",
       "dobIso": "1961-08-04",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 2,
       "psychic": 4,
@@ -2832,6 +4234,146 @@
           "personalYear": 11,
           "pinnacleId": 3,
           "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2008,
+          "month": 11,
+          "label": "Office: President-elect of the United States",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Time Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Financial Times Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Phoenix Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2009,
+          "month": 1,
+          "label": "Office: President of the United States",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "Nobel Peace Prize",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "King Abdulaziz Medal",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2012,
+          "month": null,
+          "label": "Time Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": 3,
+          "label": "Presidential Medal of Distinction",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": 4,
+          "label": "Order of Sikatuna",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "German Media Award",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "Profile in Courage Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2022,
+          "month": 9,
+          "label": "Primetime Emmy Award for Outstanding Narrator",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2022,
+          "month": null,
+          "label": "Audie Award for Narration by the Author or Authors",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 4,
+          "pinnacleNumber": 7
         }
       ]
     },
@@ -2843,6 +4385,7 @@
       "country": "Germany",
       "dob": "17/07/1954",
       "dobIso": "1954-07-17",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 7,
       "psychic": 8,
@@ -2969,6 +4512,166 @@
           "personalYear": 11,
           "pinnacleId": 3,
           "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 1996,
+          "month": null,
+          "label": "Commander's Cross of the Order of Merit of the Federal Republic of Germany",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 1998,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 1998,
+          "month": 11,
+          "label": "Office: Secretary General of the CDU",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "marriage",
+          "year": 1998,
+          "month": 12,
+          "label": "Union with Joachim Sauer",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2000,
+          "month": 4,
+          "label": "Office: leader of the Christian Democratic Union",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2002,
+          "month": 9,
+          "label": "Office: Chairman of the CDU/CSU Bundestag fraction",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2002,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2005,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2005,
+          "month": 11,
+          "label": "Office: Federal Chancellor of Germany",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": 3,
+          "label": "Knight Grand Cross of the Order of Merit of the Italian Republic",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2007,
+          "month": 1,
+          "label": "Office: President-in-Office of the European Council",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": 10,
+          "label": "Grand Cross of Royal Norwegian Order of Merit",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "German Leo Baeck Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2009,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2013,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2017,
+          "month": 10,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
         }
       ]
     },
@@ -2980,6 +4683,7 @@
       "country": "India",
       "dob": "19/11/1917",
       "dobIso": "1917-11-19",
+      "deathIso": "1984-10-31",
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 3,
       "psychic": 1,
@@ -3108,6 +4812,106 @@
           "personalYear": 1,
           "pinnacleId": 4,
           "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1971,
+          "month": null,
+          "label": "Bharat Ratna",
+          "source": "Wikidata",
+          "personalYear": 2,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "office_start",
+          "year": 1975,
+          "month": 11,
+          "label": "Office: Minister of Defence",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "office_start",
+          "year": 1980,
+          "month": 1,
+          "label": "Office: Prime Minister of India",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "office_start",
+          "year": 1980,
+          "month": 1,
+          "label": "Office: Minister of Defence",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1981,
+          "month": 11,
+          "label": "honorary doctor of the Sorbonne Nouvelle University",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1983,
+          "month": null,
+          "label": "Gold Olympic Order",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "office_start",
+          "year": 1984,
+          "month": 7,
+          "label": "Office: Minister of External Affairs",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Lenin Peace Prize",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Jawaharlal Nehru Award for International Understanding",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1985,
+          "month": null,
+          "label": "Order of José Martí",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
         }
       ]
     },
@@ -3119,6 +4923,7 @@
       "country": "United States",
       "dob": "20/11/1942",
       "dobIso": "1942-11-20",
+      "deathIso": null,
       "dateSource": "Wikidata P569 (day-level)",
       "lifePath": 2,
       "psychic": 2,
@@ -3246,6 +5051,166 @@
           "source": "Wikidata",
           "personalYear": 11,
           "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1981,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1983,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1985,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1987,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1989,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1991,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1993,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1995,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1997,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1999,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2001,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2003,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2005,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2007,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2009,
+          "month": 1,
+          "label": "Office: Vice President of the United States",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 2009,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
           "pinnacleNumber": 9
         }
       ]

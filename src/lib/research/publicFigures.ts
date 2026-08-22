@@ -34,6 +34,7 @@ export type PublicFigureRow = {
   country: string;
   dob: string;
   dobIso: string;
+  deathIso?: string | null;
   dateSource: string;
   lifePath: number;
   psychic: number;

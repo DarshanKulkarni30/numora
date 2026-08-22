@@ -23,7 +23,7 @@ import type {
 
 const UA =
   "NumoraResearch/1.0 (local calibration study; public Wikidata only)";
-const MAX_EVENTS = 8;
+const MAX_EVENTS = 24;
 
 type TimeClaim = { time?: string; precision?: number };
 
@@ -97,9 +97,8 @@ async function wikiToQids(titles: string[]): Promise<Map<string, string>> {
     url.searchParams.set("titles", batch.join("|"));
     url.searchParams.set("redirects", "1");
     url.searchParams.set("format", "json");
-    const res = await fetch(url, { headers: { "User-Agent": UA } });
-    if (!res.ok) throw new Error(`wiki ${res.status}`);
-    const json = await res.json();
+    if (i > 0) await sleep(400);
+    const json = await fetchJson(url, "wiki");
     const normalized: Record<string, string> = {};
     for (const n of json.query?.normalized ?? []) normalized[n.from] = n.to;
     const redirects: Record<string, string> = {};
@@ -124,10 +123,29 @@ async function wikiToQids(titles: string[]): Promise<Map<string, string>> {
   return map;
 }
 
+async function sleep(ms: number): Promise<void> {
+  await new Promise((r) => setTimeout(r, ms));
+}
+
+async function fetchJson(url: URL, label: string): Promise<any> {
+  let last = 0;
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    const res = await fetch(url, { headers: { "User-Agent": UA } });
+    last = res.status;
+    if (res.ok) return res.json();
+    if (res.status !== 429 && res.status < 500) {
+      throw new Error(`${label} ${res.status}`);
+    }
+    await sleep(4000 * attempt);
+  }
+  throw new Error(`${label} ${last}`);
+}
+
 async function getEntities(ids: string[]): Promise<Record<string, any>> {
   const out: Record<string, any> = {};
   const unique = [...new Set(ids.filter(Boolean))];
   for (let i = 0; i < unique.length; i += 40) {
+    if (i > 0) await sleep(400);
     const batch = unique.slice(i, i + 40);
     const url = new URL("https://www.wikidata.org/w/api.php");
     url.searchParams.set("action", "wbgetentities");
@@ -135,9 +153,7 @@ async function getEntities(ids: string[]): Promise<Record<string, any>> {
     url.searchParams.set("props", "claims|labels");
     url.searchParams.set("languages", "en");
     url.searchParams.set("format", "json");
-    const res = await fetch(url, { headers: { "User-Agent": UA } });
-    if (!res.ok) throw new Error(`wikidata ${res.status}`);
-    const json = await res.json();
+    const json = await fetchJson(url, "wikidata");
     Object.assign(out, json.entities ?? {});
   }
   return out;
@@ -238,7 +254,18 @@ function extractEvents(
     );
     if (ev) out.push(ev);
   }
-  out.sort((a, b) => a.year - b.year || (a.month ?? 13) - (b.month ?? 13));
+  const rank: Record<ResearchEventType, number> = {
+    marriage: 0,
+    union_ended: 1,
+    office_start: 2,
+    award: 3,
+  };
+  out.sort(
+    (a, b) =>
+      rank[a.type] - rank[b.type] ||
+      a.year - b.year ||
+      (a.month ?? 13) - (b.month ?? 13),
+  );
   const seen = new Set<string>();
   const unique: ResearchEvent[] = [];
   for (const ev of out) {
@@ -247,7 +274,9 @@ function extractEvents(
     seen.add(key);
     unique.push(ev);
   }
-  return unique.slice(0, MAX_EVENTS);
+  return unique.slice(0, MAX_EVENTS).sort(
+    (a, b) => a.year - b.year || (a.month ?? 13) - (b.month ?? 13),
+  );
 }
 
 async function main() {
@@ -292,6 +321,7 @@ async function main() {
       skipped.push({ name: seed.name, reason: `Unusable DOB ${wikiDob.iso}` });
       continue;
     }
+    const death = firstTime(ent?.claims, "P570");
     const loShu = calculateLoShu(dob);
     const pinSet = pinnaclesForDob(dob);
     const { day } = parseDob(dob);
@@ -303,6 +333,7 @@ async function main() {
       country: seed.country,
       dob,
       dobIso: wikiDob.iso,
+      deathIso: death.iso,
       dateSource: "Wikidata P569 (day-level)",
       lifePath: lifePathFromDob(dob),
       psychic: vedicPsychicFromDob(dob),

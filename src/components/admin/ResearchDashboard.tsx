@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { FigureLifePanel } from "@/components/admin/FigureLifePanel";
 import type {
   FigureField,
   PublicFigureGold,
+  PublicFigureRow,
   PublicFigureSummary,
 } from "@/lib/research/publicFigures";
 import { summarizePublicFigures } from "@/lib/research/publicFigures";
@@ -61,10 +63,15 @@ function filterGold(gold: PublicFigureGold, field: FigureField | "all"): PublicF
 
 export function ResearchDashboard({ gold }: Props) {
   const [field, setField] = useState<FigureField | "all">("all");
+  const [selectedQid, setSelectedQid] = useState<string | null>(null);
   const slice = useMemo(() => filterGold(gold, field), [gold, field]);
   const summary: PublicFigureSummary = useMemo(
     () => summarizePublicFigures(slice),
     [slice],
+  );
+  const selected: PublicFigureRow | null = useMemo(
+    () => slice.figures.find((f) => f.qid === selectedQid) ?? null,
+    [selectedQid, slice.figures],
   );
 
   return (
@@ -87,7 +94,10 @@ export function ResearchDashboard({ gold }: Props) {
           <button
             key={f}
             type="button"
-            onClick={() => setField(f)}
+            onClick={() => {
+              setField(f);
+              setSelectedQid(null);
+            }}
             className={`btn-tactile rounded-full border px-3 py-1.5 text-sm ${
               field === f
                 ? "border-ink bg-ink text-paper"
@@ -182,6 +192,18 @@ export function ResearchDashboard({ gold }: Props) {
         </p>
       ) : null}
 
+      {selected ? (
+        <FigureLifePanel
+          figure={selected}
+          onClose={() => setSelectedQid(null)}
+        />
+      ) : (
+        <p className="text-sm text-ink-soft">
+          Click a name to open that person’s Personal Year strip and Pinnacle
+          chapters, with every dated Wikidata event marked.
+        </p>
+      )}
+
       <section className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-4">
         <h2 className="text-lg text-ink">People</h2>
         <div className="mt-3 overflow-x-auto">
@@ -198,9 +220,20 @@ export function ResearchDashboard({ gold }: Props) {
             </thead>
             <tbody>
               {slice.figures.map((f) => (
-                <tr key={f.qid} className="border-t border-[var(--line)] align-top">
+                <tr
+                  key={f.qid}
+                  className={`border-t border-[var(--line)] align-top ${
+                    selectedQid === f.qid ? "bg-gold/10" : ""
+                  }`}
+                >
                   <td className="py-2 pr-3 text-ink">
-                    {f.name}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedQid(f.qid)}
+                      className="btn-tactile rounded-md border border-transparent px-1 py-0.5 text-left font-medium text-ink underline decoration-gold/60 underline-offset-2 hover:border-[var(--line)] hover:bg-white"
+                    >
+                      {f.name}
+                    </button>
                     <span className="mt-0.5 block text-[11px] text-ink-soft">
                       {f.dob} · {f.country}
                     </span>
@@ -211,17 +244,8 @@ export function ResearchDashboard({ gold }: Props) {
                   <td className="py-2 pr-3 text-ink">{f.destiny}</td>
                   <td className="py-2 text-ink-soft">
                     {f.events.length
-                      ? f.events
-                          .slice(0, 4)
-                          .map(
-                            (e) =>
-                              `${e.year} ${e.type} · PY ${e.personalYear} · P${e.pinnacleId}`,
-                          )
-                          .join("; ")
+                      ? `${f.events.length} dated · click name for years`
                       : "No dated events"}
-                    {f.events.length > 4
-                      ? ` · +${f.events.length - 4} more`
-                      : ""}
                   </td>
                 </tr>
               ))}

@@ -16,3 +16,5 @@ Follow the personal skill `public-figure-research` on this machine.
 - Admin UI: `/admin/research` (superadmin)
 
 Wikidata only. Date numbers only. No invented events. Not a public prediction feature.
+
+Cap ~24 dated events per person. Click a name on `/admin/research` for that person’s Personal Year strip and Pinnacle chapters.
