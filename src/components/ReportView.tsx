@@ -326,6 +326,8 @@ export function ReportView({
         compound: snap.compound_number,
         reduced: snap.chaldean_name_number,
         pythExpression: snap.expression_number,
+        birthDay: snap.birth_day,
+        lifePath: snap.life_path,
       }),
       rows: [
         {

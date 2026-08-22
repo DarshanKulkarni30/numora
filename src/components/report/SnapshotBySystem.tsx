@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import type { GuideTopic } from "@/lib/guides/content";
+import { PathStory } from "@/components/report/PathStory";
 import type { SystemInsight } from "@/lib/numerology/westernPath";
 
 export type NumerologySystem =
@@ -182,20 +183,17 @@ function InsightBlock({
           {insight.path.kicker}
         </p>
         <p className="mt-1 text-sm font-medium">{insight.path.heading}</p>
-        <dl className={`mt-2 space-y-2 text-xs leading-5 ${muted}`}>
-          <div>
-            <dt className={dark ? "text-sand" : "text-ink"}>How the shift may feel</dt>
-            <dd className="mt-0.5">{insight.path.feel}</dd>
-          </div>
-          <div>
-            <dt className={dark ? "text-sand" : "text-ink"}>Life atmosphere</dt>
-            <dd className="mt-0.5">{insight.path.atmosphere}</dd>
-          </div>
-          <div>
-            <dt className={dark ? "text-sand" : "text-ink"}>Growth invitation</dt>
-            <dd className="mt-0.5">{insight.path.invitation}</dd>
-          </div>
-        </dl>
+        <div className="mt-2">
+          <PathStory
+            dark={dark}
+            feel={insight.path.feel}
+            atmosphere={insight.path.atmosphere}
+            invitation={insight.path.invitation}
+            looksLike={insight.path.looksLike}
+            helps={insight.path.helps}
+            watch={insight.path.watch}
+          />
+        </div>
         <p className={`mt-2 text-[11px] ${muted}`}>
           Weather language only — not a forecast of events.
         </p>

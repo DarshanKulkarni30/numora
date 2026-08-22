@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
 import { planetGuideHref } from "@/lib/guides/planets";
+import { PathStory } from "@/components/report/PathStory";
 import {
   bnDnTransition,
   nameOnBnDnPath,
@@ -212,20 +213,17 @@ export function VedicPanel({
         <p className="mt-1 font-medium text-paper">
           Psychic {path.bn} → Destiny {path.dn}
         </p>
-        <dl className="mt-3 space-y-2 text-xs leading-5 text-paper/85">
-          <div>
-            <dt className="text-sand">How the shift may feel</dt>
-            <dd className="mt-0.5">{path.feel}</dd>
-          </div>
-          <div>
-            <dt className="text-sand">Life atmosphere</dt>
-            <dd className="mt-0.5">{path.atmosphere}</dd>
-          </div>
-          <div>
-            <dt className="text-sand">Growth invitation</dt>
-            <dd className="mt-0.5">{path.invitation}</dd>
-          </div>
-        </dl>
+        <div className="mt-3">
+          <PathStory
+            dark
+            feel={path.feel}
+            atmosphere={path.atmosphere}
+            invitation={path.invitation}
+            looksLike={path.looksLike}
+            helps={path.helps}
+            watch={path.watch}
+          />
+        </div>
         <p className="mt-3 text-[11px] text-paper/60">
           Weather language only — not a forecast of events or a verdict on
           worth.

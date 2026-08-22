@@ -65,7 +65,7 @@ const CHALDEAN_COMPOUND: Record<number, string> = {
   41: "Compound 41 may suggest innovative independence with practical checks.",
   42: "Compound 42 may suggest collaborative systems that endure.",
   43: "Compound 43 may suggest inventive problem-solving under pressure.",
-  44: "Compound 44 may suggest substantial building through persistence.",
+  44: "Compound 44 is often read as doubled structure (4 + 4): persistence, systems, and work that has to hold weight. It can feel like being the load-bearing wall — useful, and tiring if every room assumes you will carry it.",
   45: "Compound 45 may suggest versatile mastery when curiosity is channeled.",
   46: "Compound 46 may suggest caring leadership with clear standards.",
   47: "Compound 47 may suggest deep study applied to real-world craft.",

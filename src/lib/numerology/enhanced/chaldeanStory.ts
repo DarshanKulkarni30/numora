@@ -41,7 +41,7 @@ export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
   const compare = assertSafeCopy(
     expr === reduced
       ? `Chaldean reduced ${reduced} and Pythagorean Expression ${expr} agree on this spelling. Two letter maps arrived at the same digit—worth noticing, still not a prediction.`
-      : `Chaldean reduced ${reduced} (${coreTraitFor(reduced)}) sits beside Pythagorean Expression ${expr} (${coreTraitFor(expr)}). One school is listening to name texture; the other is totaling every letter as craft. Combined, many readers hold both: how the name may feel, and how the person may build.`,
+      : `Same letters, two jobs. Chaldean ${reduced} (${coreTraitFor(reduced)}) is the older map’s keyword; Pythagorean Expression ${expr} (${coreTraitFor(expr)}) is how the name builds and speaks. Hold both: how the spelling may feel, and how you make things. Not a fight over which is correct.`,
     "enhanced.chaldean.compare",
   );
 

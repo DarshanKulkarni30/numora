@@ -10,10 +10,20 @@ import { VEDIC_DIGIT_THEMES } from "./vedicNumberThemes";
 export type BnDnTransition = {
   bn: number;
   dn: number;
+  /** Short headline of the shift — keep to 1–2 sentences. */
   feel: string;
   atmosphere: string;
   invitation: string;
+  /** Concrete life situations this pairing often resembles. */
+  looksLike: string;
+  /** What this stretch can support. */
+  helps: string[];
+  /** Common friction — pacing cues, not character verdicts. */
+  watch: string[];
 };
+
+type TransitionDraft = Pick<BnDnTransition, "feel" | "atmosphere" | "invitation"> &
+  Partial<Pick<BnDnTransition, "looksLike" | "helps" | "watch">>;
 
 export type VedicLayerId = "bn" | "dn" | "nn";
 
@@ -73,74 +83,86 @@ const TO: Record<number, string> = {
   9: "release and wider care",
 };
 
-const SAME: Record<number, BnDnTransition> = {
+const SAME: Record<number, TransitionDraft> = {
   1: {
-    bn: 1,
-    dn: 1,
     feel: "Identity intensifies; repeated calls to stand on your own.",
     atmosphere: "Leadership moments, decisive crossroads, self-reliance as a practice.",
     invitation: "Claim authority with clarity; refine a personal vision without forcing others.",
   },
   2: {
-    bn: 2,
-    dn: 2,
     feel: "Sensitivity doubles; life keeps asking for cooperation.",
     atmosphere: "Partnerships, diplomacy, and emotional weather as the main classroom.",
     invitation: "Honor feeling without disappearing; practice patience as strength.",
   },
   3: {
-    bn: 3,
-    dn: 3,
     feel: "Expression is both starting point and destination.",
     atmosphere: "Conversation, teaching-in-ordinary-life, creative output as daily weather.",
     invitation: "Finish what you start sharing; let joy have a container.",
   },
   4: {
-    bn: 4,
-    dn: 4,
     feel: "Structure deepens; the lesson is to keep building.",
     atmosphere: "Routines, systems, slow progress that actually holds.",
     invitation: "Stay with the scaffold; loosen rigidity where life needs give.",
   },
   5: {
-    bn: 5,
-    dn: 5,
     feel: "Change is home; restlessness is the curriculum.",
     atmosphere: "Variety, movement of mind, openings that do not stay still.",
     invitation: "Choose a few experiments; freedom needs a chosen path.",
   },
   6: {
-    bn: 6,
-    dn: 6,
     feel: "Care is both instinct and assignment.",
     atmosphere: "Home, loyalty, harmony work, tending people and places.",
     invitation: "Give without emptying; duty and joy can share a room.",
   },
   7: {
-    bn: 7,
-    dn: 7,
     feel: "The inner life is both refuge and homework.",
     atmosphere: "Study, solitude, intuition, meaning-making away from noise.",
     invitation: "Trust stillness; let insight become usable, not only private.",
   },
   8: {
-    bn: 8,
-    dn: 8,
     feel: "Ambition and endurance keep meeting you.",
     atmosphere: "Long projects, authority tests, stamina as the weather.",
     invitation: "Build with integrity; pair drive with rest so mastery can last.",
   },
   9: {
-    bn: 9,
-    dn: 9,
     feel: "Completion and compassion stay on the syllabus.",
     atmosphere: "Endings, forgiveness practice, care that wants to go wider.",
     invitation: "Close loops cleanly; let love move beyond the personal without bypassing it.",
   },
 };
 
+function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition {
+  const from = VEDIC_DIGIT_THEMES[bn];
+  const to = VEDIC_DIGIT_THEMES[dn];
+  const looksLike =
+    draft.looksLike ??
+    (bn === dn
+      ? `The same tone repeats at the start and on the long walk. Days and chapters may keep handing you ${from.keyword.toLowerCase()} work — ${from.psychicFocus} That is a concentration of weather, not a sentence.`
+      : `Ordinary life often looks like this: the day’s habit (${from.keyword}: ${from.psychicFocus}) meeting a longer assignment (${to.keyword}: ${to.destinyFocus}) Home, work, and close relationships become the practice room.`);
+  const helps = draft.helps ?? [
+    from.strengths[0],
+    to.strengths[0],
+    to.strengths[1] ?? to.workTone,
+  ];
+  const watch = draft.watch ?? [
+    from.watchouts[0],
+    to.watchouts[0],
+    to.watchouts[1] ?? from.watchouts[1],
+  ];
+  return {
+    bn,
+    dn,
+    feel: draft.feel,
+    atmosphere: draft.atmosphere,
+    invitation: draft.invitation,
+    looksLike,
+    helps,
+    watch,
+  };
+}
+
 /** Hand-tuned BN→DN rows (user research, rewritten as reflective themes). */
-const CURATED: Record<string, Omit<BnDnTransition, "bn" | "dn">> = {
+const CURATED: Record<string, TransitionDraft> = {
   "1-2": {
     feel: "Shift from self-focus toward relational awareness.",
     atmosphere: "Partnerships, diplomacy, and emotional sensitivity as growing skills.",
@@ -162,14 +184,42 @@ const CURATED: Record<string, Omit<BnDnTransition, "bn" | "dn">> = {
     invitation: "Trust intuition; cultivate inner stillness without cutting all ties.",
   },
   "3-6": {
-    feel: "Creativity matures into responsibility and care.",
-    atmosphere: "Family, community, artistic service, nurturing roles as themes.",
-    invitation: "Balance joy with duty; pour expression into something that holds people.",
+    feel: "The 3-voice (speech, play, ideas) is asked to grow a container. Care and responsibility become the classroom — not the end of creativity.",
+    atmosphere:
+      "Home, loyalty, teaching, hosting, and work that other people rely on. The gift is still expression; the test is whether it feeds someone or something that lasts the week, not only the moment.",
+    invitation:
+      "Keep one creative practice that is yours alone, and one place where that gift actually holds people. Duty without joy dries out; joy without a vessel scatters.",
+    looksLike:
+      "A lively talker who becomes the person a family or team calls when something breaks. A designer, teacher, or performer who starts running the studio, the classroom, or the household calendar. Wit that used to entertain is asked to soothe, explain, or stay. It can also look like saying yes to every need because you can make it sound easy.",
+    helps: [
+      "Warmth that can actually hold people, not only charm a room",
+      "Ideas that find a use — art, teaching, or a product someone lives with",
+      "Social ease that builds loyalty instead of a string of first impressions",
+      "Humor that makes duty bearable for you and for others",
+    ],
+    watch: [
+      "Resentment if care swallows play and you never get the stage back",
+      "Performing helpfulness (sounding responsible) instead of keeping the promise",
+      "Using charm to dodge a hard conversation the 6-path still needs",
+      "Guilt when you want solitude or applause — both are allowed; neither is the whole job",
+    ],
   },
   "3-9": {
-    feel: "Expression expands into a wider human purpose.",
-    atmosphere: "Teaching, guiding, and broader involvement as reflective tones.",
-    invitation: "Develop compassion; share knowledge generously, not as performance.",
+    feel: "Expression is asked to serve a wider circle. The 3-voice still talks and makes; the 9-path asks what the gift is for when the room is larger than friends.",
+    atmosphere: "Teaching, mentoring, finishing chapters, and causes that pull you past personal applause.",
+    invitation: "Share knowledge as hospitality, not performance. Close loops so the next creative start is clean.",
+    looksLike:
+      "A storyteller who becomes a mentor. A brand or hobby that turns into unpaid counseling. Heat for people you will never fully know. It can also look like collecting new missions before the last one is finished.",
+    helps: [
+      "Communication that actually lifts someone, not only entertains",
+      "Permission to end a chapter without calling it failure",
+      "Creative fire with a moral aim",
+    ],
+    watch: [
+      "Saving the world in talk while one nearby relationship waits",
+      "Scattered causes that feel noble and finish nothing",
+      "Burnout from being 'on' for everyone",
+    ],
   },
   "4-1": {
     feel: "Structure transforms into initiative and independence.",
@@ -192,9 +242,21 @@ const CURATED: Record<string, Omit<BnDnTransition, "bn" | "dn">> = {
     invitation: "Commit to a path; turn scattered ideas into one honest action.",
   },
   "5-6": {
-    feel: "Exploration becomes responsibility and care.",
-    atmosphere: "Relationships deepen; home and stability themes rise.",
-    invitation: "Cultivate loyalty; create emotional and practical harmony.",
+    feel: "Curiosity is asked to stay. Variety does not vanish; someone or some place starts needing you on Tuesdays, not only on adventures.",
+    atmosphere: "Home, partnership, and reliability themes rise beside a mind that still wants movement.",
+    invitation: "Choose a few people and practices to be loyal to. Freedom with a return ticket is still freedom.",
+    looksLike:
+      "The traveler who starts keeping house. The job-hopper who is asked to manage a team. A restless mind that now has dependents — children, clients, a lease, a reputation. It can also look like picking fights with 'boring' duty.",
+    helps: [
+      "Adaptability that makes care less rigid",
+      "Loyalty that still knows how to play",
+      "A home or practice that can survive a change of plans",
+    ],
+    watch: [
+      "Resenting the people you chose to stay for",
+      "Secret exits (new crushes, new cities, new jobs) when care feels heavy",
+      "Calling restlessness honesty when it is only escape",
+    ],
   },
   "5-8": {
     feel: "Change sharpens into ambition and achievement themes.",
@@ -268,27 +330,25 @@ const CURATED: Record<string, Omit<BnDnTransition, "bn" | "dn">> = {
   },
 };
 
-function generated(bn: number, dn: number): BnDnTransition {
+function generatedDraft(bn: number, dn: number): TransitionDraft {
   const from = FROM[bn] ?? "your starting tone";
   const toward = TO[dn] ?? "the next lesson";
   const fromKw = VEDIC_DIGIT_THEMES[bn]?.keyword ?? String(bn);
   const toKw = VEDIC_DIGIT_THEMES[dn]?.keyword ?? String(dn);
   return {
-    bn,
-    dn,
-    feel: `A shift from ${from} (${fromKw}) toward ${toward} (${toKw}).`,
-    atmosphere: `${VEDIC_DIGIT_THEMES[dn]?.destinyFocus ?? "Path themes of the Destiny digit."} The Birth tone of ${fromKw} is the soil this grows in.`,
-    invitation: `${VEDIC_DIGIT_THEMES[dn]?.practice ?? "Work with the Destiny theme as weather, not a verdict."} Keep what is true in Birth ${bn}.`,
+    feel: `A shift from ${from} (${fromKw}) toward ${toward} (${toKw}). The starting tone does not vanish; it becomes the soil the next lesson grows in.`,
+    atmosphere: `${VEDIC_DIGIT_THEMES[dn]?.destinyFocus ?? "Path themes of the Destiny digit."} Birth ${bn} (${fromKw}) is the habit you already know; Destiny ${dn} (${toKw}) is the chapter that keeps repeating.`,
+    invitation: `${VEDIC_DIGIT_THEMES[dn]?.practice ?? "Work with the Destiny theme as weather, not a verdict."} Keep what is true in Birth ${bn} — the stretch is to add ${toKw.toLowerCase()}, not to erase ${fromKw.toLowerCase()}.`,
   };
 }
 
 export function bnDnTransition(bnRaw: number | string, dnRaw: number | string): BnDnTransition {
   const bn = reduceToSingleDigit(Number(bnRaw));
   const dn = reduceToSingleDigit(Number(dnRaw));
-  if (bn === dn) return SAME[bn] ?? generated(bn, dn);
+  if (bn === dn) return finish(bn, dn, SAME[bn] ?? generatedDraft(bn, dn));
   const hit = CURATED[`${bn}-${dn}`];
-  if (hit) return { bn, dn, ...hit };
-  return generated(bn, dn);
+  if (hit) return finish(bn, dn, hit);
+  return finish(bn, dn, generatedDraft(bn, dn));
 }
 
 export type NameOnPath = {
