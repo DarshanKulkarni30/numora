@@ -28,6 +28,7 @@ export function can(
     | "read_billing"
     | "override_plan"
     | "read_vercel"
+    | "read_research"
     | "manage_admins",
 ): boolean {
   switch (action) {
@@ -44,6 +45,7 @@ export function can(
     case "read_vercel":
       return ROLE_RANK[role] >= ROLE_RANK.operator;
     case "override_plan":
+    case "read_research":
     case "manage_admins":
       return role === "superadmin";
     default:

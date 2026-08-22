@@ -15,6 +15,7 @@ const LINKS: Array<{
   { href: "/admin/activity", label: "Activity", action: "read_activity" },
   { href: "/admin/audit", label: "Audit", action: "read_audit" },
   { href: "/admin/trends", label: "Trends", action: "read_trends" },
+  { href: "/admin/research", label: "Research", action: "read_research" },
   { href: "/admin/billing", label: "Billing", action: "read_billing" },
   { href: "/admin/issues", label: "Issues", action: "manage_issues" },
   { href: "/admin/vercel", label: "Vercel", action: "read_vercel" },
@@ -42,7 +43,7 @@ export function AdminNav({
             <Link
               key={l.href}
               href={l.href}
-              className={`rounded-lg px-3 py-2 text-sm ${
+              className={`btn-tactile rounded-lg px-3 py-2 text-sm ${
                 active
                   ? "bg-sea text-paper"
                   : "text-ink-soft hover:bg-mist hover:text-ink"

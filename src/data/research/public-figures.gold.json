@@ -1,0 +1,3255 @@
+{
+  "generatedAt": "2026-08-22T06:32:12.939Z",
+  "source": "wikidata",
+  "disclaimer": "Public Wikidata dates only. Personal Year is birthday-to-birthday, not calendar year. Counts calibrate copy. They are not a prediction product and not customer data.",
+  "figures": [
+    {
+      "name": "Elon Musk",
+      "wiki": "Elon_Musk",
+      "qid": "Q317521",
+      "field": "wealth",
+      "country": "United States",
+      "dob": "28/06/1971",
+      "dobIso": "1971-06-28",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 7,
+      "psychic": 1,
+      "destiny": 7,
+      "birthDay": 1,
+      "loShuMissing": [
+        3,
+        4,
+        5
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 7,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 7,
+          "ageStart": 0,
+          "ageEnd": 29
+        },
+        {
+          "id": 2,
+          "number": 1,
+          "ageStart": 30,
+          "ageEnd": 38
+        },
+        {
+          "id": 3,
+          "number": 8,
+          "ageStart": 39,
+          "ageEnd": 47
+        },
+        {
+          "id": 4,
+          "number": 6,
+          "ageStart": 48,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 2000,
+          "month": null,
+          "label": "Union with Justine Musk",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "office_start",
+          "year": 2002,
+          "month": null,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "office_start",
+          "year": 2008,
+          "month": 10,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "union_ended",
+          "year": 2008,
+          "month": null,
+          "label": "Union ended with Justine Musk",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "office_start",
+          "year": 2008,
+          "month": null,
+          "label": "Office: chairperson",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "NSS Wernher Von Braun Memorial Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "marriage",
+          "year": 2010,
+          "month": null,
+          "label": "Union with Talulah Riley",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Great Immigrants Award",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Jeff Bezos",
+      "wiki": "Jeff_Bezos",
+      "qid": "Q312556",
+      "field": "wealth",
+      "country": "United States",
+      "dob": "12/01/1964",
+      "dobIso": "1964-01-12",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 6,
+      "psychic": 3,
+      "destiny": 6,
+      "birthDay": 3,
+      "loShuMissing": [
+        5,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 6,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 4,
+          "ageStart": 0,
+          "ageEnd": 30
+        },
+        {
+          "id": 2,
+          "number": 5,
+          "ageStart": 31,
+          "ageEnd": 39
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 40,
+          "ageEnd": 48
+        },
+        {
+          "id": 4,
+          "number": 3,
+          "ageStart": 49,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1992,
+          "month": null,
+          "label": "Union with MacKenzie Scott",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1996,
+          "month": 5,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 1999,
+          "month": null,
+          "label": "Time Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "The James Smithson Bicentennial Medal",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "Q1868047",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Axel Springer Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        }
+      ]
+    },
+    {
+      "name": "Mukesh Ambani",
+      "wiki": "Mukesh_Ambani",
+      "qid": "Q298547",
+      "field": "wealth",
+      "country": "India",
+      "dob": "19/04/1957",
+      "dobIso": "1957-04-19",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 9,
+      "psychic": 1,
+      "destiny": 9,
+      "birthDay": 1,
+      "loShuMissing": [
+        2,
+        3,
+        6,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 9,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 5,
+          "ageStart": 0,
+          "ageEnd": 27
+        },
+        {
+          "id": 2,
+          "number": 5,
+          "ageStart": 28,
+          "ageEnd": 36
+        },
+        {
+          "id": 3,
+          "number": 1,
+          "ageStart": 37,
+          "ageEnd": 45
+        },
+        {
+          "id": 4,
+          "number": 8,
+          "ageStart": 46,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Othmer Gold Medal",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Gautam Adani",
+      "wiki": "Gautam_Adani",
+      "qid": "Q5527865",
+      "field": "wealth",
+      "country": "India",
+      "dob": "24/06/1962",
+      "dobIso": "1962-06-24",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 3,
+      "psychic": 6,
+      "destiny": 3,
+      "birthDay": 6,
+      "loShuMissing": [
+        5,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 2,
+          "count": 2
+        },
+        {
+          "number": 6,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 33
+        },
+        {
+          "id": 2,
+          "number": 6,
+          "ageStart": 34,
+          "ageEnd": 42
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 43,
+          "ageEnd": 51
+        },
+        {
+          "id": 4,
+          "number": 6,
+          "ageStart": 52,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2022,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        }
+      ]
+    },
+    {
+      "name": "Warren Buffett",
+      "wiki": "Warren_Buffett",
+      "qid": "Q47213",
+      "field": "wealth",
+      "country": "United States",
+      "dob": "30/08/1930",
+      "dobIso": "1930-08-30",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 6,
+      "psychic": 3,
+      "destiny": 6,
+      "birthDay": 3,
+      "loShuMissing": [
+        2,
+        4,
+        5,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 3,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 2,
+          "ageStart": 0,
+          "ageEnd": 30
+        },
+        {
+          "id": 2,
+          "number": 7,
+          "ageStart": 31,
+          "ageEnd": 39
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 40,
+          "ageEnd": 48
+        },
+        {
+          "id": 4,
+          "number": 3,
+          "ageStart": 49,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1952,
+          "month": 4,
+          "label": "Union with Susan Buffett",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "office_start",
+          "year": 1970,
+          "month": null,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "union_ended",
+          "year": 2004,
+          "month": 7,
+          "label": "Union ended with Susan Buffett",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "marriage",
+          "year": 2006,
+          "month": 8,
+          "label": "Union with Astrid Menks",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "Presidential Medal of Freedom",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 3
+        }
+      ]
+    },
+    {
+      "name": "Bill Gates",
+      "wiki": "Bill_Gates",
+      "qid": "Q5284",
+      "field": "wealth",
+      "country": "United States",
+      "dob": "28/10/1955",
+      "dobIso": "1955-10-28",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 4,
+      "psychic": 1,
+      "destiny": 4,
+      "birthDay": 1,
+      "loShuMissing": [
+        3,
+        6,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 5,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 2,
+          "ageStart": 0,
+          "ageEnd": 32
+        },
+        {
+          "id": 2,
+          "number": 3,
+          "ageStart": 33,
+          "ageEnd": 41
+        },
+        {
+          "id": 3,
+          "number": 5,
+          "ageStart": 42,
+          "ageEnd": 50
+        },
+        {
+          "id": 4,
+          "number": 3,
+          "ageStart": 51,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "office_start",
+          "year": 1975,
+          "month": 4,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 1992,
+          "month": null,
+          "label": "National Medal of Technology and Innovation",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "marriage",
+          "year": 1994,
+          "month": 1,
+          "label": "Union with Melinda Gates",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 1994,
+          "month": null,
+          "label": "Distinguished Fellow of the British Computer Society",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 1994,
+          "month": null,
+          "label": "Financial Times Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 1998,
+          "month": null,
+          "label": "American Library Association Honorary Membership",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2002,
+          "month": 2,
+          "label": "honorary doctor of Royal Institute of Technology",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 3,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2002,
+          "month": null,
+          "label": "honorary doctor of Stockholm University",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 3,
+          "pinnacleNumber": 5
+        }
+      ]
+    },
+    {
+      "name": "Mark Zuckerberg",
+      "wiki": "Mark_Zuckerberg",
+      "qid": "Q36215",
+      "field": "wealth",
+      "country": "United States",
+      "dob": "14/05/1984",
+      "dobIso": "1984-05-14",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 5,
+      "psychic": 5,
+      "destiny": 5,
+      "birthDay": 5,
+      "loShuMissing": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 4,
+          "count": 2
+        },
+        {
+          "number": 5,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 1,
+          "ageStart": 0,
+          "ageEnd": 31
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 32,
+          "ageEnd": 40
+        },
+        {
+          "id": 3,
+          "number": 1,
+          "ageStart": 41,
+          "ageEnd": 49
+        },
+        {
+          "id": 4,
+          "number": 9,
+          "ageStart": 50,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "office_start",
+          "year": 2004,
+          "month": 2,
+          "label": "Office: chief executive officer",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "California Hall of Fame",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Time Person of the Year",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "BigBrotherAwards",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "marriage",
+          "year": 2012,
+          "month": 5,
+          "label": "Union with Priscilla Chan",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": 2,
+          "label": "Axel Springer Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "honorary doctor of Harvard University",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2025,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 1
+        }
+      ]
+    },
+    {
+      "name": "Bernard Arnault",
+      "wiki": "Bernard_Arnault",
+      "qid": "Q32055",
+      "field": "wealth",
+      "country": "France",
+      "dob": "05/03/1949",
+      "dobIso": "1949-03-05",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 4,
+      "psychic": 5,
+      "destiny": 4,
+      "birthDay": 5,
+      "loShuMissing": [
+        2,
+        6,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 4,
+          "count": 2
+        },
+        {
+          "number": 5,
+          "count": 2
+        },
+        {
+          "number": 9,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 8,
+          "ageStart": 0,
+          "ageEnd": 32
+        },
+        {
+          "id": 2,
+          "number": 1,
+          "ageStart": 33,
+          "ageEnd": 41
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 42,
+          "ageEnd": 50
+        },
+        {
+          "id": 4,
+          "number": 8,
+          "ageStart": 51,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1973,
+          "month": 5,
+          "label": "Union with Anne Dewavrin",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 1978,
+          "month": null,
+          "label": "Office: président-directeur général",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 1984,
+          "month": null,
+          "label": "Office: chairperson",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "office_start",
+          "year": 1989,
+          "month": 1,
+          "label": "Office: président-directeur général",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "union_ended",
+          "year": 1990,
+          "month": null,
+          "label": "Union ended with Anne Dewavrin",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "marriage",
+          "year": 1991,
+          "month": 9,
+          "label": "Union with Hélène Mercier-Arnault",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 2002,
+          "month": null,
+          "label": "Commandeur des Arts et des Lettres‎",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "Grand Officer of the Order of Merit of the Italian Republic",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Amitabh Bachchan",
+      "wiki": "Amitabh_Bachchan",
+      "qid": "Q9570",
+      "field": "film",
+      "country": "India",
+      "dob": "11/10/1942",
+      "dobIso": "1942-10-11",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 1,
+      "psychic": 2,
+      "destiny": 1,
+      "birthDay": 11,
+      "loShuMissing": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 5
+        },
+        {
+          "number": 2,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 35
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 36,
+          "ageEnd": 44
+        },
+        {
+          "id": 3,
+          "number": 3,
+          "ageStart": 45,
+          "ageEnd": 53
+        },
+        {
+          "id": 4,
+          "number": 8,
+          "ageStart": 54,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1979,
+          "month": 6,
+          "label": "Union with Jaya Bachchan",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Padma Shri in arts",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1984,
+          "month": null,
+          "label": "Office: Member of the Lok Sabha",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1990,
+          "month": null,
+          "label": "National Film Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 1991,
+          "month": null,
+          "label": "Filmfare Lifetime Achievement Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 3,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2001,
+          "month": null,
+          "label": "Padma Bhushan",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Officer of the Legion of Honour",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "CNN-News18 Indian of the Year",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 4,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Shah Rukh Khan",
+      "wiki": "Shah_Rukh_Khan",
+      "qid": "Q9535",
+      "field": "film",
+      "country": "India",
+      "dob": "02/11/1965",
+      "dobIso": "1965-11-02",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 7,
+      "psychic": 2,
+      "destiny": 7,
+      "birthDay": 2,
+      "loShuMissing": [
+        3,
+        4,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 2,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 4,
+          "ageStart": 0,
+          "ageEnd": 29
+        },
+        {
+          "id": 2,
+          "number": 5,
+          "ageStart": 30,
+          "ageEnd": 38
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 39,
+          "ageEnd": 47
+        },
+        {
+          "id": 4,
+          "number": 5,
+          "ageStart": 48,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1991,
+          "month": 10,
+          "label": "Union with Gauri Khan",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1993,
+          "month": null,
+          "label": "Filmfare Award for Best Male Debut",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1994,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1995,
+          "month": null,
+          "label": "Filmfare Award for Best Performance in a Negative Role",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1995,
+          "month": null,
+          "label": "Filmfare Critics Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1996,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 1998,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 1999,
+          "month": null,
+          "label": "Filmfare Award for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        }
+      ]
+    },
+    {
+      "name": "Priyanka Chopra",
+      "wiki": "Priyanka_Chopra",
+      "qid": "Q158957",
+      "field": "film",
+      "country": "India",
+      "dob": "18/07/1982",
+      "dobIso": "1982-07-18",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 9,
+      "psychic": 9,
+      "destiny": 9,
+      "birthDay": 9,
+      "loShuMissing": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 8,
+          "count": 2
+        },
+        {
+          "number": 9,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 7,
+          "ageStart": 0,
+          "ageEnd": 27
+        },
+        {
+          "id": 2,
+          "number": 2,
+          "ageStart": 28,
+          "ageEnd": 36
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 37,
+          "ageEnd": 45
+        },
+        {
+          "id": 4,
+          "number": 9,
+          "ageStart": 46,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2009,
+          "month": null,
+          "label": "National Film Award for Best Actress",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "office_start",
+          "year": 2010,
+          "month": null,
+          "label": "Office: UNICEF Goodwill Ambassador",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Padma Shri in arts",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "People's Choice Award for Favorite Actress in a New TV Series",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "marriage",
+          "year": 2018,
+          "month": 12,
+          "label": "Union with Nick Jonas",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 2
+        },
+        {
+          "type": "award",
+          "year": 2022,
+          "month": null,
+          "label": "BBC 100 Women",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        }
+      ]
+    },
+    {
+      "name": "Aamir Khan",
+      "wiki": "Aamir_Khan",
+      "qid": "Q9557",
+      "field": "film",
+      "country": "India",
+      "dob": "14/03/1965",
+      "dobIso": "1965-03-14",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 11,
+      "psychic": 5,
+      "destiny": 2,
+      "birthDay": 5,
+      "loShuMissing": [
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 5,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 8,
+          "ageStart": 0,
+          "ageEnd": 34
+        },
+        {
+          "id": 2,
+          "number": 8,
+          "ageStart": 35,
+          "ageEnd": 43
+        },
+        {
+          "id": 3,
+          "number": 7,
+          "ageStart": 44,
+          "ageEnd": 52
+        },
+        {
+          "id": 4,
+          "number": 6,
+          "ageStart": 53,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1986,
+          "month": 4,
+          "label": "Union with Reena Dutta",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "union_ended",
+          "year": 2002,
+          "month": 12,
+          "label": "Union ended with Reena Dutta",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Padma Shri in arts",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "marriage",
+          "year": 2005,
+          "month": 12,
+          "label": "Union with Kiran Rao",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "CNN-News18 Indian of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Filmfare Award for Best Director",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "Padma Bhushan",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "union_ended",
+          "year": 2021,
+          "month": 7,
+          "label": "Union ended with Kiran Rao",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        }
+      ]
+    },
+    {
+      "name": "Leonardo DiCaprio",
+      "wiki": "Leonardo_DiCaprio",
+      "qid": "Q38111",
+      "field": "film",
+      "country": "United States",
+      "dob": "11/11/1974",
+      "dobIso": "1974-11-11",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 7,
+      "psychic": 2,
+      "destiny": 7,
+      "birthDay": 11,
+      "loShuMissing": [
+        3,
+        5,
+        6,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 5
+        },
+        {
+          "number": 7,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 4,
+          "ageStart": 0,
+          "ageEnd": 29
+        },
+        {
+          "id": 2,
+          "number": 5,
+          "ageStart": 30,
+          "ageEnd": 38
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 39,
+          "ageEnd": 47
+        },
+        {
+          "id": 4,
+          "number": 5,
+          "ageStart": 48,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 1997,
+          "month": null,
+          "label": "Silver Bear for Best Actor",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 1997,
+          "month": null,
+          "label": "Silver Bear",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Golden Globe Award for Best Actor – Motion Picture Drama",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Golden Globe Awards",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Chevalier des Arts et des Lettres",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2011,
+          "month": null,
+          "label": "Horatio Alger Award",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "AACTA Award for Best Actor in a Leading Role",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 5
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": null,
+          "label": "Golden Globe Award for Best Actor – Motion Picture Musical or Comedy",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 9
+        }
+      ]
+    },
+    {
+      "name": "Meryl Streep",
+      "wiki": "Meryl_Streep",
+      "qid": "Q873",
+      "field": "film",
+      "country": "United States",
+      "dob": "22/06/1949",
+      "dobIso": "1949-06-22",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 33,
+      "psychic": 4,
+      "destiny": 6,
+      "birthDay": 22,
+      "loShuMissing": [
+        3,
+        5,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 2,
+          "count": 2
+        },
+        {
+          "number": 4,
+          "count": 2
+        },
+        {
+          "number": 6,
+          "count": 2
+        },
+        {
+          "number": 9,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 1,
+          "ageStart": 0,
+          "ageEnd": 30
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 31,
+          "ageEnd": 39
+        },
+        {
+          "id": 3,
+          "number": 1,
+          "ageStart": 40,
+          "ageEnd": 48
+        },
+        {
+          "id": 4,
+          "number": 2,
+          "ageStart": 49,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 1976,
+          "month": null,
+          "label": "Theatre World Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "marriage",
+          "year": 1978,
+          "month": 9,
+          "label": "Union with Don Gummer",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1978,
+          "month": null,
+          "label": "Primetime Emmy Award for Outstanding Lead Actress in a Miniseries or a Movie",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1980,
+          "month": 4,
+          "label": "Academy Award for Best Supporting Actress",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1980,
+          "month": null,
+          "label": "Golden Globe Award for Best Supporting Actress – Motion Picture",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1980,
+          "month": null,
+          "label": "Hasty Pudding Woman of the Year",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1981,
+          "month": null,
+          "label": "BAFTA Award for Best Actress in a Leading Role",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "award",
+          "year": 1982,
+          "month": null,
+          "label": "Golden Globe Award for Best Actress – Motion Picture Drama",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        }
+      ]
+    },
+    {
+      "name": "Sachin Tendulkar",
+      "wiki": "Sachin_Tendulkar",
+      "qid": "Q9488",
+      "field": "sport",
+      "country": "India",
+      "dob": "24/04/1973",
+      "dobIso": "1973-04-24",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 3,
+      "psychic": 6,
+      "destiny": 3,
+      "birthDay": 6,
+      "loShuMissing": [
+        5,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 3,
+          "count": 2
+        },
+        {
+          "number": 4,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 1,
+          "ageStart": 0,
+          "ageEnd": 33
+        },
+        {
+          "id": 2,
+          "number": 8,
+          "ageStart": 34,
+          "ageEnd": 42
+        },
+        {
+          "id": 3,
+          "number": 9,
+          "ageStart": 43,
+          "ageEnd": 51
+        },
+        {
+          "id": 4,
+          "number": 6,
+          "ageStart": 52,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 1994,
+          "month": null,
+          "label": "Arjuna Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1997,
+          "month": null,
+          "label": "Wisden Cricketer of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1999,
+          "month": null,
+          "label": "Padma Shri in sports",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 2008,
+          "month": null,
+          "label": "Padma Vibhushan",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2010,
+          "month": null,
+          "label": "People's Choice Awards",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2012,
+          "month": 5,
+          "label": "Office: member of Rajya Sabha",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2012,
+          "month": 10,
+          "label": "Honorary Member of the Order of Australia",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": null,
+          "label": "Bharat Ratna",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 2,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Virat Kohli",
+      "wiki": "Virat_Kohli",
+      "qid": "Q213854",
+      "field": "sport",
+      "country": "India",
+      "dob": "05/11/1988",
+      "dobIso": "1988-11-05",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 6,
+      "psychic": 5,
+      "destiny": 6,
+      "birthDay": 5,
+      "loShuMissing": [
+        2,
+        3,
+        4,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 5,
+          "count": 2
+        },
+        {
+          "number": 8,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 7,
+          "ageStart": 0,
+          "ageEnd": 30
+        },
+        {
+          "id": 2,
+          "number": 4,
+          "ageStart": 31,
+          "ageEnd": 39
+        },
+        {
+          "id": 3,
+          "number": 2,
+          "ageStart": 40,
+          "ageEnd": 48
+        },
+        {
+          "id": 4,
+          "number": 1,
+          "ageStart": 49,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Arjuna Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Wisden Leading Cricketer in the World",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2017,
+          "month": null,
+          "label": "Padma Shri in sports",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Major Dhyan Chand Khel Ratna Award in Sports and Games",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2018,
+          "month": null,
+          "label": "Time 100",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        },
+        {
+          "type": "award",
+          "year": 2019,
+          "month": null,
+          "label": "Wisden Cricketer of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 7
+        }
+      ]
+    },
+    {
+      "name": "P. V. Sindhu",
+      "wiki": "P._V._Sindhu",
+      "qid": "Q448360",
+      "field": "sport",
+      "country": "India",
+      "dob": "05/07/1995",
+      "dobIso": "1995-07-05",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 9,
+      "psychic": 5,
+      "destiny": 9,
+      "birthDay": 5,
+      "loShuMissing": [
+        2,
+        3,
+        4,
+        6,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 5,
+          "count": 3
+        },
+        {
+          "number": 9,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 27
+        },
+        {
+          "id": 2,
+          "number": 2,
+          "ageStart": 28,
+          "ageEnd": 36
+        },
+        {
+          "id": 3,
+          "number": 5,
+          "ageStart": 37,
+          "ageEnd": 45
+        },
+        {
+          "id": 4,
+          "number": 4,
+          "ageStart": 46,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "Arjuna Award",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2013,
+          "month": null,
+          "label": "CNN-News18 Indian of the Year",
+          "source": "Wikidata",
+          "personalYear": 8,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2015,
+          "month": null,
+          "label": "Padma Shri in sports",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Olympic silver medal",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2016,
+          "month": null,
+          "label": "Major Dhyan Chand Khel Ratna Award in Sports and Games",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2020,
+          "month": null,
+          "label": "Padma Bhushan",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2020,
+          "month": null,
+          "label": "Olympic bronze medal",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        }
+      ]
+    },
+    {
+      "name": "Michael Jordan",
+      "wiki": "Michael_Jordan",
+      "qid": "Q41421",
+      "field": "sport",
+      "country": "United States",
+      "dob": "17/02/1963",
+      "dobIso": "1963-02-17",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 11,
+      "psychic": 8,
+      "destiny": 2,
+      "birthDay": 8,
+      "loShuMissing": [
+        4,
+        5
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 2,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 1,
+          "ageStart": 0,
+          "ageEnd": 34
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 35,
+          "ageEnd": 43
+        },
+        {
+          "id": 3,
+          "number": 1,
+          "ageStart": 44,
+          "ageEnd": 52
+        },
+        {
+          "id": 4,
+          "number": 3,
+          "ageStart": 53,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 1982,
+          "month": null,
+          "label": "Atlantic Coast Conference Men's Basketball Rookie of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Atlantic Coast Conference Men's Basketball Player of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Oscar Robertson Trophy",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "Naismith College Player of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "John R. Wooden Award",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1984,
+          "month": null,
+          "label": "ACC Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1985,
+          "month": null,
+          "label": "NBA Rookie of the Year Award",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "award",
+          "year": 1985,
+          "month": null,
+          "label": "NBA All-Rookie Team",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 1
+        }
+      ]
+    },
+    {
+      "name": "Serena Williams",
+      "wiki": "Serena_Williams",
+      "qid": "Q11459",
+      "field": "sport",
+      "country": "United States",
+      "dob": "26/09/1981",
+      "dobIso": "1981-09-26",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 9,
+      "psychic": 8,
+      "destiny": 9,
+      "birthDay": 8,
+      "loShuMissing": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 8,
+          "count": 2
+        },
+        {
+          "number": 9,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 8,
+          "ageStart": 0,
+          "ageEnd": 27
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 28,
+          "ageEnd": 36
+        },
+        {
+          "id": 3,
+          "number": 8,
+          "ageStart": 37,
+          "ageEnd": 45
+        },
+        {
+          "id": 4,
+          "number": 1,
+          "ageStart": 46,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2000,
+          "month": null,
+          "label": "Laureus World Sports Award for Sportswoman of the Year",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2002,
+          "month": null,
+          "label": "Associated Press Athlete of the Year",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Laureus World Sports Award for Sportswoman of the Year",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "Best Female Athlete ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2003,
+          "month": null,
+          "label": "NAACP Image Award – President's Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2004,
+          "month": null,
+          "label": "Best Female Tennis Player ESPY Award",
+          "source": "Wikidata",
+          "personalYear": 4,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Laureus World Sports Award for Comeback of the Year",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        }
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "wiki": "Lionel_Messi",
+      "qid": "Q615",
+      "field": "sport",
+      "country": "Argentina",
+      "dob": "24/06/1987",
+      "dobIso": "1987-06-24",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 1,
+      "psychic": 6,
+      "destiny": 1,
+      "birthDay": 6,
+      "loShuMissing": [
+        3,
+        5
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 6,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 35
+        },
+        {
+          "id": 2,
+          "number": 4,
+          "ageStart": 36,
+          "ageEnd": 44
+        },
+        {
+          "id": 3,
+          "number": 7,
+          "ageStart": 45,
+          "ageEnd": 53
+        },
+        {
+          "id": 4,
+          "number": 4,
+          "ageStart": 54,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Footballer of the Year of Argentina",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Alejandro buceta",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "FIFA U-20 World Cup awards",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "Q6084897",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": null,
+          "label": "FIFPRO",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Bravo Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Don Balón Award",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "Trofeo EFE",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        }
+      ]
+    },
+    {
+      "name": "Narendra Modi",
+      "wiki": "Narendra_Modi",
+      "qid": "Q1058",
+      "field": "politics",
+      "country": "India",
+      "dob": "17/09/1950",
+      "dobIso": "1950-09-17",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 5,
+      "psychic": 8,
+      "destiny": 5,
+      "birthDay": 8,
+      "loShuMissing": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 5,
+          "count": 2
+        },
+        {
+          "number": 9,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 8,
+          "ageStart": 0,
+          "ageEnd": 31
+        },
+        {
+          "id": 2,
+          "number": 5,
+          "ageStart": 32,
+          "ageEnd": 40
+        },
+        {
+          "id": 3,
+          "number": 4,
+          "ageStart": 41,
+          "ageEnd": 49
+        },
+        {
+          "id": 4,
+          "number": 6,
+          "ageStart": 50,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1968,
+          "month": null,
+          "label": "Union with Jashodaben Narendrabhai Modi",
+          "source": "Wikidata",
+          "personalYear": 22,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "union_ended",
+          "year": 1971,
+          "month": null,
+          "label": "Union ended with Jashodaben Narendrabhai Modi",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 8
+        },
+        {
+          "type": "office_start",
+          "year": 2001,
+          "month": 10,
+          "label": "Office: Chief Minister of Gujarat",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2002,
+          "month": 1,
+          "label": "Office: Member of the Gujarat Legislative Assembly",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2014,
+          "month": 5,
+          "label": "Office: Member of the 16th Lok Sabha",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2014,
+          "month": 5,
+          "label": "Office: Prime Minister of India",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2014,
+          "month": 5,
+          "label": "Office: Minister of Personnel, Public Grievances and Pensions",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2014,
+          "month": null,
+          "label": "CNN-News18 Indian of the Year",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 4,
+          "pinnacleNumber": 6
+        }
+      ]
+    },
+    {
+      "name": "Barack Obama",
+      "wiki": "Barack_Obama",
+      "qid": "Q76",
+      "field": "politics",
+      "country": "United States",
+      "dob": "04/08/1961",
+      "dobIso": "1961-08-04",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 2,
+      "psychic": 4,
+      "destiny": 2,
+      "birthDay": 4,
+      "loShuMissing": [
+        3,
+        5,
+        7
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 4,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 34
+        },
+        {
+          "id": 2,
+          "number": 3,
+          "ageStart": 35,
+          "ageEnd": 43
+        },
+        {
+          "id": 3,
+          "number": 6,
+          "ageStart": 44,
+          "ageEnd": 52
+        },
+        {
+          "id": 4,
+          "number": 7,
+          "ageStart": 53,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1992,
+          "month": 10,
+          "label": "Union with Michelle Obama",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "office_start",
+          "year": 1997,
+          "month": 1,
+          "label": "Office: member of the State Senate of Illinois",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "office_start",
+          "year": 2005,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "Grammy Award for Best Audio Book, Narration & Storytelling Recording",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2005,
+          "month": null,
+          "label": "NAACP Image Award – Chairman's Award",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "award",
+          "year": 2006,
+          "month": 2,
+          "label": "Grammy Award for Best Audio Book, Narration & Storytelling Recording",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 2007,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "award",
+          "year": 2007,
+          "month": null,
+          "label": "NAACP Image Award for Outstanding Literary Work, Nonfiction",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        }
+      ]
+    },
+    {
+      "name": "Angela Merkel",
+      "wiki": "Angela_Merkel",
+      "qid": "Q567",
+      "field": "politics",
+      "country": "Germany",
+      "dob": "17/07/1954",
+      "dobIso": "1954-07-17",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 7,
+      "psychic": 8,
+      "destiny": 7,
+      "birthDay": 8,
+      "loShuMissing": [
+        2,
+        3,
+        6
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 2
+        },
+        {
+          "number": 7,
+          "count": 3
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 6,
+          "ageStart": 0,
+          "ageEnd": 29
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 30,
+          "ageEnd": 38
+        },
+        {
+          "id": 3,
+          "number": 6,
+          "ageStart": 39,
+          "ageEnd": 47
+        },
+        {
+          "id": 4,
+          "number": 8,
+          "ageStart": 48,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "award",
+          "year": 1973,
+          "month": null,
+          "label": "Q1688688",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "marriage",
+          "year": 1977,
+          "month": 9,
+          "label": "Union with Ulrich Merkel",
+          "source": "Wikidata",
+          "personalYear": 3,
+          "pinnacleId": 1,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "union_ended",
+          "year": 1982,
+          "month": 3,
+          "label": "Union ended with Ulrich Merkel",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 1990,
+          "month": 12,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1991,
+          "month": 1,
+          "label": "Office: Federal Minister for Education, Family Affairs, Senior Citizens, Women and Youth",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1993,
+          "month": null,
+          "label": "Office: Party Chairman of the CDU Mecklenburg-Western Pomerania",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        },
+        {
+          "type": "office_start",
+          "year": 1994,
+          "month": 11,
+          "label": "Office: member of the German Bundestag",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        },
+        {
+          "type": "office_start",
+          "year": 1994,
+          "month": 11,
+          "label": "Office: Federal Minister for the Environment, Climate Action, Nature Conservation and Nuclear Safety",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 3,
+          "pinnacleNumber": 6
+        }
+      ]
+    },
+    {
+      "name": "Indira Gandhi",
+      "wiki": "Indira_Gandhi",
+      "qid": "Q1149",
+      "field": "politics",
+      "country": "India",
+      "dob": "19/11/1917",
+      "dobIso": "1917-11-19",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 3,
+      "psychic": 1,
+      "destiny": 3,
+      "birthDay": 1,
+      "loShuMissing": [
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 6
+        },
+        {
+          "number": 9,
+          "count": 2
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 3,
+          "ageStart": 0,
+          "ageEnd": 33
+        },
+        {
+          "id": 2,
+          "number": 1,
+          "ageStart": 34,
+          "ageEnd": 42
+        },
+        {
+          "id": 3,
+          "number": 4,
+          "ageStart": 43,
+          "ageEnd": 51
+        },
+        {
+          "id": 4,
+          "number": 2,
+          "ageStart": 52,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1942,
+          "month": 3,
+          "label": "Union with Feroze Gandhi",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 3
+        },
+        {
+          "type": "union_ended",
+          "year": 1960,
+          "month": 9,
+          "label": "Union ended with Feroze Gandhi",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 2,
+          "pinnacleNumber": 1
+        },
+        {
+          "type": "office_start",
+          "year": 1964,
+          "month": null,
+          "label": "Office: member of Rajya Sabha",
+          "source": "Wikidata",
+          "personalYear": 22,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1964,
+          "month": null,
+          "label": "Office: Minister of Information and Broadcasting",
+          "source": "Wikidata",
+          "personalYear": 22,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1966,
+          "month": 1,
+          "label": "Office: Prime Minister of India",
+          "source": "Wikidata",
+          "personalYear": 6,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1967,
+          "month": 9,
+          "label": "Office: Minister of External Affairs",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1969,
+          "month": 7,
+          "label": "Office: Minister of Finance",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 3,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1970,
+          "month": 6,
+          "label": "Office: Minister of Home Affairs",
+          "source": "Wikidata",
+          "personalYear": 1,
+          "pinnacleId": 4,
+          "pinnacleNumber": 2
+        }
+      ]
+    },
+    {
+      "name": "Joe Biden",
+      "wiki": "Joe_Biden",
+      "qid": "Q6279",
+      "field": "politics",
+      "country": "United States",
+      "dob": "20/11/1942",
+      "dobIso": "1942-11-20",
+      "dateSource": "Wikidata P569 (day-level)",
+      "lifePath": 2,
+      "psychic": 2,
+      "destiny": 2,
+      "birthDay": 2,
+      "loShuMissing": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "loShuRepeated": [
+        {
+          "number": 1,
+          "count": 3
+        },
+        {
+          "number": 2,
+          "count": 4
+        }
+      ],
+      "pinnacles": [
+        {
+          "id": 1,
+          "number": 4,
+          "ageStart": 0,
+          "ageEnd": 34
+        },
+        {
+          "id": 2,
+          "number": 9,
+          "ageStart": 35,
+          "ageEnd": 43
+        },
+        {
+          "id": 3,
+          "number": 4,
+          "ageStart": 44,
+          "ageEnd": 52
+        },
+        {
+          "id": 4,
+          "number": 9,
+          "ageStart": 53,
+          "ageEnd": null
+        }
+      ],
+      "events": [
+        {
+          "type": "marriage",
+          "year": 1966,
+          "month": 8,
+          "label": "Union with Neilia Hunter",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1970,
+          "month": 11,
+          "label": "Office: council member",
+          "source": "Wikidata",
+          "personalYear": 2,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "union_ended",
+          "year": 1972,
+          "month": 12,
+          "label": "Union ended with Neilia Hunter",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1973,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 5,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1975,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 7,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1977,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "marriage",
+          "year": 1977,
+          "month": 6,
+          "label": "Union with Jill Biden",
+          "source": "Wikidata",
+          "personalYear": 9,
+          "pinnacleId": 1,
+          "pinnacleNumber": 4
+        },
+        {
+          "type": "office_start",
+          "year": 1979,
+          "month": 1,
+          "label": "Office: United States senator",
+          "source": "Wikidata",
+          "personalYear": 11,
+          "pinnacleId": 2,
+          "pinnacleNumber": 9
+        }
+      ]
+    }
+  ],
+  "skipped": []
+}

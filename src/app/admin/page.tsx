@@ -144,6 +144,9 @@ export default async function AdminHomePage() {
         <Link href="/admin/trends" className="text-gold-deep underline">
           Trends
         </Link>
+        <Link href="/admin/research" className="text-gold-deep underline">
+          Research
+        </Link>
       </div>
     </div>
   );
