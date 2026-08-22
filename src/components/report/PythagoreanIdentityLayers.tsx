@@ -135,8 +135,8 @@ function ExpressionBridge({
     () => [
       {
         id: "bd",
-        code: "BD",
-        role: "Origin",
+        code: "Birth Day",
+        role: "your first instinct",
         value: birthDay,
         tip: `Birth Day ${birthDay} · ${identityTrait(birthDay)} — your starting energy`,
         detail: `Birth Day ${birthDay} is the origin tone (${identityTrait(birthDay)}) you carry into the path.`,
@@ -144,8 +144,10 @@ function ExpressionBridge({
       },
       {
         id: "ex",
-        code: "EX",
-        role: echoes ? "Amplifies BD" : "Your how",
+        code: "Expression",
+        role: echoes
+          ? "same number as your birth day, so it doubles up"
+          : "how you come across",
         value: expression,
         tip: `Expression ${expression} · ${identityTrait(expression)} — how you bridge Birth Day to Life Path`,
         detail: echoes
@@ -155,8 +157,8 @@ function ExpressionBridge({
       },
       {
         id: "lp",
-        code: "LP",
-        role: "Direction",
+        code: "Life Path",
+        role: "where you are headed",
         value: lifePath,
         tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — the direction you're growing toward`,
         detail: `Life Path ${lifePath} is the direction (${identityTrait(lifePath)}) Expression ${expression} helps you walk toward.`,
@@ -247,10 +249,10 @@ function ExpressionBridge({
             {expression}
           </text>
           <text x="140" y="18" fontSize="8" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
-            Ex {expression}
+            Expression {expression}
           </text>
           <text x="140" y="28" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
-            {echoes ? "Amplifies BD" : "Your how"}
+            {echoes ? "same as your birth day" : "how you come across"}
           </text>
         </SvgHotspot>
 
@@ -267,10 +269,10 @@ function ExpressionBridge({
             {lifePath}
           </text>
           <text x="244" y="72" fontSize="8" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
-            LP {lifePath}
+            Life Path {lifePath}
           </text>
           <text x="244" y="84" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
-            Direction
+            where you are headed
           </text>
         </SvgHotspot>
       </svg>
@@ -300,8 +302,8 @@ function InnerOuterOverlap({
     () => [
       {
         id: "su",
-        code: "SU",
-        role: "Inner want",
+        code: "Soul Urge",
+        role: "what you privately want",
         value: soulUrge,
         tip: `Soul Urge ${soulUrge} · ${identityTrait(soulUrge)} — what you privately want`,
         detail: `Inner want ${soulUrge} (${identityTrait(soulUrge)}) is the pull others may not see first.`,
@@ -309,8 +311,8 @@ function InnerOuterOverlap({
       },
       {
         id: "pe",
-        code: "PE",
-        role: "Outer face",
+        code: "Personality",
+        role: "what other people see first",
         value: personality,
         tip: `Personality ${personality} · ${identityTrait(personality)} — how you are seen`,
         detail: `Outer face ${personality} (${identityTrait(personality)}) is often the first impression in the room.`,
@@ -358,10 +360,10 @@ function InnerOuterOverlap({
             {soulUrge}
           </text>
           <text x="88" y="58" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
-            SU
+            Soul Urge
           </text>
           <text x="70" y="94" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
-            Inner want
+            What you want
           </text>
         </SvgHotspot>
 
@@ -379,10 +381,10 @@ function InnerOuterOverlap({
             {personality}
           </text>
           <text x="192" y="58" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
-            PE
+            Personality
           </text>
           <text x="210" y="94" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
-            Outer face
+            What others see
           </text>
         </SvgHotspot>
 
@@ -434,28 +436,28 @@ function MaturityConvergence({
     () => [
       {
         id: "lp",
-        code: "LP",
-        role: "Life Path",
+        code: "Life Path",
+        role: "first ingredient",
         value: lifePath,
-        tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — one input to Maturity`,
+        tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — one of the two numbers added to get Maturity`,
         detail: `Life Path ${lifePath} (${identityTrait(lifePath)}) is one strand that integrates into Maturity ${maturity}.`,
         guide: { topic: "life-path", label: "Life Path", value: lifePath },
       },
       {
         id: "ex",
-        code: "EX",
-        role: "Expression",
+        code: "Expression",
+        role: "second ingredient",
         value: expression,
-        tip: `Expression ${expression} · ${identityTrait(expression)} — the craft that blends with the path`,
+        tip: `Expression ${expression} · ${identityTrait(expression)} — the other number added to get Maturity`,
         detail: `Expression ${expression} (${identityTrait(expression)}) is the craft strand that converges with the path.`,
         guide: { topic: "expression", label: "Expression", value: expression },
       },
       {
         id: "mat",
-        code: "MAT",
-        role: "Integration",
+        code: "Maturity",
+        role: "the two added together",
         value: maturity,
-        tip: `Maturity ${maturity} · ${identityTrait(maturity)} — Life Path + Expression synthesis`,
+        tip: `Maturity ${maturity} · ${identityTrait(maturity)} — Life Path ${lifePath} plus Expression ${expression}, reduced`,
         detail: `Maturity ${maturity} (${identityTrait(maturity)}) is the synthesis of Life Path ${lifePath} and Expression ${expression} — not a calendar flip.`,
         guide: { topic: "maturity", label: "Maturity", value: maturity },
       },
@@ -626,23 +628,25 @@ function Chevron({ open }: { open: boolean }) {
 }
 
 function MetaChip({
-  code,
   value,
   topic,
   label,
+  job,
   tint,
 }: {
-  code: string;
   value: string;
   topic: "birth-day" | "life-path" | "expression";
   label: string;
+  /** Plain words for what this number covers, so the chip is not just a code. */
+  job: string;
   tint: string;
 }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium shadow-sm ${tint}`}
+      title={`${label} ${value} — ${job}`}
     >
-      <span className="uppercase tracking-wider opacity-70">{code}</span>
+      <span className="opacity-80">{label}</span>
       <GuideNumberLink
         topic={topic}
         value={value}
@@ -650,6 +654,7 @@ function MetaChip({
         display={value}
         className="brand text-ink underline decoration-gold/40 underline-offset-2 hover:text-gold-deep"
       />
+      <span className="hidden opacity-70 sm:inline">· {job}</span>
     </span>
   );
 }
@@ -781,32 +786,33 @@ export function PythagoreanIdentityLayers({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="brand text-lg text-ink sm:text-xl">Identity Layers</p>
-          <p className="mt-1 max-w-[65ch] text-sm text-ink-soft">
-            How your name numbers sit with your birth numbers. Expression is
-            how you show up. Inner want vs outer face. Maturity is what may
-            grow over many years. Tap a diagram node for a closer look.
+          <p className="mt-1 max-w-[65ch] text-sm leading-6 text-ink-soft">
+            Three comparisons, each answering one question. Does how you come
+            across match what your birth date asks of you? Does what you
+            privately want match what people see? And what tends to change as
+            you get older? Tap any diagram for the detail.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <MetaChip
-            code="BD"
             value={birthDay}
             topic="birth-day"
             label="Birth Day"
+            job="your first instinct"
             tint="border-ink/15 bg-[rgb(30_58_107/0.08)] text-ink"
           />
           <MetaChip
-            code="LP"
             value={lifePath}
             topic="life-path"
             label="Life Path"
+            job="your long-term direction"
             tint="border-sea/30 bg-[rgb(45_122_120/0.1)] text-ink"
           />
           <MetaChip
-            code="EX"
             value={expression}
             topic="expression"
             label="Expression"
+            job="how you come across"
             tint="border-gold/40 bg-[rgb(180_83_9/0.1)] text-ink"
           />
         </div>

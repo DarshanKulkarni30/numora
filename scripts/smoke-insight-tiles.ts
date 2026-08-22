@@ -62,14 +62,21 @@ has(lp6.keyword, "Care", "keyword care");
 has(lp6.core, "care", "core meaning names care");
 has(lp6.showsUp, "you thrive", "shows-up is second person");
 has(lp6.growth, "keep one hour that is for you", "growth cue from life-path 6 practice");
-has(lp6.narrative, "harmony and care", "mini-narrative for 6");
+// The narrative must carry a concrete try and watch, not an abstract summary.
+has(lp6.narrative, "Try ", "mini-narrative for 6 offers something to try");
+has(lp6.narrative, "watch ", "mini-narrative for 6 names what to watch");
 eq(lp6.connections.length >= 3, true, "three cross-system connections");
 eq(lp6.strengths.length >= 1, true, "strength tie-ins present");
 eq(lp6.growthTies.length >= 1, true, "growth-mode catalyst tie-in");
 has(
   lp6.connections.map((c) => c.body).join(" "),
-  "supportive blend",
-  "complementary copy stays reflective",
+  "tend to support each other",
+  "complementary copy says how the pair helps",
+);
+has(
+  lp6.connections.map((c) => c.body).join(" "),
+  "Use them in the same task",
+  "complementary copy ends with an action",
 );
 
 const su7 = buildInsightCard({
@@ -98,7 +105,12 @@ const su7 = buildInsightCard({
   ),
 });
 has(su7.showsUp, "underneath", "soul urge shows-up is inner want");
-has(su7.narrative, "seek meaning", "soul urge 7 narrative");
+has(su7.narrative, "quiet time to think", "soul urge 7 narrative names the need");
+has(
+  su7.narrative,
+  "researching instead of deciding",
+  "soul urge 7 narrative names the failure mode",
+);
 
 const report = generateReport({
   fullName: "Aarav Mehta",

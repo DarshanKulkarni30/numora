@@ -99,10 +99,10 @@ const CHANNEL_STROKE: Record<CompatChannel | "team", string> = {
 };
 
 const VEDIC_CHANNEL_LABEL: Record<CompatChannel | "team", string> = {
-  romantic: "Rasa",
-  business: "Karma",
-  friendship: "Sangha",
-  team: "Sangha",
+  romantic: "Rasa (romance)",
+  business: "Karma (work)",
+  friendship: "Sangha (friendship)",
+  team: "Sangha (team)",
 };
 
 export function toneToVisualState(tone: string): VisualToneState {
@@ -356,7 +356,7 @@ function grahaLayerDynamics(
     if (tone === "Challenging") {
       return `Destiny tones (${pair}) may pull differently. Shared milestones and honest timelines reduce karmic-feeling friction.`;
     }
-    return `Life-direction mix (${pair}) is situational — strong when goals rhyme, stretch when timelines diverge.`;
+    return `Life-direction mix (${pair}) depends on the situation: it works well when you both want the same outcome, and gets harder when you want it on different timescales.`;
   }
   if (tone === "Amazing" || tone === "Favourable") {
     return `Outer-face tones (${pair}) may add clarity and ease in social settings — friendship and presentation can feel mutually supportive.`;

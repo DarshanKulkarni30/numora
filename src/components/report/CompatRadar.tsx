@@ -74,7 +74,9 @@ export function CompatRadar({
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         role="img"
-        aria-label="Compatibility radar chart"
+        aria-label={`Compatibility chart. Each spoke is one kind of bond; the further the point sits from the centre, the easier that bond tends to be. ${axes
+          .map((ax) => `${ax.key}: ${ax.value} out of ${levels}`)
+          .join(". ")}.`}
         className="max-w-full"
       >
         {gridPolys.map((pts, i) => (
@@ -124,6 +126,12 @@ export function CompatRadar({
           );
         })}
       </svg>
+      <p className="text-center text-[11px] leading-4 text-ink-soft">
+        The further a point sits from the centre, the easier that kind of bond
+        tends to be. The outer ring is the smoothest reading and the centre is
+        the one that takes most effort — it describes effort required, not
+        whether a relationship will work.
+      </p>
       <ul className="w-full space-y-1 text-sm text-ink-soft">
         {(hideRomantic
           ? [

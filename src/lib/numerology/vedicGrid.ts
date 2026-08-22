@@ -53,11 +53,20 @@ export const GRID_STATUS_ORDER: GridStatus[] = [
 ];
 
 export const GRID_KIND_LABEL: Record<GridPatternKind, string> = {
-  yoga: "Yoga",
-  trikon: "Trikon",
-  drishti: "4th Drishti",
-  yuti: "Yuti",
-  void: "Gap",
+  yoga: "Yoga (line of three)",
+  trikon: "Trikon (triangle)",
+  drishti: "Drishti (digits four apart)",
+  yuti: "Yuti (pair)",
+  void: "Gap (nothing there)",
+};
+
+/** One-line plain explanation of each pattern type, for tooltips and legends. */
+export const GRID_KIND_HELP: Record<GridPatternKind, string> = {
+  yoga: "Three digits in a row on the grid — a strong, repeating pattern.",
+  trikon: "Three digits forming a triangle — a supporting pattern.",
+  drishti: "Two digits four apart, which tradition treats as influencing each other.",
+  yuti: "Two digits sitting next to each other and acting as a pair.",
+  void: "A place on the grid where you have no digits at all.",
 };
 
 const LINEAR_YOGAS: GridPattern[] = [
@@ -77,7 +86,7 @@ const LINEAR_YOGAS: GridPattern[] = [
     numbers: [1, 7, 8],
     status: "Neutral",
     trait:
-      "Endurance under strain and unyielding determination. Isolation can show up too—treat that as a cue to rest and reconnect, not a verdict.",
+      "Endurance under strain and stubborn determination. The cost is that you tend to withdraw and push on alone when things get hard, so this is the pattern where deliberately asking for help pays off most.",
   },
   {
     id: "yoga-practical",

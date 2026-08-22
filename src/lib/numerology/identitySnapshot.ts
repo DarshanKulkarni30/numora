@@ -186,7 +186,7 @@ function buildHarmony(
       label: "High Harmony",
       score,
       summary:
-        "Several digits rhyme across methods—systems largely support one story.",
+        "Several of your numbers repeat across different methods, which means the schools mostly agree about you rather than describing three different people.",
     };
   }
   if (score >= 45) {

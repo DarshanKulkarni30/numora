@@ -224,7 +224,7 @@ function planeLayerCopy(
         ? "Mental plane is quiet—thinking may feel empathic yet unstructured until systems are practiced."
         : `Cognitive frame leans on ${presentTraits.join(", ") || "mental themes"}${
             missingTraits.length
-              ? `; growth edges around ${missingTraits.join(", ")}`
+              ? `, with ${missingTraits.join(", ")} as skills to practise rather than defaults`
               : ""
           }. Thinking may feel moral and compassionate, with structure as a learnable skill when 4 or 2 is light.`;
   }
@@ -360,7 +360,7 @@ export function buildLoShuArchitecture(loShu: LoShuResult): LoShuArchitecture {
         ? e.summaryActive
         : status === "partial"
           ? `Partially lit (${e.numbers.filter((n) => (grid[n] ?? 0) > 0).join("–")} present)—may still support ${e.label.toLowerCase()} when practiced.`
-          : `Quiet on ${e.numbers.join("–")}—a growth edge rather than a fixed limit.`;
+          : `None of ${e.numbers.join(", ")} appear in your birth date, so ${e.label.toLowerCase()} is a skill you build deliberately rather than one that comes automatically. Missing digits are practice areas, not permanent gaps.`;
     return {
       id: e.id,
       label: e.label,

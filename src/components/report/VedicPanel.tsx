@@ -11,6 +11,7 @@ import {
   twoNameMapsCopy,
   VEDIC_LAYER_MAP,
 } from "@/lib/numerology/bnDnPath";
+import { plainTrait } from "@/lib/numerology/layeredCopy";
 import { planetForVedic } from "@/lib/numerology/planets";
 import { vedicNumberProfile } from "@/lib/numerology/vedicNumberProfile";
 import { vedicDigitTheme } from "@/lib/numerology/vedicNumberThemes";
@@ -239,7 +240,8 @@ export function VedicPanel({
         <p className="mt-1 text-xs leading-5 text-paper/80">{nameRole.detail}</p>
         {natalNameNumber && natalNameNumber !== nameNumber ? (
           <p className="mt-2 text-[11px] leading-5 text-paper/65">
-            Birth-certificate NN {natalNameNumber} stays as a root layer. The
+            Your birth-certificate name number {natalNameNumber} stays in the
+            reading as the original layer. The
             triangle above uses the name in force now ({nameNumber}). Psychic
             and Destiny do not change with a name.
           </p>
@@ -344,25 +346,28 @@ export function VedicPanel({
               {psychicProfile.friendly.map((n) => (
                 <span
                   key={`f-${n}`}
+                  title={`People born on a day that reduces to ${n}: usually easy going with you, because they lean toward ${plainTrait(n)}.`}
                   className="rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-100"
                 >
-                  Often easy · {n}
+                  Usually easy: day number {n}
                 </span>
               ))}
               {psychicProfile.neutral.map((n) => (
                 <span
                   key={`n-${n}`}
+                  title={`People born on a day that reduces to ${n}: neither easy nor hard — it depends on the situation rather than the numbers.`}
                   className="rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-xs text-paper/85"
                 >
-                  Neutral · {n}
+                  Depends: day number {n}
                 </span>
               ))}
               {psychicProfile.challenging.map((n) => (
                 <span
                   key={`c-${n}`}
+                  title={`People born on a day that reduces to ${n}: takes more effort, because they lean toward ${plainTrait(n)} where you do not. Say what you need explicitly.`}
                   className="rounded-full border border-rose-300/35 bg-rose-500/15 px-2 py-0.5 text-xs text-rose-100"
                 >
-                  Needs care · {n}
+                  Takes more effort: day number {n}
                 </span>
               ))}
             </div>
@@ -401,9 +406,10 @@ export function VedicPanel({
                   {unitSystem.doshas.map((d) => (
                     <span
                       key={d}
+                      title={`${d} is a traditional Vedic imbalance note. Treat it as a hint about pacing and temperament, not a medical or personal diagnosis.`}
                       className="rounded-full border border-sand/40 bg-sand/10 px-2.5 py-0.5 text-xs text-sand"
                     >
-                      {d}
+                      {d} (traditional imbalance note)
                     </span>
                   ))}
                 </div>

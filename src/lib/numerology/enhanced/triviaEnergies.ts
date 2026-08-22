@@ -144,7 +144,7 @@ function workspaceFor(lp: number, expr: number, young: boolean): string[] {
 function mottoFor(archetype: string, lp: number, expr: number): string {
   if (lp === 7 || lp === 11) return "Understand deeply, then act on purpose.";
   if (expr === 4 || lp === 4) return "Make the insight usable.";
-  if (lp === 8) return "Steward power as a craft, not a proof.";
+  if (lp === 8) return "Use authority to get a result, not to prove you deserve it.";
   if (lp === 2 || lp === 6) return "Care without disappearing.";
   if (lp === 5) return "Move, then choose a form.";
   return `${archetype}: keep the numbers honest, and keep the day kind.`;

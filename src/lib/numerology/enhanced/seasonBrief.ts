@@ -6,10 +6,14 @@ export type SeasonBrief = {
   asOf: string;
   yearNumber: number;
   yearTitle: string;
+  /** Plain sentence: what this year is for. Leads; the image is secondary. */
+  yearJob: string;
   yearImage: string;
   yearFocus: string[];
   monthNumber: number | null;
   monthTitle: string | null;
+  /** Plain sentence: what this month is for. */
+  monthJob: string | null;
   monthImage: string | null;
   monthFocus: string[];
   combined: string;
@@ -19,10 +23,14 @@ export type SeasonBrief = {
   projected?: string;
 };
 
-const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[] }> =
+const YEAR_IMAGE: Record<
+  number,
+  { title: string; job: string; image: string; focus: string[] }
+> =
   {
     1: {
-      title: "A trailhead year",
+      title: "A starting year",
+      job: "This year is for starting one thing and putting your name on it. Expect to be the one who decides and goes first, which is tiring but is the point of a 1 year.",
       image: "like standing at a new trailhead",
       focus: [
         "starting one clear thing",
@@ -32,6 +40,7 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     },
     2: {
       title: "A listening year",
+      job: "This year is for working with people rather than ahead of them. Progress tends to come from one good partnership and from waiting for the right moment, not from pushing harder.",
       image: "like waiting for the right tide",
       focus: [
         "hearing the other person out before you decide",
@@ -40,7 +49,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     3: {
-      title: "A voice year",
+      title: "A speaking-up year",
+      job: "This year is for saying and showing what you have been working on. Writing, teaching, posting and ordinary conversation all count — the risk is starting many of them and finishing none.",
       image: "like a studio with the windows open",
       focus: [
         "finishing one thing you started saying",
@@ -49,7 +59,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     4: {
-      title: "A foundation year",
+      title: "A groundwork year",
+      job: "This year is for building the boring things that hold everything else up: routines, records, savings, repairs. It rarely feels exciting, and what you set up now is what next year runs on.",
       image: "like laying stone for a lasting floor",
       focus: [
         "writing one repeating task down as steps",
@@ -58,7 +69,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     5: {
-      title: "A movement year",
+      title: "A change year",
+      job: "This year is for movement — travel, a new role, a different routine, a change of scene. Change tends to find you either way, so choose one or two on purpose rather than letting five happen at once.",
       image: "like changing trains with a lighter bag",
       focus: [
         "trying one small change you can undo",
@@ -67,7 +79,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     6: {
-      title: "A garden year",
+      title: "A responsibility year",
+      job: "This year is for people and places that depend on you: home, family, a team, a promise you already made. More gets asked of you than usual, so the useful skill is helping with a limit rather than helping until you are empty.",
       image: "like tending a garden",
       focus: [
         "keeping one promise you already made",
@@ -76,7 +89,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     7: {
-      title: "A university year",
+      title: "A study year",
+      job: "This year is for going deeper into one subject rather than wider across five. Time alone is productive rather than antisocial now, as long as the thinking eventually turns into one small step.",
       image: "like entering a university",
       focus: [
         "protecting one quiet hour each week",
@@ -85,7 +99,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     8: {
-      title: "A stewardship year",
+      title: "A results year",
+      job: "This year is for finishing things that can be counted: money, targets, qualifications, a project that ships. Effort shows up in visible results, and the cost is that rest gets postponed unless you schedule it.",
       image: "like taking inventory of a workshop",
       focus: [
         "finishing one result you can measure",
@@ -94,7 +109,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
       ],
     },
     9: {
-      title: "A completion year",
+      title: "A finishing year",
+      job: "This year is for ending things properly — a job, a course, a habit, a version of yourself that has already finished. Starting something brand new tends to stall until the old thing is actually closed.",
       image: "like closing a long chapter with care",
       focus: [
         "closing one loop that is already done",
@@ -104,7 +120,8 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     },
     11: {
       title: "A noticing year",
-      image: "a year to notice, think, and rest",
+      job: "This year is for paying attention rather than producing. Ideas and patterns arrive faster than usual and so does tiredness, so the job is to write things down and rest before you are forced to.",
+      image: "a year for noticing, thinking and resting",
       focus: [
         "writing down one thing you keep repeating",
         "resting on purpose, not only once you are tired",
@@ -113,6 +130,7 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     },
     22: {
       title: "A building year",
+      job: "This year is for the large practical project — the one that needs years, not weeks. Ambition only turns into anything if it goes on a real calendar in ordinary steps.",
       image: "like drawing a large plan on practical paper",
       focus: [
         "taking one practical step on the large plan",
@@ -122,6 +140,7 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     },
     33: {
       title: "A teaching year",
+      job: "This year is for passing on what you know and looking after people who ask. It goes wrong in one specific way — giving to everyone lightly and running yourself down — so help fewer people properly.",
       image: "like holding a lamp for others while keeping your own fuel",
       focus: [
         "helping one person properly instead of many lightly",
@@ -131,57 +150,68 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     },
   };
 
-const MONTH_IMAGE: Record<number, { title: string; image: string; focus: string[] }> =
-  {
-    1: {
-      title: "Initiative month",
-      image: "like striking a match",
-      focus: ["starting one small thing"],
-    },
-    2: {
-      title: "Attunement month",
-      image: "like listening before speaking",
-      focus: ["doing one thing with one other person"],
-    },
-    3: {
-      title: "Expression month",
-      image: "like a sketchbook week",
-      focus: ["finishing and sharing one piece"],
-    },
-    4: {
-      title: "Order month",
-      image: "like sorting a workbench",
-      focus: ["putting one routine on paper"],
-    },
-    5: {
-      title: "Change month",
-      image: "like opening a window",
-      focus: ["trying one small change you can undo"],
-    },
-    6: {
-      title: "Care month",
-      image: "like tending a garden",
-      focus: [
-        "looking after one person properly",
-        "repairing one thing you have let slide",
-      ],
-    },
-    7: {
-      title: "Study month",
-      image: "like a quiet library hour",
-      focus: ["taking quiet time before you answer"],
-    },
-    8: {
-      title: "Steward month",
-      image: "like balancing the books",
-      focus: ["finishing one result you can measure"],
-    },
-    9: {
-      title: "Release month",
-      image: "like finishing a letter",
-      focus: ["closing one loop that is already done"],
-    },
-  };
+const MONTH_IMAGE: Record<
+  number,
+  { title: string; job: string; image: string; focus: string[] }
+> = {
+  1: {
+    title: "Starting month",
+    job: "A month to begin one thing rather than plan several.",
+    image: "like striking a match",
+    focus: ["starting one small thing"],
+  },
+  2: {
+    title: "Working-with-others month",
+    job: "A month where things move faster with one other person than alone.",
+    image: "like listening before speaking",
+    focus: ["doing one thing with one other person"],
+  },
+  3: {
+    title: "Sharing month",
+    job: "A month to finish something and let people see it.",
+    image: "like a sketchbook week",
+    focus: ["finishing and sharing one piece"],
+  },
+  4: {
+    title: "Tidying month",
+    job: "A month for admin, routines and the jobs you keep deferring.",
+    image: "like sorting a workbench",
+    focus: ["putting one routine on paper"],
+  },
+  5: {
+    title: "Change month",
+    job: "A month where a small change lands well and a big one overshoots.",
+    image: "like opening a window",
+    focus: ["trying one small change you can undo"],
+  },
+  6: {
+    title: "Looking-after month",
+    job: "A month when home and the people close to you need more of your time.",
+    image: "like tending a garden",
+    focus: [
+      "looking after one person properly",
+      "repairing one thing you have let slide",
+    ],
+  },
+  7: {
+    title: "Quiet month",
+    job: "A month to think before answering and to protect some time alone.",
+    image: "like a quiet library hour",
+    focus: ["taking quiet time before you answer"],
+  },
+  8: {
+    title: "Delivery month",
+    job: "A month to finish one thing you can actually measure.",
+    image: "like balancing the books",
+    focus: ["finishing one result you can measure"],
+  },
+  9: {
+    title: "Closing month",
+    job: "A month to end what is already over instead of starting more.",
+    image: "like finishing a letter",
+    focus: ["closing one loop that is already done"],
+  },
+};
 
 export function buildSeasonBrief(
   report: NumerologyReport,
@@ -224,9 +254,11 @@ export function buildSeasonBrief(
     yearNumber: py,
     yearTitle: yMeta.title,
     yearImage: yMeta.image,
+    yearJob: assertSafeCopy(yMeta.job, "enhanced.season.yearJob"),
     yearFocus: yMeta.focus,
     monthNumber: pm,
     monthTitle: mMeta?.title ?? null,
+    monthJob: mMeta ? assertSafeCopy(mMeta.job, "enhanced.season.monthJob") : null,
     monthImage: mMeta?.image ?? null,
     monthFocus: mMeta?.focus ?? [],
     combined,

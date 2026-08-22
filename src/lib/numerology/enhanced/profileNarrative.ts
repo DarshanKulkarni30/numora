@@ -82,7 +82,7 @@ export function buildProfileNarrative(opts: {
       `The profile also holds useful stretch. ${tensions
         .slice(0, 3)
         .map((t) => t.insight)
-        .join(" ")} Stretch is not failure. In this reading it is often the place where skill is earned.`,
+        .join(" ")} Where two numbers disagree, that is not a fault in the chart. Try one small action from each side this week and see which one the situation actually rewarded.`,
     );
   }
 
@@ -113,7 +113,7 @@ export function buildProfileNarrative(opts: {
   paras.push(
     young
       ? `For a young person, this story is a mirror for curiosity—not a sorting hat. Adults around ${displayName} may use it to notice strengths and preferred pace, then offer choices rather than labels. The detailed report remains the catalog of every method; this enhanced reading is the through-line.`
-      : `Early chapters may care about achievement. Later chapters often care about meaning. Structure, when it appears, is often the bridge between wanting more and growing wiser. Growth tends to land when an insight becomes one small action and, when it is kind to do so, is shared. ${displayName} can treat this story as a working note: return to the numbers, test them against real days, and keep what is useful.`,
+      : `Early chapters in this chart tend to be about achieving things; later ones tend to be about whether those things meant anything. Where structure shows up, it is usually what lets the second question get answered without abandoning the first. In practice an insight only changes anything once it becomes one small repeated action. ${displayName} can treat this as a working note rather than a conclusion: check the numbers against real days and keep the parts that hold up.`,
   );
 
   paras.push(

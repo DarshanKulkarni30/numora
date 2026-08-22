@@ -261,5 +261,5 @@ function chaldeanOnDatePath(opts: {
   if (ch === bd) {
     return `Chaldean name number ${ch} is the same as Birth Day ${bd}. The name repeats the starting style. Life Path ${lp} is the longer lesson. ${path.feel}${echo}`;
   }
-  return `On this chart the date path is Birth Day ${bd} → Life Path ${lp}. ${path.feel} The Chaldean name number is ${ch} (${trait(ch)}) — a third number for the same spelling. Question to sit with: does the name ask for ${trait(ch).toLowerCase()} while you are still practicing ${bd} → ${lp}? This is a pacing note, not a verdict.${echo}`;
+  return `On this chart the date path is Birth Day ${bd} → Life Path ${lp}. ${path.feel} The Chaldean name number is ${ch} (${trait(ch)}) — a third number for the same spelling. Worth checking: your name pushes toward ${trait(ch).toLowerCase()} while your date is still asking you to practise ${bd} → ${lp}. When those two disagree, people tend to expect the name version of you and get the date version — useful to know before you take on a role that only suits one of them.${echo}`;
 }

@@ -109,7 +109,7 @@ export function VedicBirthChart({ dateOfBirth }: Props) {
                               `${GRID_KIND_LABEL[p.kind]} · ${p.status}: ${p.name}`,
                           )
                           .join("\n")
-                      : "No complete yoga or yuti uses this cell alone."
+                      : "This digit does not join into a line, triangle or pair here."
                   }`
                 : `${n} · ${cell.sanskrit} / ${cell.english} · not in this date (unique digits only).`;
               return (
@@ -230,7 +230,7 @@ export function VedicBirthChart({ dateOfBirth }: Props) {
 
       <ChartTipPanel
         tip={tip}
-        empty="Hover a lit cell for its planet. Tap a present number to see which yogas and yutis on this chart include it."
+        empty="Hover a filled cell to see its planet. Tap a digit you have to see which patterns on this grid include it — lines of three, triangles and pairs each carry a different traditional meaning."
       />
 
       <div className="flex flex-wrap gap-2 text-[11px] text-ink-soft">
@@ -263,15 +263,18 @@ export function VedicBirthChart({ dateOfBirth }: Props) {
             </ul>
           ) : (
             <p className="mt-2 text-sm text-ink-soft">
-              This digit is present, but it is not part of a complete yoga, yuti,
-              or drishti on this chart.
+              You have this digit, but it does not join up with others into a
+              line, triangle or pair on this grid — so it acts on its own rather
+              than reinforcing a wider pattern.
             </p>
           )}
         </div>
       ) : null}
 
       <div>
-        <h3 className="text-ink">Present yogas and yutis</h3>
+        <h3 className="text-ink">
+          Patterns your digits make on the grid
+        </h3>
         {groupedPresent.length ? (
           <div className="mt-3 space-y-4">
             {groupedPresent.map((g) => (
@@ -289,8 +292,9 @@ export function VedicBirthChart({ dateOfBirth }: Props) {
           </div>
         ) : (
           <p className="mt-2 text-sm text-ink-soft">
-            No complete linear yoga, trikon, drishti, or yuti from the unique
-            digits in this date.
+            The digits in your date do not form any complete line, triangle or
+            pair on this grid. That is common and simply means no single
+            traditional pattern dominates your chart.
           </p>
         )}
       </div>

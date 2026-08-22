@@ -49,13 +49,21 @@ function SynergyChip({
       : kind === "complementary"
         ? "border-sky-300 bg-sky-50 text-sky-900"
         : "border-amber-300 bg-amber-50 text-amber-950";
+  const meaning =
+    kind === "aligned"
+      ? "same number, so this doubles up"
+      : kind === "complementary"
+        ? "different numbers that work together"
+        : kind === "neutral"
+          ? "unrelated, neither helps nor blocks"
+          : "pull opposite ways, give each its own task";
   return (
-    <span className={`rounded-full border px-2.5 py-1 text-[11px] ${tone}`}>
+    <span
+      className={`rounded-full border px-2.5 py-1 text-[11px] ${tone}`}
+      title={`${label} — ${meaning}`}
+    >
       {label}
-      <span className="text-ink-soft">
-        {" "}
-        · {kind === "contrasting" ? "contrast" : kind === "neutral" ? "independent" : kind}
-      </span>
+      <span className="text-ink-soft"> · {meaning}</span>
     </span>
   );
 }
@@ -89,10 +97,12 @@ export function PinnacleYearPanel({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-lg text-ink">Pinnacle year</h3>
-        <p className="mt-1 text-sm text-ink-soft">
-          Four life chapters on a mountain — what this terrace is, how it may
-          show up, and one practice. Reflective pacing, not a forecast.
+        <h3 className="text-lg text-ink">Your life in four chapters</h3>
+        <p className="mt-1 max-w-[70ch] text-sm leading-6 text-ink-soft">
+          Your birth date splits into four age ranges, each with its own number
+          and its own thing to work on. The one highlighted is where you are
+          now. Tap any chapter to see what it asks for, how it tends to show up,
+          and one thing to try. These describe pacing and emphasis, not events.
         </p>
       </div>
 
@@ -102,7 +112,7 @@ export function PinnacleYearPanel({
             viewBox="0 0 240 268"
             className="h-auto w-full"
             role="img"
-            aria-label={`Life mountain. Current pinnacle ${currentId}, number ${model.current.pinnacle.number}, ${model.current.ageLabel}.`}
+            aria-label={`Your four life chapters by age. You are currently in chapter ${currentId}, number ${model.current.pinnacle.number}, ${model.current.ageLabel}.`}
           >
             <defs>
               <linearGradient id="pin-sky" x1="0" y1="0" x2="0" y2="1">
@@ -151,7 +161,7 @@ export function PinnacleYearPanel({
                     className={`cursor-pointer ${isNow ? "pinnacle-terrace-now" : ""}`}
                     tabIndex={0}
                     role="button"
-                    aria-label={`Pinnacle ${id}, number ${chapter.pinnacle.number}, ${chapter.ageLabel}`}
+                    aria-label={`Life chapter ${id}, ${chapter.ageLabel}, number ${chapter.pinnacle.number}: ${chapter.coreTone}`}
                     onClick={() => setSelectedId(id)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -167,7 +177,8 @@ export function PinnacleYearPanel({
                     className="fill-[var(--ink)]"
                     style={{ fontSize: 10, fontWeight: 600 }}
                   >
-                    P{id} · {chapter.pinnacle.number} {chapter.title}
+                    {chapter.ageLabel} · {chapter.pinnacle.number}{" "}
+                    {chapter.title}
                   </text>
                 </g>
               );
@@ -179,8 +190,8 @@ export function PinnacleYearPanel({
                 key={ch.pinnacle.id}
                 type="button"
                 aria-pressed={selectedId === ch.pinnacle.id}
-                aria-label={`Pinnacle ${ch.pinnacle.id}, number ${ch.pinnacle.number}, ${ch.ageLabel}`}
-                title={`${ch.ageLabel} · ${ch.coreTone}`}
+                aria-label={`Life chapter ${ch.pinnacle.id}, ${ch.ageLabel}, number ${ch.pinnacle.number}: ${ch.coreTone}`}
+                title={`${ch.ageLabel} — ${ch.coreTone}`}
                 onClick={() => setSelectedId(ch.pinnacle.id)}
                 className={`btn-tactile rounded-lg border px-1 py-1.5 text-[10px] leading-tight ${
                   selectedId === ch.pinnacle.id
@@ -188,7 +199,7 @@ export function PinnacleYearPanel({
                     : "border-[var(--line)] bg-white/80 text-ink-soft"
                 }`}
               >
-                P{ch.pinnacle.id}
+                {ch.ageLabel}
                 {ch.pinnacle.id === currentId ? " · now" : ""}
               </button>
             ))}

@@ -189,7 +189,7 @@ const SAME_ELEMENT: Record<DigitElement, ElementMix> = {
   },
   Water: {
     tension: "Climate and tempo both turn inward.",
-    opportunity: "Feeling and pacing may rhyme if you do not rush the tide.",
+    opportunity: "Good conditions for honest conversations and reflective work, as long as you are not rushing a decision.",
     bestUse: "Protect one quiet block and one honest conversation.",
     watchFor: "Withdrawing so far that nothing can complete.",
   },
@@ -373,9 +373,9 @@ function yearMonthCopy(year: number, month: number): string {
   const ys = DIGIT_SEASON[year];
   const ms = DIGIT_SEASON[month];
   if (year === month) {
-    return `Year and month share ${year} (${ys.season}). The climate and the tempo currently rhyme.`;
+    return `Your year and your month are both ${year} (${ys.season.toLowerCase()}). The same theme applies at both scales, so anything you do this month counts double toward the year — a good month to make the year's main move.`;
   }
-  return `The year’s ${ys.season.toLowerCase()} (${ys.keyword.toLowerCase()}) sits beside this month’s ${ms.season.toLowerCase()} (${ms.keyword.toLowerCase()}). Let the month set tempo; let the year set climate.`;
+  return `The year asks for ${ys.keyword.toLowerCase()} and this month asks for ${ms.keyword.toLowerCase()}. They work at different scales: the year is the goal you are aiming at, the month is how to spend the next few weeks. Do the month's job as one step toward the year's.`;
 }
 
 export function sunVerbFor(sign: SunSignInfo): string {
@@ -502,8 +502,8 @@ export function buildYearRhythm(opts: {
       season: outlookSeason,
       insight:
         outlookDigit != null && outlookDigit !== yearDigit
-          ? `A second birthday-cycle mirror at ${outlookLabel} (${outlookSeason.season}). Same clock as Personal Year, different formula — two weathers, not a vote.`
-          : `Outlook currently rhymes with Personal Year ${yearLabel} (${yearSeason.season}). Two methods, similar climate this cycle.`,
+          ? `A second way of numbering the same birthday-to-birthday window gives ${outlookLabel}. It disagrees with your Personal Year ${yearLabel} because the two formulas use different parts of the date. Neither cancels the other: run the Personal Year task across the calendar year and the ${outlookLabel} task from birthday to birthday.`
+          : `The second formula for this window also gives ${outlookLabel}, matching your Personal Year. Both methods agree, so there is one pacing theme to follow rather than two.`,
       scan: outlookSeason.scan,
     },
     {
@@ -544,11 +544,11 @@ export function buildYearRhythm(opts: {
   const practice =
     opts.monthAdvice ||
     PY_NATURE[monthDigit]?.practice ||
-    "Pick one small pacing habit this month — weather, not a deadline.";
+    "Pick one small habit to run for the rest of this month. It sets your pace, not a deadline you can miss.";
 
   const outlookNote =
     outlookDigit != null && outlookDigit !== yearDigit
-      ? `Outlook ${outlookLabel} is a second year clock (${outlookSeason.scan}) It is not a vote against year ${yearLabel}.`
+      ? `Outlook ${outlookLabel} is a second reading of the same year (${outlookSeason.scan}) It does not overrule year ${yearLabel} — use both, each on its own calendar.`
       : `Outlook matches year ${yearLabel}: ${yearSeason.scan}`;
 
   const mix: RhythmMix = {

@@ -10,6 +10,7 @@ import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
 import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
 import { ReadingLegend } from "@/components/report/ReadingLegend";
+import { ReportGlossary } from "@/components/report/ReportGlossary";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
 import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
@@ -169,8 +170,16 @@ export function EnhancedReportView({
           expiresAt={expiresAt}
         />
 
-        <div id="quick" className="scroll-mt-16">
-          <ReadingLegend lines={reading.howToRead} />
+        <div id="quick" className="scroll-mt-16 space-y-4">
+          <ReadingLegend
+            lines={reading.howToRead}
+            startHere={reading.coreStrip
+              .filter((c) =>
+                ["Life Path", "Expression", "Psychic"].includes(c.label),
+              )
+              .map((c) => ({ label: c.label, value: c.value }))}
+          />
+          <ReportGlossary />
         </div>
 
         <section className="space-y-4">
@@ -364,17 +373,27 @@ export function EnhancedReportView({
           <p className="mt-3 text-lg text-ink">
             Personal Year {reading.season.yearNumber} — {reading.season.yearTitle}
           </p>
+          <p className="mt-1 text-sm leading-6 text-ink">
+            {reading.season.yearJob}
+          </p>
           <p className="mt-1 text-sm text-ink-soft">
-            Feels {reading.season.yearImage}. Focus: {reading.season.yearFocus.join(" · ")}
+            Try this year: {reading.season.yearFocus.join(" · ")}
+          </p>
+          <p className="mt-1 text-xs text-ink-soft">
+            If a picture helps: {reading.season.yearImage}.
           </p>
           {reading.season.monthNumber != null ? (
             <>
               <p className="mt-4 text-lg text-ink">
                 Personal Month {reading.season.monthNumber} — {reading.season.monthTitle}
               </p>
+              {reading.season.monthJob ? (
+                <p className="mt-1 text-sm leading-6 text-ink">
+                  {reading.season.monthJob}
+                </p>
+              ) : null}
               <p className="mt-1 text-sm text-ink-soft">
-                Feels {reading.season.monthImage}. Focus:{" "}
-                {reading.season.monthFocus.join(" · ")}
+                Try this month: {reading.season.monthFocus.join(" · ")}
               </p>
             </>
           ) : null}

@@ -25,17 +25,21 @@ type Props = {
 function Meter({
   label,
   value,
+  help,
 }: {
   label: string;
   value: number;
+  /** What a high bar actually means, so the percentage is not read as a grade. */
+  help: string;
 }) {
   const pct = Math.round(Math.min(1, Math.max(0, value)) * 100);
   return (
-    <div>
+    <div title={`${label}: ${pct}% — ${help}`}>
       <div className="flex justify-between text-[10px] uppercase tracking-wider text-ink-soft">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
+      <p className="text-[10px] leading-4 text-ink-soft">{help}</p>
       <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[var(--line)]/50">
         <div
           className="h-full rounded-full bg-gold-deep/80 transition-[width] duration-300"
@@ -413,17 +417,31 @@ export function VedicSquarePanel({
 
           <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-2.5">
             <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-              Footprint strength
+              How your digits sit on this square
             </p>
-            <Meter label="Frequency" value={architecture.metrics.frequencyScore} />
+            <p className="text-[10px] leading-4 text-ink-soft">
+              These describe the shape of your grid, not how good it is. There
+              is no ideal set of bars.
+            </p>
+            <Meter
+              label="Frequency"
+              value={architecture.metrics.frequencyScore}
+              help="How often your digits repeat. Higher means fewer traits, used more strongly."
+              />
             <Meter
               label="Distribution"
               value={architecture.metrics.distributionScore}
+              help="How spread out your digits are. Higher means more traits available, each less dominant."
             />
-            <Meter label="Symmetry" value={architecture.metrics.symmetryScore} />
+            <Meter
+              label="Symmetry"
+              value={architecture.metrics.symmetryScore}
+              help="How evenly your digits balance across the square. Higher means fewer lopsided areas."
+            />
             <Meter
               label="Opposite tension"
               value={architecture.metrics.oppositeTension}
+              help="How often you hold digits that sit opposite each other. Higher means more internal push and pull."
             />
             <p className="text-[11px] text-ink-soft">
               {architecture.metrics.frequencyLabel} ·{" "}

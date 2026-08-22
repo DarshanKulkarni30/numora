@@ -106,7 +106,7 @@ export function CoupleScorePanel({ report }: Props) {
 
       <h3 className="mt-8 text-lg text-ink">Next 10 years</h3>
       <p className="mt-1 text-xs text-ink-soft">
-        Open a year for that year’s job, then every month. Still weather, not
+        Open a year to see that year’s job, then every month in it. Pacing, not
         events.
       </p>
       <div className="mt-3 space-y-2">

@@ -48,7 +48,7 @@ export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLiv
       kind: "repeated",
       number: r.number,
       effect: assertSafeCopy(
-        `${repeatedNumberEffect(r.number, r.count)} In daily life this may look like a default gear—useful when chosen, tiring when it is the only gear.`,
+        `${repeatedNumberEffect(r.number, r.count)} Because this digit repeats, the behaviour tends to run automatically rather than by choice. Try doing it on purpose once this week and notice whether the situation actually called for it.`,
         `enhanced.loshu.rep.${r.number}`,
       ),
     });

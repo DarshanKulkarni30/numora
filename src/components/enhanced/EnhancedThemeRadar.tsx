@@ -28,7 +28,14 @@ export function EnhancedThemeRadar({ axes }: Props) {
 
   return (
     <figure className="mx-auto max-w-sm">
-      <svg viewBox="0 0 220 220" className="h-auto w-full" role="img" aria-label="Theme chart presence">
+      <svg
+        viewBox="0 0 220 220"
+        className="h-auto w-full"
+        role="img"
+        aria-label={`How many of your chart positions mention each theme. ${axes
+          .map((a) => `${a.label}: ${a.count}`)
+          .join(". ")}.`}
+      >
         <polygon
           points={ring(1)}
           fill="none"
@@ -82,8 +89,11 @@ export function EnhancedThemeRadar({ axes }: Props) {
           );
         })}
       </svg>
-      <figcaption className="mt-2 text-center text-xs text-ink-soft">
-        Chart presence by theme family (seat counts, not percentages).
+      <figcaption className="mt-2 text-center text-xs leading-5 text-ink-soft">
+        Each spoke counts how many of your chart positions point at that theme.
+        A longer spoke means the theme turns up in more places, so you are
+        likely to meet it often. It is a count, not a score, and a short spoke
+        is not a weakness.
       </figcaption>
     </figure>
   );

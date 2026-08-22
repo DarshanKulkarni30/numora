@@ -346,7 +346,11 @@ export function IdentitySnapshotPanel({
         <div className="space-y-3">
           <div className="rounded-xl border border-[var(--line)] bg-white/55 px-3 py-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-              Tone Balance
+              What your chart emphasises
+            </p>
+            <p className="mt-0.5 text-[10px] leading-4 text-ink-soft">
+              The bar splits your chart positions by the kind of trait each one
+              points at. A wider band means more of your numbers push that way.
             </p>
             <div className="mt-2 flex h-3 overflow-hidden rounded-full bg-mist">
               {model.toneBalance
@@ -354,7 +358,7 @@ export function IdentitySnapshotPanel({
                 .map((t) => (
                   <div
                     key={t.id}
-                    title={`${t.label} ${t.weight}%`}
+                    title={`${t.label}: ${t.weight}% of your chart positions point this way.`}
                     className={`${t.tint} h-full`}
                     style={{ width: `${t.weight}%` }}
                   />

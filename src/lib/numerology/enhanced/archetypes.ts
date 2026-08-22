@@ -35,16 +35,16 @@ export function archetypeFor(opts: {
 
   const throughline =
     theme === "wisdom"
-      ? "This chart often comes back to learning from real experience."
+      ? "In plain terms: you work things out by living through them rather than by being told. That makes your conclusions well tested and slow to arrive. Watch the point where researching becomes a way of not deciding."
       : theme === "leadership"
-        ? "This chart often comes back to leading while staying responsible."
+        ? "In plain terms: you end up in charge, and you take the consequences seriously rather than passing them on. That earns trust and quietly loads you up. Watch carrying decisions that were never actually yours."
         : theme === "service"
-          ? "This chart often comes back to care that stays useful."
+          ? "In plain terms: people bring you their problems because you deal with them properly. The skill worth building is helping with a stated limit, so that being useful does not become being available to everyone."
           : theme === "structure"
-            ? "This chart often comes back to turning ideas into something you can use."
+            ? "In plain terms: you are the one who turns a loose idea into something that actually runs — a plan, a system, a finished thing. Watch refusing to start until the plan is perfect."
             : theme === "freedom"
-              ? "This chart often comes back to trying new things, then choosing a shape."
-              : "This chart often comes back to saying what is inside in a clear way.";
+              ? "In plain terms: you learn by trying things, and you need room to change your mind. The useful discipline is finishing one of the experiments before starting the next three."
+              : "In plain terms: you are good at putting into words what other people only half feel. Watch starting many conversations, pieces or projects and completing none of them.";
 
   return { title, throughline };
 }

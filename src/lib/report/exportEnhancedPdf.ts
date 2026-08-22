@@ -162,8 +162,10 @@ export async function downloadEnhancedPdf(
 
   addBanner("Current season");
   addBody(
-    `Personal Year ${reading.season.yearNumber} (${reading.season.yearTitle}). ${reading.season.combined}`,
+    `Personal Year ${reading.season.yearNumber} (${reading.season.yearTitle}). ${reading.season.yearJob}`,
   );
+  if (reading.season.monthJob) addBody(reading.season.monthJob);
+  addBody(reading.season.combined);
   addH("Practise");
   for (const x of reading.season.doThis) addBullet(x);
   addH("Ease off");

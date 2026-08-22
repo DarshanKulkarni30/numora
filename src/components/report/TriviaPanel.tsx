@@ -92,9 +92,9 @@ export function TriviaPanel({
       ? citiesMatchingDigit(natalNameN, 5)
       : [];
   const matrixRows = [
-    { key: "psychic", label: "Psychic (PN)", digit: psychicN },
-    { key: "destiny", label: "Destiny (DN)", digit: destinyN },
-    { key: "name", label: "Name (NN)", digit: nameN },
+    { key: "psychic", label: "Psychic (birth-day number)", digit: psychicN },
+    { key: "destiny", label: "Destiny (full-date number)", digit: destinyN },
+    { key: "name", label: "Name number (your spelling)", digit: nameN },
   ] as const;
 
   return (
@@ -171,7 +171,9 @@ export function TriviaPanel({
       </div>
 
       <div>
-        <h3 className="text-lg text-ink">PN / DN / NN × city name number</h3>
+        <h3 className="text-lg text-ink">
+          Your birth-day, full-date and name numbers against city name numbers
+        </h3>
         <p className="mt-1 text-xs text-ink-soft">
           Psychic <span className="brand text-ink">{psychicN}</span>, Destiny{" "}
           <span className="brand text-ink">{destinyN}</span>, and Name{" "}
@@ -249,7 +251,8 @@ export function TriviaPanel({
         {natalCities.length ? (
           <div className="mt-3 rounded-xl border border-[var(--line)] bg-white/50 px-3 py-2 text-sm">
             <p className="text-ink">
-              Natal name (NN) <span className="brand">{natalNameN}</span>
+              Birth-certificate name number{" "}
+              <span className="brand">{natalNameN}</span>
             </p>
             <p className="mt-1 text-xs text-ink-soft">
               Birth-certificate spelling ·{" "}

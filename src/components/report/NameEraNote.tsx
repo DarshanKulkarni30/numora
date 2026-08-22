@@ -36,7 +36,7 @@ export function NameEraNote({
         {operatingNn != null ? (
           <>
             {" "}
-            · NN <span className="brand">{operatingNn}</span>
+            · name number <span className="brand">{operatingNn}</span>
           </>
         ) : null}
         . Birth-certificate name stays{" "}
@@ -44,7 +44,7 @@ export function NameEraNote({
         {natalNn != null ? (
           <>
             {" "}
-            · NN <span className="brand">{natalNn}</span>
+            · name number <span className="brand">{natalNn}</span>
           </>
         ) : null}
         .

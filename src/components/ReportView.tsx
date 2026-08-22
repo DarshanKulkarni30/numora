@@ -35,6 +35,7 @@ import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { LivingReportBanner } from "@/components/report/LivingReportBanner";
 import { LoShuLivedNotes } from "@/components/report/LoShuLivedNotes";
 import { ReadingLegend } from "@/components/report/ReadingLegend";
+import { ReportGlossary } from "@/components/report/ReportGlossary";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
@@ -641,7 +642,16 @@ export function ReportView({
 
         <LivingReportBanner />
 
-        <ReadingLegend lines={HOW_TO_READ_DETAILED} />
+        <ReadingLegend
+          lines={HOW_TO_READ_DETAILED}
+          startHere={[
+            { label: "Life Path", value: snap.life_path },
+            { label: "Expression", value: snap.expression_number },
+            { label: "Psychic", value: snap.vedic_psychic },
+          ]}
+        />
+
+        <ReportGlossary />
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Person details</h2>
@@ -985,7 +995,9 @@ export function ReportView({
         ) : null}
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-          <h2 className="text-xl text-ink">Reflective associations</h2>
+          <h2 className="text-xl text-ink">
+            Your three main numbers, and what tradition links to them
+          </h2>
           <div className="mt-4">
             <AssociationsPanel
               lifePath={snap.life_path}

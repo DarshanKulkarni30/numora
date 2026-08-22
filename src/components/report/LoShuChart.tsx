@@ -158,10 +158,15 @@ function TriBalanceRadar({ architecture }: { architecture: LoShuArchitecture }) 
         {architecture.planes.map((p) => (
           <li key={p.id}>
             <span className="font-medium text-ink">{p.label}</span> · {p.level}{" "}
-            ({p.score})
+            — {p.score} of the 3 digits in this group appear in your date
           </li>
         ))}
       </ul>
+      <p className="mt-1.5 text-[10px] leading-4 text-ink-soft">
+        A bigger shape means more of your birth-date digits fall in that group.
+        It is a count of what is present, not a score out of ten and not a
+        measure of ability.
+      </p>
     </div>
   );
 }
@@ -172,10 +177,19 @@ function TensionBar({ architecture }: { architecture: LoShuArchitecture }) {
   return (
     <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
       <p className="text-xs uppercase tracking-wider text-ink-soft">
-        Life-path tension
+        Which pulls harder: your instinct or your longer aim
       </p>
       <p className="mt-1 text-sm font-medium text-ink">{tension.label}</p>
-      <div className="relative mt-3 h-2 rounded-full bg-[var(--line)]/60">
+      <p className="mt-1 text-[11px] leading-4 text-ink-soft">
+        The marker sits between your two numbers. Left means your day-to-day
+        instinct usually wins; right means your longer aim does; the middle
+        means they are evenly matched and you may go back and forth.
+      </p>
+      <div
+        className="relative mt-3 h-2 rounded-full bg-[var(--line)]/60"
+        role="img"
+        aria-label={`Balance marker at ${pct} percent toward your longer aim. Zero percent means your birth-day instinct leads, one hundred percent means your destiny aim leads.`}
+      >
         <div
           className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-gold-deep bg-paper shadow-sm transition-[left] duration-500"
           style={{ left: `calc(${pct}% - 0.5rem)` }}
@@ -183,8 +197,12 @@ function TensionBar({ architecture }: { architecture: LoShuArchitecture }) {
         />
       </div>
       <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px] uppercase tracking-wider text-ink-soft">
-        <span className="whitespace-nowrap">BN {tension.bn ?? "—"} · inner</span>
-        <span className="whitespace-nowrap">DN {tension.dn ?? "—"} · outer</span>
+        <span className="whitespace-nowrap">
+          Birth-day {tension.bn ?? "—"} · your instinct
+        </span>
+        <span className="whitespace-nowrap">
+          Destiny {tension.dn ?? "—"} · your longer aim
+        </span>
       </div>
       <p className="mt-2 text-xs leading-5 text-ink-soft">{tension.narrative}</p>
     </div>
@@ -323,14 +341,18 @@ export function LoShuChart({
   return (
     <div className="space-y-5">
       {intro ?? (
-        <p className="text-sm text-ink-soft">
-          Birth-date digits plus{" "}
-          <span className="font-medium text-ink">BN</span>
-          {loShu.birth_number != null ? ` ${loShu.birth_number}` : ""} and{" "}
-          <span className="font-medium text-ink">DN</span>
-          {loShu.destiny_number != null ? ` ${loShu.destiny_number}` : ""} on
-          the Lo Shu grid. Rings mark Emotional (inner), Mental, and Practical
-          (outer). Hover a node for meaning; click for its guide.
+        <p className="text-sm leading-6 text-ink-soft">
+          Every digit in your birth date is placed on a 3×3 grid, along with
+          your{" "}
+          <span className="font-medium text-ink">birth-day number</span>
+          {loShu.birth_number != null ? ` (${loShu.birth_number})` : ""} and{" "}
+          <span className="font-medium text-ink">destiny number</span>
+          {loShu.destiny_number != null ? ` (${loShu.destiny_number})` : ""}.
+          Digits you have several times are habits that run automatically;
+          digits you are missing are skills you have to build on purpose. The
+          three rings group them into feelings (inner), thinking (middle) and
+          doing (outer). Hover any digit for what it means for you; click to
+          open its guide.
         </p>
       )}
 
@@ -530,7 +552,7 @@ export function LoShuChart({
               style={{ fontSize: 3.2 }}
               className="fill-[var(--ink-soft)]"
             >
-              BN | DN
+              day | path
             </text>
             </g>
 
@@ -560,7 +582,7 @@ export function LoShuChart({
                 `${n} · ${meta.trait} · ${status}`,
                 `Plane: ${plane} (${plane === "emotional" ? "feeling" : plane === "mental" ? "planning" : "doing"})`,
                 missing
-                  ? `Quiet on the date grid. Try: ${meta.growth}. Not a hole.`
+                  ? `Not in your birth date, so this is a skill you build on purpose rather than one you already have. Try: ${meta.growth}`
                   : `Date digits show ${dateCount}×. ${
                       loShu.birth_number === n || loShu.destiny_number === n
                         ? "Birth-day and/or long-path also sit here, so the circle looks louder."
@@ -661,7 +683,7 @@ export function LoShuChart({
 
       <ChartTipPanel
         tip={tip}
-        empty="Hover a node for plane and meaning, or a vector for its strength engine."
+        empty="Hover any digit to see what it means for you and whether you have it, are missing it, or have it several times. Hover a coloured line to see what that three-in-a-row pattern gives you."
       />
 
       {aspectLegend}
@@ -866,9 +888,14 @@ function ClassicSquareGrid({
               const count = loShu.grid[n] ?? 0;
               const missing = count === 0;
               const meta = LO_SHU_NUMBER_META[n];
-              const tileTip = `${n} · ${meta.trait} · ${row.label} plane${
-                missing ? " · quiet" : ` · ×${count}`
-              }`;
+              const tileTip = [
+                `${n} — ${meta.trait} (${row.label.toLowerCase()} group)`,
+                missing
+                  ? `You have no ${n} in your birth date, so this is a skill to build rather than a default. Try: ${meta.growth}`
+                  : count > 1
+                    ? `You have ${n} ${count} times, so this runs automatically. ${meta.theme}`
+                    : `You have ${n} once, so it is available without dominating. ${meta.theme}`,
+              ].join("\n");
               return (
                 <Link
                   key={n}

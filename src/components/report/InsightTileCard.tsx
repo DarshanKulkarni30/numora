@@ -228,13 +228,17 @@ export function InsightTileCard({ card }: { card: InsightCardModel }) {
             style={{
               backgroundImage: `linear-gradient(90deg, ${c0}, ${c1}, ${c2})`,
             }}
-            title="Number tone palette"
+            title="Colours traditionally linked to this number. Decorative only."
           />
         </div>
-        <div className="flex gap-1 pt-1" title="At a glance: meaning, expression, growth">
+        <div
+          className="flex gap-1 pt-1"
+          title="Three dots: what this number means, how it shows up for you, and what to grow. A filled dot means this card has content for that part."
+        >
           {card.dots.map((on, i) => (
             <span
               key={i}
+              title={`${["Meaning", "How it shows up", "What to grow"][i] ?? "Section"}: ${on ? "included below" : "not applicable for this number"}`}
               className={`h-2 w-2 rounded-full border ${
                 on
                   ? "border-gold-deep bg-gold"

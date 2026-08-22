@@ -222,7 +222,7 @@ export function PythagoreanBirthTable({ dateOfBirth, snap, fullName }: Props) {
             </div>
             <p className="mt-1 text-[11px] text-ink-soft">
               {wheel.contrast === 0
-                ? "Inner tone, outer face, and layers currently rhyme."
+                ? "What you want privately and how you come across publicly land on the same number, so people generally get an accurate read on you."
                 : wheel.contrast < 50
                   ? "A mild inner / outer texture — nuance, not a split."
                   : "Several tensions in play — see the notes below."}

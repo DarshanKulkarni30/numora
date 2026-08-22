@@ -141,7 +141,7 @@ function synergyFor(outlook: number, personalYear: number): YearSynergy {
     outlook,
     mode: "contrast",
     label: "Contrast",
-    summary: `Two year clocks. Western year ${personalYear} is ${plainTrait(personalYear)}. This birthday-year ${outlook} is ${plainTrait(outlook)}. They are not a vote. Try the Western job this calendar year, and the birthday-year job from birthday to birthday.`,
+    summary: `You have two year numbers because two methods count the same year differently. The Western Personal Year ${personalYear} is ${plainTrait(personalYear)} and runs January to December. The birthday-year Outlook ${outlook} is ${plainTrait(outlook)} and runs from one birthday to the next. Neither overrules the other — use the Western one for calendar planning and the birthday one for how the year actually feels as you live it.`,
   };
 }
 

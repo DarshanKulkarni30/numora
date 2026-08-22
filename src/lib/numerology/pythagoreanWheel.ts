@@ -427,7 +427,7 @@ export function buildPythagoreanWheel(
     );
   } else if (bn === lp) {
     tensions.push(
-      `Birth Day and Life Path share ${snap.life_path}. The starting color and the longer walk often rhyme — still a theme to live honestly.`,
+      `Your Birth Day and Life Path are both ${snap.life_path}, so your day-to-day instinct and your long-term direction ask for the same thing. That makes you consistent; it also means you have fewer natural fallbacks when that approach does not fit.`,
     );
   }
   if (Number.isFinite(su) && Number.isFinite(pe) && su !== pe) {
@@ -472,7 +472,7 @@ export function buildPythagoreanWheel(
     layerRelation === "synergy"
       ? "The three layers support one another rather than competing."
       : layerRelation === "contrast"
-        ? `${dom.label} leads; ${wk.label.toLowerCase()} is the growth edge.`
+        ? `${dom.label} is your strongest area; ${wk.label.toLowerCase()} is the one to practise deliberately.`
         : `${dom.label} leans forward, with ${wk.label.toLowerCase()} a step behind.`;
 
   const inPlay = engines.filter(

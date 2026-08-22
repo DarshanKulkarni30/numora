@@ -267,16 +267,18 @@ function pairSummary(
   right: AuraLayer,
   kind: AuraSynergyKind,
 ): string {
+  const lt = traitOf(left.digit).toLowerCase();
+  const rt = traitOf(right.digit).toLowerCase();
   if (kind === "aligned") {
-    return `${left.label} and ${right.label} share ${left.digit} (${traitOf(left.digit)}) — two layers rhyming, not a guarantee of ease.`;
+    return `${left.label} and ${right.label} are both ${left.digit}. The same trait (${lt}) is counted twice, so it becomes your automatic response. That is an advantage when the situation suits it, and a blind spot when it does not — the fix is to notice when you are reaching for it out of habit.`;
   }
   if (kind === "complementary") {
-    return `${left.label} ${left.digit} (${traitOf(left.digit)}) sits beside ${right.label} ${right.digit} (${traitOf(right.digit)}) as complementary weather — texture, not a split to fix.`;
+    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These two work well in the same task: one tends to supply the push and the other the follow-through. Use both on one job rather than picking a side.`;
   }
   if (kind === "neutral") {
-    return `${left.label} ${left.digit} (${traitOf(left.digit)}) and ${right.label} ${right.digit} (${traitOf(right.digit)}) neither push nor pull — they simply do different jobs.`;
+    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). They cover unrelated ground, so neither helps nor blocks the other. Treat them as two separate tools and use whichever the moment calls for.`;
   }
-  return `${left.label} ${left.digit} and ${right.label} ${right.digit} ask for patience between ${traitOf(left.digit).split(" & ")[0].toLowerCase()} and ${traitOf(right.digit).split(" & ")[0].toLowerCase()} — a stretch, not a verdict.`;
+  return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These pull opposite ways, so when both apply you can stall or flip between them. Give each one its own task — for example let ${rt.split(" & ")[0]} handle the preparation and ${lt.split(" & ")[0]} make the call.`;
 }
 
 function parseHex(hex: string): { r: number; g: number; b: number } {
@@ -358,9 +360,10 @@ export function buildAuraIdentity(opts: {
   const layers: AuraLayer[] = [
     {
       id: "path",
-      label: "Path aura",
+      label: "Life Path",
       role: "Outer ring",
-      represents: "Life Path — the external journey, how the longer walk may feel to live.",
+      represents:
+        "Life Path, from your full birth date. The direction your life keeps returning to, regardless of what job you happen to be doing.",
       raw: opts.lifePath,
       digit: pathDigit,
       trait: traitOf(pathDigit),
@@ -370,10 +373,10 @@ export function buildAuraIdentity(opts: {
     },
     {
       id: "destiny",
-      label: "Destiny aura",
+      label: "Vedic Destiny",
       role: "Middle ring",
       represents:
-        "Vedic Destiny — the longer curriculum, themes that keep returning.",
+        "Vedic Destiny, from the same birth date read by the Vedic method. The lesson that keeps coming back until you get good at it.",
       raw: opts.vedicDestiny,
       digit: destDigit,
       trait: traitOf(destDigit),
@@ -383,10 +386,10 @@ export function buildAuraIdentity(opts: {
     },
     {
       id: "name",
-      label: "Name aura",
+      label: "Name number",
       role: "Inner ring",
       represents:
-        "Chaldean name — the identity vibration of this spelling, the face rooms meet.",
+        "Name number, from the letters of the spelling you use now. How you come across before people know you — and the one number here that changes if you change your name.",
       raw: opts.chaldeanName,
       digit: nameDigit,
       trait: traitOf(nameDigit),
@@ -435,16 +438,17 @@ export function buildAuraIdentity(opts: {
   const sameDigits = new Set(layers.map((l) => l.digit));
   const stretchPair = pairs.find((p) => p.kind === "contrasting");
   const synergySummary = (() => {
+    const intro = `This compares three numbers about you: Life Path ${layers[0].raw} (from your birth date), Vedic Destiny ${layers[1].raw} (same date, different method) and Name number ${layers[2].raw} (from your spelling). When two of them land on the same digit, that trait is being counted twice and tends to become your default move.`;
     const shape =
       sameDigits.size === 1
-        ? `All three layers are ${layers[0].digit}, so one tone (${traitOf(layers[0].digit).toLowerCase()}) carries the whole chart.`
+        ? ` All three are ${layers[0].digit}, so one trait — ${traitOf(layers[0].digit).toLowerCase()} — drives almost everything you do. That makes you consistent and predictable to others, and it means you have few natural alternatives when it stops working.`
         : sameDigits.size === 2
-          ? `Two of the three layers share a number; the third brings a different tone.`
-          : `All three layers are different numbers, so no single tone runs the chart.`;
+          ? ` Two of the three share a number, so that trait is your strong default, and the odd one out is the setting you have to choose deliberately.`
+          : ` All three are different, so no single trait dominates. You can lead with whichever suits the situation, at the cost of feeling less consistent than people whose numbers repeat.`;
     const stretch = stretchPair
-      ? ` The one to watch is ${byId[stretchPair.a].label} ${byId[stretchPair.a].digit} beside ${byId[stretchPair.b].label} ${byId[stretchPair.b].digit} — give each its own time rather than blending them.`
-      : ` None of the pairs pull hard against each other.`;
-    return `${shape}${stretch} Atmosphere only, not a score.`;
+      ? ` The pair to watch is ${byId[stretchPair.a].label} ${byId[stretchPair.a].digit} next to ${byId[stretchPair.b].label} ${byId[stretchPair.b].digit}: they want opposite things, so under time pressure you may freeze or swing between them. Try giving each its own slot in the task rather than trying to do both at once.`
+      : ` No pair pulls hard against another, so you are unlikely to feel torn between these three.`;
+    return `${intro}${shape}${stretch}`;
   })();
 
   const palette = pickPalette(layers);
@@ -480,7 +484,8 @@ export function buildAuraIdentity(opts: {
     const planet = WEEKDAY_PLANET[weekday] ?? PLANETS.sun;
     const meta = WEEKDAY_RHYTHM[weekday] ?? {
       energy: "Planetary weekday tone",
-      invitation: "A reflective day-tone in tradition — weather, not a schedule.",
+      invitation:
+        "Tradition links this weekday to your number. Use it as an optional reminder to do that number's kind of task — it does not make the day lucky.",
     };
     return { weekday, planet, energy: meta.energy, invitation: meta.invitation, layers: ids };
   });
@@ -493,14 +498,14 @@ export function buildAuraIdentity(opts: {
 
   const narrative =
     pathDest.kind === "aligned"
-      ? `Path and Destiny share ${path.digit} (${path.trait}). The outer walk and the longer curriculum currently rhyme. Name ${name.raw} (${name.trait}) is the inner vibration of this spelling — ${
+      ? `Your Life Path and your Vedic Destiny both come out as ${path.digit} (${path.trait}). Two different methods reaching the same digit means the trait is well supported rather than incidental — expect it to show up in both day-to-day choices and long-term direction. Your Name number ${name.raw} (${name.trait}) is what people meet first, and here ${
           nameVsPath.kind === "aligned"
-            ? "it matches that rhyme."
+            ? "it matches the other two, so how you come across and how you actually operate are the same thing."
             : nameVsPath.kind === "complementary"
-              ? `it ${name.digit === 2 ? "softens and emotionalizes" : "colors"} the ${path.digit} aura rather than fighting it.`
-              : "it adds a stretch beside that shared digit."
-        } Atmosphere only.`
-      : `Path ${path.raw} and Destiny ${dest.raw} are different digits — ${pathDest.summary} Name ${name.raw} is the spelling’s face. Weather language, not a forecast.`;
+              ? `it works with them rather than against them — it changes the delivery, not the direction.`
+              : "it pulls a different way, so first impressions of you may not match how you actually work."
+        }`
+      : `Your Life Path is ${path.raw} and your Vedic Destiny is ${dest.raw}. Two methods reading the same birth date land on different digits, which is common and simply means your day-to-day instinct and your longer direction are not the same thing. ${pathDest.summary} Your Name number ${name.raw} is what people meet first.`;
 
   const insight = pairs.map((p) => p.summary).join(" ");
 
@@ -523,11 +528,13 @@ export function auraIdentityPdfLines(aura: AuraIdentity): string[] {
   const crystals = aura.crystals.map((c) => `${c.name} (${c.keyword})`).join(", ");
   const days = aura.rhythms.map((r) => `${r.weekday} ${r.planet.symbol}`).join(", ");
   return [
-    `Aura identity — Path ${aura.layers[0].raw} · Destiny ${aura.layers[1].raw} · Name ${aura.layers[2].raw}. ${aura.synergyLabel}. ${aura.synergySummary}`,
-    `Palette: ${pal}.`,
+    `Your three main numbers — Life Path ${aura.layers[0].raw}, Vedic Destiny ${aura.layers[1].raw}, Name ${aura.layers[2].raw}. ${aura.synergyLabel}. ${aura.synergySummary}`,
+    `Colours linked to these numbers: ${pal}.`,
     aura.narrative,
-    crystals ? `Resonance crystals: ${crystals}.` : "",
-    days ? `Rhythm days: ${days}. Reflective weekday tones, not a schedule.` : "",
+    crystals ? `Stones traditionally linked to these numbers: ${crystals}.` : "",
+    days
+      ? `Weekdays traditionally linked to these numbers: ${days}. Use them as optional reminders, not a schedule.`
+      : "",
   ].filter(Boolean);
 }
 

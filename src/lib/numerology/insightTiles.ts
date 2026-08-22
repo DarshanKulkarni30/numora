@@ -79,18 +79,18 @@ const GLYPH: Record<number, string> = {
 };
 
 const NARRATIVE: Record<number, string> = {
-  1: "You move with a pioneering edge — initiative as a quiet compass.",
-  2: "You move with attunement — cooperation as a way of seeing.",
-  3: "Your voice is a vehicle — creative, warm, and imaginative.",
-  4: "You build in measured steps — structure as devotion.",
-  5: "You learn by moving — freedom with a chosen craft.",
-  6: "You walk through life with a steady devotion to harmony and care.",
-  7: "Beneath everything, you seek meaning.",
-  8: "You take stewardship seriously — power as accountability.",
-  9: "You complete cycles with a wide, compassionate view.",
-  11: "Inspiration wants a grounded daily rhythm beside it.",
-  22: "Large vision asks for patient, practical building.",
-  33: "Care becomes teaching when it includes you too.",
+  1: "You tend to be the one who starts things and decides. Try naming one thing you will begin this month; watch waiting for permission that is not coming.",
+  2: "You read the room before you act, and things go better with one other person than alone. Try asking before fixing; watch agreeing to keep the peace.",
+  3: "You explain and entertain easily. Try finishing one thing you started saying; watch opening five conversations and closing none.",
+  4: "You like clear steps and reliable systems. Try writing tomorrow's three tasks tonight; watch treating every change as a threat to the plan.",
+  5: "You learn by trying rather than planning. Try one small change you can undo; watch starting over every few weeks.",
+  6: "People bring you their problems because you handle them. Try keeping one promise properly; watch helping until there is nothing left for you.",
+  7: "You need quiet time to think before you commit. Try protecting one study hour a week; watch researching instead of deciding.",
+  8: "You take money, targets and responsibility seriously. Try finishing one result you can measure; watch judging your worth by output.",
+  9: "You are good at ending things well and seeing the wider picture. Try closing one loop that is already done; watch reopening what you already finished.",
+  11: "Ideas and moods reach you faster than most people, and so does tiredness. Try writing one down and resting before you have to; watch running on nerves.",
+  22: "You can hold a large practical plan in your head. Try putting the next step on a real calendar; watch a vision that never gets a first date.",
+  33: "You end up teaching and looking after people. Try helping one person fully rather than five lightly; watch leaving nothing for yourself.",
 };
 
 const SHOW_UP: Record<string, (trait: string) => string> = {
@@ -184,13 +184,13 @@ function connectionBody(
   const tb = coreTraitFor(b).toLowerCase();
   let body: string;
   if (kind === "aligned") {
-    body = `Shared ${ar} — ${ta} rhyming across layers, not a guarantee of ease.`;
+    body = `Both reduce to ${ar}, so ${ta} shows up twice in your chart. Doubling makes it your default move — strong when it fits the situation, and worth checking when it does not.`;
   } else if (kind === "complementary") {
-    body = `${ta} meeting ${tb} — a supportive blend to notice.`;
+    body = `${ta} and ${tb} tend to support each other: one supplies the drive and the other the finish. Use them in the same task rather than choosing between them.`;
   } else if (kind === "neutral") {
-    body = `${ta} and ${tb} do different jobs — they neither help nor block each other.`;
+    body = `${ta} and ${tb} do unrelated jobs, so neither one helps or blocks the other. Treat them as two separate tools and pick whichever the situation needs.`;
   } else {
-    body = `${ta} and ${tb} ask for patience — useful contrast, not a flaw.`;
+    body = `${ta} and ${tb} pull in different directions, so you may stall when both apply at once. Give each its own task rather than trying to satisfy both in one decision.`;
   }
   return {
     pair: `${aLabel} ${aVal} ↔ ${bLabel} ${bVal}`,
@@ -563,7 +563,8 @@ export function buildDetailedInsightCards(report: NumerologyReport): Record<
       growth:
         report.growth_areas?.[0]?.actions?.[0] ??
         "Pick one micro-practice for seven days, then review.",
-      narrative: "Growth is a pathway of small durable habits, not a verdict.",
+      narrative:
+        "These are skills to practise, not faults. Pick one, run it for seven days, then decide whether to keep it — a habit you can sustain beats a resolution you cannot.",
       strengths: report.growth_opportunities.slice(0, 3),
     }),
   ];

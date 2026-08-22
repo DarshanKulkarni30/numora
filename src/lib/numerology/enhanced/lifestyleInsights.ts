@@ -83,7 +83,7 @@ function communicationStyle(pers: number, expr: number, young: boolean): string 
       : "Measured speech. May prefer writing or a second draft when the topic matters.";
   }
   if (warm) {
-    return "May communicate with warmth and story; the growth edge is leaving room for the other person’s pace.";
+    return "You tend to explain things warmly and at length. Watch: leave gaps so the other person can answer at their own speed.";
   }
   return `First impressions may lean on Personality ${pers} (${traitLabel(pers)}), while longer craft leans on Expression ${expr}.`;
 }

@@ -87,7 +87,7 @@ export function GrowthAreasPanel({
       ? `This month’s ${monthSeason.verb} weather may be a useful window for ${active.title.toLowerCase()}. `
       : "";
     const lp = lifePath ? `Life Path ${lifePath}` : "the longer path";
-    return `${monthBit}${active.suggestion} Hold it beside ${lp} as practice, not a verdict.`;
+    return `${monthBit}${active.suggestion} Treat it as one skill to practise alongside your Life Path ${lp}, not a judgement on how you are doing.`;
   }, [active, lifePath, monthSeason]);
 
   if (!areas.length) return null;
@@ -315,7 +315,7 @@ export function GrowthAreasPanel({
             </p>
             <p className="mt-1 text-sm leading-5 text-ink-soft">
               {yearN === monthN
-                ? "Year and month rhyme — lean into that tone as weather, not a forecast."
+                ? "Your year and month are the same number, so this month is the best time to make the year's main move."
                 : `${CORE_TRAIT[yearN]?.split("&")[0]?.trim() ?? yearN} climate with ${CORE_TRAIT[monthN]?.split("&")[0]?.trim()?.toLowerCase() ?? monthN} pacing.`}
             </p>
           </div>

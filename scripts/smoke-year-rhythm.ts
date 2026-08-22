@@ -99,8 +99,13 @@ eq(mixed.sunVerb, "REFINE", "Virgo mutable earth → REFINE");
 has(mixed.mix.outlookNote, "Outlook 9", "differing outlook names its number");
 has(
   mixed.mix.outlookNote,
-  "second year clock",
+  "second reading of the same year",
   "outlook not a third timeline",
+);
+has(
+  mixed.mix.outlookNote,
+  "does not overrule",
+  "outlook does not compete with the Personal Year",
 );
 eq(mixed.mix.mixLabel, "MOVE → BUILD", "hero stays year × month");
 

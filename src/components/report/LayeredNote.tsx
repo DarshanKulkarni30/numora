@@ -9,7 +9,11 @@ type Props = {
 };
 
 export function LayeredNote({ student, expert, dark }: Props) {
-  const [open, setOpen] = useState<"none" | "student" | "expert">("none");
+  // Both layers can be open at once: a practitioner often wants the working and
+  // the method notes side by side, and the old single-slot state hid one to
+  // show the other.
+  const [showStudent, setShowStudent] = useState(false);
+  const [showExpert, setShowExpert] = useState(false);
   if (!student && !expert) return null;
 
   const box = dark
@@ -26,25 +30,25 @@ export function LayeredNote({ student, expert, dark }: Props) {
           <button
             type="button"
             className={btn}
-            aria-expanded={open === "student"}
-            onClick={() => setOpen((o) => (o === "student" ? "none" : "student"))}
+            aria-expanded={showStudent}
+            onClick={() => setShowStudent((v) => !v)}
           >
-            More detail
+            {showStudent ? "Hide the maths" : "How this is calculated"}
           </button>
         ) : null}
         {expert ? (
           <button
             type="button"
             className={btn}
-            aria-expanded={open === "expert"}
-            onClick={() => setOpen((o) => (o === "expert" ? "none" : "expert"))}
+            aria-expanded={showExpert}
+            onClick={() => setShowExpert((v) => !v)}
           >
-            For students and experts
+            {showExpert ? "Hide method notes" : "Method notes"}
           </button>
         ) : null}
       </div>
-      {open === "student" && student ? <p className={box}>{student}</p> : null}
-      {open === "expert" && expert ? <p className={box}>{expert}</p> : null}
+      {showStudent && student ? <p className={box}>{student}</p> : null}
+      {showExpert && expert ? <p className={box}>{expert}</p> : null}
     </div>
   );
 }

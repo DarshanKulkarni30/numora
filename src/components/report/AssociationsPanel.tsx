@@ -40,12 +40,11 @@ function gradientId(uid: string, id: AuraLayerId) {
 
 function layerTip(layer: AuraLayer): string {
   return [
-    `${layer.label} · ${layer.raw}${layer.raw !== String(layer.digit) ? ` → ${layer.digit}` : ""}`,
+    `${layer.label} — ${layer.raw}${layer.raw !== String(layer.digit) ? ` (reduces to ${layer.digit})` : ""}: ${layer.trait}`,
     layer.represents,
-    `Colors: ${layer.assoc.colors.map((c) => c.name).join(", ")}`,
-    `Crystals: ${layer.assoc.stones.join(", ")}`,
-    `Anchor: ${layer.assoc.metals.join(", ")}`,
-    `Rhythm: ${layer.assoc.weekdays.join(", ")} · ${layer.planet.symbol} ${layer.planet.name}`,
+    `Optional reminders for this number: colours ${layer.assoc.colors
+      .map((c) => c.name)
+      .join(", ")}; stones ${layer.assoc.stones.join(", ")}; metal ${layer.assoc.metals.join(", ")}; weekday ${layer.assoc.weekdays.join(", ")} (${layer.planet.name}).`,
   ].join("\n");
 }
 
@@ -88,7 +87,7 @@ function AuraMandala({
         viewBox="0 0 200 200"
         className="h-full w-full overflow-visible"
         role="img"
-        aria-label="Tri-aura mandala with Path, Destiny, and Name rings"
+        aria-label="Three rings showing your Life Path, Vedic Destiny and Name numbers"
       >
         <defs>
           {aura.layers.map((layer) => {
@@ -166,7 +165,7 @@ function AuraMandala({
           fill="#355680"
           fontSize="4.5"
         >
-          aura signature
+          your 3 numbers
         </text>
       </svg>
     </div>
@@ -200,11 +199,17 @@ export function AssociationsPanel({
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-ink-soft">
-        A <span className="font-medium text-ink">tri-aura mandala</span> —
-        Path (outer), Destiny (middle), Name (inner). Colors, crystals, metals,
-        and weekdays are traditional atmosphere cues, not prescriptions,
-        purchases, or a weekly schedule.
+      <p className="text-sm leading-6 text-ink-soft">
+        Three rings, one per number:{" "}
+        <span className="font-medium text-ink">Life Path</span> on the outside
+        (from your birth date),{" "}
+        <span className="font-medium text-ink">Vedic Destiny</span> in the
+        middle (same date, different method), and{" "}
+        <span className="font-medium text-ink">Name number</span> in the centre
+        (from your spelling). Tap a ring to see what that number is for. The
+        colours, stones, metals and weekdays below are traditional associations
+        you can use as reminders — nothing here needs to be bought, worn or
+        scheduled.
       </p>
 
       <div className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3">
@@ -226,7 +231,7 @@ export function AssociationsPanel({
           </div>
           <div className="min-w-[10rem] max-w-[26rem]">
             <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-              How the three layers sit
+              Do these three numbers pull the same way?
             </p>
             <p className="mt-0.5 text-sm font-medium text-ink">
               {aura.synergyLabel}
@@ -260,13 +265,13 @@ export function AssociationsPanel({
                   selected === layer.id ? "ring-2 ring-gold" : ""
                 }`}
               >
-                {layer.role} · {layer.digit}
+                {layer.label} {layer.digit} · {layer.trait}
               </button>
             ))}
           </div>
           <ChartTipPanel
             tip={tip}
-            empty="Tap a ring or legend chip for that layer’s colors, crystals, anchor, and rhythm day."
+            empty="Tap a ring or a chip below to see what that number is for and the traditional colours, stones and weekday linked to it."
           />
           {selectedLayer ? (
             <SelectedLayerCard layer={selectedLayer} />
@@ -283,11 +288,11 @@ export function AssociationsPanel({
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
-          <h3 className="text-ink">Aura narrative</h3>
+          <h3 className="text-ink">How the three read together</h3>
           <p className="mt-2 text-sm leading-6 text-ink-soft">{aura.narrative}</p>
         </div>
         <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
-          <h3 className="text-ink">Layer insights</h3>
+          <h3 className="text-ink">Each pair, one at a time</h3>
           <ul className="mt-2 space-y-2 text-sm leading-6 text-ink-soft">
             {aura.pairs.map((p) => (
               <li key={`${p.a}-${p.b}`}>
@@ -374,7 +379,7 @@ function CrystalsCard({ aura }: { aura: AuraIdentity }) {
   return (
     <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
       <p className="text-xs uppercase tracking-wider text-ink-soft">
-        Resonance crystals
+        Stones traditionally linked to these numbers
       </p>
       <ul className="mt-2 space-y-2">
         {aura.crystals.map((c) => (

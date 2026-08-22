@@ -138,7 +138,9 @@ export function CompatArcWheel({
               onClick={() => onFocus(focus === ch.id ? null : ch.id)}
               onMouseEnter={() => onFocus(ch.id)}
               onMouseLeave={() => onFocus(null)}
-            />
+            >
+              <title>{`${ch.label}: ${ch.stateLabel}. A thicker band means this kind of bond comes more easily between these numbers.`}</title>
+            </path>
             <path
               d={describeArc(cx, cy, rInner, start, end)}
               fill="none"
@@ -436,7 +438,13 @@ export function CompatCompass({
             ))}
           </ul>
         </div>
-      ) : null}
+      ) : (
+        <p className="text-[11px] leading-4 text-ink-soft">
+          Each band is one kind of bond. A thicker, brighter band means that
+          bond comes more easily between these numbers; a thin or dashed one
+          means it takes more deliberate effort. Tap a band for the detail.
+        </p>
+      )}
     </div>
   );
 }

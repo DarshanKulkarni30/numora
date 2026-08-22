@@ -41,15 +41,19 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
   {
     id: "bn",
     shortTitle: "Birth · Psychic",
-    represents: "Your default wiring — who you are when nothing else is pulling.",
-    feelsLike: "This is me on an ordinary day, before the world asks anything.",
+    represents:
+      "From the day of the month you were born. How you react first, before you have thought about it.",
+    feelsLike:
+      "This is how you behave on an ordinary day when nothing is being demanded of you.",
     shapes: "Early habits, instinctive reactions, natural strengths.",
   },
   {
     id: "dn",
     shortTitle: "Destiny",
-    represents: "The longer curriculum — themes life keeps returning you to.",
-    feelsLike: "This is who I am growing into; the lesson keeps repeating.",
+    represents:
+      "From your full birth date. The theme that keeps coming back across jobs, places and relationships.",
+    feelsLike:
+      "This is the lesson that keeps reappearing in different forms until you get good at it.",
     shapes: "Major chapters, recurring lessons, how the path matures.",
   },
   {
@@ -93,7 +97,7 @@ const SAME: Record<number, TransitionDraft> = {
   },
   2: {
     feel: "Sensitivity doubles; life keeps asking for cooperation.",
-    atmosphere: "Partnerships, diplomacy, and emotional weather as the main classroom.",
+    atmosphere: "Partnerships, negotiation and reading other people's moods are where most of the learning happens.",
     invitation: "Honor feeling without disappearing; practice patience as strength.",
   },
   3: {
@@ -139,8 +143,8 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
   const looksLike =
     draft.looksLike ??
     (bn === dn
-      ? `The same tone repeats at the start and on the long walk. Days and chapters may keep handing you ${from.keyword.toLowerCase()} work — ${from.psychicFocus} That is a concentration of weather, not a sentence.`
-      : `Ordinary life often looks like this: the day’s habit (${from.keyword}: ${from.psychicFocus}) meeting a longer assignment (${to.keyword}: ${to.destinyFocus}) Home, work, and close relationships become the practice room.`);
+      ? `Both numbers are the same, so the same theme shows up in your daily reactions and in your longer direction. Expect ${from.keyword.toLowerCase()} work to keep landing on you — ${from.psychicFocus} Doubled like this it becomes your strongest skill and your least examined habit, so it is worth checking occasionally whether it actually suits the situation.`
+      : `In practice this looks like your first instinct (${from.keyword}: ${from.psychicFocus}) meeting a longer assignment (${to.keyword}: ${to.destinyFocus}) You will notice the difference most at home, at work and with people close to you — those are the places where the quick reaction and the longer aim have to be reconciled.`);
   // When Psychic and Destiny are the same digit both sides pull from one
   // theme, so take the next distinct entry instead of repeating the first.
   const pickThree = (a: string[], b: string[], fallback: string): string[] => {
@@ -416,7 +420,7 @@ export function nameOnBnDnPath(
     toDn === "Amazing" || toDn === "Favourable"
       ? "often sits more easily with Destiny"
       : toDn === "Challenging"
-        ? "may add friction on the Destiny side — a cue to slow down, not a verdict"
+        ? "tends to add friction on the Destiny side, which usually means decisions there take longer than you expect"
         : "sits in a mixed way with Destiny";
   const birthEase =
     toBn === "Amazing" || toBn === "Favourable"

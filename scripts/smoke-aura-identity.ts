@@ -51,11 +51,30 @@ has(
   "Two layers share a number",
   "label names the shared pair",
 );
-has(darshan.synergySummary, "not a score", "synergy is words, not a score");
+// The summary must name the three numbers it is comparing, so a first-time
+// reader knows what a "layer" is before being told how the layers interact.
+has(darshan.synergySummary, "Life Path", "synergy names Life Path");
+has(darshan.synergySummary, "Name number", "synergy names the Name number");
+has(
+  darshan.synergySummary,
+  "counted twice",
+  "synergy explains why a shared digit matters",
+);
 eq(darshan.palette.primary.name, "Blue-grey", "primary blue-grey");
 eq(darshan.palette.secondary.name, "Earth brown", "secondary earth brown");
 eq(darshan.palette.highlight.name, "Silver", "highlight prefers silver");
-has(darshan.narrative, "softens", "name 2 softens the 4 aura");
+// The narrative must say what a matching Life Path and Destiny actually means
+// for the reader, and how the Name number relates to them.
+has(
+  darshan.narrative,
+  "Two different methods reaching the same digit",
+  "narrative explains the doubled digit",
+);
+has(
+  darshan.narrative,
+  "changes the delivery, not the direction",
+  "name 2 works with the 4 rather than against it",
+);
 has(darshan.crystals.map((c) => c.name).join(","), "Hessonite", "hessonite present");
 has(darshan.crystals.map((c) => c.keyword).join(","), "Grounding", "hessonite grounding");
 has(darshan.anchors.map((a) => a.name).join(","), "Iron", "iron anchor");
@@ -87,6 +106,10 @@ lacks(blob, "karmic", "no karmic jargon");
 lacks(blob, "avoid", "no avoid-activities");
 lacks(blob, "least supportive", "no least-supportive stone");
 lacks(blob, "purchase", "crystal bodies are not purchase prompts");
-has(auraIdentityPdfLines(darshan).join(" "), "Aura identity", "pdf banner line");
+has(
+  auraIdentityPdfLines(darshan).join(" "),
+  "Your three main numbers",
+  "pdf banner line",
+);
 
 console.log("aura identity smoke ok");

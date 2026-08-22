@@ -89,7 +89,7 @@ const NUMBER_COPY: Record<
     manifestation: ["You start more of your own work", "You want a clear yes or no"],
     practiceCue: "Name one project and protect its first 90 days.",
     narrative: "This chapter asks you to trust a start you can finish.",
-    keywords: ["Start", "Agency", "Spark"],
+    keywords: ["Start one thing", "Decide yourself", "Protect the first 90 days"],
   },
   2: {
     title: "Partnership",
@@ -97,7 +97,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Hard choices want a second voice", "Timing matters more than speed"],
     practiceCue: "Ask for one clear yes before adding a new yes.",
     narrative: "This chapter asks you to build with someone, not only for them.",
-    keywords: ["Listen", "Pace", "Bond"],
+    keywords: ["Ask before fixing", "Match their speed", "Get one clear agreement"],
   },
   3: {
     title: "Creative expansion",
@@ -105,7 +105,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Ideas come quickly", "Your work may be more public"],
     practiceCue: "Finish and share one creative project this year.",
     narrative: "This chapter asks you to show what you already know.",
-    keywords: ["Voice", "Play", "Share"],
+    keywords: ["Say it out loud", "Make time to play", "Publish one thing"],
   },
   4: {
     title: "Structure",
@@ -113,7 +113,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Daily habits matter more", "Shortcuts cost more later"],
     practiceCue: "Keep one weekly structure that outlives mood.",
     narrative: "This chapter asks you to build something that lasts past the week.",
-    keywords: ["Craft", "Order", "Steady"],
+    keywords: ["Build one skill properly", "Put it in writing", "Keep it weekly"],
   },
   5: {
     title: "Change",
@@ -121,7 +121,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Plans may change more often", "New places and trials feel closer"],
     practiceCue: "Pick one change to finish; let the rest wait.",
     narrative: "This chapter asks you to change with a plan, not to jump every day.",
-    keywords: ["Move", "Try", "Air"],
+    keywords: ["Change one thing", "Run a small trial", "Leave room to move"],
   },
   6: {
     title: "Responsibility",
@@ -129,7 +129,7 @@ const NUMBER_COPY: Record<
     manifestation: ["People ask you to be steady", "Home and duty share your time"],
     practiceCue: "Care includes you — schedule one receiving hour weekly.",
     narrative: "This chapter asks you to keep care without erasing yourself.",
-    keywords: ["Care", "Home", "Duty"],
+    keywords: ["Keep one promise", "Sort out home", "Help with a limit"],
   },
   7: {
     title: "Learning",
@@ -137,7 +137,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Quiet time becomes useful", "Noise costs more"],
     practiceCue: "Protect two study or rest blocks on the calendar.",
     narrative: "This chapter asks you to go inward without disappearing.",
-    keywords: ["Study", "Quiet", "Depth"],
+    keywords: ["Study one subject", "Book quiet time", "Answer a beat later"],
   },
   8: {
     title: "Stewardship",
@@ -145,7 +145,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Results are more visible", "Pressure can rise with money and duty"],
     practiceCue: "Define success with rest and integrity, not status alone.",
     narrative: "This chapter asks you to hold power as care for what you tend.",
-    keywords: ["Steward", "Measure", "Hold"],
+    keywords: ["Finish one measurable result", "Sort the money", "Schedule the rest"],
   },
   9: {
     title: "Completion",
@@ -153,7 +153,7 @@ const NUMBER_COPY: Record<
     manifestation: ["Endings may ask for your time", "The next chapter needs space"],
     practiceCue: "Close one loop this season before opening three more.",
     narrative: "This chapter asks you to finish cleanly so the next start is honest.",
-    keywords: ["Close", "Give", "Clear"],
+    keywords: ["Close one loop", "Hand something on", "Clear the backlog"],
   },
 };
 

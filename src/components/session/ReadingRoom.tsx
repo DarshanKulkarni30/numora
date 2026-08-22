@@ -10,7 +10,8 @@ type Step = {
   kicker: string;
   title: string;
   body: string;
-  chips?: { label: string; value: string }[];
+  /** A chip is never just a label and a number: `meaning` says what it is for. */
+  chips?: { label: string; value: string; meaning: string }[];
 };
 
 type Props = {
@@ -40,44 +41,50 @@ function buildSteps(reading: EnhancedReading): Step[] {
   const day = reading.pythagoreanChart.personalDay;
   const essence = reading.pythagoreanChart.essence;
 
+  const chip = (c: (typeof core)[number]) => ({
+    label: c.label,
+    value: c.value,
+    meaning: c.trait,
+  });
+
   return [
     {
-      kicker: "Session",
+      kicker: "Start here",
       title: reading.hero.archetype,
-      body: `${reading.hero.throughline} Right now: ${reading.hero.currentFocus.join("; ")}.`,
+      body: `${reading.hero.throughline} The next few screens go through your numbers one group at a time. Nothing here predicts events — it describes tendencies you can check against your own life. Right now the reading points at: ${reading.hero.currentFocus.join("; ")}.`,
     },
     {
-      kicker: "Identity seats",
-      title: "The long walk",
-      body: "These are the date and name numbers that stay with the person. Read one number. What is the job? What should you try this week?",
-      chips: identity.map((c) => ({ label: c.label, value: c.value })),
+      kicker: "Group 1 of 4",
+      title: "The numbers that do not change",
+      body: "These come from your birth date and your birth name, so they stay the same for life. They describe your long-term direction and how you tend to operate. Each card below shows the number and what it is for.",
+      chips: identity.map(chip),
     },
     {
-      kicker: "Inner / outer",
-      title: "Inside, outside, later",
-      body: "Soul Urge is what can feel true inside. Personality is what people may notice first. Maturity is the habit that can grow with practice — not a fate.",
-      chips: inner.map((c) => ({ label: c.label, value: c.value })),
+      kicker: "Group 2 of 4",
+      title: "What you want, what people see, what grows",
+      body: "Soul Urge is what you actually want, which you may not say out loud. Personality is the impression people form before they know you. Maturity is what tends to come forward in the second half of life — it is a direction, not a switch that flips on a birthday.",
+      chips: inner.map(chip),
     },
     {
-      kicker: "Vedic + Chaldean",
-      title: "Day, path, and name",
-      body: "Psychic and Destiny come from the birth date. Name numbers come from the spelling in force now. A later name can change name seats; it does not change the date numbers.",
-      chips: vedic.map((c) => ({ label: c.label, value: c.value })),
+      kicker: "Group 3 of 4",
+      title: "The same date read a different way",
+      body: "Indian and Chaldean numerology read your details with different rules, so they give different numbers rather than contradicting the ones above. Psychic is your first reaction, Destiny is your longer direction, and the name numbers describe how you come across. If you change your name, only the name numbers move — the date numbers stay put.",
+      chips: vedic.map(chip),
     },
     {
-      kicker: "This season",
-      title: reading.season.yearTitle,
-      body: reading.season.combined,
-      chips: timing.map((c) => ({ label: c.label, value: c.value })),
+      kicker: "Group 4 of 4",
+      title: `This year: ${reading.season.yearTitle.toLowerCase()}`,
+      body: `${reading.season.yearJob} ${reading.season.monthJob ?? ""} Try this month: ${reading.season.yearFocus[0] ?? "one small step"}.`.trim(),
+      chips: timing.map(chip),
     },
     {
-      kicker: "Today",
-      title: `Personal Day ${day.number}`,
-      body: `${day.summary} ${essence.summary}`,
+      kicker: "Today only",
+      title: `Today is a ${day.number} day`,
+      body: `${day.summary} ${essence.summary} This one changes daily, so treat it as a nudge about pacing rather than anything to plan around.`,
     },
     {
-      kicker: "Story",
-      title: "The through-line",
+      kicker: "Putting it together",
+      title: "What the numbers keep pointing at",
       body: reading.narrative.teaser,
     },
   ];
@@ -121,12 +128,15 @@ export function ReadingRoom({
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] px-5 py-3">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-gold-deep">
-            {BRAND_NAME} · reading room
+            {BRAND_NAME} · guided walkthrough
           </p>
           <p className="text-sm text-ink">{displayName}</p>
         </div>
         <p className="text-sm text-ink-soft">
-          {i + 1} / {steps.length}
+          Step {i + 1} of {steps.length}
+          <span className="ml-2 hidden text-xs sm:inline">
+            (arrow keys work too)
+          </span>
         </p>
         <Link
           href={exitHref}
@@ -147,16 +157,23 @@ export function ReadingRoom({
         <h1 className="brand mt-3 text-4xl text-ink md:text-5xl">{step.title}</h1>
         <p className="mt-5 text-lg leading-8 text-ink-soft">{step.body}</p>
         {step.chips?.length ? (
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {step.chips.map((c) => (
               <div
                 key={c.label}
-                className="rounded-2xl border border-[var(--line)] bg-white/70 px-3 py-4 text-center"
+                className="rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3"
               >
-                <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                  {c.label}
+                <p className="flex items-baseline gap-2">
+                  <span className="text-xs uppercase tracking-wider text-ink-soft">
+                    {c.label}
+                  </span>
+                  <span className="brand text-3xl leading-none text-ink">
+                    {c.value}
+                  </span>
                 </p>
-                <p className="brand mt-1 text-3xl text-ink">{c.value}</p>
+                <p className="mt-1.5 text-sm leading-6 text-ink-soft">
+                  {c.meaning}
+                </p>
               </div>
             ))}
           </div>
@@ -179,7 +196,7 @@ export function ReadingRoom({
                 href={detailedHref}
                 className="btn-tactile rounded-full border border-[var(--line)] bg-white px-5 py-2.5 text-sm text-ink"
               >
-                Full catalog
+                Open the full report
               </Link>
             ) : null}
             <Link

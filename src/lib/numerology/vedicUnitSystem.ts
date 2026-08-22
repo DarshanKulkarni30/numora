@@ -394,7 +394,7 @@ export function triadHarmony(
       tone: "stretch",
       label: "Name ↔ Destiny stretch",
       detail:
-        "Name and Destiny differ enough that social identity and outer path may feel mismatched—reflective cue, not a verdict.",
+        "Your Name number and your Destiny number are far enough apart that how people read you may not match where you are actually heading. Expect to have to explain yourself more often than most.",
       set369,
     };
   }

@@ -246,7 +246,7 @@ function buildImpact(
       );
     } else if (delta < -0.25) {
       bullets.push(
-        `Pair-year tone between you asked for more stretch after ${marriageYear} (average affinity down vs the pre-bond window)—patience themes, not a verdict.`,
+        `The shared year numbers between you have been less easy since ${marriageYear} than they were before it. That points to years that asked for more patience from both of you, not to a problem with the relationship.`,
       );
     } else {
       bullets.push(
