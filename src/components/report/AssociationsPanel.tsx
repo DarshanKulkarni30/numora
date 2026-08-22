@@ -224,30 +224,16 @@ export function AssociationsPanel({
               <span className="brand text-base text-ink">{chaldeanName}</span>
             </p>
           </div>
-          <div className="min-w-[10rem]">
+          <div className="min-w-[10rem] max-w-[26rem]">
             <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-              Aura synergy
+              How the three layers sit
             </p>
             <p className="mt-0.5 text-sm font-medium text-ink">
-              {aura.synergyLabel}{" "}
-              <span className="text-ink-soft">({aura.synergyScore})</span>
+              {aura.synergyLabel}
             </p>
-            <div
-              className="mt-1 h-2 overflow-hidden rounded-full bg-mist"
-              role="meter"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={aura.synergyScore}
-              aria-label="Aura synergy"
-            >
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${Math.max(10, aura.synergyScore)}%`,
-                  background: `linear-gradient(90deg, ${aura.palette.primary.hex}, ${aura.palette.secondary.hex}, ${aura.palette.highlight.hex})`,
-                }}
-              />
-            </div>
+            <p className="mt-1 text-xs leading-5 text-ink-soft">
+              {aura.synergySummary}
+            </p>
           </div>
         </div>
       </div>

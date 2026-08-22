@@ -172,7 +172,7 @@ function ExpressionBridge({
     <div>
       <svg
         viewBox="0 0 280 88"
-        className="h-[5.5rem] w-full"
+        className="mx-auto h-auto w-full max-w-[40rem]"
         role="img"
         aria-label="Expression bridge from Birth Day through Expression to Life Path. Hover or tap nodes for details."
       >
@@ -220,7 +220,7 @@ function ExpressionBridge({
           <text x="36" y="72" fontSize="8" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             BD {birthDay}
           </text>
-          <text x="36" y="84" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+          <text x="36" y="84" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
             Origin
           </text>
         </SvgHotspot>
@@ -249,7 +249,7 @@ function ExpressionBridge({
           <text x="140" y="18" fontSize="8" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
             Ex {expression}
           </text>
-          <text x="140" y="28" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+          <text x="140" y="28" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
             {echoes ? "Amplifies BD" : "Your how"}
           </text>
         </SvgHotspot>
@@ -269,7 +269,7 @@ function ExpressionBridge({
           <text x="244" y="72" fontSize="8" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             LP {lifePath}
           </text>
-          <text x="244" y="84" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+          <text x="244" y="84" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
             Direction
           </text>
         </SvgHotspot>
@@ -340,7 +340,7 @@ function InnerOuterOverlap({
     <div className="space-y-1">
       <svg
         viewBox="0 0 280 100"
-        className="h-24 w-full"
+        className="mx-auto h-auto w-full max-w-[40rem]"
         role="img"
         aria-label="Inner want and outer face overlapping lenses. Hover or tap for details."
       >
@@ -357,10 +357,10 @@ function InnerOuterOverlap({
           <text x="88" y="46" fontSize="14" fill="rgb(30 58 107)" textAnchor="middle" fontWeight="700">
             {soulUrge}
           </text>
-          <text x="88" y="58" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+          <text x="88" y="58" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
             SU
           </text>
-          <text x="70" y="94" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+          <text x="70" y="94" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             Inner want
           </text>
         </SvgHotspot>
@@ -378,10 +378,10 @@ function InnerOuterOverlap({
           <text x="192" y="46" fontSize="14" fill="rgb(45 122 120)" textAnchor="middle" fontWeight="700">
             {personality}
           </text>
-          <text x="192" y="58" fontSize="6.5" fill="rgb(70 82 98)" textAnchor="middle">
+          <text x="192" y="58" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
             PE
           </text>
-          <text x="210" y="94" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+          <text x="210" y="94" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             Outer face
           </text>
         </SvgHotspot>
@@ -397,10 +397,10 @@ function InnerOuterOverlap({
             strokeWidth={focus === "meet" ? 2 : 1}
             strokeDasharray={focus === "meet" ? undefined : "3 2"}
           />
-          <text x="140" y="50" fontSize="6.5" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
+          <text x="140" y="50" fontSize="8" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
             Meet
           </text>
-          <text x="140" y="12" fontSize="7" fill={bandColor} textAnchor="middle" fontWeight="600">
+          <text x="140" y="12" fontSize="8.5" fill={bandColor} textAnchor="middle" fontWeight="600">
             Where you meet the world
           </text>
         </SvgHotspot>
@@ -469,7 +469,7 @@ function MaturityConvergence({
     <div>
       <svg
         viewBox="0 0 280 118"
-        className="h-[7rem] w-full"
+        className="mx-auto h-auto w-full max-w-[40rem]"
         role="img"
         aria-label="Maturity convergence of Life Path and Expression. Hover or tap nodes for details."
       >
@@ -502,7 +502,7 @@ function MaturityConvergence({
         <text
           x="140"
           y="62"
-          fontSize="6.5"
+          fontSize="8"
           fill="rgb(70 82 98)"
           textAnchor="middle"
           opacity={focus ? 0.45 : 1}
@@ -521,7 +521,7 @@ function MaturityConvergence({
             stroke="rgb(180 83 9)"
             strokeWidth={focus === "mat" ? 2.4 : 1.8}
           />
-          <text x="140" y="20" fontSize="7" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
+          <text x="140" y="20" fontSize="8.5" fill="rgb(180 83 9)" textAnchor="middle" fontWeight="600">
             Maturity
           </text>
           <text x="140" y="32" fontSize="11" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="700">
@@ -541,7 +541,7 @@ function MaturityConvergence({
           <text x="56" y="92" fontSize="10" fill="white" textAnchor="middle" fontWeight="700">
             {lifePath}
           </text>
-          <text x="56" y="108" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+          <text x="56" y="108" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             Life Path
           </text>
         </SvgHotspot>
@@ -558,7 +558,7 @@ function MaturityConvergence({
           <text x="224" y="92" fontSize="10" fill="white" textAnchor="middle" fontWeight="700">
             {expression}
           </text>
-          <text x="224" y="108" fontSize="7" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
+          <text x="224" y="108" fontSize="8.5" fill="rgb(30 40 55)" textAnchor="middle" fontWeight="600">
             Expression
           </text>
         </SvgHotspot>
@@ -847,28 +847,30 @@ export function PythagoreanIdentityLayers({
                   alignment={model.alignment}
                 />
               </div>
-              {expanded ? (
-                <div className="space-y-3 border-t border-[var(--line)] px-4 py-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
-                    In simple words
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-3">
-                    <MetricCell
-                      label="What this can look like"
-                      value={layer.micro.tone}
-                      dot="bg-sea"
-                    />
-                    <MetricCell
-                      label="What to watch"
-                      value={layer.micro.tension}
-                      dot="bg-gold-deep"
-                    />
-                    <MetricCell
-                      label="What can help"
-                      value={layer.micro.gift}
-                      dot="bg-ink"
-                    />
-                  </div>
+              {/* The three cells are the actionable part of each layer, so they
+                  stay visible instead of hiding behind the accordion. */}
+              <div className="space-y-3 border-t border-[var(--line)] px-4 py-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+                  In simple words
+                </p>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  <MetricCell
+                    label="What this can look like"
+                    value={layer.micro.tone}
+                    dot="bg-sea"
+                  />
+                  <MetricCell
+                    label="What to watch"
+                    value={layer.micro.tension}
+                    dot="bg-gold-deep"
+                  />
+                  <MetricCell
+                    label="What can help"
+                    value={layer.micro.gift}
+                    dot="bg-ink"
+                  />
+                </div>
+                {expanded ? (
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
                       More about this
@@ -878,8 +880,8 @@ export function PythagoreanIdentityLayers({
                     </p>
                     <LayeredNote student={layer.student} expert={layer.expert} />
                   </div>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
             </div>
           );
         })}

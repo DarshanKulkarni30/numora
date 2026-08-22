@@ -318,6 +318,10 @@ export type RhythmMix = {
 
 export type YearRhythm = {
   layers: RhythmLayer[];
+  /** Display label for the year — keeps 11/22/33 instead of the reduced digit. */
+  yearLabel: string;
+  /** Set only when the year is a master number that reduces to a different digit. */
+  masterGloss: string | null;
   yearMonth: string;
   sun: SunSignInfo | null;
   sunInfluence: string;
@@ -335,6 +339,18 @@ function digitOf(raw: string | number | undefined | null): number | null {
   const n = Number(raw);
   if (!Number.isFinite(n) || n <= 0) return null;
   return reduceToSingleDigit(n);
+}
+
+const MASTERS = new Set([11, 22, 33]);
+
+/**
+ * Season tables are keyed 1–9, but a master year must still read as 11/22/33 in
+ * copy. Lookups keep the reduced digit; every sentence uses this label.
+ */
+function labelOf(raw: string | number | undefined | null, digit: number): string {
+  const n = Number(raw);
+  if (Number.isFinite(n) && MASTERS.has(n)) return String(n);
+  return String(digit);
 }
 
 function elementMix(year: number, month: number): ElementMix {
@@ -440,6 +456,17 @@ export function buildYearRhythm(opts: {
   const monthDigit = digitOf(opts.personalMonth) ?? yearDigit;
   const outlookDigit = digitOf(opts.outlook ?? undefined);
 
+  const yearLabel = labelOf(opts.personalYear, yearDigit);
+  const monthLabel = labelOf(opts.personalMonth, monthDigit);
+  const outlookLabel = labelOf(
+    opts.outlook ?? undefined,
+    outlookDigit ?? yearDigit,
+  );
+  const masterGloss =
+    yearLabel !== String(yearDigit)
+      ? `Personal Year ${yearLabel} (works like a ${yearDigit}). Both readings are used below: the ${yearLabel} names the year, the ${yearDigit} sets its pacing.`
+      : null;
+
   const yearSeason = DIGIT_SEASON[yearDigit];
   const monthSeason = DIGIT_SEASON[monthDigit];
   const outlookSeason = DIGIT_SEASON[outlookDigit ?? yearDigit];
@@ -475,8 +502,8 @@ export function buildYearRhythm(opts: {
       season: outlookSeason,
       insight:
         outlookDigit != null && outlookDigit !== yearDigit
-          ? `A second birthday-cycle mirror at ${opts.outlook} (${outlookSeason.season}). Same clock as Personal Year, different formula — two weathers, not a vote.`
-          : `Outlook currently rhymes with Personal Year ${yearDigit} (${yearSeason.season}). Two methods, similar climate this cycle.`,
+          ? `A second birthday-cycle mirror at ${outlookLabel} (${outlookSeason.season}). Same clock as Personal Year, different formula — two weathers, not a vote.`
+          : `Outlook currently rhymes with Personal Year ${yearLabel} (${yearSeason.season}). Two methods, similar climate this cycle.`,
       scan: outlookSeason.scan,
     },
     {
@@ -506,11 +533,11 @@ export function buildYearRhythm(opts: {
     ? sunCopy(sun, yearDigit)
     : "Sun sign is read from month and day only — add a complete date to place the astro season.";
 
-  const summary = `Year ${yearDigit}: ${yearSeason.scan} Month ${monthDigit}: ${monthSeason.scan}${
+  const summary = `Year ${yearLabel}: ${yearSeason.scan} Month ${monthLabel}: ${monthSeason.scan}${
     sun ? ` ${sun.name} is calendar backdrop only — not a numerology number.` : ""
   }`;
 
-  const seasonal = `Year ${yearDigit}: ${yearSeason.scan} Month ${monthDigit}: ${monthSeason.scan}${
+  const seasonal = `Year ${yearLabel}: ${yearSeason.scan} Month ${monthLabel}: ${monthSeason.scan}${
     sun ? ` ${sun.name} is a calendar backdrop, not a numerology number.` : ""
   }`;
 
@@ -521,8 +548,8 @@ export function buildYearRhythm(opts: {
 
   const outlookNote =
     outlookDigit != null && outlookDigit !== yearDigit
-      ? `Outlook ${opts.outlook} is a second year clock (${outlookSeason.scan}) It is not a vote against year ${yearDigit}.`
-      : `Outlook matches year ${yearDigit}: ${yearSeason.scan}`;
+      ? `Outlook ${outlookLabel} is a second year clock (${outlookSeason.scan}) It is not a vote against year ${yearLabel}.`
+      : `Outlook matches year ${yearLabel}: ${yearSeason.scan}`;
 
   const mix: RhythmMix = {
     mixLabel: `${yearSeason.verb} → ${monthSeason.verb}`,
@@ -551,6 +578,8 @@ export function buildYearRhythm(opts: {
 
   return {
     layers,
+    yearLabel,
+    masterGloss,
     yearMonth,
     sun,
     sunInfluence,

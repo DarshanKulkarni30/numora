@@ -5,7 +5,10 @@
 
 import { blurbForTopic, type NumberGuideTopic } from "@/lib/guides/numberMeanings";
 import { associationsForNumber } from "@/lib/numerology/associations";
-import { synergyKind } from "@/lib/numerology/auraIdentity";
+import {
+  synergyKind,
+  type AuraSynergyKind,
+} from "@/lib/numerology/auraIdentity";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import type { GrowthArea } from "@/lib/numerology/growthAreas";
 import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
@@ -37,7 +40,7 @@ export type InsightGeometry =
 export type InsightConnection = {
   pair: string;
   body: string;
-  kind: "aligned" | "complementary" | "contrasting";
+  kind: AuraSynergyKind;
 };
 
 export type InsightCardModel = {
@@ -184,6 +187,8 @@ function connectionBody(
     body = `Shared ${ar} — ${ta} rhyming across layers, not a guarantee of ease.`;
   } else if (kind === "complementary") {
     body = `${ta} meeting ${tb} — a supportive blend to notice.`;
+  } else if (kind === "neutral") {
+    body = `${ta} and ${tb} do different jobs — they neither help nor block each other.`;
   } else {
     body = `${ta} and ${tb} ask for patience — useful contrast, not a flaw.`;
   }

@@ -61,7 +61,7 @@ eq(lp6.geometry, "hexagon", "life path uses hexagon watermark");
 has(lp6.keyword, "Care", "keyword care");
 has(lp6.core, "care", "core meaning names care");
 has(lp6.showsUp, "you thrive", "shows-up is second person");
-has(lp6.growth, "receiving help", "growth cue from life-path 6 practice");
+has(lp6.growth, "keep one hour that is for you", "growth cue from life-path 6 practice");
 has(lp6.narrative, "harmony and care", "mini-narrative for 6");
 eq(lp6.connections.length >= 3, true, "three cross-system connections");
 eq(lp6.strengths.length >= 1, true, "strength tie-ins present");

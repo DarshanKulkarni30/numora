@@ -58,10 +58,14 @@ export type LoShuArchitecture = {
     label: string;
     narrative: string;
   };
+  /** What the loudest and quietest plane mean in practice, plus one job. */
+  decisionFlowTakeaway: string;
   catalysts: GrowthCatalyst[];
   engines: StrengthEngine[];
   activeEngineCount: number;
   narrative: string;
+  /** Same content as `narrative`, kept as separate sentences for rendering. */
+  narrativeLines: string[];
   blueprint: {
     title: string;
     lines: string[];
@@ -93,6 +97,27 @@ const PLANE_DEFS: {
     flowVerb: "Act",
   },
 ];
+
+const PLANE_HABIT: Record<
+  PlaneId,
+  { loud: string; quiet: string; job: string }
+> = {
+  emotional: {
+    loud: "you read the mood first, and feeling usually decides",
+    quiet: "checking how you feel about it is the step that gets skipped",
+    job: "say out loud how you feel about it before you decide",
+  },
+  mental: {
+    loud: "you plan first, and the plan usually decides",
+    quiet: "writing the plan down is the step that gets skipped",
+    job: "write the next three steps down before you start",
+  },
+  practical: {
+    loud: "you move first, and doing usually decides",
+    quiet: "actually starting is the step that gets postponed",
+    job: "put one small first action in the calendar this week",
+  },
+};
 
 const ENGINE_DEFS: {
   id: StrengthEngine["id"];
@@ -305,6 +330,23 @@ export function buildLoShuArchitecture(loShu: LoShuResult): LoShuArchitecture {
   const decisionFlow = ranked.map((p) => p.flowVerb);
   const decisionFlowLabel = decisionFlow.join(" → ");
 
+  const loudPlane = byId[ranked[0]!.id];
+  const quietPlane = byId[ranked[ranked.length - 1]!.id];
+  const loudHabit = PLANE_HABIT[loudPlane.id];
+  const quietHabit = PLANE_HABIT[quietPlane.id];
+  const decisionFlowTakeaway =
+    loudPlane.id === quietPlane.id || loudPlane.score === quietPlane.score
+      ? `All three planes are close on this grid, so no single step leads. Pick the order on purpose: ${quietHabit.job}.`
+      : `Loudest is ${loudPlane.label.toLowerCase()} (${
+          loudPlane.present.length
+            ? `${loudPlane.present.join(", ")} filled`
+            : "carried by the centre numbers"
+        }) — ${loudHabit.loud}. Quietest is ${quietPlane.label.toLowerCase()} (${
+          quietPlane.missing.length
+            ? `${quietPlane.missing.join(", ")} quiet`
+            : "the lightest of the three"
+        }) — ${quietHabit.quiet}. Try: ${quietHabit.job}.`;
+
   const engines: StrengthEngine[] = ENGINE_DEFS.map((e) => {
     const presentCount = e.numbers.filter((n) => (grid[n] ?? 0) > 0).length;
     const strength =
@@ -361,15 +403,16 @@ export function buildLoShuArchitecture(loShu: LoShuResult): LoShuArchitecture {
         ? "No fully lit strength engines—partial patterns and catalysts still offer a clear practice map."
         : `${activeEngineCount} active strength engine${activeEngineCount === 1 ? "" : "s"} with ${engines.filter((e) => e.status === "partial").length} partial.`;
 
-  const narrative = [
-    `Decision flow may read as ${decisionFlowLabel}.`,
-    layers.map((l) => l.summary).join(" "),
+  const narrativeLines = [
+    `Decision flow may read as ${decisionFlowLabel}. ${decisionFlowTakeaway}`,
+    ...layers.map((l) => l.summary),
     tensionMeta.narrative,
     engineLine,
     catalysts.length
-      ? `Growth catalysts: ${catalysts.map((c) => c.keyword).join(", ")}.`
+      ? `Quiet digits to practise: ${catalysts.map((c) => c.keyword).join(", ")}. Pick one, not all five.`
       : "No missing-number catalysts—distribution looks broad across the Lo Shu grid.",
-  ].join(" ");
+  ];
+  const narrative = narrativeLines.join(" ");
 
   const blueprint = {
     title: "Lo Shu personality blueprint",
@@ -402,10 +445,12 @@ export function buildLoShuArchitecture(loShu: LoShuResult): LoShuArchitecture {
       label: tensionMeta.label,
       narrative: tensionMeta.narrative,
     },
+    decisionFlowTakeaway,
     catalysts,
     engines,
     activeEngineCount,
     narrative,
+    narrativeLines,
     blueprint,
   };
 }

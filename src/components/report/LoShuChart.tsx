@@ -182,13 +182,9 @@ function TensionBar({ architecture }: { architecture: LoShuArchitecture }) {
           aria-hidden
         />
       </div>
-      <div className="mt-1.5 flex justify-between text-[10px] uppercase tracking-wider text-ink-soft">
-        <span>
-          BN {tension.bn ?? "—"} · inner
-        </span>
-        <span>
-          DN {tension.dn ?? "—"} · outer
-        </span>
+      <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px] uppercase tracking-wider text-ink-soft">
+        <span className="whitespace-nowrap">BN {tension.bn ?? "—"} · inner</span>
+        <span className="whitespace-nowrap">DN {tension.dn ?? "—"} · outer</span>
       </div>
       <p className="mt-2 text-xs leading-5 text-ink-soft">{tension.narrative}</p>
     </div>
@@ -376,7 +372,7 @@ export function LoShuChart({
       ) : null}
 
       {architecture && showArchitecture ? (
-        <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
+        <div className="grid gap-3 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
           <TensionBar architecture={architecture} />
           <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
             <p className="text-xs uppercase tracking-wider text-ink-soft">
@@ -389,6 +385,9 @@ export function LoShuChart({
               Loudest date-grid plane first, quietest last — not advice on how
               you should decide. First = more filled digits (Act = doing, Feel =
               feeling, Think = planning).
+            </p>
+            <p className="mt-2 text-sm leading-6 text-ink">
+              {architecture.decisionFlowTakeaway}
             </p>
           </div>
         </div>
@@ -633,10 +632,10 @@ export function LoShuChart({
                       x={x}
                       y={y + size + 3.2}
                       textAnchor="middle"
-                      style={{ fontSize: 2.8 }}
+                      style={{ fontSize: 2.6 }}
                       className="fill-[var(--ink-soft)]"
                     >
-                      {catalyst.keyword.slice(0, 8)}
+                      {catalyst.keyword}
                     </text>
                   ) : !missing && count > 1 ? (
                     <text
@@ -774,9 +773,20 @@ export function LoShuChart({
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm leading-6 text-ink-soft">
-              {architecture.narrative}
-            </p>
+            {/* The layer summaries are already listed above, so only the
+                remaining sentences are shown here — one per line. */}
+            <div className="mt-3 space-y-2">
+              {architecture.narrativeLines
+                .filter(
+                  (line) =>
+                    !architecture.layers.some((l) => l.summary === line),
+                )
+                .map((line) => (
+                  <p key={line} className="text-sm leading-6 text-ink-soft">
+                    {line}
+                  </p>
+                ))}
+            </div>
           </div>
 
           {dateOfBirth ? (

@@ -112,8 +112,14 @@ assert(
   "expression insight is amateur-plain for 3",
 );
 assert(
-  magnusLayers.layers[2]!.insight.toLowerCase().includes("does not switch"),
+  magnusLayers.layers[2]!.insight
+    .toLowerCase()
+    .includes("nothing switches on at a birthday"),
   "maturity is not a birthday switch",
+);
+assert(
+  magnusLayers.layers[2]!.insight.includes("reduces to"),
+  "maturity shows the sum, so it reads differently from the bridge",
 );
 assert(
   chart.planeNote.toLowerCase().includes("lo shu"),

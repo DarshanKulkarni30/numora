@@ -74,7 +74,13 @@ export function buildActionPlan(opts: {
       primary: assertSafeCopy(primary, "enhanced.plan.year.primary"),
       secondary: assertSafeCopy(secondary, "enhanced.plan.year.secondary"),
       items: assertSafeList(
-        unique([season.yearFocus[0], recs[1], growth[1]?.suggestion]).slice(0, 3),
+        // `suggestion` is internal architecture wording ("Missing 4 may act as a
+        // growth trigger..."). Only the concrete `actions` belong in a plan.
+        unique([
+          season.yearFocus[0],
+          recs[1],
+          growth[1]?.actions?.[0] ?? growth[0]?.actions?.[1],
+        ]).slice(0, 3),
         "enhanced.plan.year.items",
       ),
     },

@@ -34,21 +34,19 @@ export type StrengthConstellationModel = {
   defaultIndex: number;
 };
 
+/**
+ * Splits a strength only at a real clause boundary. Cutting on a preposition
+ * produced half-phrases like "Willingness" from "Willingness to support
+ * others' growth", so the title now keeps the whole phrase unless a comma or
+ * dash offers a clean break.
+ */
 export function splitStrengthLabel(label: string): { title: string; detail: string } {
   const clean = label.replace(/[.。].*$/, "").trim();
-  const split =
-    /^(.*?)\s+(when|in|with|to|across|under|before|through|for|of)\s+(.*)$/i.exec(
-      clean,
-    );
+  const split = /^([^,—–]+)\s*[,—–]\s*(.+)$/.exec(clean);
   if (split) {
-    return { title: split[1]!.trim(), detail: `${split[2]} ${split[3]}`.trim() };
+    return { title: split[1]!.trim(), detail: split[2]!.trim() };
   }
-  const words = clean.split(/\s+/);
-  if (words.length <= 4) return { title: clean, detail: "" };
-  return {
-    title: words.slice(0, 3).join(" "),
-    detail: words.slice(3).join(" "),
-  };
+  return { title: clean, detail: "" };
 }
 
 function digitsFor(raw: string): number[] {

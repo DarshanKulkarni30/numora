@@ -3,7 +3,10 @@
  * Reflective pacing only: not events, health, or a calendar of incidents.
  */
 
-import { synergyKind } from "@/lib/numerology/auraIdentity";
+import {
+  synergyKind,
+  type AuraSynergyKind,
+} from "@/lib/numerology/auraIdentity";
 import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import {
   pinnaclesForDob,
@@ -38,7 +41,7 @@ export type PinnacleInsight = {
   planet: PlanetInfo;
   palette: ChapterPalette;
   related: { label: string; value: string }[];
-  synergies: { label: string; kind: "aligned" | "complementary" | "contrasting" }[];
+  synergies: { label: string; kind: AuraSynergyKind }[];
   student?: string;
   expert?: string;
 };

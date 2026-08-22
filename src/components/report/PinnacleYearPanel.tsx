@@ -54,7 +54,7 @@ function SynergyChip({
       {label}
       <span className="text-ink-soft">
         {" "}
-        · {kind === "contrasting" ? "contrast" : kind}
+        · {kind === "contrasting" ? "contrast" : kind === "neutral" ? "independent" : kind}
       </span>
     </span>
   );
@@ -204,9 +204,11 @@ export function PinnacleYearPanel({
             {yearAtAge(dateOfBirth, selected.pinnacle.ageStart) != null
               ? ` · from about ${yearAtAge(dateOfBirth, selected.pinnacle.ageStart)}`
               : ""}
+            {/* The chapter runs through the whole of ageEnd, so it closes on the
+                birthday after it — the same year the next chapter's tick shows. */}
             {selected.pinnacle.ageEnd != null &&
-            yearAtAge(dateOfBirth, selected.pinnacle.ageEnd) != null
-              ? ` to ${yearAtAge(dateOfBirth, selected.pinnacle.ageEnd)}`
+            yearAtAge(dateOfBirth, selected.pinnacle.ageEnd + 1) != null
+              ? ` to ${yearAtAge(dateOfBirth, selected.pinnacle.ageEnd + 1)}`
               : ""}
           </p>
           <div className="grid gap-2 sm:grid-cols-3">

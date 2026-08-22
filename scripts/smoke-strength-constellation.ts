@@ -26,8 +26,24 @@ function has(text: string, needle: string, label: string) {
 }
 
 const split = splitStrengthLabel("Comfort initiating when others hesitate");
-eq(split.title, "Comfort initiating", "title does not repeat the when-clause");
-eq(split.detail, "when others hesitate", "detail keeps the rest");
+eq(
+  split.title,
+  "Comfort initiating when others hesitate",
+  "title keeps the whole phrase",
+);
+eq(split.detail, "", "no detail when there is no clause break");
+
+// Splitting on a preposition used to leave chips reading just "Willingness".
+const preposition = splitStrengthLabel("Willingness to support others' growth");
+eq(
+  preposition.title,
+  "Willingness to support others' growth",
+  "preposition does not truncate the chip",
+);
+
+const clause = splitStrengthLabel("Steady presence, even under pressure");
+eq(clause.title, "Steady presence", "a comma is a clean break");
+eq(clause.detail, "even under pressure", "detail keeps the rest");
 
 const pool = [
   ...(STRENGTH_BANK[1] ?? []),

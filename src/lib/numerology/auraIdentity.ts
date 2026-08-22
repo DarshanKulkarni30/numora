@@ -13,7 +13,11 @@ import { CORE_TRAIT } from "./meanings";
 import { PLANETS, planetForPythagorean, planetForVedic, type PlanetInfo } from "./planets";
 
 export type AuraLayerId = "path" | "destiny" | "name";
-export type AuraSynergyKind = "aligned" | "complementary" | "contrasting";
+export type AuraSynergyKind =
+  | "aligned"
+  | "complementary"
+  | "neutral"
+  | "contrasting";
 
 export type AuraLayer = {
   id: AuraLayerId;
@@ -65,8 +69,9 @@ export type AuraRhythm = {
 export type AuraIdentity = {
   layers: AuraLayer[];
   pairs: AuraPair[];
-  synergyScore: number;
   synergyLabel: string;
+  /** Plain-words replacement for the old 0–100 synergy score. */
+  synergySummary: string;
   palette: { primary: AuraSwatch; secondary: AuraSwatch; highlight: AuraSwatch };
   crystals: AuraCrystal[];
   anchors: AuraAnchor[];
@@ -251,6 +256,9 @@ export function synergyKind(a: number, b: number): AuraSynergyKind {
   if (a === b) return "aligned";
   const tone = pairTone(a, b);
   if (tone === "Amazing" || tone === "Favourable") return "complementary";
+  // A Neutral pair is a mixed pairing, not a clash. Reporting it as
+  // "contrasting" made ordinary combinations read like a problem.
+  if (tone === "Neutral") return "neutral";
   return "contrasting";
 }
 
@@ -264,6 +272,9 @@ function pairSummary(
   }
   if (kind === "complementary") {
     return `${left.label} ${left.digit} (${traitOf(left.digit)}) sits beside ${right.label} ${right.digit} (${traitOf(right.digit)}) as complementary weather — texture, not a split to fix.`;
+  }
+  if (kind === "neutral") {
+    return `${left.label} ${left.digit} (${traitOf(left.digit)}) and ${right.label} ${right.digit} (${traitOf(right.digit)}) neither push nor pull — they simply do different jobs.`;
   }
   return `${left.label} ${left.digit} and ${right.label} ${right.digit} ask for patience between ${traitOf(left.digit).split(" & ")[0].toLowerCase()} and ${traitOf(right.digit).split(" & ")[0].toLowerCase()} — a stretch, not a verdict.`;
 }
@@ -407,21 +418,34 @@ export function buildAuraIdentity(opts: {
     };
   });
 
-  const points = pairs.reduce((s, p) => {
-    if (p.kind === "aligned") return s + 2;
-    if (p.kind === "complementary") return s + 1;
-    return s;
-  }, 0);
-  const synergyScore = Math.round((points / 6) * 100);
   const alignedCount = pairs.filter((p) => p.kind === "aligned").length;
   const synergyLabel =
     alignedCount === 3
-      ? "Triple rhyme"
+      ? "All three layers share one number"
       : alignedCount === 1 && pairs.every((p) => p.kind !== "contrasting")
-        ? "Aligned path, complementary name"
+        ? "Two layers share a number, the third fits alongside"
         : pairs.every((p) => p.kind !== "contrasting")
-          ? "Complementary layers"
-          : "Mixed textures";
+          ? "Three different numbers that sit easily together"
+          : "Three different numbers with one real stretch";
+
+  /**
+   * A 0–100 score read as a grade, and in a numerology app a number like 33
+   * also read as a master number. Say the shape of the layers in words instead.
+   */
+  const sameDigits = new Set(layers.map((l) => l.digit));
+  const stretchPair = pairs.find((p) => p.kind === "contrasting");
+  const synergySummary = (() => {
+    const shape =
+      sameDigits.size === 1
+        ? `All three layers are ${layers[0].digit}, so one tone (${traitOf(layers[0].digit).toLowerCase()}) carries the whole chart.`
+        : sameDigits.size === 2
+          ? `Two of the three layers share a number; the third brings a different tone.`
+          : `All three layers are different numbers, so no single tone runs the chart.`;
+    const stretch = stretchPair
+      ? ` The one to watch is ${byId[stretchPair.a].label} ${byId[stretchPair.a].digit} beside ${byId[stretchPair.b].label} ${byId[stretchPair.b].digit} — give each its own time rather than blending them.`
+      : ` None of the pairs pull hard against each other.`;
+    return `${shape}${stretch} Atmosphere only, not a score.`;
+  })();
 
   const palette = pickPalette(layers);
 
@@ -483,8 +507,8 @@ export function buildAuraIdentity(opts: {
   return {
     layers,
     pairs,
-    synergyScore,
     synergyLabel,
+    synergySummary,
     palette,
     crystals,
     anchors,
@@ -499,7 +523,7 @@ export function auraIdentityPdfLines(aura: AuraIdentity): string[] {
   const crystals = aura.crystals.map((c) => `${c.name} (${c.keyword})`).join(", ");
   const days = aura.rhythms.map((r) => `${r.weekday} ${r.planet.symbol}`).join(", ");
   return [
-    `Aura identity — Path ${aura.layers[0].raw} · Destiny ${aura.layers[1].raw} · Name ${aura.layers[2].raw}. ${aura.synergyLabel} (${aura.synergyScore}).`,
+    `Aura identity — Path ${aura.layers[0].raw} · Destiny ${aura.layers[1].raw} · Name ${aura.layers[2].raw}. ${aura.synergyLabel}. ${aura.synergySummary}`,
     `Palette: ${pal}.`,
     aura.narrative,
     crystals ? `Resonance crystals: ${crystals}.` : "",
@@ -510,5 +534,6 @@ export function auraIdentityPdfLines(aura: AuraIdentity): string[] {
 export function synergyKindLabel(kind: AuraSynergyKind): string {
   if (kind === "aligned") return "Aligned";
   if (kind === "complementary") return "Complementary";
+  if (kind === "neutral") return "Independent";
   return "Contrasting";
 }

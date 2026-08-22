@@ -213,7 +213,9 @@ export function buildYearOutlookMandala(
   ];
 
   const combined = `Combined: Western year ${personalYear} — ${plainJob(personalYear)}. This birthday-year ${cycle.number} — ${plainJob(cycle.number)}. ${meta.practice} Not a prediction.`;
-  const reflectivePractice = combined;
+  // Sits under the derivation table, so it explains the sum rather than
+  // repeating the combined line printed under the wheel.
+  const reflectivePractice = `Those four parts add to ${cycle.compound}, which reduces to ${cycle.number}. That single digit is the whole point of the table above — the parts are shown so you can check the working, not because each one has its own meaning.`;
 
   const blueprintLines = [
     `Year Outlook Mandala · ${cycle.rangeLabel} · ${cycle.number} (${planet.name})`,

@@ -46,8 +46,12 @@ const darshan = buildAuraIdentity({
 eq(darshan.layers.map((l) => l.digit), [4, 4, 2], "4 / 4 / 2 digits");
 eq(darshan.pairs[0].kind, "aligned", "path × destiny aligned");
 eq(darshan.pairs[1].kind, "complementary", "path × name complementary");
-eq(darshan.synergyScore, 67, "aligned+complementary+complementary = 67");
-has(darshan.synergyLabel, "Aligned path", "label names aligned path");
+has(
+  darshan.synergyLabel,
+  "Two layers share a number",
+  "label names the shared pair",
+);
+has(darshan.synergySummary, "not a score", "synergy is words, not a score");
 eq(darshan.palette.primary.name, "Blue-grey", "primary blue-grey");
 eq(darshan.palette.secondary.name, "Earth brown", "secondary earth brown");
 eq(darshan.palette.highlight.name, "Silver", "highlight prefers silver");

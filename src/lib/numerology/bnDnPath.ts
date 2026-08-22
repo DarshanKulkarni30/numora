@@ -141,16 +141,25 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
     (bn === dn
       ? `The same tone repeats at the start and on the long walk. Days and chapters may keep handing you ${from.keyword.toLowerCase()} work — ${from.psychicFocus} That is a concentration of weather, not a sentence.`
       : `Ordinary life often looks like this: the day’s habit (${from.keyword}: ${from.psychicFocus}) meeting a longer assignment (${to.keyword}: ${to.destinyFocus}) Home, work, and close relationships become the practice room.`);
-  const helps = draft.helps ?? [
-    from.strengths[0],
-    to.strengths[0],
-    to.strengths[1] ?? to.workTone,
-  ];
-  const watch = draft.watch ?? [
-    from.watchouts[0],
-    to.watchouts[0],
-    to.watchouts[1] ?? from.watchouts[1],
-  ];
+  // When Psychic and Destiny are the same digit both sides pull from one
+  // theme, so take the next distinct entry instead of repeating the first.
+  const pickThree = (a: string[], b: string[], fallback: string): string[] => {
+    const out: string[] = [];
+    for (const item of [...a, ...b, fallback]) {
+      if (item && !out.includes(item)) out.push(item);
+      if (out.length === 3) break;
+    }
+    return out;
+  };
+  const helps =
+    draft.helps ?? pickThree(from.strengths, to.strengths, to.workTone);
+  const watch =
+    draft.watch ??
+    pickThree(
+      from.watchouts,
+      to.watchouts,
+      "Treating one number as the whole person",
+    );
   return {
     bn,
     dn,

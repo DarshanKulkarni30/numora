@@ -138,6 +138,9 @@ export function YearRhythmPanel({
           {personalYear.range_label ? (
             <p className="mt-1 text-xs text-ink-soft">{personalYear.range_label}</p>
           ) : null}
+          {rhythm.masterGloss ? (
+            <p className="mt-1 text-xs text-ink-soft">{rhythm.masterGloss}</p>
+          ) : null}
         </div>
       ) : (
         <div>
@@ -147,6 +150,9 @@ export function YearRhythmPanel({
           <p className="mt-1 text-sm text-ink-soft">{rhythm.weatherPrinciple}</p>
           {personalYear.range_label ? (
             <p className="mt-1 text-xs text-ink-soft">{personalYear.range_label}</p>
+          ) : null}
+          {rhythm.masterGloss ? (
+            <p className="mt-1 text-xs text-ink-soft">{rhythm.masterGloss}</p>
           ) : null}
         </div>
       )}
@@ -161,9 +167,6 @@ export function YearRhythmPanel({
         </p>
         <p className="text-sm text-ink">
           Month {month.raw}: {month.season.scan}
-        </p>
-        <p className="mt-1 text-xs text-ink-soft">
-          Together: {rhythm.mix.bestUse} Watch: {rhythm.mix.watchFor}
         </p>
         <p className="mt-1 text-xs text-ink-soft">{rhythm.mix.outlookNote}</p>
       </div>
@@ -446,8 +449,7 @@ export function YearRhythmPanel({
       </div>
 
       <div className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-4">
-        <h3 className="text-ink">Current rhythm</h3>
-        <p className="brand mt-1 text-xl text-ink">{rhythm.mix.mixLabel}</p>
+        <h3 className="text-ink">How the year and the month fit</h3>
         <p className="mt-2 text-sm leading-6 text-ink">{rhythm.mix.tension}</p>
         <p className="mt-1 text-sm leading-6 text-ink-soft">{rhythm.mix.opportunity}</p>
         <p className="mt-2 text-sm leading-6 text-ink-soft">{rhythm.yearMonth}</p>
@@ -465,7 +467,11 @@ export function YearRhythmPanel({
         <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
           <h3 className="text-ink">Watch for</h3>
           <p className="mt-2 text-sm leading-6 text-ink">{rhythm.mix.watchFor}</p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">{rhythm.seasonal}</p>
+          {rhythm.sun ? (
+            <p className="mt-2 text-sm leading-6 text-ink-soft">
+              {rhythm.sun.name} is a calendar backdrop, not a numerology number.
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

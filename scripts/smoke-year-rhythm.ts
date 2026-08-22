@@ -67,11 +67,24 @@ eq(darshan.clock.sectors[0]?.label, "Oct", "rhythm clock from Oct 13 DOB");
 has(darshan.yearMonth, "frame", "5↔4 uses frame / boundary copy");
 has(darshan.mix.bestUse, "experiment", "best use is pair-level");
 has(darshan.mix.watchFor, "restless", "watch-for names restlessness");
-has(darshan.mix.outlookNote, "rhymes", "matching outlook is a rhyme");
+has(darshan.mix.outlookNote, "matches year 5", "matching outlook names the year");
 has(darshan.sunInfluence, "Libra", "sun influence names Libra");
-has(darshan.summary, "wind", "summary names wind year");
-has(darshan.summary, "earth", "summary names earth month");
+has(darshan.summary, "Year 5", "summary names the year number");
+has(darshan.summary, "Month 4", "summary names the month number");
 has(darshan.summary, "libra", "summary names Libra");
+
+// Master years must stay 11 in copy even though the season table is keyed 1-9.
+const master = buildYearRhythm({
+  personalYear: "11",
+  personalMonth: "3",
+  dateOfBirth: "30/08/1981",
+  asOf,
+});
+eq(master.yearLabel, "11", "master year keeps 11");
+has(master.summary, "Year 11", "summary keeps the master number");
+has(master.seasonal, "Year 11", "seasonal keeps the master number");
+lacks(master.summary, "Year 2", "reduced digit never reaches user copy");
+has(master.masterGloss ?? "", "works like a 2", "gloss explains the reduction");
 has(darshan.weatherPrinciple, "not events", "weather principle kept");
 
 const mixed = buildYearRhythm({
@@ -83,8 +96,12 @@ const mixed = buildYearRhythm({
   asOf,
 });
 eq(mixed.sunVerb, "REFINE", "Virgo mutable earth → REFINE");
-has(mixed.mix.outlookNote, "HARVEST", "differing outlook is harvest modifier");
-has(mixed.mix.outlookNote, "second climate", "outlook not a third timeline");
+has(mixed.mix.outlookNote, "Outlook 9", "differing outlook names its number");
+has(
+  mixed.mix.outlookNote,
+  "second year clock",
+  "outlook not a third timeline",
+);
 eq(mixed.mix.mixLabel, "MOVE → BUILD", "hero stays year × month");
 
 const blob = [

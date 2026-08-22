@@ -24,76 +24,163 @@ const YEAR_IMAGE: Record<number, { title: string; image: string; focus: string[]
     1: {
       title: "A trailhead year",
       image: "like standing at a new trailhead",
-      focus: ["begin one clear aim", "name a direction", "take a first honest step"],
+      focus: [
+        "starting one clear thing",
+        "saying out loud where you are heading",
+        "taking the first honest step before it feels ready",
+      ],
     },
     2: {
       title: "A listening year",
       image: "like waiting for the right tide",
-      focus: ["patience", "partnership", "timing over force"],
+      focus: [
+        "hearing the other person out before you decide",
+        "doing one thing with someone instead of alone",
+        "letting timing do the work instead of pushing",
+      ],
     },
     3: {
       title: "A voice year",
       image: "like a studio with the windows open",
-      focus: ["expression", "learning out loud", "lighter social exchange"],
+      focus: [
+        "finishing one thing you started saying",
+        "learning something out loud where others can hear it",
+        "keeping the social load light enough to enjoy",
+      ],
     },
     4: {
       title: "A foundation year",
       image: "like laying stone for a lasting floor",
-      focus: ["routines", "systems", "simplifying commitments"],
+      focus: [
+        "writing one repeating task down as steps",
+        "keeping one system running all year",
+        "dropping one commitment that no longer fits",
+      ],
     },
     5: {
       title: "A movement year",
       image: "like changing trains with a lighter bag",
-      focus: ["flexibility", "conscious variety", "travel of mind or place"],
+      focus: [
+        "trying one small change you can undo",
+        "keeping plans loose enough to move",
+        "changing one input, not everything at once",
+      ],
     },
     6: {
       title: "A garden year",
       image: "like tending a garden",
-      focus: ["home", "care", "responsibility with boundaries"],
+      focus: [
+        "keeping one promise you already made",
+        "helping with a limit you say out loud",
+        "putting the home things back in order",
+      ],
     },
     7: {
       title: "A university year",
       image: "like entering a university",
-      focus: ["study", "research", "honest reflection"],
+      focus: [
+        "protecting one quiet hour each week",
+        "studying one subject properly instead of five lightly",
+        "waiting a beat before you answer",
+      ],
     },
     8: {
       title: "A stewardship year",
       image: "like taking inventory of a workshop",
-      focus: ["organization", "ethical ambition", "measurable follow-through"],
+      focus: [
+        "finishing one result you can measure",
+        "getting the money and the admin in order",
+        "resting after the push rather than instead of it",
+      ],
     },
     9: {
       title: "A completion year",
       image: "like closing a long chapter with care",
-      focus: ["release", "mentoring", "finishing what still matters"],
+      focus: [
+        "closing one loop that is already done",
+        "handing on something you know to someone who asked",
+        "keeping what still matters and letting the rest go",
+      ],
     },
     11: {
       title: "A noticing year",
       image: "a year to notice, think, and rest",
-      focus: ["notice patterns", "rest", "share one idea without rushing it"],
+      focus: [
+        "writing down one thing you keep repeating",
+        "resting on purpose, not only once you are tired",
+        "sharing one idea without rushing it out",
+      ],
     },
     22: {
       title: "A building year",
       image: "like drawing a large plan on practical paper",
-      focus: ["long-horizon craft", "daily steps", "durable structures"],
+      focus: [
+        "taking one practical step on the large plan",
+        "putting that plan on a real calendar",
+        "building something meant to outlast the year",
+      ],
     },
     33: {
       title: "A teaching year",
       image: "like holding a lamp for others while keeping your own fuel",
-      focus: ["guidance", "compassion", "care without self-erasure"],
+      focus: [
+        "helping one person properly instead of many lightly",
+        "saying what you know in plain words",
+        "keeping enough left over for yourself",
+      ],
     },
   };
 
 const MONTH_IMAGE: Record<number, { title: string; image: string; focus: string[] }> =
   {
-    1: { title: "Initiative month", image: "like striking a match", focus: ["start small"] },
-    2: { title: "Attunement month", image: "like listening before speaking", focus: ["collaboration"] },
-    3: { title: "Expression month", image: "like a sketchbook week", focus: ["make and share"] },
-    4: { title: "Order month", image: "like sorting a workbench", focus: ["systems"] },
-    5: { title: "Change month", image: "like opening a window", focus: ["variety with care"] },
-    6: { title: "Care month", image: "like tending a garden", focus: ["family", "repair", "home"] },
-    7: { title: "Study month", image: "like a quiet library hour", focus: ["reflection"] },
-    8: { title: "Steward month", image: "like balancing the books", focus: ["follow-through"] },
-    9: { title: "Release month", image: "like finishing a letter", focus: ["completion"] },
+    1: {
+      title: "Initiative month",
+      image: "like striking a match",
+      focus: ["starting one small thing"],
+    },
+    2: {
+      title: "Attunement month",
+      image: "like listening before speaking",
+      focus: ["doing one thing with one other person"],
+    },
+    3: {
+      title: "Expression month",
+      image: "like a sketchbook week",
+      focus: ["finishing and sharing one piece"],
+    },
+    4: {
+      title: "Order month",
+      image: "like sorting a workbench",
+      focus: ["putting one routine on paper"],
+    },
+    5: {
+      title: "Change month",
+      image: "like opening a window",
+      focus: ["trying one small change you can undo"],
+    },
+    6: {
+      title: "Care month",
+      image: "like tending a garden",
+      focus: [
+        "looking after one person properly",
+        "repairing one thing you have let slide",
+      ],
+    },
+    7: {
+      title: "Study month",
+      image: "like a quiet library hour",
+      focus: ["taking quiet time before you answer"],
+    },
+    8: {
+      title: "Steward month",
+      image: "like balancing the books",
+      focus: ["finishing one result you can measure"],
+    },
+    9: {
+      title: "Release month",
+      image: "like finishing a letter",
+      focus: ["closing one loop that is already done"],
+    },
   };
 
 export function buildSeasonBrief(
@@ -164,15 +251,30 @@ function isYoung(t: ReportType): boolean {
 }
 
 function youngChildDo(young: boolean): string[] {
-  return young ? ["keep one simple practice", "notice feelings without rushing them"] : [];
+  return young
+    ? [
+        "keeping one simple practice going",
+        "naming a feeling before moving on from it",
+      ]
+    : [];
 }
 
 function defaultEase(py: number, young: boolean): string[] {
-  if (young) return ["comparing yourself to others", "forcing a grown-up pace"];
-  if (py === 7) return ["isolation as the only plan", "over-analysis without a small next step"];
-  if (py === 8) return ["pressure without rest", "measuring worth only by results"];
-  if (py === 5) return ["scattering attention", "change for its own sake"];
-  return ["forcing growth", "ignoring the body's need for pause"];
+  if (young)
+    return ["comparing yourself to others", "forcing a grown-up pace"];
+  if (py === 7)
+    return [
+      "going quiet as the whole plan",
+      "thinking it through again instead of taking one small step",
+    ];
+  if (py === 8)
+    return ["pushing with no pause", "measuring your worth only by results"];
+  if (py === 5)
+    return ["changing course every week", "change for its own sake"];
+  return [
+    "pushing growth that is not ready yet",
+    "working through the signals to rest",
+  ];
 }
 
 function joinSoft(parts: string[]): string {

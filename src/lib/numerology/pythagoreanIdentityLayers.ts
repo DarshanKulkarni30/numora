@@ -6,7 +6,7 @@
 import { CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { bnDnTransition, nameOnBnDnPath } from "./bnDnPath";
-import { plainTrait } from "./layeredCopy";
+import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 
 export type IdentityMicroInsight = {
   tone: string;
@@ -61,28 +61,30 @@ export function identityTraitBullets(n: number | string): string {
 }
 
 function buildAlignment(su: string, pe: string): InnerOuterAlignment {
-  const suN = reduceToSingleDigit(Number(su));
-  const peN = reduceToSingleDigit(Number(pe));
+  const suRaw = Number(su);
+  const peRaw = Number(pe);
+  const suN = reduceToSingleDigit(suRaw);
+  const peN = reduceToSingleDigit(peRaw);
   const gap = Math.abs(suN - peN);
 
   if (suN === peN) {
     return {
       band: "aligned",
-      label: "High alignment",
-      note: "What you want inside and how you look outside use the same number. Stay honest when things get hard.",
+      label: "Inside and outside match",
+      note: `Both numbers are ${su}, so what people meet is close to what you actually want: ${plainTrait(suRaw)}. Try: ${plainJob(suRaw)}. Watch: ${plainWatch(suRaw)} — when nothing pushes back, this tone can run unchecked.`,
     };
   }
   if (gap <= 2 || gap === 8) {
     return {
       band: "complementary",
-      label: "Complementary dynamic",
-      note: "Outside style and inside want are different. They can still help each other.",
+      label: "Two numbers that work together",
+      note: `People meet ${plainTrait(peRaw)} (${pe}); underneath you want ${plainTrait(suRaw)} (${su}). They are close enough to help each other. Try: ${plainJob(peRaw)}, then ${plainJob(suRaw)}. Watch: doing only the outer one because it is easier.`,
     };
   }
   return {
     band: "tension",
-    label: "Inner–outer tension",
-    note: "The person others meet may not match how you feel inside. That is information, not a flaw.",
+    label: "Inside and outside want different things",
+    note: `People meet ${plainTrait(peRaw)} (${pe}); inside you want ${plainTrait(suRaw)} (${su}). That gap is why some days feel like acting. Try: ${plainJob(peRaw)} in company, and ${plainJob(suRaw)} on your own. Watch: ${plainWatch(peRaw)}.`,
   };
 }
 
@@ -149,9 +151,23 @@ export function buildPythagoreanIdentityLayers(opts: {
       ? `When both numbers match, people may read you quickly. The work is staying honest when things get hard — not acting the number. ${alignment.note}`
       : `Soul Urge ${su} is what you want when no one is watching: ${plainTrait(suRaw)}. Personality ${pe} is what people meet first: ${plainTrait(peRaw)}. Use the gap as extra information, not a problem to fix. ${alignment.note}`;
 
-  const maturityInsight = `Maturity ${mat} is Life Path ${lp} plus Expression ${ex}, added. Over many years the mix may look more like ${plainTrait(matRaw)}. This does not switch on at a birthday.`;
+  // The maturity diagram looks like the expression bridge, so the copy has to
+  // carry the difference: the sum, who it matches, and roughly when it lands.
+  const matN = reduceToSingleDigit(matRaw);
+  const lpN = reduceToSingleDigit(lpRaw);
+  const matSum = `${lp} + ${ex} = ${lpRaw + exRaw}, which reduces to ${mat}`;
+  const matEcho =
+    matN === lpN && matN === exN
+      ? `It lands on the same number as both, so this is less a new tone than more of the same.`
+      : matN === lpN
+        ? `It lands back on Life Path ${lp}, so the path tone gets stronger with age rather than changing.`
+        : matN === exN
+          ? `It lands on Expression ${ex}, so the name style is what tends to last.`
+          : `It is a third number, not Life Path ${lp} and not Expression ${ex} — a tone that only appears once the other two have been lived a while.`;
 
-  const maturityDeeper = `Maturity is a later mix, not a flip on a birthday. Life Path ${lp} (${plainTrait(lpRaw)}) plus Expression ${ex} (${plainTrait(exRaw)}) add toward Maturity ${mat} (${plainTrait(matRaw)}). Birth Day ${bd} still colors daily habits.`;
+  const maturityInsight = `Maturity ${mat} is the sum of the other two: ${matSum}. ${matEcho} Traditions place it loosely around the mid-thirties to mid-forties, and it arrives gradually — nothing switches on at a birthday.`;
+
+  const maturityDeeper = `The expression bridge above is about now: Birth Day ${bd} and Expression ${ex} in daily use. Maturity is about later. Life Path ${lp} (${plainTrait(lpRaw)}) and Expression ${ex} (${plainTrait(exRaw)}) add toward ${mat} (${plainTrait(matRaw)}), which is the habit that tends to remain once the busier ones settle. Birth Day ${bd} still colours ordinary days throughout.`;
 
   const layers: IdentityLayerCard[] = [
     {
@@ -197,9 +213,9 @@ export function buildPythagoreanIdentityLayers(opts: {
       kicker: "Path + expression → maturity",
       insight: maturityInsight,
       micro: {
-        tone: plainTrait(matRaw),
-        tension: "Trying to help everyone, or leaving things open too long",
-        gift: "Path and name style can grow into one habit over time",
+        tone: `Later habit: ${plainTrait(matRaw)}`,
+        tension: `Watch: ${plainWatch(matRaw)}`,
+        gift: `Try now: ${plainJob(matRaw)} — small doses, years ahead of time`,
       },
       deeper: maturityDeeper,
       student:

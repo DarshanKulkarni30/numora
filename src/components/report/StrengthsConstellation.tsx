@@ -52,6 +52,12 @@ export function StrengthsConstellation({
   const [pin, setPin] = useState(model.defaultIndex);
   const [peek, setPeek] = useState<number | null>(null);
   const shownIndex = peek ?? pin;
+
+  /** A click must win over a lingering hover, or the panel keeps the hovered slot. */
+  const select = (i: number) => {
+    setPin(i);
+    setPeek(null);
+  };
   const lp = lifePath ? reduceToSingleDigit(Number(lifePath)) : null;
   const centerTrait = lp != null ? CORE_TRAIT[lp] : "Dominant tone";
 
@@ -142,7 +148,7 @@ export function StrengthsConstellation({
                   key={n.title + i}
                   opacity={isShown ? 1 : 0.38}
                   className="cursor-pointer"
-                  onClick={() => setPin(i)}
+                  onClick={() => select(i)}
                   onMouseEnter={() => setPeek(i)}
                   onMouseLeave={() => setPeek(null)}
                 >
@@ -180,7 +186,7 @@ export function StrengthsConstellation({
                 key={n.title + i}
                 type="button"
                 aria-pressed={pin === i}
-                onClick={() => setPin(i)}
+                onClick={() => select(i)}
                 onMouseEnter={() => setPeek(i)}
                 onMouseLeave={() => setPeek(null)}
                 className={`btn-tactile rounded-lg border px-2 py-1.5 text-left text-[11px] leading-4 ${

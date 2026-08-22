@@ -311,7 +311,9 @@ export function InsightTileCard({ card }: { card: InsightCardModel }) {
                     ? "Aligned · "
                     : c.kind === "complementary"
                       ? "Complementary · "
-                      : "Contrast · "}
+                      : c.kind === "neutral"
+                        ? "Independent · "
+                        : "Contrast · "}
                   {c.body}
                 </p>
               </li>

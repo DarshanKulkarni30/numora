@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { YearOutlookMandala } from "@/components/report/YearOutlookMandala";
+import { personalYearCycleAt } from "@/lib/numerology/cycles";
 import {
   projectedYearCycleStarting,
 } from "@/lib/numerology/vedicYearNumber";
@@ -30,6 +31,29 @@ export function ProjectedYearPanel({
     () => projectedYearCycleStarting(dateOfBirth, year),
     [dateOfBirth, year],
   );
+
+  /**
+   * The picker opens on the calendar year, which before a birthday is the
+   * *next* cycle. Say so, otherwise this number looks like it contradicts the
+   * Personal Year shown in Annual rhythm.
+   */
+  const cyclePosition = useMemo(() => {
+    try {
+      const live = personalYearCycleAt(dateOfBirth).calendarYearUsed;
+      const liveYear = personalYearCycleAt(dateOfBirth).number;
+      if (year === live) {
+        return `You are inside this cycle now. It runs to your next birthday.`;
+      }
+      if (year === live + 1) {
+        return `This is your next cycle, not the one you are in. You are still in Personal Year ${liveYear} until your birthday — a coming year usually starts being felt one to two months before it.`;
+      }
+      return year > live
+        ? `A future cycle. You are still in Personal Year ${liveYear} until your birthday.`
+        : `A past cycle. You are in Personal Year ${liveYear} now.`;
+    } catch {
+      return null;
+    }
+  }, [dateOfBirth, year]);
 
   const body = (
     <>
@@ -83,9 +107,12 @@ export function ProjectedYearPanel({
       </div>
 
       <div className="mt-4">
-        <p className="mb-2 text-[10px] uppercase tracking-wider text-ink-soft">
+        <p className="mb-1 text-[10px] uppercase tracking-wider text-ink-soft">
           Year number for {cycle.rangeLabel}
         </p>
+        {cyclePosition ? (
+          <p className="mb-2 text-xs leading-5 text-ink-soft">{cyclePosition}</p>
+        ) : null}
         <YearOutlookMandala cycle={cycle} dob={dateOfBirth} />
       </div>
 

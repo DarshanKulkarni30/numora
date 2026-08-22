@@ -64,10 +64,6 @@ export function buildYearForecast(
 ): YearForecast {
   const currentCycle = personalYearCycleAt(dateOfBirth, asOf);
   const yearTrait = coreTraitFor(currentCycle.number);
-  const yearSummary = assertSafeCopy(
-    `Personal Year ${currentCycle.number} (${yearTrait}) is the climate for this birthday cycle. The twelve months below are weather inside that climate — Personal Month from the year digit plus the calendar month.`,
-    "forecast.year",
-  );
 
   const months: MonthForecast[] = [];
   for (let i = 0; i < 12; i++) {
@@ -93,6 +89,17 @@ export function buildYearForecast(
       ),
     });
   }
+
+  // The window is 12 rolling months from today, so it crosses the birthday and
+  // the year digit changes partway down the list. Say where, or the header
+  // contradicts the rows.
+  const switchAt = months.find((m) => m.personalYear !== currentCycle.number);
+  const yearSummary = assertSafeCopy(
+    switchAt
+      ? `The next twelve months, starting from today. You are in Personal Year ${currentCycle.number} (${yearTrait}) until your birthday; from ${switchAt.label} the rows move into Personal Year ${switchAt.personalYear} (${coreTraitFor(switchAt.personalYear)}). Personal Month is the year digit plus the calendar month.`
+      : `Personal Year ${currentCycle.number} (${yearTrait}) is the climate for every month below. Personal Month is the year digit plus the calendar month.`,
+    "forecast.year",
+  );
 
   return {
     asOfLabel: asOfLabel(asOf),
