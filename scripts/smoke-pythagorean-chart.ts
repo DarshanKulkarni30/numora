@@ -8,6 +8,11 @@ import {
 } from "../src/lib/numerology/pythagoreanChart";
 import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
 import { buildPythagoreanIdentityLayers } from "../src/lib/numerology/pythagoreanIdentityLayers";
+import {
+  buildInnerOuterPattern,
+  INNER_OUTER_DIGITS,
+  microForTensionStop,
+} from "../src/lib/numerology/innerOuterPairs";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -180,6 +185,103 @@ assert(
   threeNineThree.blueprintLines.some((line) => line.includes("Watch:")),
   "PDF blueprint includes the watch line",
 );
+
+const sixThree = buildPythagoreanIdentityLayers({
+  birthDay: "6",
+  lifePath: "6",
+  expression: "3",
+  soulUrge: "6",
+  personality: "3",
+  maturity: "9",
+});
+const sevenEight = buildPythagoreanIdentityLayers({
+  birthDay: "7",
+  lifePath: "8",
+  expression: "7",
+  soulUrge: "7",
+  personality: "8",
+  maturity: "6",
+});
+const innerSixThree = sixThree.layers[1]!;
+const innerSevenEight = sevenEight.layers[1]!;
+assert(
+  innerSixThree.micro.tension !== innerSevenEight.micro.tension,
+  "6x3 and 7x8 inner-outer watch copy differs",
+);
+assert(
+  !innerSixThree.micro.tension.toLowerCase().includes(
+    "people may see one thing while you feel another",
+  ),
+  "6x3 watch is not the old generic line",
+);
+assert(
+  innerSixThree.micro.tone.toLowerCase().includes("care") ||
+    innerSixThree.micro.tone.toLowerCase().includes("promise") ||
+    innerSixThree.micro.tone.toLowerCase().includes("chat"),
+  "6x3 looks-like names the 6 vs 3 pair",
+);
+assert(
+  sixThree.innerOuterPattern.meet.toLowerCase().includes("care") ||
+    sixThree.innerOuterPattern.meet.toLowerCase().includes("chat") ||
+    sixThree.innerOuterPattern.meet.toLowerCase().includes("warm"),
+  "6x3 Meet blend is pair-specific",
+);
+assert(
+  sixThree.blueprintLines.some((line) => line.includes("Meet:")),
+  "PDF blueprint includes the Meet line",
+);
+assert(
+  sixThree.innerOuterPattern.kind === "light-face-heavy-want",
+  "6x3 is light face, heavier inner want",
+);
+assert(
+  sevenEight.innerOuterPattern.kind === "strong-face-soft-want",
+  "7x8 is strong face, gentler inner want",
+);
+
+const magnusInner = magnusLayers.layers[1]!;
+assert(
+  magnusInner.micro.tension.length > 20,
+  "inner-outer watch is a real sentence",
+);
+assert(
+  magnusLayers.layers[2]!.micro.tone.toLowerCase().includes("third") ||
+    magnusLayers.layers[2]!.micro.tone.toLowerCase().includes("not life path"),
+  "maturity micro names the relation to path and expression",
+);
+assert(
+  threeNineThree.layers[2]!.micro.tone.toLowerCase().includes("life path"),
+  "3-9-3 maturity lands back on Life Path and the card says so",
+);
+
+for (const su of INNER_OUTER_DIGITS) {
+  for (const pe of INNER_OUTER_DIGITS) {
+    const pair = buildInnerOuterPattern(String(su), String(pe));
+    const blob = [
+      pair.looksLike,
+      pair.watch,
+      pair.tryLine,
+      pair.meet,
+      pair.overInner,
+      pair.balanced,
+      pair.overOuter,
+      pair.overInnerWatch,
+      pair.overOuterWatch,
+    ];
+    assert(
+      blob.every((s) => typeof s === "string" && s.trim().length > 0),
+      `inner-outer ${su}x${pe} has no empty copy fields`,
+    );
+    const inner = microForTensionStop(pair, 0);
+    const mid = microForTensionStop(pair, 1);
+    const outer = microForTensionStop(pair, 2);
+    assert(mid.gift === pair.tryLine, `inner-outer ${su}x${pe} centre gift is tryLine`);
+    assert(
+      inner.gift === pair.overInner && outer.gift === pair.overOuter,
+      `inner-outer ${su}x${pe} slider extremes swap the help card`,
+    );
+  }
+}
 assert(
   chart.planeNote.toLowerCase().includes("lo shu"),
   "planes distinguished from Lo Shu",

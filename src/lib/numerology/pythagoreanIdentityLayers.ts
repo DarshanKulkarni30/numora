@@ -7,6 +7,14 @@ import { CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { bnDnTransition } from "./bnDnPath";
 import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
+import {
+  buildInnerOuterPattern,
+  INNER_OUTER_KIND_LABEL,
+  type InnerOuterPattern,
+} from "./innerOuterPairs";
+
+export type { InnerOuterKind, InnerOuterPattern, TensionStop } from "./innerOuterPairs";
+export { buildInnerOuterPattern, microForTensionStop } from "./innerOuterPairs";
 
 export type IdentityMicroInsight = {
   tone: string;
@@ -64,6 +72,7 @@ export type PythagoreanIdentityLayers = {
   layers: IdentityLayerCard[];
   alignment: InnerOuterAlignment;
   expressionPattern: ExpressionPattern;
+  innerOuterPattern: InnerOuterPattern;
   dynamicsSummary: string;
   growthInvitation: string;
   reflectivePractice: string;
@@ -245,31 +254,65 @@ export function buildExpressionPattern(
   };
 }
 
-function buildAlignment(su: string, pe: string): InnerOuterAlignment {
-  const suRaw = Number(su);
-  const peRaw = Number(pe);
-  const suN = reduceToSingleDigit(suRaw);
-  const peN = reduceToSingleDigit(peRaw);
-  const gap = Math.abs(suN - peN);
-
-  if (suN === peN) {
+function buildAlignment(pattern: InnerOuterPattern): InnerOuterAlignment {
+  if (pattern.band === "aligned") {
     return {
       band: "aligned",
       label: "Inside and outside match",
-      note: `Both numbers are ${su}, so what people meet is close to what you actually want: ${plainTrait(suRaw)}. Try: ${plainJob(suRaw)}. Watch: ${plainWatch(suRaw)} — when nothing pushes back, this tone can run unchecked.`,
+      note: pattern.meet,
     };
   }
-  if (gap <= 2 || gap === 8) {
+  if (pattern.band === "complementary") {
     return {
       band: "complementary",
       label: "Two numbers that work together",
-      note: `People meet ${plainTrait(peRaw)} (${pe}); underneath you want ${plainTrait(suRaw)} (${su}). They are close enough to help each other. Try: ${plainJob(peRaw)}, then ${plainJob(suRaw)}. Watch: doing only the outer one because it is easier.`,
+      note: pattern.meet,
     };
   }
   return {
     band: "tension",
     label: "Inside and outside want different things",
-    note: `People meet ${plainTrait(peRaw)} (${pe}); inside you want ${plainTrait(suRaw)} (${su}). That gap is why some days feel like acting. Try: ${plainJob(peRaw)} in company, and ${plainJob(suRaw)} on your own. Watch: ${plainWatch(peRaw)}.`,
+    note: pattern.meet,
+  };
+}
+
+function maturityMicro(opts: {
+  mat: string;
+  matRaw: number;
+  lp: string;
+  ex: string;
+  lpRaw: number;
+  exRaw: number;
+  matN: number;
+  lpN: number;
+  exN: number;
+}): IdentityMicroInsight {
+  const { mat, matRaw, lp, ex, lpRaw, exRaw, matN, lpN, exN } = opts;
+  if (matN === lpN && matN === exN) {
+    return {
+      tone: `Later habit ${mat} is the same theme as both Life Path and Expression: ${plainTrait(matRaw)}. Age tends to deepen it, not add a new one.`,
+      tension: `Watch: ${plainWatch(matRaw)} — doubled for years, this is the habit you may not question.`,
+      gift: `Try today: ${plainJob(matRaw)} in small doses, years ahead of time, so the later habit is chosen rather than automatic.`,
+    };
+  }
+  if (matN === lpN) {
+    return {
+      tone: `Later habit lands back on Life Path ${lp}: ${plainTrait(lpRaw)}. The path tone gets stronger with age rather than changing.`,
+      tension: `Watch: treating Expression ${ex} (${plainTrait(exRaw)}) as if it were the later story, and missing that the path is what remains.`,
+      gift: `Try today: ${plainJob(lpRaw)} — a little at a time, so the later path tone has somewhere to land.`,
+    };
+  }
+  if (matN === exN) {
+    return {
+      tone: `Later habit lands on Expression ${ex}: ${plainTrait(exRaw)}. The name style is what tends to last.`,
+      tension: `Watch: waiting for age to switch on a new personality, when the lasting tone is already how you show up.`,
+      gift: `Try today: ${plainJob(exRaw)} in a calmer dose — the later habit is this style, used with more care.`,
+    };
+  }
+  return {
+    tone: `Later habit ${mat} (${plainTrait(matRaw)}) is a third number — not Life Path ${lp} and not Expression ${ex}. It tends to show once the other two have been lived a while.`,
+    tension: `Watch: ${plainWatch(matRaw)}. Also watch for skipping it because it is not the number people already know you for.`,
+    gift: `Try today: ${plainJob(matRaw)} — small doses, years ahead of time, so the later tone is not a surprise.`,
   };
 }
 
@@ -299,7 +342,8 @@ export function buildPythagoreanIdentityLayers(opts: {
   const peN = reduceToSingleDigit(peRaw);
   const bdN = reduceToSingleDigit(bdRaw);
   const exN = reduceToSingleDigit(exRaw);
-  const alignment = buildAlignment(su, pe);
+  const innerOuterPattern = buildInnerOuterPattern(su, pe);
+  const alignment = buildAlignment(innerOuterPattern);
   const expressionPattern = buildExpressionPattern(bd, lp, ex);
 
   const expressionInsight = expressionPattern.insight;
@@ -325,8 +369,8 @@ export function buildPythagoreanIdentityLayers(opts: {
 
   const innerOuterDeeper =
     suN === peN
-      ? `When both numbers match, people may read you quickly. The work is staying honest when things get hard — not acting the number. ${alignment.note}`
-      : `Soul Urge ${su} is what you want when no one is watching: ${plainTrait(suRaw)}. Personality ${pe} is what people meet first: ${plainTrait(peRaw)}. Use the gap as extra information, not a problem to fix. ${alignment.note}`;
+      ? `When both numbers match, people may read you quickly. The work is staying honest when things get hard — not acting the number. ${innerOuterPattern.meet}`
+      : `${innerOuterPattern.looksLike} ${innerOuterPattern.tryLine}`;
 
   // The maturity diagram looks like the expression bridge, so the copy has to
   // carry the difference: the sum, who it matches, and roughly when it lands.
@@ -365,32 +409,32 @@ export function buildPythagoreanIdentityLayers(opts: {
       kicker: "Inner × outer",
       insight: innerOuterInsight,
       micro: {
-        tone: `Want ${plainTrait(suRaw)} · Seen as ${plainTrait(peRaw)}`,
-        tension:
-          alignment.band === "aligned"
-            ? "When they match, you may forget to rest"
-            : "People may see one thing while you feel another",
-        gift:
-          alignment.band === "aligned"
-            ? "People can see what you want if you stay honest"
-            : "You can greet people one way, then give the inner want some quiet time",
+        tone: innerOuterPattern.looksLike,
+        tension: innerOuterPattern.watch,
+        gift: innerOuterPattern.tryLine,
       },
       deeper: innerOuterDeeper,
       student:
         "Soul Urge uses vowels. Personality uses consonants. Same chart, two jobs.",
       expert:
-        "Alignment band is a teaching gap (same digit / close / far), not a compatibility score. Masters such as 11 stay visible; gap math may reduce them.",
+        "Alignment band comes from how the inner want and outer face relate (same digit, same direction, or a named friction), not a compatibility score. Masters such as 11 keep their own read; family tags may fall back to the reduced digit.",
     },
     {
       id: "maturity",
       title: "Maturity layer",
       kicker: "Path + expression → maturity",
       insight: maturityInsight,
-      micro: {
-        tone: `Later habit: ${plainTrait(matRaw)}`,
-        tension: `Watch: ${plainWatch(matRaw)}`,
-        gift: `Try now: ${plainJob(matRaw)} — small doses, years ahead of time`,
-      },
+      micro: maturityMicro({
+        mat,
+        matRaw,
+        lp,
+        ex,
+        lpRaw,
+        exRaw,
+        matN,
+        lpN,
+        exN,
+      }),
       deeper: maturityDeeper,
       student:
         "Maturity = Life Path + Expression, then reduce. It is a later-life tone, not a birthday switch.",
@@ -402,8 +446,8 @@ export function buildPythagoreanIdentityLayers(opts: {
   const dynamicsSummary = [
     `Pattern: BD ${bd} · Ex ${ex} · LP ${lp}. ${expressionPattern.standsOut}`,
     alignment.band === "aligned"
-      ? `Inner×outer share ${su}.`
-      : `Inner ${su} × outer ${pe}.`,
+      ? `Inner×outer share ${su} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`
+      : `Inner ${su} × outer ${pe} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`,
     `Convergence: LP ${lp} + Ex ${ex} → Mat ${mat}.`,
   ].join(" ");
 
@@ -419,7 +463,8 @@ export function buildPythagoreanIdentityLayers(opts: {
     `  ${expressionPattern.standsOut}`,
     `  Strength: ${expressionPattern.strength}. Watch: ${expressionPattern.watch}. ${expressionPattern.tryLine}`,
     `Inner ${su} / Outer ${pe}: ${layers[1].insight}`,
-    `  Alignment: ${alignment.label}. ${alignment.note}`,
+    `  Alignment: ${alignment.label}. ${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}.`,
+    `  Meet: ${innerOuterPattern.meet}`,
     `  Tone: ${layers[1].micro.tone}. Tension: ${layers[1].micro.tension}. Gift: ${layers[1].micro.gift}.`,
     `Maturity ${mat}: ${layers[2].insight}`,
     `  Tone: ${layers[2].micro.tone}. Tension: ${layers[2].micro.tension}. Gift: ${layers[2].micro.gift}.`,
@@ -437,6 +482,7 @@ export function buildPythagoreanIdentityLayers(opts: {
     layers,
     alignment,
     expressionPattern,
+    innerOuterPattern,
     dynamicsSummary,
     growthInvitation,
     reflectivePractice,

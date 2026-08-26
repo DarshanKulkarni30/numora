@@ -272,6 +272,73 @@ button:disabled,
   box-shadow: none;
 }
 
+/* Inner × outer tension slider — tactile without a 1px lift */
+.tension-slider {
+  appearance: none;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--line) 85%, rgb(180 83 9) 15%);
+  cursor: pointer;
+  transition:
+    filter 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.tension-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 999px;
+  border: 2px solid rgb(180 83 9);
+  background: rgb(250 248 243);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.18);
+  transition:
+    transform 0.15s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.tension-slider::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 999px;
+  border: 2px solid rgb(180 83 9);
+  background: rgb(250 248 243);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.18);
+}
+
+.tension-slider:hover {
+  filter: brightness(1.04);
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.16);
+}
+
+.tension-slider:hover::-webkit-slider-thumb {
+  background: rgb(255 252 247);
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.22);
+}
+
+.tension-slider:active {
+  filter: brightness(0.98);
+  box-shadow: 0 1px 3px rgba(180, 83, 9, 0.14);
+}
+
+.tension-slider:active::-webkit-slider-thumb {
+  background: rgb(245 242 236);
+}
+
+.tension-slider:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.tension-slider:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: none;
+  box-shadow: none;
+}
+
 /* Pill / filled CTA links (common NumoraWisdom pattern) */
 a.rounded-full {
   transition:
@@ -309,7 +376,9 @@ a.rounded-full:active {
   [type="submit"],
   [type="reset"],
   .btn-tactile,
-  a.rounded-full {
+  a.rounded-full,
+  .tension-slider,
+  .tension-slider::-webkit-slider-thumb {
     transition: background-color 0.15s ease, color 0.15s ease,
       border-color 0.15s ease, filter 0.15s ease;
     transform: none !important;

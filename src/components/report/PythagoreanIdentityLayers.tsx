@@ -9,9 +9,12 @@ import {
   buildPythagoreanIdentityLayers,
   identityTrait,
   identityTraitBullets,
+  microForTensionStop,
   type ExpressionPattern,
   type IdentityLayerCard,
   type InnerOuterAlignment,
+  type InnerOuterPattern,
+  type TensionStop,
 } from "@/lib/numerology/pythagoreanIdentityLayers";
 
 type Props = {
@@ -289,10 +292,16 @@ function InnerOuterOverlap({
   soulUrge,
   personality,
   alignment,
+  pattern,
+  tensionStop,
+  onTensionStop,
 }: {
   soulUrge: string;
   personality: string;
   alignment: InnerOuterAlignment;
+  pattern: InnerOuterPattern;
+  tensionStop: TensionStop;
+  onTensionStop: (stop: TensionStop) => void;
 }) {
   const [focus, setFocus] = useState<string | null>(null);
   const bandColor =
@@ -332,12 +341,12 @@ function InnerOuterOverlap({
         role: "Where you meet the world",
         value:
           soulUrge === personality ? soulUrge : `${soulUrge} × ${personality}`,
-        tip: `${alignment.label} — ${alignment.note}`,
-        detail: alignment.note,
+        tip: `${alignment.label} — ${pattern.meet}`,
+        detail: pattern.meet,
         traitLine: alignment.label,
       },
     ],
-    [soulUrge, personality, alignment],
+    [soulUrge, personality, alignment, pattern],
   );
 
   const active = nodes.find((n) => n.id === focus) ?? null;
@@ -420,6 +429,64 @@ function InnerOuterOverlap({
           <span className="text-ink-soft"> — {alignment.note}</span>
         </p>
       ) : null}
+      <TensionSlider
+        stop={tensionStop}
+        onChange={onTensionStop}
+        soulUrge={soulUrge}
+        personality={personality}
+      />
+    </div>
+  );
+}
+
+function TensionSlider({
+  stop,
+  onChange,
+  soulUrge,
+  personality,
+}: {
+  stop: TensionStop;
+  onChange: (stop: TensionStop) => void;
+  soulUrge: string;
+  personality: string;
+}) {
+  const labels: [string, string, string] = [
+    `Too far inside (Soul Urge ${soulUrge})`,
+    "In balance",
+    `Too far outside (Personality ${personality})`,
+  ];
+  return (
+    <div className="mt-3 px-1">
+      <p className="text-center text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
+        How do you feel today?
+      </p>
+      <label className="mt-2 block">
+        <span className="sr-only">How do you feel today?</span>
+        <input
+          type="range"
+          min={0}
+          max={2}
+          step={1}
+          value={stop}
+          aria-valuemin={0}
+          aria-valuemax={2}
+          aria-valuenow={stop}
+          aria-valuetext={labels[stop]}
+          onChange={(e) => onChange(Number(e.target.value) as TensionStop)}
+          className="tension-slider w-full"
+        />
+      </label>
+      <div className="mt-1 grid grid-cols-3 gap-2 text-[10px] leading-4 text-ink-soft">
+        <span className={`text-left ${stop === 0 ? "font-semibold text-ink" : ""}`}>
+          {labels[0]}
+        </span>
+        <span className={`text-center ${stop === 1 ? "font-semibold text-ink" : ""}`}>
+          {labels[1]}
+        </span>
+        <span className={`text-right ${stop === 2 ? "font-semibold text-ink" : ""}`}>
+          {labels[2]}
+        </span>
+      </div>
     </div>
   );
 }
@@ -688,11 +755,17 @@ function LayerVisual({
   numbers,
   alignment,
   pattern,
+  innerOuterPattern,
+  tensionStop,
+  onTensionStop,
 }: {
   layer: IdentityLayerCard;
   numbers: Props;
   alignment: InnerOuterAlignment;
   pattern: ExpressionPattern;
+  innerOuterPattern: InnerOuterPattern;
+  tensionStop: TensionStop;
+  onTensionStop: (stop: TensionStop) => void;
 }) {
   if (layer.id === "expression") {
     return (
@@ -710,6 +783,9 @@ function LayerVisual({
         soulUrge={numbers.soulUrge}
         personality={numbers.personality}
         alignment={alignment}
+        pattern={innerOuterPattern}
+        tensionStop={tensionStop}
+        onTensionStop={onTensionStop}
       />
     );
   }
@@ -778,6 +854,7 @@ export function PythagoreanIdentityLayers({
     [birthDay, lifePath, expression, soulUrge, personality, maturity],
   );
   const [open, setOpen] = useState<string | null>("expression");
+  const [tensionStop, setTensionStop] = useState<TensionStop>(1);
 
   const numbers = {
     birthDay,
@@ -828,6 +905,10 @@ export function PythagoreanIdentityLayers({
       <div className="mt-5 space-y-3">
         {model.layers.map((layer) => {
           const expanded = open === layer.id;
+          const micro =
+            layer.id === "inner-outer"
+              ? microForTensionStop(model.innerOuterPattern, tensionStop)
+              : layer.micro;
           return (
             <div
               key={layer.id}
@@ -859,6 +940,9 @@ export function PythagoreanIdentityLayers({
                   numbers={numbers}
                   alignment={model.alignment}
                   pattern={model.expressionPattern}
+                  innerOuterPattern={model.innerOuterPattern}
+                  tensionStop={tensionStop}
+                  onTensionStop={setTensionStop}
                 />
               </div>
               {/* The three cells are the actionable part of each layer, so they
@@ -870,17 +954,17 @@ export function PythagoreanIdentityLayers({
                 <div className="grid gap-2 sm:grid-cols-3">
                   <MetricCell
                     label="What this can look like"
-                    value={layer.micro.tone}
+                    value={micro.tone}
                     dot="bg-sea"
                   />
                   <MetricCell
                     label="What to watch"
-                    value={layer.micro.tension}
+                    value={micro.tension}
                     dot="bg-gold-deep"
                   />
                   <MetricCell
                     label="What can help"
-                    value={layer.micro.gift}
+                    value={micro.gift}
                     dot="bg-ink"
                   />
                 </div>
