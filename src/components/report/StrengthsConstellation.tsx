@@ -5,8 +5,13 @@ import { reduceToSingleDigit } from "@/lib/numerology/dateNumbers";
 import { plainTrait } from "@/lib/numerology/layeredCopy";
 import {
   buildStrengthConstellation,
+  CONSTELLATION_CX,
+  CONSTELLATION_CY,
+  INNER_ORBIT,
+  layoutStrengthMap,
+  OUTER_ORBIT,
   strengthWeightLabel,
-  type StrengthNode,
+  type StrengthWeight,
 } from "@/lib/numerology/strengthConstellation";
 
 type Props = {
@@ -17,24 +22,10 @@ type Props = {
   vedicPsychic?: string;
 };
 
-const NODE_COLORS = [
-  "rgb(45 122 120)",
-  "rgb(30 58 107)",
-  "rgb(180 100 50)",
-  "rgb(79 70 150)",
-  "rgb(45 122 90)",
-];
-
-function nodeRadius(weight: StrengthNode["weight"]) {
+function nodeRadius(weight: StrengthWeight) {
   if (weight === "core") return 15;
   if (weight === "supporting") return 12;
-  return 9;
-}
-
-function orbitRadius(weight: StrengthNode["weight"]) {
-  if (weight === "core") return 52;
-  if (weight === "supporting") return 72;
-  return 92;
+  return 10;
 }
 
 type Focus = { kind: "map"; i: number } | { kind: "extra"; i: number };
@@ -79,21 +70,7 @@ export function StrengthsConstellation({
   const lp = lifePath ? reduceToSingleDigit(Number(lifePath)) : null;
   const centerPlain = lp != null ? plainTrait(lp) : "your long-term direction";
 
-  const layout = useMemo(() => {
-    const cx = 110;
-    const cy = 110;
-    return model.map.map((node, i) => {
-      const ang =
-        (-90 + (i * 360) / Math.max(model.map.length, 1)) * (Math.PI / 180);
-      const r = orbitRadius(node.weight);
-      return {
-        ...node,
-        x: cx + Math.cos(ang) * r,
-        y: cy + Math.sin(ang) * r,
-        color: NODE_COLORS[i % NODE_COLORS.length],
-      };
-    });
-  }, [model.map]);
+  const layout = useMemo(() => layoutStrengthMap(model.map), [model.map]);
 
   if (!model.map.length) return null;
 
@@ -121,29 +98,46 @@ export function StrengthsConstellation({
             role="img"
             aria-label="Gifts around Life Path. Closer filled circles sit next to the Life Path. Dashed circles further out are quieter on this chart."
           >
-            {layout.map((n, i) =>
-              n.fromLifePath ? (
-                <line
-                  key={`spoke-${n.title}-${i}`}
-                  x1="110"
-                  y1="110"
-                  x2={n.x}
-                  y2={n.y}
-                  stroke="rgb(30 58 107 / 0.35)"
-                  strokeWidth={n.weight === "core" ? 1.8 : 1}
-                />
-              ) : null,
-            )}
             <circle
-              cx="110"
-              cy="110"
+              cx={CONSTELLATION_CX}
+              cy={CONSTELLATION_CY}
+              r={OUTER_ORBIT}
+              fill="none"
+              stroke="rgb(30 58 107 / 0.18)"
+              strokeWidth="1"
+              strokeDasharray="3 3"
+            />
+            <circle
+              cx={CONSTELLATION_CX}
+              cy={CONSTELLATION_CY}
+              r={INNER_ORBIT}
+              fill="none"
+              stroke="rgb(30 58 107 / 0.28)"
+              strokeWidth="1"
+            />
+            {layout.map((n, i) => (
+              <line
+                key={`spoke-${n.title}-${i}`}
+                x1={CONSTELLATION_CX}
+                y1={CONSTELLATION_CY}
+                x2={n.x}
+                y2={n.y}
+                stroke={n.color}
+                strokeOpacity={n.weight === "stretch" ? 0.35 : 0.45}
+                strokeWidth={n.weight === "core" ? 1.8 : 1.2}
+                strokeDasharray={n.weight === "stretch" ? "3 3" : undefined}
+              />
+            ))}
+            <circle
+              cx={CONSTELLATION_CX}
+              cy={CONSTELLATION_CY}
               r="28"
               fill="rgb(250 248 243)"
               stroke="rgb(30 58 107)"
               strokeWidth="1.4"
             />
             <text
-              x="110"
+              x={CONSTELLATION_CX}
               y="106"
               textAnchor="middle"
               fontSize="12"
@@ -153,7 +147,7 @@ export function StrengthsConstellation({
               {lp ?? "·"}
             </text>
             <text
-              x="110"
+              x={CONSTELLATION_CX}
               y="120"
               textAnchor="middle"
               fontSize="6"
@@ -168,7 +162,6 @@ export function StrengthsConstellation({
               return (
                 <g
                   key={n.title + i}
-                  opacity={isShown ? 1 : 0.38}
                   className="cursor-pointer"
                   role="button"
                   tabIndex={0}
@@ -187,10 +180,22 @@ export function StrengthsConstellation({
                     cy={n.y}
                     r={r}
                     fill={n.color}
-                    fillOpacity={n.weight === "stretch" ? 0.08 : 0.22}
+                    fillOpacity={
+                      n.weight === "stretch"
+                        ? isShown
+                          ? 0.28
+                          : 0.16
+                        : isShown
+                          ? 0.38
+                          : 0.24
+                    }
                     stroke={n.color}
-                    strokeWidth={n.weight === "core" ? 2 : 1.4}
-                    strokeDasharray={n.weight === "stretch" ? "2.5 2" : undefined}
+                    strokeWidth={
+                      isPin ? 2.8 : n.weight === "core" ? 2.2 : 1.8
+                    }
+                    strokeDasharray={
+                      n.weight === "stretch" ? "3 2.5" : undefined
+                    }
                   />
                 </g>
               );

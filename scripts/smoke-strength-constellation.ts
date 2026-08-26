@@ -6,6 +6,9 @@ import { plainTrait } from "../src/lib/numerology/layeredCopy";
 import {
   STRENGTH_ACTIONS,
   buildStrengthConstellation,
+  INNER_ORBIT,
+  layoutStrengthMap,
+  OUTER_ORBIT,
   splitStrengthLabel,
 } from "../src/lib/numerology/strengthConstellation";
 
@@ -125,5 +128,42 @@ has(
   "Psychic 3",
   "sourceLine names Psychic when it matches",
 );
+
+const placed = layoutStrengthMap(model.map);
+eq(
+  placed.filter((n) => n.weight !== "stretch").every((n) => n.orbit === INNER_ORBIT),
+  true,
+  "loud gifts sit on the inner ring",
+);
+eq(
+  placed.filter((n) => n.weight === "stretch").every((n) => n.orbit === OUTER_ORBIT),
+  true,
+  "quiet gifts sit on the outer ring",
+);
+const innerPlaced = placed.filter((n) => n.weight !== "stretch");
+if (innerPlaced.length >= 2) {
+  const d0 = Math.hypot(innerPlaced[0]!.x - 110, innerPlaced[0]!.y - 110);
+  const d1 = Math.hypot(innerPlaced[1]!.x - 110, innerPlaced[1]!.y - 110);
+  eq(Math.abs(d0 - d1) < 0.5, true, "inner gifts share one radius, not leftover angles");
+}
+for (const n of placed) {
+  if (n.x < 8 || n.x > 212 || n.y < 8 || n.y > 212) {
+    console.error(`FAIL node clipped: ${n.title} at ${n.x},${n.y}`);
+    process.exit(1);
+  }
+}
+console.log("ok constellation nodes stay inside the viewBox");
+for (let i = 0; i < placed.length; i++) {
+  for (let j = i + 1; j < placed.length; j++) {
+    const dist = Math.hypot(placed[i]!.x - placed[j]!.x, placed[i]!.y - placed[j]!.y);
+    if (dist < 28) {
+      console.error(
+        `FAIL overlapping nodes ${placed[i]!.title} and ${placed[j]!.title} dist ${dist}`,
+      );
+      process.exit(1);
+    }
+  }
+}
+console.log("ok constellation nodes do not overlap");
 
 console.log("strength constellation smoke ok");

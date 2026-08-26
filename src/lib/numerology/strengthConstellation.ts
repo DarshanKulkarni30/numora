@@ -321,3 +321,60 @@ export function strengthWeightLabel(weight: StrengthWeight): string {
   if (weight === "supporting") return "Familiar · more than one seat";
   return "Quiet · also in the mix";
 }
+
+export const CONSTELLATION_CX = 110;
+export const CONSTELLATION_CY = 110;
+/** Filled gifts (core + supporting) sit on this ring. */
+export const INNER_ORBIT = 56;
+/** Quiet / stretch gifts sit on this ring — far enough that same-angle nodes do not overlap. */
+export const OUTER_ORBIT = 90;
+
+const NODE_COLORS = [
+  "rgb(45 122 120)",
+  "rgb(30 58 107)",
+  "rgb(180 100 50)",
+  "rgb(79 70 150)",
+  "rgb(45 122 90)",
+];
+
+export type PlacedStrengthNode = StrengthNode & {
+  x: number;
+  y: number;
+  color: string;
+  orbit: number;
+};
+
+/**
+ * Place loud gifts evenly on the inner ring and quiet gifts evenly on the
+ * outer ring. List-index angles stacked all Life Path gifts on one side and
+ * left dashed circles looking broken.
+ */
+export function layoutStrengthMap(map: StrengthNode[]): PlacedStrengthNode[] {
+  const innerSlots = map
+    .map((n, i) => (n.weight === "stretch" ? -1 : i))
+    .filter((i) => i >= 0);
+  const outerSlots = map
+    .map((n, i) => (n.weight === "stretch" ? i : -1))
+    .filter((i) => i >= 0);
+  const innerCount = Math.max(innerSlots.length, 1);
+  const outerCount = Math.max(outerSlots.length, 1);
+  const innerIndex = new Map(innerSlots.map((orig, k) => [orig, k]));
+  const outerIndex = new Map(outerSlots.map((orig, k) => [orig, k]));
+  const outerStart = -45;
+
+  return map.map((node, i) => {
+    const stretch = node.weight === "stretch";
+    const orbit = stretch ? OUTER_ORBIT : INNER_ORBIT;
+    const slot = stretch ? (outerIndex.get(i) ?? 0) : (innerIndex.get(i) ?? 0);
+    const count = stretch ? outerCount : innerCount;
+    const start = stretch ? outerStart : -90;
+    const ang = ((start + (slot * 360) / count) * Math.PI) / 180;
+    return {
+      ...node,
+      x: CONSTELLATION_CX + Math.cos(ang) * orbit,
+      y: CONSTELLATION_CY + Math.sin(ang) * orbit,
+      color: NODE_COLORS[i % NODE_COLORS.length],
+      orbit,
+    };
+  });
+}
