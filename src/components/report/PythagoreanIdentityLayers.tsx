@@ -9,6 +9,7 @@ import {
   buildPythagoreanIdentityLayers,
   identityTrait,
   identityTraitBullets,
+  type ExpressionPattern,
   type IdentityLayerCard,
   type InnerOuterAlignment,
 } from "@/lib/numerology/pythagoreanIdentityLayers";
@@ -117,18 +118,20 @@ function SvgHotspot({ nodeId, tip, focus, setFocus, children }: HotspotProps) {
   );
 }
 
-/** BD → EX → LP as an explicit bridge / flow (Expression = vehicle). */
+/** BD · EX · LP as three views of one person (Expression = how you show up). */
 function ExpressionBridge({
   birthDay,
   lifePath,
   expression,
+  pattern,
 }: {
   birthDay: string;
   lifePath: string;
   expression: string;
+  pattern: ExpressionPattern;
 }) {
   const uid = useId().replace(/:/g, "");
-  const echoes = String(birthDay) === String(expression);
+  const echoesBirth = pattern.kind === "ex-bd-repeat" || pattern.kind === "all-same";
   const [focus, setFocus] = useState<string | null>(null);
 
   const nodes: FocusNode[] = useMemo(
@@ -138,21 +141,21 @@ function ExpressionBridge({
         code: "Birth Day",
         role: "your first instinct",
         value: birthDay,
-        tip: `Birth Day ${birthDay} · ${identityTrait(birthDay)} — your starting energy`,
-        detail: `Birth Day ${birthDay} is the origin tone (${identityTrait(birthDay)}) you carry into the path.`,
+        tip: `Birth Day ${birthDay} — your first habit`,
+        detail: pattern.birthDetail,
+        traitLine: "first habit",
         guide: { topic: "birth-day", label: "Birth Day", value: birthDay },
       },
       {
         id: "ex",
         code: "Expression",
-        role: echoes
+        role: echoesBirth
           ? "same number as your birth day, so it doubles up"
           : "how you come across",
         value: expression,
-        tip: `Expression ${expression} · ${identityTrait(expression)} — how you bridge Birth Day to Life Path`,
-        detail: echoes
-          ? `Expression ${expression} echoes Birth Day ${birthDay}, amplifying ${identityTraitBullets(expression).toLowerCase()} as the style toward Life Path ${lifePath}.`
-          : `Expression ${expression} is the vehicle — how ${identityTraitBullets(expression).toLowerCase()} colors the walk from Birth Day ${birthDay} toward Life Path ${lifePath}.`,
+        tip: `Expression ${expression} — how you show up`,
+        detail: pattern.expressionDetail,
+        traitLine: "how you show up",
         guide: { topic: "expression", label: "Expression", value: expression },
       },
       {
@@ -160,12 +163,13 @@ function ExpressionBridge({
         code: "Life Path",
         role: "where you are headed",
         value: lifePath,
-        tip: `Life Path ${lifePath} · ${identityTrait(lifePath)} — the direction you're growing toward`,
-        detail: `Life Path ${lifePath} is the direction (${identityTrait(lifePath)}) Expression ${expression} helps you walk toward.`,
+        tip: `Life Path ${lifePath} — your longer direction`,
+        detail: pattern.pathDetail,
+        traitLine: "longer direction",
         guide: { topic: "life-path", label: "Life Path", value: lifePath },
       },
     ],
-    [birthDay, lifePath, expression, echoes],
+    [birthDay, lifePath, expression, echoesBirth, pattern],
   );
 
   const active = nodes.find((n) => n.id === focus) ?? null;
@@ -176,7 +180,7 @@ function ExpressionBridge({
         viewBox="0 0 280 88"
         className="mx-auto h-auto w-full max-w-[40rem]"
         role="img"
-        aria-label="Expression bridge from Birth Day through Expression to Life Path. Hover or tap nodes for details."
+        aria-label="Birth Day, Expression, and Life Path. Hover or tap a number for what it means for this chart."
       >
         <defs>
           <linearGradient id={`bridge-${uid}`} x1="0" y1="0" x2="1" y2="0">
@@ -252,7 +256,7 @@ function ExpressionBridge({
             Expression {expression}
           </text>
           <text x="140" y="28" fontSize="8" fill="rgb(70 82 98)" textAnchor="middle">
-            {echoes ? "same as your birth day" : "how you come across"}
+            {echoesBirth ? "same as your birth day" : "how you come across"}
           </text>
         </SvgHotspot>
 
@@ -683,10 +687,12 @@ function LayerVisual({
   layer,
   numbers,
   alignment,
+  pattern,
 }: {
   layer: IdentityLayerCard;
   numbers: Props;
   alignment: InnerOuterAlignment;
+  pattern: ExpressionPattern;
 }) {
   if (layer.id === "expression") {
     return (
@@ -694,6 +700,7 @@ function LayerVisual({
         birthDay={numbers.birthDay}
         lifePath={numbers.lifePath}
         expression={numbers.expression}
+        pattern={pattern}
       />
     );
   }
@@ -851,6 +858,7 @@ export function PythagoreanIdentityLayers({
                   layer={layer}
                   numbers={numbers}
                   alignment={model.alignment}
+                  pattern={model.expressionPattern}
                 />
               </div>
               {/* The three cells are the actionable part of each layer, so they

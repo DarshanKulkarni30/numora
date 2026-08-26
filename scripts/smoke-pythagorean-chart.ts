@@ -122,6 +122,65 @@ assert(
   "maturity shows the sum, so it reads differently from the bridge",
 );
 assert(
+  magnusLayers.expressionPattern.kind === "ex-bd-repeat",
+  "Magnus Expression matches Birth Day, Life Path differs",
+);
+
+const threeNineThree = buildPythagoreanIdentityLayers({
+  birthDay: "3",
+  lifePath: "3",
+  expression: "9",
+  soulUrge: "1",
+  personality: "11",
+  maturity: "3",
+});
+const t93 = threeNineThree.layers[0]!;
+const t93blob = [
+  t93.insight,
+  t93.deeper,
+  t93.micro.tone,
+  t93.micro.tension,
+  t93.micro.gift,
+  threeNineThree.expressionPattern.birthDetail,
+  threeNineThree.expressionPattern.expressionDetail,
+  threeNineThree.expressionPattern.pathDetail,
+].join(" ");
+assert(
+  threeNineThree.expressionPattern.kind === "bd-lp-repeat",
+  "3-9-3 is a repeated Birth Day / Life Path with Expression as modifier",
+);
+assert(
+  !t93blob.toLowerCase().includes("vehicle"),
+  "expression amateur copy does not call Expression a vehicle",
+);
+assert(
+  !t93blob.toLowerCase().includes("colors the walk"),
+  "expression amateur copy does not say colors the walk",
+);
+const trait3 = "talking, play, and sharing ideas";
+assert(
+  (t93.insight.split(trait3).length - 1) < 2,
+  "3-9-3 insight does not repeat the same Birth Day 3 clause for Life Path",
+);
+assert(
+  t93.insight.toLowerCase().includes("finish") ||
+    t93.insight.toLowerCase().includes("wider group"),
+  "3-9-3 insight names Expression 9 as finishing / a wider group",
+);
+assert(
+  t93.micro.gift.toLowerCase().includes("try"),
+  "3-9-3 gift carries a try",
+);
+assert(
+  t93.micro.tension.toLowerCase().includes("talk") ||
+    t93.micro.tension.toLowerCase().includes("finish"),
+  "3-9-3 watch is concrete",
+);
+assert(
+  threeNineThree.blueprintLines.some((line) => line.includes("Watch:")),
+  "PDF blueprint includes the watch line",
+);
+assert(
   chart.planeNote.toLowerCase().includes("lo shu"),
   "planes distinguished from Lo Shu",
 );
