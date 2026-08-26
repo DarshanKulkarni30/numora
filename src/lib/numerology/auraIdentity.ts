@@ -120,7 +120,7 @@ export type AuraIdentity = {
 const CRYSTAL_META: Record<string, { keyword: string; body: string; hex: string }> = {
   Ruby: {
     keyword: "Vitality",
-    body: "A warmth cue — starting energy, not a medical claim.",
+    body: "Warmth — starting energy, not a medical claim.",
     hex: "#9B1B30",
   },
   Garnet: {
@@ -150,12 +150,12 @@ const CRYSTAL_META: Record<string, { keyword: string; body: string; hex: string 
   },
   Hessonite: {
     keyword: "Grounding",
-    body: "A structural cue — feet on the floor, one brick at a time.",
+    body: "A grounded reminder — feet on the floor, one brick at a time.",
     hex: "#B5651D",
   },
   "Cat’s eye": {
     keyword: "Clarity",
-    body: "A focus cue — see the next honest step.",
+    body: "Focus — see the next honest step.",
     hex: "#C4B454",
   },
   Emerald: {
@@ -170,7 +170,7 @@ const CRYSTAL_META: Record<string, { keyword: string; body: string; hex: string 
   },
   Diamond: {
     keyword: "Clarity",
-    body: "A clean-light cue — name what is true.",
+    body: "Clean light — name what is true.",
     hex: "#E8EEF4",
   },
   "White sapphire": {
@@ -180,12 +180,12 @@ const CRYSTAL_META: Record<string, { keyword: string; body: string; hex: string 
   },
   Amethyst: {
     keyword: "Reflection",
-    body: "An inward-violet cue — study and rest.",
+    body: "Inward violet — study and rest.",
     hex: "#7B5EA7",
   },
   "Blue sapphire": {
     keyword: "Discipline",
-    body: "A deep-blue cue — long aims, honest limits.",
+    body: "Deep blue — long aims, honest limits.",
     hex: "#1E3A5F",
   },
   "Red coral": {
@@ -310,7 +310,7 @@ function pairSummary(
     return `${left.label} and ${right.label} are both ${left.digit}. The same trait (${lt}) is counted twice, so it becomes your automatic response. That is an advantage when the situation suits it, and a blind spot when it does not — the fix is to notice when you are reaching for it out of habit.`;
   }
   if (kind === "complementary") {
-    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These two work well in the same task: one tends to supply the push and the other the follow-through. Use both on one job rather than picking a side.`;
+    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These two work well in the same task: one supplies the push and the other the follow-through. Use both on one job rather than picking a side.`;
   }
   if (kind === "neutral") {
     return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). They cover unrelated ground, so neither helps nor blocks the other. Treat them as two separate tools and use whichever the moment calls for.`;
@@ -339,7 +339,7 @@ const INK_FALLBACK: AssociationColor = {
   hex: "#183a6b",
   title: "Quiet focus",
   tags: ["Calm", "Clear", "Steady"],
-  line: "A default ink tone when no traditional colour is listed — use it as a cue to slow down and name the next step.",
+  line: "A default ink tone when no traditional colour is listed — slow down and name the next step.",
   action: "Write the next step in one sentence.",
   use: "Keep a dark notebook nearby when the chart colour list is empty.",
 };
@@ -349,16 +349,16 @@ const ROLE_FRAME: Record<
   { job: string; indicates: string }
 > = {
   Primary: {
-    job: "Your baseline state",
-    indicates: "Your core operating frequency and natural comfort zone.",
+    job: "Your usual setting",
+    indicates: "How you usually operate when nothing special is happening.",
   },
   Secondary: {
-    job: "Your action engine",
-    indicates: "The energy you project outward when doing daily work.",
+    job: "How you show up at work and with people",
+    indicates: "What other people see when you are doing the day's work.",
   },
   Highlight: {
-    job: "Your clarity reset",
-    indicates: "The boundary that keeps the other two from spilling into burnout.",
+    job: "The extra switch",
+    indicates: "Use this when the first two colours are not enough. It is not your everyday setting.",
   },
 };
 
@@ -491,7 +491,7 @@ function crystalFor(
     name.replace(/['’]/g, "'") === "Cat's eye" ? "Cat’s eye" : name;
   const meta = CRYSTAL_META[key] ?? {
     keyword: "Atmosphere",
-    body: "A traditional stone cue for this number — reflective only, not a purchase.",
+    body: "A traditional stone for this number — atmosphere, not a shopping list.",
     hex: "#C4B28A",
   };
   return {
@@ -596,7 +596,7 @@ export function buildAuraIdentity(opts: {
   const sameDigits = new Set(layers.map((l) => l.digit));
   const stretchPair = pairs.find((p) => p.kind === "contrasting");
   const synergySummary = (() => {
-    const intro = `This compares three numbers about you: Life Path ${layers[0].raw} (from your birth date), Vedic Destiny ${layers[1].raw} (same date, different method) and Name number ${layers[2].raw} (from your spelling). When two of them land on the same digit, that trait is being counted twice and tends to become your default move.`;
+    const intro = `This compares three numbers about you: Life Path ${layers[0].raw} (from your birth date), Vedic Destiny ${layers[1].raw} (same date, different method) and Name number ${layers[2].raw} (from your spelling). When two of them land on the same digit, that trait is being counted twice and becomes your default move.`;
     const shape =
       sameDigits.size === 1
         ? ` All three are ${layers[0].digit}, so one trait — ${traitOf(layers[0].digit).toLowerCase()} — drives almost everything you do. That makes you consistent and predictable to others, and it means you have few natural alternatives when it stops working.`
@@ -635,7 +635,7 @@ export function buildAuraIdentity(opts: {
   const anchors: AuraAnchor[] = [...metalMap.entries()].map(([name, ids]) => {
     const meta = ANCHOR_META[name] ?? {
       keyword: "Anchor",
-      body: "A traditional metal cue for this number — atmosphere, not a prescription.",
+      body: "A traditional metal for this number — atmosphere, not a prescription.",
     };
     return { name, keyword: meta.keyword, body: meta.body, layers: ids };
   });

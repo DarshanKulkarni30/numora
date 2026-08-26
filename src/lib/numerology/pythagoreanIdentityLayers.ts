@@ -168,7 +168,7 @@ export function buildExpressionPattern(
       core: bdN,
       modifier: null,
       insight: `Birth Day ${bd}, Expression ${ex}, and Life Path ${lp} share one theme: ${plainTrait(bdRaw)}. It is the first habit, how people meet you, and the longer direction. That makes it your strongest skill and the habit you are least likely to question.`,
-      standsOut: `${bdN} is repeated in all three seats — there is no second number shaping how this shows.`,
+      standsOut: `${bdN} is repeated in all three numbers — there is no second number shaping how this shows.`,
       relation: `The work is using ${plainTrait(bdRaw)} with more care, not finding a new theme.`,
       friction: pairFriction(bdRaw, lpRaw),
       strength: `Living ${plainTrait(bdRaw)} honestly, on purpose.`,
@@ -249,7 +249,7 @@ export function buildExpressionPattern(
     tryLine: `Try: ${plainJob(exRaw)}, then return to ${plainJob(bdRaw)}.`,
     birthDetail: `Birth Day ${bd} is the first habit: ${plainTrait(bdRaw)}. It is how you naturally begin, not the whole story.`,
     expressionDetail: `Expression ${ex} is how you show up: ${plainTrait(exRaw)}. It is the style between the first habit and the longer direction — not a second person.`,
-    pathDetail: `Life Path ${lp} is the longer direction: ${plainTrait(lpRaw)}. Expression ${ex} is how that direction tends to look from the outside.`,
+    pathDetail: `Life Path ${lp} is the longer direction: ${plainTrait(lpRaw)}. Expression ${ex} is how that direction looks from the outside.`,
   };
 }
 
@@ -289,8 +289,8 @@ function maturityMicro(opts: {
   const { mat, matRaw, lp, ex, lpRaw, exRaw, matN, lpN, exN } = opts;
   if (matN === lpN && matN === exN) {
     return {
-      tone: `Later habit ${mat} is the same theme as both Life Path and Expression: ${plainTrait(matRaw)}. Age tends to deepen it, not add a new one.`,
-      tension: `Watch: ${plainWatch(matRaw)} — doubled for years, this is the habit you may not question.`,
+      tone: `Later habit ${mat} is the same theme as both Life Path and Expression: ${plainTrait(matRaw)}. Age deepens it; it does not add a new one.`,
+      tension: `Watch: ${plainWatch(matRaw)} — doubled for years, this is the habit you do not question.`,
       gift: `Try today: ${plainJob(matRaw)} in small doses, years ahead of time, so the later habit is chosen rather than automatic.`,
     };
   }
@@ -303,13 +303,13 @@ function maturityMicro(opts: {
   }
   if (matN === exN) {
     return {
-      tone: `Later habit lands on Expression ${ex}: ${plainTrait(exRaw)}. The name style is what tends to last.`,
+      tone: `Later habit lands on Expression ${ex}: ${plainTrait(exRaw)}. The name style is what lasts.`,
       tension: `Watch: waiting for age to switch on a new personality, when the lasting tone is already how you show up.`,
       gift: `Try today: ${plainJob(exRaw)} in a calmer dose — the later habit is this style, used with more care.`,
     };
   }
   return {
-    tone: `Later habit ${mat} (${plainTrait(matRaw)}) is a third number — not Life Path ${lp} and not Expression ${ex}. It tends to show once the other two have been lived a while.`,
+    tone: `Later habit ${mat} (${plainTrait(matRaw)}) is a third number — not Life Path ${lp} and not Expression ${ex}. It shows once the other two have been lived a while.`,
     tension: `Watch: ${plainWatch(matRaw)}. Also watch for skipping it because it is not the number people already know you for.`,
     gift: `Try today: ${plainJob(matRaw)} — small doses, years ahead of time, so the later tone is not a surprise.`,
   };
@@ -379,12 +379,12 @@ export function buildPythagoreanIdentityLayers(opts: {
       : matN === lpN
         ? `It lands back on Life Path ${lp}, so the path tone gets stronger with age rather than changing.`
         : matN === exN
-          ? `It lands on Expression ${ex}, so the name style is what tends to last.`
+          ? `It lands on Expression ${ex}, so the name style is what lasts.`
           : `It is a third number, not Life Path ${lp} and not Expression ${ex} — a tone that only appears once the other two have been lived a while.`;
 
   const maturityInsight = `Maturity ${mat} is the sum of the other two: ${matSum}. ${matEcho} Traditions place it loosely around the mid-thirties to mid-forties, and it arrives gradually — nothing switches on at a birthday.`;
 
-  const maturityDeeper = `The Expression layer above is about now: Birth Day ${bd} and Expression ${ex} in daily use. Maturity is about later. Life Path ${lp} (${plainTrait(lpRaw)}) and Expression ${ex} (${plainTrait(exRaw)}) add toward ${mat} (${plainTrait(matRaw)}), which is the habit that tends to remain once the busier ones settle. Birth Day ${bd} still colours ordinary days throughout.`;
+  const maturityDeeper = `The Expression layer above is about now: Birth Day ${bd} and Expression ${ex} in daily use. Maturity is about later. Life Path ${lp} (${plainTrait(lpRaw)}) and Expression ${ex} (${plainTrait(exRaw)}) add toward ${mat} (${plainTrait(matRaw)}), which is the habit that remains once the busier ones settle. Birth Day ${bd} still colours ordinary days throughout.`;
 
   const layers: IdentityLayerCard[] = [
     {

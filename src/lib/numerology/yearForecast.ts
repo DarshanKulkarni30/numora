@@ -31,14 +31,14 @@ const DISCLAIMER =
   "A twelve-month chapter is reflective pacing from Personal Year and Personal Month digits. It is not a calendar of events, and it does not predict outcomes.";
 
 const MONTH_PRACTICE: Record<number, string> = {
-  1: "Plant one clear start. Do not wait for a perfect week.",
-  2: "Pair a decision. Name what you heard before you add what you want.",
-  3: "Finish one piece of expression instead of opening three.",
-  4: "Keep one durable container — a list, a slot, a tool.",
-  5: "Give change a craft: one new input, with a start and an end.",
-  6: "Choose one act of care, then rest. Automatic yes is not the same as love.",
-  7: "Protect a study hour, then bring one finding back to ordinary talk.",
-  8: "Measure one result honestly. Stewardship over speed.",
+  1: "Start one small thing this month. Do not wait for a perfect week.",
+  2: "Decide with one other person. Repeat what you heard before you add what you want.",
+  3: "Finish one note, talk, or piece of work. Do not open three new ones.",
+  4: "Write one repeating plan — a list, a weekly slot, or a tool — and keep it this week.",
+  5: "Change one input. Give it a start date and an end date.",
+  6: "Keep one promise to someone, then rest. A yes is not the same as care.",
+  7: "Protect one study hour, then tell one person what you found.",
+  8: "Finish one result you can count. Do not make speed the goal.",
   9: "Close one loop that is already done. Do not reopen it this month.",
 };
 

@@ -30,7 +30,7 @@ export type DigitSeason = {
 
 export const DIGIT_SEASON: Record<number, DigitSeason> = {
   1: {
-    season: "Spark season",
+    season: "Starting stretch",
     element: "Fire",
     keyword: "Beginnings",
     verb: "BEGIN",
@@ -43,7 +43,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Opening ten things and finishing none.",
   },
   2: {
-    season: "Tide season",
+    season: "Slow stretch",
     element: "Water",
     keyword: "Cooperation",
     verb: "RELATE",
@@ -56,7 +56,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Waiting so long that nothing gets decided.",
   },
   3: {
-    season: "Voice season",
+    season: "Sharing stretch",
     element: "Air",
     keyword: "Expression",
     verb: "EXPRESS",
@@ -69,7 +69,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Talking about the work instead of doing it.",
   },
   4: {
-    season: "Earth season",
+    season: "Planning stretch",
     element: "Earth",
     keyword: "Structure",
     verb: "BUILD",
@@ -82,7 +82,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Planning so much that nothing actually starts.",
   },
   5: {
-    season: "Wind season",
+    season: "Changing stretch",
     element: "Air",
     keyword: "Movement",
     verb: "MOVE",
@@ -95,7 +95,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Changing again before the last change had time to work.",
   },
   6: {
-    season: "Hearth season",
+    season: "Care stretch",
     element: "Earth",
     keyword: "Care",
     verb: "TEND",
@@ -108,7 +108,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Saying yes until you have no rest left.",
   },
   7: {
-    season: "Still-water season",
+    season: "Quiet stretch",
     element: "Water",
     keyword: "Insight",
     verb: "STUDY",
@@ -121,7 +121,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Going so quiet that people cannot reach you.",
   },
   8: {
-    season: "Summit season",
+    season: "Finishing stretch",
     element: "Earth",
     keyword: "Stewardship",
     verb: "STEWARD",
@@ -134,7 +134,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     watch: "Working with no rest until the result runs you.",
   },
   9: {
-    season: "Harvest season",
+    season: "Closing stretch",
     element: "Fire",
     keyword: "Completion",
     verb: "HARVEST",

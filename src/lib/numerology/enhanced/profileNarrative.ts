@@ -39,7 +39,7 @@ function showsAs(n: number): string {
 }
 
 function numberBeat(label: string, n: number, pointsTo: string): string {
-  return `${label} ${n} points to ${plainTrait(n)} — ${pointsTo} You may notice this as ${showsAs(n)}. ${action(n)}`;
+  return `${label} ${n} points to ${plainTrait(n)} — ${pointsTo} You notice this as ${showsAs(n)}. ${action(n)}`;
 }
 
 function pairBeat(
@@ -51,7 +51,7 @@ function pairBeat(
   bPoints: string,
 ): string {
   if (aN === bN) {
-    return `${aLabel} ${aN} and ${bLabel} ${bN} both point to ${plainTrait(aN)} — ${aPoints} ${bPoints} You may notice this as ${showsAs(aN)}. ${action(aN)}`;
+    return `${aLabel} ${aN} and ${bLabel} ${bN} both point to ${plainTrait(aN)} — ${aPoints} ${bPoints} You notice this as ${showsAs(aN)}. ${action(aN)}`;
   }
   return `${numberBeat(aLabel, aN, aPoints)} ${numberBeat(bLabel, bN, bPoints)}`;
 }
@@ -112,7 +112,7 @@ export function buildProfileNarrative(opts: {
       "how the spelling you use now shapes how you show up and contribute.",
       "Maturity",
       mat,
-      "what tends to deepen after practice, not a switch on a birthday.",
+      "what deepens after practice, not a switch on a birthday.",
     ),
   );
 

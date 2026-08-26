@@ -79,7 +79,7 @@ eq(darshan.palette.highlight.layers, ["name"], "silver highlight is name-only");
 has(darshan.paletteSummary, "blue-grey", "summary names primary colour");
 has(darshan.paletteSummary, "earth brown", "summary names secondary colour");
 has(darshan.paletteSummary, "silver", "summary names highlight colour");
-has(darshan.palette.primary.job, "baseline", "primary role is baseline");
+has(darshan.palette.primary.job, "usual setting", "primary role is usual setting");
 has(darshan.palette.secondary.action, "Do the next", "secondary has a micro-action");
 eq(darshan.climate?.year.name, "Light green", "year 5 first colour");
 eq(darshan.climate?.month.name, "Yellow", "month 3 first colour");
@@ -149,7 +149,7 @@ eq(
 );
 has(roshni.paletteSummary, "calm clarity", "summary uses cream title");
 has(roshni.paletteSummary, "care with boundaries", "summary uses soft green title");
-has(roshni.paletteSummary, "reset and truth", "summary uses white title");
+has(roshni.paletteSummary, "be clear", "summary uses white title");
 const roshniBlob = [
   roshni.paletteSummary,
   ...auraIdentityPdfLines(roshni),

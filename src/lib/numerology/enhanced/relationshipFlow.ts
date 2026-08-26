@@ -38,14 +38,14 @@ export function buildRelationshipFlow(snap: NumerologySnapshot): RelationshipFlo
   ];
 
   const primaryNarrative = assertSafeCopy(
-    `Early emphasis (${bd}, ${traitLabel(bd)}) may push toward a working craft (${expr}, ${traitLabel(expr)}). That craft becomes a way of walking the longer path (${lp}, ${traitLabel(lp)}). Maturity ${mat} (${traitLabel(mat)}) may describe how the same material deepens with experience—not a later personality swap.`,
+    `Early emphasis (${bd}, ${traitLabel(bd)}) pushes toward a working craft (${expr}, ${traitLabel(expr)}). That craft becomes how you walk the longer path (${lp}, ${traitLabel(lp)}). Maturity ${mat} (${traitLabel(mat)}) is how the same material deepens with experience — not a later personality swap.`,
     "enhanced.flow.primary",
   );
 
   const secondaryNarrative = assertSafeCopy(
     soul === pers
-      ? `Soul Urge ${soul} and Personality ${pers} agree, which may feel like inner wish and outer manner sharing a room.`
-      : `Soul Urge ${soul} (${traitLabel(soul)}) and Personality ${pers} (${traitLabel(pers)}) differ. Inner and outer are in conversation: neither needs to win.`,
+      ? `Soul Urge ${soul} and Personality ${pers} agree: what you want and what people see first are the same move.`
+      : `Soul Urge ${soul} (${traitLabel(soul)}) and Personality ${pers} (${traitLabel(pers)}) differ. Name the inner wish out loud; do not wait for the outer manner to translate it.`,
     "enhanced.flow.secondary",
   );
 

@@ -30,7 +30,7 @@ export function buildActionPlan(opts: {
     : purposeRelation(purpose);
   const unfinished = young
     ? "one unfinished piece of schoolwork, hobby, or room-order"
-    : "one unfinished task that would quiet the mind if completed";
+    : "Finish one open task (a file, a message, or a job at home)";
 
   const days30 = assertSafeList(
     unique([
@@ -100,7 +100,7 @@ function purposeSkill(purpose: string, theme: string): string {
   if (p.includes("career")) return `One skill that makes ${theme} usable at work (a template, checklist, or teaching note)`;
   if (p.includes("relationship") || p.includes("family"))
     return "One listening or repair skill used in a real conversation";
-  return `One skill you can show this month (a finished note, a kept promise, or a small start) — tied to ${theme}`;
+  return `Show one skill this month: a finished note, a kept promise, or a small start.`;
 }
 
 function purposeRelation(purpose: string): string {
@@ -123,7 +123,7 @@ function purposeYearPrimary(purpose: string, theme: string): string {
   if (p.includes("career")) return `Deepen ${theme} as craft others can rely on`;
   if (p.includes("family")) return "Deepen care at home without disappearing";
   if (p.includes("relationship")) return "Deepen honest pacing in close ties";
-  return `Use ${theme} in one real weekly habit, not only as an idea`;
+  return "Use this year's theme in one weekly habit, not only as an idea";
 }
 
 function unique(items: (string | undefined)[]): string[] {

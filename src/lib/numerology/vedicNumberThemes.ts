@@ -43,7 +43,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Start one thing clearly. Then let someone else add their part.",
     workTone:
-      "Suits roles with autonomy, ownership, and visible responsibility (reflective cue only).",
+      "Suits roles with autonomy, ownership, and visible responsibility (reflective only).",
   },
   2: {
     keyword: "Harmony",
@@ -65,7 +65,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Keep the peace, and still say no once this week.",
     workTone:
-      "Suits teaching, mediation, care, and collaborative crafts (reflective cue only).",
+      "Suits teaching, mediation, care, and collaborative crafts (reflective only).",
   },
   3: {
     keyword: "Creativity",
@@ -87,7 +87,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Finish and share one idea. Not ten drafts.",
     workTone:
-      "Suits media, teaching, design, and people-facing storytelling roles (reflective cue only).",
+      "Suits media, teaching, design, and people-facing storytelling roles (reflective only).",
   },
   4: {
     keyword: "Stability",
@@ -109,7 +109,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Keep one routine. Let one plan change without throwing the rest out.",
     workTone:
-      "Suits analysis, building, technical craft, and orderly stewardship (reflective cue only).",
+      "Suits analysis, building, technical craft, and orderly stewardship (reflective only).",
   },
   5: {
     keyword: "Freedom",
@@ -131,7 +131,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Try one small new thing. Come back to the routine after.",
     workTone:
-      "Suits sales, travel-adjacent work, writing, and fast-feedback roles (reflective cue only).",
+      "Suits sales, travel-adjacent work, writing, and fast-feedback roles (reflective only).",
   },
   6: {
     keyword: "Care",
@@ -152,7 +152,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     ],
     practice: CARE_HOUR_PRACTICE,
     workTone:
-      "Suits healing, teaching, design, hospitality, and family-centered work (reflective cue only).",
+      "Suits healing, teaching, design, hospitality, and family-centered work (reflective only).",
   },
   7: {
     keyword: "Wisdom",
@@ -174,7 +174,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Tell one honest thought to someone you trust. Then stop.",
     workTone:
-      "Suits research, writing, counseling, and specialist craft (reflective cue only).",
+      "Suits research, writing, counseling, and specialist craft (reflective only).",
   },
   8: {
     keyword: "Success",
@@ -196,7 +196,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Finish one real result. Then rest as if rest were part of the job.",
     workTone:
-      "Suits finance, operations, law, and enterprise building (reflective cue only).",
+      "Suits finance, operations, law, and enterprise building (reflective only).",
   },
   9: {
     keyword: "Humanity",
@@ -218,7 +218,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     practice:
       "Pick one cause. Do one next step. Then stop.",
     workTone:
-      "Suits healing, defense of others, arts with impact, and high-energy craft (reflective cue only).",
+      "Suits healing, defense of others, arts with impact, and high-energy craft (reflective only).",
   },
 };
 

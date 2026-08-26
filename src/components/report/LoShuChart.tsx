@@ -547,7 +547,7 @@ export function LoShuChart({
               onMouseEnter={() =>
                 setTip(
                   loShu.birth_number === loShu.destiny_number
-                    ? `Day number and long path are both ${loShu.birth_number}. That habit may show a lot. Try: finish one thing you started. Watch: treating this number as the whole self.`
+                    ? `Day number and long path are both ${loShu.birth_number}. That habit shows up a lot. Try: finish one thing you started. Watch: treating this number as the whole self.`
                     : `Day number ${loShu.birth_number ?? "—"} is the first habit. Long path ${loShu.destiny_number ?? "—"} is the longer walk. They are date numbers, not a third Lo Shu digit.`,
                 )
               }

@@ -494,11 +494,11 @@ const OVERRIDES: Record<string, OverrideSpec> = {
       "Because the front looks ready to change, people may not expect you to want a repeating plan. Watch for saying yes to every new thing in a light voice while privately wanting the week to hold.",
     tryLine:
       "Try writing one repeating plan, then try one small change inside it — not instead of it.",
-    meet: "The changeable face (5) can still protect a steady plan (4) if you let people see what is not up for grabs.",
+    meet: "People see someone who likes change (5). Inside you want a steady plan (4). Say what is not up for grabs before you say yes to the next new thing.",
     overInner:
       "If the wish for routine is running everything today, try one small change so the plan does not become a cage.",
     overOuter:
-      "If the changeable face has the whole day, write one repeating plan before you say yes to the next new thing.",
+      "If looking ready to move has the whole day, write one repeating plan before you say yes to the next new thing.",
     overInnerWatch:
       "Watch: planning so long that the week never starts.",
     overOuterWatch:
@@ -566,11 +566,11 @@ const OVERRIDES: Record<string, OverrideSpec> = {
       "Because you look ready to move, people may keep offering new things after you are done. Watch for saying yes to change when you wanted a pause.",
     tryLine:
       "Try one small change, then take ten quiet minutes before you answer the next one. The quiet is a plan, not a disappearance.",
-    meet: "The changeable face (5) can still protect a private want (7) if you leave before the next experiment starts.",
+    meet: "People see someone who likes change (5). Inside you want quiet (7). You can look ready to move and still need a pause. Tell the person offering the next new thing that you will answer after ten quiet minutes.",
     overInner:
       "If you have gone fully quiet today, try one small, visible change so people know you are still in.",
     overOuter:
-      "If the changeable face has the whole day, take ten quiet minutes before you agree to the next new thing.",
+      "If looking ready to move has the whole day, take ten quiet minutes before you agree to the next new thing.",
     overInnerWatch:
       "Watch: going so quiet that people think you do not care about the moving world.",
     overOuterWatch:

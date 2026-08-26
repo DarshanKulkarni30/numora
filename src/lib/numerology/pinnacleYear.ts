@@ -251,8 +251,8 @@ export function pinnacleYearPdfLines(model: PinnacleYearModel): string[] {
     `Pinnacle ${c.pinnacle.id} · ${c.pinnacle.number} ${c.title} · ${c.ageLabel} (age ${model.age}).`,
     `Season ${c.season.season} · ${c.planet.symbol} ${c.planet.name}.`,
     `Core tone: ${c.coreTone}`,
-    `How it may show: ${c.manifestation.join("; ")}.`,
-    `Practice cue: ${c.practiceCue}`,
+    `How it shows: ${c.manifestation.join("; ")}.`,
+    `Try: ${c.practiceCue}`,
     c.narrative,
     `Related: ${c.related.map((r) => `${r.label} ${r.value}`).join(" · ")}.`,
     `Chapters: ${model.chapters

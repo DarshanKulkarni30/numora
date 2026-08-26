@@ -63,7 +63,7 @@ eq(model.chapters[0]?.palette.name, "Gold", "chapter 1 gold");
 eq(model.chapters[2]?.palette.name, "Orange", "chapter 3 orange");
 
 const blob = pinnacleYearPdfLines(model).join("\n");
-has(blob, "Practice cue", "pdf includes practice cue");
+has(blob, "Try:", "pdf includes a try");
 has(blob, "current", "pdf marks current terrace");
 lacks(blob, "will become", "no predictive will-become");
 lacks(blob, "guaranteed", "no guaranteed language");

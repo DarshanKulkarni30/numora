@@ -7,18 +7,18 @@ import {
 } from "./themeGraph";
 
 const TITLE_BY_DIGIT: Record<number, string> = {
-  1: "The Starter",
-  2: "The Partner",
-  3: "The Voice",
-  4: "The Pattern Builder",
-  5: "The Adaptive Scout",
-  6: "The Harmoniser",
-  7: "The Quiet Seeker",
-  8: "The Steady Steward",
-  9: "The Closer",
-  11: "The Intuitive",
-  22: "The Architect",
-  33: "The Teacher",
+  1: "The Starter — you go first",
+  2: "The Partner — you work with someone",
+  3: "The Voice — you talk it through",
+  4: "The Planner — you write the steps",
+  5: "The Changer — you switch course",
+  6: "The Carer — you keep promises",
+  7: "The Thinker — you pause first",
+  8: "The Finisher of results — you count the work",
+  9: "The Closer of loops — you end what is done",
+  11: "The Noticer — you see it first",
+  22: "The Builder — you put a large plan on a calendar",
+  33: "The Teacher — you explain and care",
 };
 
 /** Short pull — used only inside the throughline, not as a title. */
@@ -84,12 +84,12 @@ function titleFor(theme: ThemeHit, seats: ChartSeat[]): string {
   if (theme.id === "expression") {
     const three = map.get(3)?.length ?? 0;
     const nine = map.get(9)?.length ?? 0;
-    if (three > 0 && nine > 0 && three === nine) return "The Voice who finishes";
+    if (three > 0 && nine > 0 && three === nine) return "You talk it through and you finish it";
     if (nine > three) return TITLE_BY_DIGIT[9];
     if (three > 0) return TITLE_BY_DIGIT[3];
   }
   const { digit } = loudestDigit(theme, seats);
-  return TITLE_BY_DIGIT[digit] ?? "The Working Note";
+  return TITLE_BY_DIGIT[digit] ?? "Your working note";
 }
 
 function counterweights(opts: {
@@ -162,9 +162,9 @@ function throughlineFor(opts: {
 }): string {
   const { digit, labels } = loudestDigit(opts.dominant, opts.seats);
   const seatList = labels.slice(0, 4).join(", ");
-  const pattern = `${digit} sits in ${labels.length} seat${labels.length === 1 ? "" : "s"}${
+  const pattern = `${plainTrait(digit)} shows up in ${labels.length} place${labels.length === 1 ? "" : "s"}${
     seatList ? ` (${seatList})` : ""
-  }, so ${plainTrait(digit)} is the loudest signal here.`;
+  }. That is the loudest pattern here.`;
 
   const pulls = counterweights({
     dominantId: opts.dominant.id,

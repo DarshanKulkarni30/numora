@@ -53,21 +53,21 @@ const darshan = buildYearRhythm({
 
 eq(darshan.layers[0].digit, 5, "PY 5");
 eq(darshan.layers[2].digit, 4, "month 4");
-eq(darshan.layers[0].season.season, "Wind season", "year 5 is wind");
-eq(darshan.layers[2].season.season, "Earth season", "month 4 is earth");
+eq(darshan.layers[0].season.season, "Changing stretch", "year 5 is wind");
+eq(darshan.layers[2].season.season, "Planning stretch", "month 4 is earth");
 eq(darshan.layers[0].season.verb, "MOVE", "year verb MOVE");
 eq(darshan.layers[2].season.verb, "BUILD", "month verb BUILD");
-eq(darshan.mix.mixLabel, "MOVE → BUILD", "hero mix 5×4");
+eq(darshan.mix.mixLabel, "A changing year, a planning month", "hero mix 5×4");
 eq(darshan.sun?.name, "Libra", "Libra center");
 eq(darshan.sunVerb, "INITIATE", "Libra cardinal → INITIATE");
-eq(darshan.layers[0].role, "Climate", "year is climate");
-eq(darshan.layers[1].role, "Mirror", "outlook is mirror");
-eq(darshan.layers[2].role, "Weather", "month is weather");
+eq(darshan.layers[0].role, "This year", "year is this year");
+eq(darshan.layers[1].role, "Second count for this year", "outlook is second count");
+eq(darshan.layers[2].role, "This month", "month is this month");
 eq(darshan.clock.sectors[0]?.label, "Oct", "rhythm clock from Oct 13 DOB");
-has(darshan.yearMonth, "frame", "5↔4 uses frame / boundary copy");
-has(darshan.mix.bestUse, "experiment", "best use is pair-level");
+has(darshan.yearMonth, "routine", "5↔4 uses year-change plus month-plan");
+has(darshan.mix.bestUse, "repeat", "best use is a repeating step");
 has(darshan.mix.watchFor, "restless", "watch-for names restlessness");
-has(darshan.mix.outlookNote, "matches year 5", "matching outlook names the year");
+has(darshan.mix.outlookNote, "one job for the year", "matching outlook names one job");
 has(darshan.sunInfluence, "Libra", "sun influence names Libra");
 has(darshan.summary, "Year 5", "summary names the year number");
 has(darshan.summary, "Month 4", "summary names the month number");
@@ -85,7 +85,7 @@ has(master.summary, "Year 11", "summary keeps the master number");
 has(master.seasonal, "Year 11", "seasonal keeps the master number");
 lacks(master.summary, "Year 2", "reduced digit never reaches user copy");
 has(master.masterGloss ?? "", "works like a 2", "gloss explains the reduction");
-has(darshan.weatherPrinciple, "not events", "weather principle kept");
+has(darshan.weatherPrinciple, "do not predict", "weather principle kept");
 
 const mixed = buildYearRhythm({
   personalYear: "5",
@@ -96,18 +96,18 @@ const mixed = buildYearRhythm({
   asOf,
 });
 eq(mixed.sunVerb, "REFINE", "Virgo mutable earth → REFINE");
-has(mixed.mix.outlookNote, "Outlook 9", "differing outlook names its number");
+has(mixed.mix.outlookNote, "reads 9", "differing outlook names its number");
 has(
   mixed.mix.outlookNote,
-  "second reading of the same year",
+  "same year",
   "outlook not a third timeline",
 );
 has(
   mixed.mix.outlookNote,
-  "does not overrule",
+  "calendar year",
   "outlook does not compete with the Personal Year",
 );
-eq(mixed.mix.mixLabel, "MOVE → BUILD", "hero stays year × month");
+eq(mixed.mix.mixLabel, "A changing year, a planning month", "hero stays year × month");
 
 const blob = [
   darshan.yearMonth,
@@ -120,10 +120,10 @@ const blob = [
   ...yearRhythmPdfLines(darshan),
   ...yearRhythmPdfLines(mixed),
 ].join(" ");
-has(blob, "Best use", "pdf includes best use");
-has(blob, "Watch for", "pdf includes watch for");
-has(blob, "Clock:", "pdf includes clock");
-has(blob, "ASTRO", "pdf tags astro separately");
+has(blob, "Try:", "pdf includes a try");
+has(blob, "Watch:", "pdf includes a watch");
+has(blob, "clock starts", "pdf includes clock");
+has(blob, "calendar backdrop", "pdf tags astro separately");
 lacks(blob, "expect ", "no expect-event language");
 lacks(blob, "will happen", "no will-happen");
 lacks(blob, "definitely will", "no definitely-will");

@@ -35,18 +35,18 @@ export function ageSpan(start: number, end: number | null): string {
 /** One amateur job for a chart or year digit. */
 export function plainJob(n: number): string {
   const map: Record<number, string> = {
-    1: "start one small thing",
-    2: "wait and work with one other person",
-    3: "finish one thing you started saying",
-    4: "write one repeating plan",
-    5: "try one small change",
-    6: "keep one promise",
-    7: "take ten quiet minutes before you answer",
-    8: "finish one real result, then rest",
-    9: "close one loop before opening another",
-    11: "notice and rest — do not force a big launch",
-    22: "take one practical step on a large plan",
-    33: "help one person without emptying yourself",
+    1: "start one small thing today and put your name on it",
+    2: "do one task with one other person this week",
+    3: "finish one thing you started saying to someone",
+    4: "write one repeating plan and keep it this week",
+    5: "change one small thing this week, not everything",
+    6: "keep one promise to someone, then keep one hour for yourself",
+    7: "take ten quiet minutes, then answer the person who is waiting",
+    8: "finish one result you can measure, then rest",
+    9: "close one loop that is already done before you start another",
+    11: "write one thing you keep noticing, then rest — do not force a launch",
+    22: "put one practical step of the large plan on a real date",
+    33: "help one person properly, then stop",
   };
   return map[n] ?? `use the tone of ${n} in one small way`;
 }

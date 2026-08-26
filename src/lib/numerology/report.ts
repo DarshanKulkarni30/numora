@@ -121,7 +121,7 @@ function ageGuidance(age: number, name: string, lifePath: number): {
       category: "Guidance For Teens And Parents",
       guidance: [
         `For ${name} (age ${age}), numerology traditions may describe reflective themes around identity and motivation linked with Life Path ${lifePath}.`,
-        "Identity formation: this period may emphasize trying roles, values, and friendships. Curiosity can be a strength when paired with reflection.",
+        "This period is for trying roles, values, and friendships. Pair curiosity with one quiet check-in. Not a verdict on who they are.",
         "Self-confidence: progress may come from skills practiced consistently more than from sudden breakthroughs.",
         "Friendships: social belonging may matter deeply; supportive peers and clear personal boundaries can coexist.",
         "Academic motivation: purpose-linked goals and varied study methods may help more than pressure alone.",
@@ -147,7 +147,7 @@ function monthlyGuidance(py: number, pm: number, reportType: ReportType) {
   if (reportType === "child") {
     return {
       career:
-        "Learning & play pacing (reflective only): this month may emphasize curiosity through short, enjoyable activities—not performance pressure or career forecasting.",
+        "Learning and play this month: one short enjoyable activity. Not a school plan and not a career forecast.",
       relationships:
         "Family & friendships: gentle presence, clear routines, and kind communication may support connection. Outcomes are not predicted.",
       finances:
@@ -174,7 +174,7 @@ function monthlyGuidance(py: number, pm: number, reportType: ReportType) {
 
   if (reportType === "adolescent") {
     return {
-      career: `Interests & future pacing (reflective only): Personal Month ${pm} within Personal Year ${py} may emphasize exploring interests without locking a lifelong path. This is not career counseling.`,
+      career: `This month (Personal Month ${pm} inside Personal Year ${py}): try one interest. Do not lock a lifelong path. This is not career counseling.`,
       relationships:
         "Friendships & family: presence and respectful communication may help. This does not predict relationship outcomes.",
       finances:
@@ -200,11 +200,11 @@ function monthlyGuidance(py: number, pm: number, reportType: ReportType) {
   }
 
   return {
-    career: `According to numerology traditions, Personal Month ${pm} within a Personal Year ${py} may emphasize thoughtful career pacing—progress through clear priorities rather than urgency. This could suggest reviewing commitments and choosing one high-value focus. Not a guarantee of results.`,
-    relationships: `This period may emphasize presence and honest communication. Small consistent gestures may matter more than grand statements. Outcomes remain open; the invitation is reflective connection.`,
-    finances: `Money awareness this month may benefit from tracking, simplifying, and avoiding impulsive upgrades. Numerology may highlight stewardship themes—not windfalls or losses as certainties. Not financial advice.`,
-    learning: `Study and skill-building may flow when broken into short sessions. Curiosity paired with a simple weekly review could support retention.`,
-    wellbeing: `Emotional focus may include rest and reducing overstimulation. Supportive routines may help more than dramatic overhauls. Not medical or psychological advice.`,
+    career: `This month sits inside Personal Year ${py}. Pick one work focus. Drop one extra task. This is pacing, not a promise of results.`,
+    relationships: `Say one true thing to someone close this week. Small regular contact beats one big gesture.`,
+    finances: `Write down one money number this week (a bill, a spend, or a save). Do not treat this as financial advice.`,
+    learning: `Study in short blocks. Review once at the end of the week.`,
+    wellbeing: `Protect rest. Cut one extra demand this week. Not medical or psychological advice.`,
     focus_areas: [
       "One priority project",
       "Clearer communication in key relationships",
@@ -243,7 +243,7 @@ function recommendationsFor(
 
   if (reportType === "child") {
     return [
-      `For parents/guardians only: Life Path ${pyth.lifePath} (${lp}) may show up as preferences in play or learning—not as fixed ability. Notice one preference this week and support it without pressure.`,
+      `For parents/guardians only: Life Path ${pyth.lifePath} (${lp}) shows up as preferences in play or learning—not as fixed ability. Notice one preference this week and support it without pressure.`,
       "Offer one encouraging learning activity this week and praise effort over outcomes.",
       "Keep communication warm and specific; avoid comparing the child to siblings or peers using this report.",
       `Personal Year ${py} / Month ${pm}: ${pyTheme} Use this only as gentle pacing—not a schedule of destiny.`,
@@ -277,7 +277,7 @@ function recommendationsFor(
     `Personal Month ${pm}: ${pmTheme} Keep goals small enough to finish this month.`,
     missing.length
       ? `Missing Lo Shu numbers invite gentle habits—not pressure: ${missingTips}.`
-      : "Vary the week across mental planning, emotional connection, and practical finishing so all three Lo Shu planes get airtime.",
+      : "Vary the week across mental planning, emotional connection, and practical finishing so all three Lo Shu groups get airtime.",
     "Revisit this report after major life changes; update name spelling if you legally change your name.",
   ];
 }
@@ -856,12 +856,12 @@ export function generateReport(
       ? [
           `Family and friendship style may be colored by Soul Urge ${pyth.soulUrge} and Life Path ${pyth.lifePath}.`,
           meaningFor(pyth.soulUrge),
-          "According to numerology traditions, closeness may grow through reliability, respectful honesty, and shared attention. This may indicate preferences—not guarantees—and must not be used to judge a child’s character.",
+          "Closeness grows through reliability, honest talk, and shared attention. This is a preference, not a verdict on the child's character.",
         ].join(" ")
       : [
           `Relationship style may be colored by Soul Urge ${pyth.soulUrge} and Life Path ${pyth.lifePath}.`,
           meaningFor(pyth.soulUrge),
-          "According to numerology traditions, closeness may grow through reliability, respectful honesty, and shared rituals of attention. This may indicate preferences—not guarantees—about partnership outcomes.",
+          "Closeness grows through reliability, honest talk, and small regular contact. This is a preference, not a prediction of partnership outcomes.",
         ].join(" "),
     "relationships",
   );

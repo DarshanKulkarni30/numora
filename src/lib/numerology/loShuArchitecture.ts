@@ -131,21 +131,21 @@ const ENGINE_DEFS: {
 }[] = [
   {
     id: "will",
-    label: "Will engine",
+    label: "Feeling group (3–5–7)",
     numbers: [3, 5, 7],
     arrowName: "Arrow of Will (Emotional)",
     summaryActive: "Emotional resilience, intuition, and creative expression.",
   },
   {
     id: "action",
-    label: "Action engine",
+    label: "Doing group (8–1–6)",
     numbers: [8, 1, 6],
     arrowName: "Arrow of Action (Practical)",
     summaryActive: "Execution, initiative, and responsible care.",
   },
   {
     id: "determination",
-    label: "Determination engine",
+    label: "Stay-with-it group (9–5–1)",
     numbers: [9, 5, 1],
     arrowName: "Arrow of Determination",
     summaryActive: "Purpose, stability, and drive to begin.",
@@ -206,30 +206,30 @@ function planeLayerCopy(
   if (kind === "core") {
     summary =
       plane.score === 0
-        ? "Emotional plane is quiet in this grid—depth may arrive through practiced insight and gentle expression rather than automatic pattern."
+        ? "The feeling group is quiet on this grid. Depth comes from practised insight and gentle expression, not from an automatic pattern."
         : `Core self leans on ${presentTraits.join(", ") || "emotional themes"}${
             missingTraits.length
               ? `; lighter on ${missingTraits.join(", ")}`
               : ""
-          }. Traditions may read this as intuitive, reflective, and creative when the plane is active.`;
+          }. When this group is active you read as intuitive, reflective, and creative.`;
   } else if (kind === "operating") {
     summary =
       plane.score === 0
-        ? "Practical plane is quiet—execution may need deliberate scaffolding."
+        ? "The doing group is quiet. Execution needs a written first step, not more intention."
         : `Operating style leans on ${presentTraits.join(", ") || "practical themes"}${
             missingTraits.length
               ? `; less automatic on ${missingTraits.join(", ")}`
               : ""
-          }. Behavior may read as action-oriented and capable of building when this plane is strong.`;
+          }. When this group is strong you start and build.`;
   } else {
     summary =
       plane.score === 0
-        ? "Mental plane is quiet—thinking may feel empathic yet unstructured until systems are practiced."
-        : `Cognitive frame leans on ${presentTraits.join(", ") || "mental themes"}${
+        ? "The thinking group is quiet. Thinking stays empathic and unstructured until you practise a system."
+        : `Thinking leans on ${presentTraits.join(", ") || "mental themes"}${
             missingTraits.length
               ? `, with ${missingTraits.join(", ")} as skills to practise rather than defaults`
               : ""
-          }. Thinking may feel moral and compassionate, with structure as a learnable skill when 4 or 2 is light.`;
+          }. Thinking is moral and compassionate; structure is a learnable skill when 4 or 2 is light.`;
   }
 
   return {
@@ -257,7 +257,7 @@ function buildCatalysts(missing: number[]): GrowthCatalyst[] {
       keyword,
       title: keyword,
       actions,
-      summary: `Missing ${n} may act as a growth trigger around ${keyword.toLowerCase()}—cultivate through habits, not self-judgment.`,
+      summary: `Digit ${n} is quiet on your date grid. Practise ${keyword.toLowerCase()} with one small habit this week. A quiet digit is not a fault.`,
     };
   });
 }
@@ -277,7 +277,7 @@ function tensionNarrative(
   if (bn === dn) {
     return {
       label: `BN ${bn} ≈ DN ${dn}`,
-      narrative: `Birth-day number and long-path number are both ${bn}. That habit may show a lot. Try one finish or one pause so it does not become the whole self. The slider is feeling-digits vs doing-digits on the grid — not a score of this ${bn}.`,
+      narrative: `Birth-day number and long-path number are both ${bn}. That habit shows up a lot. Try one finish or one pause so it does not become the whole self. The slider is feeling-digits vs doing-digits on the grid — not a score of this ${bn}.`,
     };
   }
   const bnTrait = LO_SHU_NUMBER_META[bn]?.trait ?? String(bn);
@@ -401,10 +401,10 @@ export function buildLoShuArchitecture(loShu: LoShuResult): LoShuArchitecture {
 
   const engineLine =
     activeEngineCount === 3
-      ? "This grid shows three active strength engines—traditions may read that as rare and powerful when balanced with rest."
+      ? "All three digit-groups on this grid are filled. Rest so the automatic habits do not run the whole week."
       : activeEngineCount === 0
-        ? "No fully lit strength engines—partial patterns and catalysts still offer a clear practice map."
-        : `${activeEngineCount} active strength engine${activeEngineCount === 1 ? "" : "s"} with ${engines.filter((e) => e.status === "partial").length} partial.`;
+        ? "No digit-group is fully filled. Use the quiet digits as practice, not as a flaw."
+        : `${activeEngineCount} digit-group${activeEngineCount === 1 ? "" : "s"} fully filled, and ${engines.filter((e) => e.status === "partial").length} partly filled.`;
 
   const narrativeLines = [
     `Decision flow may read as ${decisionFlowLabel}. ${decisionFlowTakeaway}`,

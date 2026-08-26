@@ -23,7 +23,7 @@ export function buildLifestyleInsights(report: NumerologyReport): LifestyleInsig
     learning: assertSafeCopy(learningStyle(lp, expr, young), "enhanced.life.learn"),
     leadership: assertSafeCopy(
       young
-        ? `May like to help by showing how something works (${traitLabel(expr)}), rather than by being in charge of people.`
+        ? `You help by showing how something works (${traitLabel(expr)}), not by being in charge of people.`
         : leadershipStyle(lp, expr),
       "enhanced.life.lead",
     ),
@@ -49,24 +49,24 @@ function learningStyle(lp: number, expr: number, young: boolean): string {
   else bits.push("a mix of example and practice");
   if (expr === 4 || expr === 22) bits.push("notes and systems that can be reused");
   if (expr === 3) bits.push("making or telling as a way to understand");
-  const line = `May learn well through ${bits.join("; ")}.`;
-  return young ? `${line} Adults can offer choice of pace rather than more pressure.` : line;
+  const line = `You learn well through ${bits.join("; ")}.`;
+  return young ? `${line} Adults: offer a choice of pace rather than more pressure.` : line;
 }
 
 function leadershipStyle(lp: number, expr: number): string {
   if (lp === 7 || lp === 11 || expr === 7) {
-    return "May lead through expertise and prepared thought more than through volume or title.";
+    return "You lead through expertise and prepared thought, not through volume or title.";
   }
   if (lp === 8 || expr === 8) {
-    return "May lead through stewardship of resources and clear standards, with a watch for over-control.";
+    return "You lead by setting standards and looking after resources. Watch: over-control.";
   }
   if (lp === 2 || lp === 6) {
-    return "May lead through care and coordination rather than solo command.";
+    return "You lead through care and coordination, not solo command.";
   }
   if (lp === 1) {
-    return "May lead by starting, then needing others who can finish the system.";
+    return "You lead by starting. Then you need others who can finish the system.";
   }
-  return `May lead by ${traitLabel(lp)}, using ${traitLabel(expr)} to get the work done.`;
+  return `You lead by ${traitLabel(lp)}, using ${traitLabel(expr)} to get the work done.`;
 }
 
 function communicationStyle(pers: number, expr: number, young: boolean): string {
@@ -74,33 +74,33 @@ function communicationStyle(pers: number, expr: number, young: boolean): string 
   const warm = pers === 3 || pers === 6 || pers === 2;
   if (careful && warm) {
     return young
-      ? "May choose words carefully and still care about the other person’s feelings. A pause before answering can help."
-      : "Thoughtful and measured: careful with words, still relational. A pause before sending often improves the message.";
+      ? "You choose words carefully and still care about the other person’s feelings. Pause before you answer."
+      : "You are careful with words and still relational. Pause before you send — the message gets better.";
   }
   if (careful) {
     return young
-      ? "May need time to think before speaking. Silence is not always refusal."
-      : "Measured speech. May prefer writing or a second draft when the topic matters.";
+      ? "You need time to think before speaking. Silence is not refusal."
+      : "You speak in a measured way. Write it down or do a second draft when the topic matters.";
   }
   if (warm) {
-    return "You tend to explain things warmly and at length. Watch: leave gaps so the other person can answer at their own speed.";
+    return "You explain things warmly and at length. Leave a gap so the other person can answer at their own speed.";
   }
-  return `First impressions may lean on Personality ${pers} (${traitLabel(pers)}), while longer craft leans on Expression ${expr}.`;
+  return `First impressions lean on Personality ${pers} (${traitLabel(pers)}). Longer craft leans on Expression ${expr}.`;
 }
 
 function stressStyle(lp: number, soul: number, young: boolean): string {
   if (lp === 7 || soul === 7 || lp === 11) {
     return young
-      ? "When overwhelmed, may withdraw to think. A quiet corner and one trusted adult can help more than a crowd."
-      : "Under strain, may withdraw, analyse, and reflect. Isolation helps in short doses; it becomes a trap if it is the only tool.";
+      ? "When overwhelmed, you withdraw to think. A quiet corner and one trusted adult help more than a crowd."
+      : "Under strain you withdraw, analyse, and reflect. Isolation helps in short doses; it becomes a trap if it is the only tool.";
   }
   if (lp === 8 || lp === 1) {
-    return "Under strain, may push harder. The useful interrupt is a defined pause, not more force.";
+    return "Under strain you push harder. The useful interrupt is a defined pause, not more force.";
   }
   if (lp === 2 || lp === 6 || soul === 2 || soul === 6) {
-    return "Under strain, may over-care for others. The useful interrupt is one boundary that protects rest.";
+    return "Under strain you over-care for others. The useful interrupt is one boundary that protects rest.";
   }
-  return "Under strain, returning to one small controllable task often restores a sense of ground.";
+  return "Under strain, return to one small controllable task. That restores a sense of ground.";
 }
 
 function recoveryStyle(lp: number, soul: number, young: boolean): string {
@@ -111,5 +111,5 @@ function recoveryStyle(lp: number, soul: number, young: boolean): string {
   else bits.push("a simple routine", "sleep and water treated as non-negotiable");
   if (young) bits.push("play that does not have to be productive");
   else bits.push("writing a short honest note to self");
-  return `Recovery may look like ${bits.slice(0, 4).join(", ")}.`;
+  return `Recovery looks like ${bits.slice(0, 4).join(", ")}.`;
 }

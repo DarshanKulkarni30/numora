@@ -31,7 +31,7 @@ const YEAR_IMAGE: Record<
     1: {
       title: "A starting year",
       job: "This year is for starting one thing and putting your name on it. Expect to be the one who decides and goes first, which is tiring but is the point of a 1 year.",
-      image: "like standing at a new trailhead",
+      image: "You will be the one who decides first more often this year.",
       focus: [
         "starting one clear thing",
         "saying out loud where you are heading",
@@ -40,8 +40,8 @@ const YEAR_IMAGE: Record<
     },
     2: {
       title: "A listening year",
-      job: "This year is for working with people rather than ahead of them. Progress tends to come from one good partnership and from waiting for the right moment, not from pushing harder.",
-      image: "like waiting for the right tide",
+      job: "This year is for working with people rather than ahead of them. Progress comes from one good partnership and from waiting for the right moment, not from pushing harder.",
+      image: "Progress comes from one good partnership, not from pushing harder.",
       focus: [
         "hearing the other person out before you decide",
         "doing one thing with someone instead of alone",
@@ -51,7 +51,7 @@ const YEAR_IMAGE: Record<
     3: {
       title: "A speaking-up year",
       job: "This year is for saying and showing what you have been working on. Writing, teaching, posting and ordinary conversation all count — the risk is starting many of them and finishing none.",
-      image: "like a studio with the windows open",
+      image: "The risk this year is starting many talks and finishing none.",
       focus: [
         "finishing one thing you started saying",
         "learning something out loud where others can hear it",
@@ -61,7 +61,7 @@ const YEAR_IMAGE: Record<
     4: {
       title: "A groundwork year",
       job: "This year is for building the boring things that hold everything else up: routines, records, savings, repairs. It rarely feels exciting, and what you set up now is what next year runs on.",
-      image: "like laying stone for a lasting floor",
+      image: "This year rarely feels exciting. What you set up now is what next year runs on.",
       focus: [
         "writing one repeating task down as steps",
         "keeping one system running all year",
@@ -70,8 +70,8 @@ const YEAR_IMAGE: Record<
     },
     5: {
       title: "A change year",
-      job: "This year is for movement — travel, a new role, a different routine, a change of scene. Change tends to find you either way, so choose one or two on purpose rather than letting five happen at once.",
-      image: "like changing trains with a lighter bag",
+      job: "This year is for movement — travel, a new role, a different routine, a change of scene. Change finds you either way, so choose one or two on purpose rather than letting five happen at once.",
+      image: "Change will find you either way, so choose one or two on purpose.",
       focus: [
         "trying one small change you can undo",
         "keeping plans loose enough to move",
@@ -81,7 +81,7 @@ const YEAR_IMAGE: Record<
     6: {
       title: "A responsibility year",
       job: "This year is for people and places that depend on you: home, family, a team, a promise you already made. More gets asked of you than usual, so the useful skill is helping with a limit rather than helping until you are empty.",
-      image: "like tending a garden",
+      image: "More gets asked of you than usual. Help with a limit you say out loud.",
       focus: [
         "keeping one promise you already made",
         "helping with a limit you say out loud",
@@ -91,7 +91,7 @@ const YEAR_IMAGE: Record<
     7: {
       title: "A study year",
       job: "This year is for going deeper into one subject rather than wider across five. Time alone is productive rather than antisocial now, as long as the thinking eventually turns into one small step.",
-      image: "like entering a university",
+      image: "Time alone is useful this year if the thinking turns into one small step.",
       focus: [
         "protecting one quiet hour each week",
         "studying one subject properly instead of five lightly",
@@ -101,7 +101,7 @@ const YEAR_IMAGE: Record<
     8: {
       title: "A results year",
       job: "This year is for finishing things that can be counted: money, targets, qualifications, a project that ships. Effort shows up in visible results, and the cost is that rest gets postponed unless you schedule it.",
-      image: "like taking inventory of a workshop",
+      image: "Effort shows up as a result you can count. Rest has to be scheduled.",
       focus: [
         "finishing one result you can measure",
         "getting the money and the admin in order",
@@ -110,8 +110,8 @@ const YEAR_IMAGE: Record<
     },
     9: {
       title: "A finishing year",
-      job: "This year is for ending things properly — a job, a course, a habit, a version of yourself that has already finished. Starting something brand new tends to stall until the old thing is actually closed.",
-      image: "like closing a long chapter with care",
+      job: "This year is for ending things properly — a job, a course, a habit, a version of yourself that has already finished. Starting something brand new stalls until the old thing is actually closed.",
+      image: "New starts stall until the old thing is actually closed.",
       focus: [
         "closing one loop that is already done",
         "handing on something you know to someone who asked",
@@ -121,7 +121,7 @@ const YEAR_IMAGE: Record<
     11: {
       title: "A noticing year",
       job: "This year is for paying attention rather than producing. Ideas and patterns arrive faster than usual and so does tiredness, so the job is to write things down and rest before you are forced to.",
-      image: "a year for noticing, thinking and resting",
+      image: "Ideas arrive faster, and so does tiredness. Write them down and rest.",
       focus: [
         "writing down one thing you keep repeating",
         "resting on purpose, not only once you are tired",
@@ -131,7 +131,7 @@ const YEAR_IMAGE: Record<
     22: {
       title: "A building year",
       job: "This year is for the large practical project — the one that needs years, not weeks. Ambition only turns into anything if it goes on a real calendar in ordinary steps.",
-      image: "like drawing a large plan on practical paper",
+      image: "Ambition only turns into anything if it goes on a real calendar.",
       focus: [
         "taking one practical step on the large plan",
         "putting that plan on a real calendar",
@@ -141,7 +141,7 @@ const YEAR_IMAGE: Record<
     33: {
       title: "A teaching year",
       job: "This year is for passing on what you know and looking after people who ask. It goes wrong in one specific way — giving to everyone lightly and running yourself down — so help fewer people properly.",
-      image: "like holding a lamp for others while keeping your own fuel",
+      image: "It goes wrong when you help everyone lightly and run yourself down.",
       focus: [
         "helping one person properly instead of many lightly",
         "saying what you know in plain words",
@@ -157,37 +157,37 @@ const MONTH_IMAGE: Record<
   1: {
     title: "Starting month",
     job: "A month to begin one thing rather than plan several.",
-    image: "like striking a match",
+    image: "Begin one thing. Do not plan several.",
     focus: ["starting one small thing"],
   },
   2: {
     title: "Working-with-others month",
     job: "A month where things move faster with one other person than alone.",
-    image: "like listening before speaking",
+    image: "Things move faster with one other person than alone.",
     focus: ["doing one thing with one other person"],
   },
   3: {
     title: "Sharing month",
     job: "A month to finish something and let people see it.",
-    image: "like a sketchbook week",
+    image: "Finish one piece and let someone see it.",
     focus: ["finishing and sharing one piece"],
   },
   4: {
     title: "Tidying month",
     job: "A month for admin, routines and the jobs you keep deferring.",
-    image: "like sorting a workbench",
+    image: "Do the admin and the jobs you keep putting off.",
     focus: ["putting one routine on paper"],
   },
   5: {
     title: "Change month",
     job: "A month where a small change lands well and a big one overshoots.",
-    image: "like opening a window",
+    image: "A small change lands. A big rewrite overshoots.",
     focus: ["trying one small change you can undo"],
   },
   6: {
     title: "Looking-after month",
     job: "A month when home and the people close to you need more of your time.",
-    image: "like tending a garden",
+    image: "Home and the people close to you need more of your time.",
     focus: [
       "looking after one person properly",
       "repairing one thing you have let slide",
@@ -196,19 +196,19 @@ const MONTH_IMAGE: Record<
   7: {
     title: "Quiet month",
     job: "A month to think before answering and to protect some time alone.",
-    image: "like a quiet library hour",
+    image: "Think before you answer. Protect some time alone.",
     focus: ["taking quiet time before you answer"],
   },
   8: {
     title: "Delivery month",
     job: "A month to finish one thing you can actually measure.",
-    image: "like balancing the books",
+    image: "Finish one thing you can measure.",
     focus: ["finishing one result you can measure"],
   },
   9: {
     title: "Closing month",
     job: "A month to end what is already over instead of starting more.",
-    image: "like finishing a letter",
+    image: "End what is already over. Do not start more.",
     focus: ["closing one loop that is already done"],
   },
 };

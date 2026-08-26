@@ -438,7 +438,7 @@ export function buildPythagoreanWheel(
     const d = planes.find((p) => p.id === dominant)!;
     const w = planes.find((p) => p.id === weak)!;
     tensions.push(
-      `${d.label} (${d.represents}) currently leads this matrix; ${w.label.toLowerCase()} is quieter. That tilt is a pacing cue — give the quieter plane a little air each week.`,
+      `${d.label} (${d.represents}) currently leads this matrix; ${w.label.toLowerCase()} is quieter. That tilt is a pacing reminder — give the quieter group a little air each week.`,
     );
   } else if (layerRelation === "synergy") {
     tensions.push(

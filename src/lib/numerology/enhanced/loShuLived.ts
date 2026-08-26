@@ -18,15 +18,15 @@ export type LoShuLived = {
 };
 
 const LIVED_MISSING: Record<number, string> = {
-  1: "Starting may wait for a nudge from outside. A tiny self-start (one independent first step) is often more useful than a pep talk.",
-  2: "Partnership cues may be easy to miss. Naming a feeling in plain language can be the practice, not a personality change.",
-  3: "Expression may stall until the room feels safe. A low-stakes sketch, note, or joke can reopen the channel.",
-  4: "Plans may live in the head longer than on paper. One written sequence for a repeating task is a lived fix.",
-  5: "Decision-making may lean on external confirmation rather than inner trial-and-error. A small, reversible experiment can restore that muscle.",
-  6: "Care may spill without a container. Choosing what is yours to hold—and what is not—is the practice.",
-  7: "Quiet analysis may be skipped under social noise. A protected thinking slot is not withdrawal; it is maintenance.",
-  8: "Follow-through on material or organizational tasks may feel heavy. Steward one number (a bill, a file, a promise) to completion.",
-  9: "Endings may linger. Completing a small cycle on purpose trains the larger release.",
+  1: "Starting waits for a nudge from outside. Do one independent first step this week instead of waiting for a pep talk.",
+  2: "Partnership signals are easy to miss. Name a feeling in plain language — that is the practice, not a personality change.",
+  3: "Expression stalls until the room feels safe. A low-stakes sketch, note, or joke reopens the channel.",
+  4: "Plans live in the head longer than on paper. Write one repeating task as steps. That is the fix.",
+  5: "Decisions lean on other people confirming first. Run one small, reversible trial yourself.",
+  6: "Care spills past what is yours. Choose what you will hold this week, and what you will not.",
+  7: "Quiet analysis gets skipped under social noise. Protect a thinking slot. That is maintenance, not withdrawal.",
+  8: "Follow-through on money, files, or organisation feels heavy. Steward one number (a bill, a file, a promise) to completion.",
+  9: "Endings linger. Complete one small cycle on purpose so the larger release has a rehearsal.",
 };
 
 export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLived {
@@ -48,7 +48,7 @@ export function buildLoShuLived(loShu: LoShuResult | undefined | null): LoShuLiv
       kind: "repeated",
       number: r.number,
       effect: assertSafeCopy(
-        `${repeatedNumberEffect(r.number, r.count)} Because this digit repeats, the behaviour tends to run automatically rather than by choice. Try doing it on purpose once this week and notice whether the situation actually called for it.`,
+        `${repeatedNumberEffect(r.number, r.count)} Because this digit repeats, the behaviour runs automatically rather than by choice. Do it on purpose once this week and notice whether the situation actually called for it.`,
         `enhanced.loshu.rep.${r.number}`,
       ),
     });

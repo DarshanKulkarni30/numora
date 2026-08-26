@@ -135,7 +135,7 @@ export const PROJECTED_YEAR_META: Record<number, ProjectedYearMeta> = {
       "Work and ventures may respond better when you plan ahead rather than improvise every week.",
       "Helpful introductions, including people with authority, may appear if you stay reachable.",
       "Study, writing, competitions, and carefully chosen new financial experiments may fit the tone.",
-      "Makers—writers, musicians, visual work—may find a clearer lane for new pieces.",
+      "Makers—writers, musicians, visual work—find clearer room for new pieces.",
     ],
     practice:
       "Start one meaningful project and protect sleep while you build momentum.",
@@ -190,9 +190,9 @@ export const PROJECTED_YEAR_META: Record<number, ProjectedYearMeta> = {
       "Stay alert and calm when unforeseen obstacles show up.",
       "Income sources may widen if you keep a practical rebuild plan.",
       "New ventures, including housing themes, may be possible with extra diligence.",
-      "Give novelty one constructive lane and review it weekly.",
+      "Give one new thing a start date and an end date, then review it on the same weekday each week.",
     ],
-    practice: "Give novelty one constructive lane with a weekly review.",
+    practice: "Give one new thing a start date and an end date. Review it on the same weekday each week.",
   },
   5: {
     planet: "Mercury",

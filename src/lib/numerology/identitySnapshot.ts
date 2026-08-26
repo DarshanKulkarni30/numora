@@ -317,9 +317,9 @@ export function buildIdentitySnapshot(input: {
   if (soul !== pers) {
     divergences.push({
       id: "inner-outer",
-      title: "Inner Want vs Outer Face",
+      title: "What you want vs what people see",
       values: [`Soul Urge ${soul}`, `Personality ${pers}`],
-      insight: "Inner depth vs adaptable first impression.",
+      insight: "What you want vs what people see first.",
       glyph: "☽",
     });
   }
@@ -351,7 +351,7 @@ export function buildIdentitySnapshot(input: {
     },
   ];
 
-  const corePoem = `${name} moves with care for ${(trait(lp) || "path").toLowerCase()}, voiced through ${(trait(expr) || "expression").toLowerCase()}. Inner ${(trait(soul) || "want").toLowerCase()} meets an outer ${(trait(pers) || "face").toLowerCase()}, ripening toward ${(trait(maturity) || "maturity").toLowerCase()}.`;
+  const corePoem = `${name}: Life Path ${lp} is ${trait(lp) || "your longer direction"}. Expression ${expr} is how you show up (${trait(expr) || "your style"}). Inside, Soul Urge ${soul} wants ${trait(soul) || "what you want"}. People first see Personality ${pers} (${trait(pers) || "the outer face"}). Later, Maturity ${maturity} is ${trait(maturity) || "the later blend"}. Keep one practice from Life Path this week.`;
 
   const flowerPetals = capsules.slice(0, 5);
   const toneBalance = buildToneBalance(tags);

@@ -216,7 +216,7 @@ export function EnhancedReportView({
         <section>
           <h2 className="text-xl text-ink">Core numbers</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Same calculated seats as the detailed report. Click a tile for its guide.
+            Same calculated numbers as the detailed report. Click a tile for its guide.
           </p>
           <div className="mt-4 space-y-6 rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <CoreNumbersChart
@@ -429,7 +429,7 @@ export function EnhancedReportView({
             Try this year: {reading.season.yearFocus.join(" · ")}
           </p>
           <p className="mt-1 text-xs text-ink-soft">
-            If a picture helps: {reading.season.yearImage}.
+            {reading.season.yearImage}
           </p>
           {reading.season.monthNumber != null ? (
             <>

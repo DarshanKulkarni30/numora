@@ -64,14 +64,14 @@ export function repeatedNumberEffect(n: number, count: number): string {
   const meta = LO_SHU_NUMBER_META[n];
   const theme = meta?.theme ?? "related personal themes";
   if (count >= 3) {
-    return `Number ${n} appears ${count} times, which traditions may read as a strongly emphasized pattern around ${theme}. Balance with rest and other planes so the emphasis stays constructive.`;
+    return `Number ${n} appears ${count} times. That is a strong habit around ${theme}. Balance it with rest and the other planes so it stays useful.`;
   }
-  return `Number ${n} appears ${count} times, which may gently amplify themes of ${theme}—an emphasis to notice, not a fixed label.`;
+  return `Number ${n} appears ${count} times. That turns up the volume on ${theme} — an emphasis to notice, not a fixed label.`;
 }
 
 export function missingNumberEffect(n: number): string {
   const tip = LO_SHU_NUMBER_META[n]?.growth ?? "balanced habits";
-  return `Missing ${n} may invite growth through ${tip}—a development area, not a deficit.`;
+  return `Missing ${n} is a skill to practise: ${tip}. It is a development area, not a deficit.`;
 }
 
 export function loShuEffectNotes(
