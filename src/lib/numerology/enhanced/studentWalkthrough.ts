@@ -84,7 +84,7 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
     [
       "Pythagorean reductions keep 11, 22, and 33 when they appear in a part or a total.",
       "Vedic Psychic and Destiny reduce to 1–9 (masters are not kept in those two seats).",
-      "Chaldean letter map uses 1–8; 9 is not assigned to a letter. Compounds are read as texture; the reduced digit is essence.",
+      "Chaldean letter map uses 1–8; 9 is not assigned to a letter. The long total is extra detail; the reduced digit is the short name number.",
       lpStored === 11 || lpStored === 22 || lpStored === 33
         ? `This profile stores Life Path ${lpStored} as a master number.`
         : "This profile’s Life Path is a single digit; master-number rules still apply to parts of the date when 11/22/33 appear there.",
@@ -94,7 +94,7 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
 
   const methodNotes = assertSafeList(
     [
-      "Three schools are shown because they answer different questions — not because one is secretly correct. Texture means the larger name total. Essence means the single digit after that.",
+      "Three schools are shown because they answer different questions — not because one is secretly correct. The larger name total is extra detail. The reduced digit is the short name number.",
       "Enhanced synthesis counts chart seats; it does not replace the detailed report’s full method notes.",
       "Pythagorean extras (Challenges, Period Cycles, Balance, Hidden Passion, missing-letter Lessons, name Planes, Personal Day, Essence) use the birth-certificate spelling. Name-letter planes are not Lo Shu date-grid planes.",
       report.disclaimer,

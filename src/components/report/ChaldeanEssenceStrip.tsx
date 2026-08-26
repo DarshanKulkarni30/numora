@@ -7,10 +7,10 @@ type Props = {
 export function ChaldeanEssenceStrip({ story }: Props) {
   return (
     <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-      <h2 className="text-xl text-ink">Chaldean texture and essence</h2>
+      <h2 className="text-xl text-ink">Name vibration (Chaldean)</h2>
       <p className="mt-1 text-sm text-ink-soft">
-        Compound is the grain of the spelling; the reduced digit is the essence.
-        The Chaldean analysis in the catalog below still stands.
+        Letters add to a long total, then reduce to one digit. Both describe
+        this spelling — not a second person.
       </p>
       <p className="brand mt-3 text-3xl text-ink">
         {story.compound || "—"}

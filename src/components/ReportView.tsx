@@ -351,7 +351,7 @@ export function ReportView({
           label: "Before reduce",
           value: snap.compound_number,
           hint: "Total before reducing to a single digit",
-          note: "Compound texture of this spelling — not a second person.",
+          note: "The long total before it reduces — extra detail, not a second person.",
         },
       ],
     },

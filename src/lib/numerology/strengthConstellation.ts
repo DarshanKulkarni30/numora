@@ -111,10 +111,7 @@ export function buildStrengthConstellation(opts: {
       fromLifePath,
       meaning,
       tryLine: `Try: ${plainJob(firstNum)}.`,
-      watchLine:
-        weight === "stretch"
-          ? `A useful practice is ${plainJob(firstNum)}.`
-          : `Watch: ${plainWatch(firstNum)}.`,
+      watchLine: `Watch: ${plainWatch(firstNum)}.`,
       sourceLine,
     };
   });

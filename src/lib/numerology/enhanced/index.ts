@@ -182,7 +182,7 @@ function buildCoreStrip(
     item("Psychic", s.vedic_psychic, "Day temperament"),
     item("Destiny", s.vedic_destiny, "Longer Vedic path"),
     item("Name", s.vedic_name, "Vedic name in force"),
-    item("Chaldean", s.chaldean_name_number, "Name essence"),
+    item("Chaldean", s.chaldean_name_number, "Short name number"),
     item("Personal Year", s.personal_year, "This season’s pacing"),
     item("Personal Day", String(chart.personalDay.number), "Today’s weather"),
     item(

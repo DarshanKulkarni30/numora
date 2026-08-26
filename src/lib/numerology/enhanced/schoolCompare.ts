@@ -9,7 +9,7 @@ export const SCHOOL_COMPARE: SchoolRow[] = [
   {
     topic: "Focus",
     pythagorean: "Identity layers (path, expression, inner/outer, maturity)",
-    chaldean: "Name vibration (compound texture → reduced essence)",
+    chaldean: "Name number (letter total, then one digit)",
     vedic: "Destiny path, day temperament, planets",
   },
   {

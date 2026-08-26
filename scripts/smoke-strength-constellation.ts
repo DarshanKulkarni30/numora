@@ -81,5 +81,8 @@ const lonely = buildStrengthConstellation({
 });
 eq(lonely.map.some((n) => n.weight === "core"), false, "5-gifts are not core for LP 1");
 eq(lonely.map[0]?.weight, "stretch", "single non-LP source is stretch");
+has(lonely.map[0]!.watchLine, "Watch:", "stretch gifts still get a watch, not a second try");
+has(model.extra[0]!.tryLine, "Try:", "overflow gifts carry a try");
+has(model.extra[0]!.watchLine, "Watch:", "overflow gifts carry a watch");
 
 console.log("strength constellation smoke ok");

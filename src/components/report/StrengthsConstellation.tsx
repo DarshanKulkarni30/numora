@@ -31,6 +31,8 @@ function radiusFor(weight: StrengthNode["weight"]) {
   return 9;
 }
 
+type Focus = { kind: "map"; i: number } | { kind: "extra"; i: number };
+
 export function StrengthsConstellation({
   strengths,
   lifePath,
@@ -49,13 +51,16 @@ export function StrengthsConstellation({
       }),
     [strengths, lifePath, expression, soulUrge, vedicPsychic],
   );
-  const [pin, setPin] = useState(model.defaultIndex);
-  const [peek, setPeek] = useState<number | null>(null);
-  const shownIndex = peek ?? pin;
+  const [pin, setPin] = useState<Focus>({
+    kind: "map",
+    i: model.defaultIndex,
+  });
+  const [peek, setPeek] = useState<Focus | null>(null);
+  const shown = peek ?? pin;
 
   /** A click must win over a lingering hover, or the panel keeps the hovered slot. */
-  const select = (i: number) => {
-    setPin(i);
+  const select = (next: Focus) => {
+    setPin(next);
     setPeek(null);
   };
   const lp = lifePath ? reduceToSingleDigit(Number(lifePath)) : null;
@@ -79,7 +84,15 @@ export function StrengthsConstellation({
 
   if (!model.map.length) return null;
 
-  const active = layout[shownIndex] ?? layout[0]!;
+  const mapActive =
+    shown.kind === "map"
+      ? (layout[shown.i] ?? layout[0]!)
+      : null;
+  const extraActive =
+    shown.kind === "extra" ? (model.extra[shown.i] ?? null) : null;
+  const active = extraActive ?? mapActive ?? layout[0]!;
+  const shownMapIndex = shown.kind === "map" ? shown.i : -1;
+  const pinMapIndex = pin.kind === "map" ? pin.i : -1;
 
   return (
     <div className="space-y-4">
@@ -140,16 +153,16 @@ export function StrengthsConstellation({
               Life Path
             </text>
             {layout.map((n, i) => {
-              const isPin = pin === i;
-              const isShown = shownIndex === i;
+              const isPin = pinMapIndex === i;
+              const isShown = shownMapIndex === i;
               const r = radiusFor(n.weight) + (isPin ? 2 : 0);
               return (
                 <g
                   key={n.title + i}
                   opacity={isShown ? 1 : 0.38}
                   className="cursor-pointer"
-                  onClick={() => select(i)}
-                  onMouseEnter={() => setPeek(i)}
+                  onClick={() => select({ kind: "map", i })}
+                  onMouseEnter={() => setPeek({ kind: "map", i })}
                   onMouseLeave={() => setPeek(null)}
                 >
                   <circle
@@ -185,12 +198,12 @@ export function StrengthsConstellation({
               <button
                 key={n.title + i}
                 type="button"
-                aria-pressed={pin === i}
-                onClick={() => select(i)}
-                onMouseEnter={() => setPeek(i)}
+                aria-pressed={pin.kind === "map" && pin.i === i}
+                onClick={() => select({ kind: "map", i })}
+                onMouseEnter={() => setPeek({ kind: "map", i })}
                 onMouseLeave={() => setPeek(null)}
                 className={`btn-tactile rounded-lg border px-2 py-1.5 text-left text-[11px] leading-4 ${
-                  pin === i
+                  pin.kind === "map" && pin.i === i
                     ? "border-ink bg-white text-ink shadow-sm"
                     : "border-[var(--line)] bg-white/70 text-ink-soft"
                 }`}
@@ -227,19 +240,30 @@ export function StrengthsConstellation({
             Also on this chart
           </p>
           <p className="mt-1 text-xs text-ink-soft">
-            Quieter gifts that did not fit the five circles. Read the full
-            phrase — they are not buttons.
+            Quieter gifts that did not fit the five circles. Tap one to see
+            what it means, one try, and one watch.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
-            {model.extra.map((n) => (
-              <span
-                key={n.label}
-                title={`${n.label}. ${n.tryLine}`}
-                className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs text-ink"
-              >
-                {n.label}
-              </span>
-            ))}
+            {model.extra.map((n, i) => {
+              const pressed = pin.kind === "extra" && pin.i === i;
+              return (
+                <button
+                  key={n.label}
+                  type="button"
+                  aria-pressed={pressed}
+                  onClick={() => select({ kind: "extra", i })}
+                  onMouseEnter={() => setPeek({ kind: "extra", i })}
+                  onMouseLeave={() => setPeek(null)}
+                  className={`btn-tactile rounded-full border px-3 py-1 text-xs ${
+                    pressed
+                      ? "border-ink bg-ink text-paper"
+                      : "border-[var(--line)] bg-white/70 text-ink"
+                  }`}
+                >
+                  {n.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : null}
