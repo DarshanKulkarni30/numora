@@ -25,6 +25,17 @@ export function entitlementsEnforce(): boolean {
   return raw === "1" || raw === "true" || raw === "yes";
 }
 
+/**
+ * Pre-launch testing: allow selecting and copying report text.
+ * Set NEXT_PUBLIC_ALLOW_REPORT_COPY=false at product launch to restore
+ * Free-plan copy protection.
+ */
+export function reportCopyUnlocked(): boolean {
+  const raw = process.env.NEXT_PUBLIC_ALLOW_REPORT_COPY?.trim().toLowerCase();
+  if (raw === "0" || raw === "false" || raw === "no") return false;
+  return true;
+}
+
 function isActivePaid(
   row: EntitlementRow | null | undefined,
 ): { planId: PlanId } | null {

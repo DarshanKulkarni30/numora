@@ -2,7 +2,10 @@ import {
   AdminDeactivateButton,
   AdminInviteForm,
 } from "@/components/admin/AdminSettingsForms";
-import { entitlementsEnforce } from "@/lib/entitlements";
+import {
+  entitlementsEnforce,
+  reportCopyUnlocked,
+} from "@/lib/entitlements";
 import { hasServiceRole } from "@/lib/supabase/service";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -27,6 +30,13 @@ export default async function AdminSettingsPage() {
       label: "ENTITLEMENTS_ENFORCE",
       ok: true,
       note: enforce ? "true (limits on)" : "false (open beta)",
+    },
+    {
+      label: "NEXT_PUBLIC_ALLOW_REPORT_COPY",
+      ok: true,
+      note: reportCopyUnlocked()
+        ? "true (testing — report text is copyable)"
+        : "false (copy protection on)",
     },
   ];
 

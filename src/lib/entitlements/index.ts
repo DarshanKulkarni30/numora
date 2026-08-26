@@ -10,6 +10,7 @@ export {
 } from "./plans";
 export {
   entitlementsEnforce,
+  reportCopyUnlocked,
   resolveEntitlements,
   type EntitlementRow,
   type Entitlements,

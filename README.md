@@ -52,3 +52,5 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Copy protection / PDF
 
 Free reports discourage selection, copy shortcuts, context menu, and print. Paid / open-beta entitlements can **Export PDF** (multi-page summary download via jsPDF). Soft launch with `ENTITLEMENTS_ENFORCE=false` includes PDF for testers.
+
+Until product launch, report text is selectable/copyable (`NEXT_PUBLIC_ALLOW_REPORT_COPY` defaults on). Set `NEXT_PUBLIC_ALLOW_REPORT_COPY=false` at launch to restore Free-plan copy protection.

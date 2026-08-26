@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ReportView } from "@/components/ReportView";
 import {
+  reportCopyUnlocked,
   resolveEntitlements,
   type EntitlementRow,
 } from "@/lib/entitlements";
@@ -56,7 +57,7 @@ export default async function ReportPage({ params }: Props) {
         report={report}
         reportId={id}
         watermarkEmail={user?.email ?? undefined}
-        allowCopy={entitlements.features.copy}
+        allowCopy={entitlements.features.copy || reportCopyUnlocked()}
         allowPdf={entitlements.features.pdf}
       />
     </div>

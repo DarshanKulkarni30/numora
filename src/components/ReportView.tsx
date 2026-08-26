@@ -574,7 +574,7 @@ export function ReportView({
   }
 
   return (
-    <article className="report-protected relative mx-auto max-w-3xl px-5 pb-20 pt-4">
+    <article className={`${allowCopy ? "" : "report-protected "}relative mx-auto max-w-3xl px-5 pb-20 pt-4`}>
       {watermarkEmail ? (
         <div
           aria-hidden
