@@ -23,8 +23,8 @@ export function ChaldeanEssenceStrip({ story, operatingName }: Props) {
     <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
       <h2 className="text-xl text-ink">Name vibration (Chaldean)</h2>
       <p className="mt-1 text-sm text-ink-soft">
-        Letters add to a long total, then reduce to one digit. Both describe
-        this spelling — not a second person.
+        Letters add to a long total, then fold to one digit. The long total is
+        extra detail on this spelling. The short number is the easy label.
       </p>
       {operatingName?.trim() ? (
         <p className="mt-2 text-sm text-ink">

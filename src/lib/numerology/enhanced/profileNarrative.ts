@@ -134,7 +134,7 @@ export function buildProfileNarrative(opts: {
     pairBeat(
       "Vedic Psychic",
       psychic,
-      "day temperament — the first habit of the birth day.",
+      "day temperament — how you start an ordinary day.",
       "Destiny",
       destiny,
       "the longer path number from the full date.",

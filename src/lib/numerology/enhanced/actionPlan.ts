@@ -1,6 +1,7 @@
 import { assertSafeCopy, assertSafeList } from "@/lib/numerology/safety";
 import type { NumerologyReport, ReportType } from "@/lib/numerology/types";
 import type { SeasonBrief } from "./seasonBrief";
+import { thirtyDayFocus } from "./seasonBrief";
 import type { ThemeHit } from "./themeGraph";
 
 export type ActionPlan = {
@@ -21,10 +22,6 @@ export function buildActionPlan(opts: {
   const growth = report.growth_areas ?? [];
   const recs = report.recommendations ?? [];
   const topTheme = themes[0]?.label.toLowerCase() ?? "clarity";
-
-  const skill = young
-    ? "one skill or interest to practice without comparison"
-    : purposeSkill(purpose, topTheme);
   const relationship = young
     ? "one family or friendship repair or shared attention"
     : purposeRelation(purpose);
@@ -34,10 +31,9 @@ export function buildActionPlan(opts: {
 
   const days30 = assertSafeList(
     unique([
-      skill,
+      thirtyDayFocus(season),
       relationship,
       unfinished,
-      season.doThis[0],
       growth[0]?.actions?.[0],
     ]).slice(0, 4),
     "enhanced.plan.30",
@@ -95,14 +91,6 @@ function isYoung(t: ReportType): boolean {
   return t === "child" || t === "adolescent";
 }
 
-function purposeSkill(purpose: string, theme: string): string {
-  const p = purpose.toLowerCase();
-  if (p.includes("career")) return `One skill that makes ${theme} usable at work (a template, checklist, or teaching note)`;
-  if (p.includes("relationship") || p.includes("family"))
-    return "One listening or repair skill used in a real conversation";
-  return `Show one skill this month: a finished note, a kept promise, or a small start.`;
-}
-
 function purposeRelation(purpose: string): string {
   const p = purpose.toLowerCase();
   if (p.includes("career")) return "One working relationship to clarify (ask, thank, or close a loop)";
@@ -121,8 +109,8 @@ function purposeNinety(purpose: string): string {
 function purposeYearPrimary(purpose: string, theme: string): string {
   const p = purpose.toLowerCase();
   if (p.includes("career")) return `Deepen ${theme} as craft others can rely on`;
-  if (p.includes("family")) return "Deepen care at home without disappearing";
-  if (p.includes("relationship")) return "Deepen honest pacing in close ties";
+  if (p.includes("family")) return "Keep one family promise without dropping your own rest";
+  if (p.includes("relationship")) return "Say one true thing in a close tie this week";
   return "Use this year's theme in one weekly habit, not only as an idea";
 }
 

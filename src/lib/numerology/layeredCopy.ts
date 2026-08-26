@@ -51,6 +51,44 @@ export function plainJob(n: number): string {
   return map[n] ?? `use the tone of ${n} in one small way`;
 }
 
+/** How you start an ordinary day (Birth Day / Psychic). */
+export function plainStart(n: number): string {
+  const map: Record<number, string> = {
+    1: "going first",
+    2: "waiting for the other person",
+    3: "talking or sharing an idea",
+    4: "making a plan or putting things in order",
+    5: "changing course",
+    6: "looking after someone or keeping a promise",
+    7: "going quiet to think",
+    8: "pushing for a result",
+    9: "finishing something or helping past the close circle",
+    11: "noticing more than you can act on",
+    22: "drawing a large plan",
+    33: "helping several people at once",
+  };
+  return map[n] ?? `the tone of ${n}`;
+}
+
+/** How people meet you (Expression / Personality / Name). */
+export function plainMeet(n: number): string {
+  const map: Record<number, string> = {
+    1: "someone who starts and decides",
+    2: "someone patient who works with others",
+    3: "someone who talks, jokes, and shares ideas",
+    4: "someone planned and steady",
+    5: "someone who likes change and room to move",
+    6: "someone who looks after people and keeps promises",
+    7: "someone quiet and hard to read",
+    8: "someone who pushes for a result",
+    9: "someone who finishes things and helps a wider group",
+    11: "someone who notices a lot",
+    22: "someone holding a large practical plan",
+    33: "someone who teaches and cares",
+  };
+  return map[n] ?? `someone with the tone of ${n}`;
+}
+
 export function plainWatch(n: number): string {
   const map: Record<number, string> = {
     1: "starting so many things that none get a second day",

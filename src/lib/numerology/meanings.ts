@@ -58,7 +58,7 @@ const CHALDEAN_COMPOUND: Record<number, string> = {
   34: "The long total 34 is making something useful. Finish one small useful thing this week.",
   35: "The long total 35 is a quick mind. Pick one focus for the week and drop the rest.",
   36: "The long total 36 is family or group care. Keep one promise there, then keep one hour for yourself.",
-  37: "The long total 37 is a quiet original idea. Share it with one person. Do not wait for a perfect version.",
+  37: "37 is a clear idea that wants a first step, not more thinking. You see the move, then you keep analysing. Example: you know the message; you do not send it. Pick one idea. Do one visible step this week (send it, book it, or open the file).",
   38: "The long total 38 is organised ambition. Name one result that counts this week. Cut one busy task that does not serve it.",
   39: "The long total 39 is finishing and teaching. Close one loop, then tell one person how you did it.",
   40: "The long total 40 is structure for the long run. Write one repeating plan and keep it this week.",

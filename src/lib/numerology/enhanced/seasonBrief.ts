@@ -73,9 +73,9 @@ const YEAR_IMAGE: Record<
       job: "This year is for movement — travel, a new role, a different routine, a change of scene. Change finds you either way, so choose one or two on purpose rather than letting five happen at once.",
       image: "Change will find you either way, so choose one or two on purpose.",
       focus: [
-        "trying one small change you can undo",
-        "keeping plans loose enough to move",
-        "changing one input, not everything at once",
+        "Try one small change you can undo (a route, a meeting, or a bedtime)",
+        "Keep the rest of the week the same",
+        "Do not start a second change until this one has had a week",
       ],
     },
     6: {
@@ -155,61 +155,60 @@ const MONTH_IMAGE: Record<
   { title: string; job: string; image: string; focus: string[] }
 > = {
   1: {
-    title: "Starting month",
-    job: "A month to begin one thing rather than plan several.",
+    title: "A starting month",
+    job: "This month is for beginning one thing, not planning five. Example: send the first message, not rewrite the whole list.",
     image: "Begin one thing. Do not plan several.",
-    focus: ["starting one small thing"],
+    focus: ["Start one small thing this week and put your name on it"],
   },
   2: {
-    title: "Working-with-others month",
-    job: "A month where things move faster with one other person than alone.",
-    image: "Things move faster with one other person than alone.",
-    focus: ["doing one thing with one other person"],
+    title: "A with-someone month",
+    job: "This month, one task moves faster with one other person than alone. Ask them. Do the task together.",
+    image: "Do one thing with one other person.",
+    focus: ["Do one task with one other person this week"],
   },
   3: {
-    title: "Sharing month",
-    job: "A month to finish something and let people see it.",
+    title: "A sharing month",
+    job: "This month is for finishing one piece and letting someone see it. Example: send the draft. Do not open a second draft first.",
     image: "Finish one piece and let someone see it.",
-    focus: ["finishing and sharing one piece"],
+    focus: ["Finish one thing you started saying and let someone see it"],
   },
   4: {
-    title: "Tidying month",
-    job: "A month for admin, routines and the jobs you keep deferring.",
-    image: "Do the admin and the jobs you keep putting off.",
-    focus: ["putting one routine on paper"],
-  },
-  5: {
-    title: "Change month",
-    job: "A month where a small change lands well and a big one overshoots.",
-    image: "A small change lands. A big rewrite overshoots.",
-    focus: ["trying one small change you can undo"],
-  },
-  6: {
-    title: "Looking-after month",
-    job: "A month when home and the people close to you need more of your time.",
-    image: "Home and the people close to you need more of your time.",
+    title: "A planning month",
+    job: "This month is for jobs you keep putting off — a bill, a filing, or a weekly plan. Write one repeating task as steps (sleep, budget, or the start of the workday) and do the first step this week.",
+    image: "Write one repeating task as steps. Do the first step this week.",
     focus: [
-      "looking after one person properly",
-      "repairing one thing you have let slide",
+      "Write one repeating task as steps (sleep, budget, or the start of the workday) and do the first step this week",
     ],
   },
+  5: {
+    title: "A change month",
+    job: "This month a small change works; a big rewrite does not. Pick one change you can undo (a route, a meeting, or a bedtime).",
+    image: "One small change. Not a rewrite of the whole plan.",
+    focus: ["Try one small change you can undo. Keep the rest of the week the same"],
+  },
+  6: {
+    title: "A care month",
+    job: "This month home and people close to you need more time. Keep one promise. Keep one hour that is only for you.",
+    image: "Keep one promise. Keep one hour for yourself.",
+    focus: ["Keep one promise to someone. Keep one hour that is only for you"],
+  },
   7: {
-    title: "Quiet month",
-    job: "A month to think before answering and to protect some time alone.",
-    image: "Think before you answer. Protect some time alone.",
-    focus: ["taking quiet time before you answer"],
+    title: "A quiet month",
+    job: "This month, think before you answer. Protect some time alone. Then tell one person what you found.",
+    image: "Think, then answer. Do not hide all week.",
+    focus: ["Take ten quiet minutes, then answer the person who is waiting"],
   },
   8: {
-    title: "Delivery month",
-    job: "A month to finish one thing you can actually measure.",
-    image: "Finish one thing you can measure.",
-    focus: ["finishing one result you can measure"],
+    title: "A results month",
+    job: "This month, finish one thing you can count — a file, a payment, a shipped step. Then rest.",
+    image: "Finish one result you can count. Then rest.",
+    focus: ["Finish one result you can measure, then rest"],
   },
   9: {
-    title: "Closing month",
-    job: "A month to end what is already over instead of starting more.",
-    image: "End what is already over. Do not start more.",
-    focus: ["closing one loop that is already done"],
+    title: "A closing month",
+    job: "This month, end what is already over. Example: send the last message, return the item, delete the dead project. Do not start more until that is closed.",
+    image: "Close one loop that is already done. Do not start more.",
+    focus: ["Close one loop that is already done before you start another"],
   },
 };
 
@@ -222,7 +221,6 @@ export function buildSeasonBrief(
   const yMeta = YEAR_IMAGE[py] ?? YEAR_IMAGE[coreFallback(py)];
   const mMeta = pm != null ? MONTH_IMAGE[pm] ?? MONTH_IMAGE[coreFallback(pm)] : null;
   const young = isYoung(report.person.report_type);
-  const monthly = report.monthly_guidance;
 
   const combined = assertSafeCopy(
     mMeta
@@ -235,7 +233,6 @@ export function buildSeasonBrief(
     unique([
       ...yMeta.focus.slice(0, 2),
       ...(mMeta?.focus ?? []),
-      ...(monthly?.focus_areas ?? []).slice(0, 2),
       ...youngChildDo(young),
     ]).slice(0, 5),
     "enhanced.season.do",
@@ -243,7 +240,6 @@ export function buildSeasonBrief(
 
   const easeOff = assertSafeList(
     unique([
-      ...(monthly?.avoid ?? []).slice(0, 3),
       ...defaultEase(py, young),
     ]).slice(0, 4),
     "enhanced.season.ease",
@@ -326,4 +322,15 @@ function unique(items: (string | undefined | null)[]): string[] {
     out.push(item.trim());
   }
   return out;
+}
+
+/** One 30-day line: this year's job inside this month's job. */
+export function thirtyDayFocus(season: SeasonBrief): string {
+  const yearBit = season.yearFocus[0];
+  const monthBit = season.monthFocus[0];
+  if (yearBit && monthBit) {
+    return `${yearBit}. This month: ${monthBit}. Keep that one pair for four weeks. Do not add a second project.`;
+  }
+  if (yearBit) return `${yearBit}. Keep it for four weeks.`;
+  return "Pick one practice from this page. Keep it for four weeks.";
 }

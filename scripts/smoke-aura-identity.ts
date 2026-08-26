@@ -68,7 +68,7 @@ has(darshan.synergySummary, "Life Path", "synergy names Life Path");
 has(darshan.synergySummary, "Name number", "synergy names the Name number");
 has(
   darshan.synergySummary,
-  "counted twice",
+  "automatic move",
   "synergy explains why a shared digit matters",
 );
 eq(darshan.palette.primary.name, "Blue-grey", "primary blue-grey");

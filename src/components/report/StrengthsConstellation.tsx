@@ -85,9 +85,10 @@ export function StrengthsConstellation({
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">
-        Five gifts around Life Path {lifePath ?? "—"}. Closer, filled circles
-        sit next to that Life Path. Dashed and further out means quieter on this
-        chart. This is not a full list of who you are.
+        Five strengths next to Life Path {lifePath ?? "—"} ({centerPlain}).
+        Dots nearer the centre are the ones you already use. Dots further out
+        are still yours — you just don’t lead with them. Tap one. Use that one
+        on a real task this week. This is not a full list of who you are.
       </p>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,1fr)] lg:items-start">
@@ -96,7 +97,7 @@ export function StrengthsConstellation({
             viewBox="0 0 220 220"
             className="mx-auto h-auto w-full max-w-md"
             role="img"
-            aria-label="Gifts around Life Path. Closer filled circles sit next to the Life Path. Dashed circles further out are quieter on this chart."
+            aria-label="Five strengths next to Life Path. Nearer dots are the ones you already use. Further dots are quieter. Tap one."
           >
             <circle
               cx={CONSTELLATION_CX}
@@ -214,7 +215,7 @@ export function StrengthsConstellation({
                 }}
                 aria-hidden
               />
-              Close and filled: next to Life Path
+              Close: you already use this
             </span>
             <span className="inline-flex items-center gap-1">
               <span
@@ -225,7 +226,7 @@ export function StrengthsConstellation({
                 }}
                 aria-hidden
               />
-              Dashed and further out: quieter on this chart
+              Further out: quieter, still yours
             </span>
           </p>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">

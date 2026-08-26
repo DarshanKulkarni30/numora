@@ -1,4 +1,5 @@
 import { assertSafeCopy } from "@/lib/numerology/safety";
+import { chaldeanCompoundMeaning } from "@/lib/numerology/meanings";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { parseChartNumber } from "./digits";
 import { plainJob, plainTrait, plainWatch } from "@/lib/numerology/layeredCopy";
@@ -23,7 +24,7 @@ export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
 
   const texture = assertSafeCopy(
     compound
-      ? `The letters first add to ${compound}. That long total is extra detail about this spelling, not a second person.`
+      ? chaldeanCompoundMeaning(compound)
       : "The long name total is not stored on this older report. The short name number is shown below.",
     "enhanced.chaldean.texture",
   );
@@ -41,7 +42,7 @@ export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
   const compare = assertSafeCopy(
     expr === reduced
       ? `Chaldean ${reduced} and Expression ${expr} landed on the same digit for this spelling. Two letter maps agree. Still not a prediction.`
-      : `Same name, two maps. Chaldean ${reduced} is ${plainTrait(reduced)}. Expression ${expr} is ${plainTrait(expr)}. Two jobs, not two people. Neither wins.`,
+      : `Same name, two maps. Chaldean ${reduced} is ${plainTrait(reduced)}. Expression ${expr} is ${plainTrait(expr)}. Two ways to count. Neither wins.`,
     "enhanced.chaldean.compare",
   );
 

@@ -222,7 +222,7 @@ export function synthesizeGrowthAreas(input: Input): GrowthArea[] {
       origin: "expression",
       whyLine: `Expression ${snap.expression_number} is how you tend to show up. This seat is a craft practice for that style — not a demand to become someone else.`,
       actions: [expr.practice],
-      examples: [expr.practice, "Use the name style once, then rest."],
+      examples: [expr.practice, "Use how people meet you once, then rest."],
       reflectPrompt: "Did one crafted showing-up change the week more than trying harder?",
     });
   }

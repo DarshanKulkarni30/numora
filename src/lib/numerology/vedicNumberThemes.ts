@@ -24,10 +24,10 @@ export type VedicDigitTheme = {
 
 export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
   1: {
-    keyword: "Leader",
+    keyword: "Starting",
     planet: "Sun",
     psychicFocus:
-      "Day-to-day drive toward initiative, visibility, and making the first move.",
+      "You start the day by going first. A room often waits for you to begin.",
     destinyFocus:
       "The longer work is starting things and deciding for yourself — often going first.",
     strengths: [
@@ -49,7 +49,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Harmony",
     planet: "Moon",
     psychicFocus:
-      "Day-to-day sensitivity, peacemaking, and reading how a room feels.",
+      "You start by waiting and reading the room before you speak.",
     destinyFocus:
       "The longer work is working with others and being patient.",
     strengths: [
@@ -71,7 +71,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Creativity",
     planet: "Jupiter",
     psychicFocus:
-      "Day-to-day expressiveness, humor, and the urge to share ideas aloud.",
+      "You start by talking, joking, or sharing an idea.",
     destinyFocus:
       "The longer work is talking, play, and sharing ideas.",
     strengths: [
@@ -90,10 +90,10 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Suits media, teaching, design, and people-facing storytelling roles (reflective only).",
   },
   4: {
-    keyword: "Stability",
+    keyword: "Planning",
     planet: "Rahu",
     psychicFocus:
-      "Day-to-day preference for structure, honest systems, and dependable effort.",
+      "You start by making a plan or putting things in order.",
     destinyFocus:
       "The longer work is plans, routines, and steady work — even when the route is awkward.",
     strengths: [
@@ -115,7 +115,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Freedom",
     planet: "Mercury",
     psychicFocus:
-      "Day-to-day curiosity, quick speech, and appetite for movement and variety.",
+      "You start by changing course or looking for a new angle.",
     destinyFocus:
       "The longer work is change, freedom, and trying new things.",
     strengths: [
@@ -137,7 +137,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Care",
     planet: "Venus",
     psychicFocus:
-      "Day-to-day warmth, aesthetic sense, and the urge to protect people you love.",
+      "You start by looking after someone or keeping a promise.",
     destinyFocus:
       "The longer work is care, home, and keeping promises.",
     strengths: [
@@ -158,7 +158,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Wisdom",
     planet: "Ketu",
     psychicFocus:
-      "Day-to-day inwardness, analysis, and preference for depth over small talk.",
+      "You start by going quiet to think.",
     destinyFocus:
       "The longer work is quiet thinking and study.",
     strengths: [
@@ -180,7 +180,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Success",
     planet: "Saturn",
     psychicFocus:
-      "Day-to-day seriousness about duty, results, and earning trust through effort.",
+      "You start by pushing for a result.",
     destinyFocus:
       "The longer work is plans, money, and responsibility — results after long effort.",
     strengths: [
@@ -202,7 +202,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Humanity",
     planet: "Mars",
     psychicFocus:
-      "Day-to-day heat—courage, compassion, and urgency to act for people or causes.",
+      "You start by finishing something or helping past the close circle.",
     destinyFocus:
       "The longer work is finishing things and helping a wider group.",
     strengths: [

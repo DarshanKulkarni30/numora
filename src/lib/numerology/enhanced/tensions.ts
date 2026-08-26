@@ -45,7 +45,7 @@ export function buildTensions(
       id: "psychic-destiny",
       title: "Day temperament and longer path",
       values: [`Psychic ${psychic}`, `Destiny ${destiny}`],
-      insight: `The day’s first habit is ${plainTrait(psychic)} (Psychic ${psychic}). The longer walk is ${plainTrait(destiny)} (Destiny ${destiny}). If a day’s reaction pulls against the longer aim, take one small step: ${plainJob(destiny)}.`,
+      insight: `The day’s first reaction is ${plainTrait(psychic)} (Psychic ${psychic}). The longer work is ${plainTrait(destiny)} (Destiny ${destiny}). If today’s reaction pulls against the longer work, take one small step: ${plainJob(destiny)}.`,
     });
   }
 

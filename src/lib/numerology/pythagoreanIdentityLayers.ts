@@ -5,7 +5,7 @@
 
 import { CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
-import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
+import { plainJob, plainMeet, plainStart, plainTrait, plainWatch } from "./layeredCopy";
 import {
   buildInnerOuterPattern,
   INNER_OUTER_KIND_LABEL,
@@ -134,7 +134,7 @@ function pairFriction(aRaw: number, bRaw: number): string {
   const a = reduceToSingleDigit(aRaw);
   const b = reduceToSingleDigit(bRaw);
   if (a === b) {
-    return `${plainWatch(aRaw)} — doubled, this is the habit you may not notice.`;
+    return `${plainWatch(aRaw)} — doubled, this is the habit you do not notice.`;
   }
   if ((a === 3 && b === 9) || (a === 9 && b === 3)) {
     return "Ideas can multiply faster than they are finished.";
@@ -167,16 +167,16 @@ export function buildExpressionPattern(
       kind: "all-same",
       core: bdN,
       modifier: null,
-      insight: `Birth Day ${bd}, Expression ${ex}, and Life Path ${lp} share one theme: ${plainTrait(bdRaw)}. It is the first habit, how people meet you, and the longer direction. That makes it your strongest skill and the habit you are least likely to question.`,
-      standsOut: `${bdN} is repeated in all three numbers — there is no second number shaping how this shows.`,
-      relation: `The work is using ${plainTrait(bdRaw)} with more care, not finding a new theme.`,
+      insight: `Birth Day ${bd}, Expression ${ex}, and Life Path ${lp} are the same theme: you start by ${plainStart(bdRaw)}, people meet you that way, and the longer work is the same. That is your strongest skill. It is also the habit you will not question.`,
+      standsOut: `${bdN} shows in all three. There is no second number here.`,
+      relation: `The work is doing ${plainTrait(bdRaw)} on purpose, not finding a new theme.`,
       friction: pairFriction(bdRaw, lpRaw),
-      strength: `Living ${plainTrait(bdRaw)} honestly, on purpose.`,
+      strength: `Do ${plainTrait(bdRaw)} honestly, on purpose.`,
       watch: plainWatch(bdRaw),
-      tryLine: `Try: ${plainJob(bdRaw)} — then check whether that habit actually suited the situation.`,
-      birthDetail: `Birth Day ${bd} is the first habit: ${instinctHabit(bdRaw)}. The same theme will keep showing up.`,
-      expressionDetail: `Expression ${ex} is how people meet that same theme: ${plainTrait(exRaw)}. It is not a second person.`,
-      pathDetail: `Life Path ${lp} is the same theme used with more care: ${pathHabit(lpRaw)}. It is not a new personality.`,
+      tryLine: `Try: ${plainJob(bdRaw)}. Then ask if that habit actually fitted the situation.`,
+      birthDetail: `Birth Day ${bd}: you start an ordinary day by ${plainStart(bdRaw)}. Try: ${plainJob(bdRaw)}.`,
+      expressionDetail: `Expression ${ex}: people meet you as ${plainMeet(exRaw)}. Same theme as the birth day.`,
+      pathDetail: `Life Path ${lp}: the longer work is the same theme, used with more care: ${pathHabit(lpRaw)}.`,
     };
   }
 
@@ -185,18 +185,18 @@ export function buildExpressionPattern(
       kind: "bd-lp-repeat",
       core: bdN,
       modifier: exN,
-      insight: `Birth Day ${bd} is the first habit (${instinctHabit(bdRaw)}). Life Path ${lp} is the same theme used with more care (${pathHabit(lpRaw)}). Expression ${ex} is how that shows: ${plainTrait(exRaw)}, not only the first habit.`,
-      standsOut: `${bdN} is repeated — instinct and long-term direction share one theme. ${exN} shapes how that theme comes across.`,
-      relation: `The repeated ${bdN} is the core. Expression ${ex} is the modifier: ${plainTrait(exRaw)}. That style is how the core reaches other people.`,
+      insight: `Birth Day ${bd} is how you start: ${instinctHabit(bdRaw)}. Life Path ${lp} is that same theme used with more care (${pathHabit(lpRaw)}). Expression ${ex} is how people meet you: ${plainTrait(exRaw)}.`,
+      standsOut: `${bdN} is how you start and the longer work. Expression ${ex} is only how that comes across.`,
+      relation: `Use ${plainTrait(exRaw)} so the longer work reaches other people.`,
       friction: pairFriction(bdRaw, exRaw),
-      strength: `You may be strongest when ${plainTrait(bdRaw)} also serves ${plainTrait(exRaw)}.`,
+      strength: `${plainTrait(bdRaw)} working through ${plainTrait(exRaw)}.`,
       watch: `${plainWatch(bdRaw)}; ${plainWatch(exRaw)}`,
       tryLine: `Try: ${plainJob(exRaw)}.${
         exN === 9 ? " Before the next idea, say what finished looks like." : ""
       }`,
-      birthDetail: `Birth Day ${bd} is the first habit: ${instinctHabit(bdRaw)}. It is the raw version of a theme you will keep meeting.`,
-      expressionDetail: `Expression ${ex} is how you show up: ${plainTrait(exRaw)}. It is the work that grows the first habit into the longer path — not a second person.`,
-      pathDetail: `Life Path ${lp} is the same theme as Birth Day, used with more care: ${pathHabit(lpRaw)}. It is not a new number and not a new personality.`,
+      birthDetail: `Birth Day ${bd}: you start an ordinary day by ${plainStart(bdRaw)}. Try: ${plainJob(bdRaw)}.`,
+      expressionDetail: `Expression ${ex}: people meet you as ${plainMeet(exRaw)}. Try: ${plainJob(exRaw)}.`,
+      pathDetail: `Life Path ${lp}: same theme as the birth day, used with more care: ${pathHabit(lpRaw)}.`,
     };
   }
 
@@ -205,16 +205,16 @@ export function buildExpressionPattern(
       kind: "ex-bd-repeat",
       core: bdN,
       modifier: lpN,
-      insight: `Your name number (Expression ${ex}) matches Birth Day ${bd}, so how you come across doubles the first habit: ${plainTrait(exRaw)}. Life Path ${lp} is the longer ask: ${plainTrait(lpRaw)}. You do not have to drop the name style to grow.`,
-      standsOut: `${exN} is repeated in Birth Day and Expression. Life Path ${lp} is the growing work.`,
-      relation: `People meet the day habit first. The path is still ${plainTrait(lpRaw)}.`,
+      insight: `Expression ${ex} matches Birth Day ${bd}: people meet you as ${plainMeet(exRaw)}, which is also how you start. Life Path ${lp} is the longer work: ${plainTrait(lpRaw)}. You do not drop how you come across to grow.`,
+      standsOut: `${exN} is both how you start and how people meet you. Life Path ${lp} is the growing work.`,
+      relation: `People meet the day's start first. The longer work is still ${plainTrait(lpRaw)}.`,
       friction: `Staying in ${plainTrait(exRaw)} can leave ${plainTrait(lpRaw)} unfinished.`,
-      strength: `Using ${plainTrait(exRaw)} to help with ${plainTrait(lpRaw)}.`,
-      watch: `Staying in the first habit so the longer path never starts.`,
-      tryLine: `Try: ${plainJob(lpRaw)} — ${plainTrait(lpRaw)} — using the ${plainTrait(exRaw)} habit you already have.`,
-      birthDetail: `Birth Day ${bd} is the first habit: ${instinctHabit(bdRaw)}. Expression matches it, so this tone shows in public as well as in private.`,
-      expressionDetail: `Expression ${ex} matches Birth Day ${bd}, so how you come across doubles ${plainTrait(exRaw)}. Life Path ${lp} is still the longer ask.`,
-      pathDetail: `Life Path ${lp} is the longer direction: ${plainTrait(lpRaw)}. The name style does not replace this work.`,
+      strength: `Use how people meet you (${plainMeet(exRaw)}) on one ${plainTrait(lpRaw)} step.`,
+      watch: `Staying in how you start so the longer work never begins.`,
+      tryLine: `Try: ${plainJob(lpRaw)}. That is ${plainTrait(lpRaw)}, using how people already meet you.`,
+      birthDetail: `Birth Day ${bd}: you start an ordinary day by ${plainStart(bdRaw)}. People meet you the same way.`,
+      expressionDetail: `Expression ${ex} matches the birth day: people meet you as ${plainMeet(exRaw)}. Life Path ${lp} is still the longer work.`,
+      pathDetail: `Life Path ${lp}: the longer work is ${plainTrait(lpRaw)}. How you come across does not replace this.`,
     };
   }
 
@@ -223,16 +223,16 @@ export function buildExpressionPattern(
       kind: "ex-lp-repeat",
       core: lpN,
       modifier: bdN,
-      insight: `Expression ${ex} already matches Life Path ${lp}: people meet you as ${plainTrait(exRaw)}, which is also the longer direction. Birth Day ${bd} is the starting difference: ${plainTrait(bdRaw)}.`,
-      standsOut: `${exN} is repeated in how you show up and where you are headed. Birth Day ${bd} is the first habit that may not match that public style.`,
-      relation: `The path already shows in the name. The private starting habit is the one that can get skipped.`,
+      insight: `Expression ${ex} already matches Life Path ${lp}: people meet you as ${plainMeet(exRaw)}, which is also the longer work. Birth Day ${bd} is how you start: ${plainStart(bdRaw)}. That private start can get skipped.`,
+      standsOut: `${exN} is how people meet you and the longer work. Birth Day ${bd} is the start that can get skipped.`,
+      relation: `The longer work already shows in public. The private start is the one to keep.`,
       friction: `Skipping ${plainTrait(bdRaw)} because the name already looks like the goal.`,
-      strength: `The longer direction showing in public sooner than it feels inside.`,
-      watch: `Skipping the birth-day habit because Expression already sounds like the path.`,
+      strength: `The longer work showing in public sooner than it feels inside.`,
+      watch: `Skipping how you start because Expression already sounds like the path.`,
       tryLine: `Try: ${plainJob(lpRaw)} this week, and still ${plainJob(bdRaw)} on your own.`,
-      birthDetail: `Birth Day ${bd} is the first habit: ${plainTrait(bdRaw)}. It can get skipped because the name already looks like the path.`,
-      expressionDetail: `Expression ${ex} already matches Life Path ${lp}: how you show up is ${plainTrait(exRaw)}, which is also the longer direction.`,
-      pathDetail: `Life Path ${lp} is the longer direction: ${plainTrait(lpRaw)}. Expression already carries this in public.`,
+      birthDetail: `Birth Day ${bd}: you start by ${plainStart(bdRaw)}. This can get skipped because the name already looks like the path.`,
+      expressionDetail: `Expression ${ex} matches Life Path ${lp}: people meet you as ${plainMeet(exRaw)}.`,
+      pathDetail: `Life Path ${lp}: the longer work is ${plainTrait(lpRaw)}. Expression already carries this in public.`,
     };
   }
 
@@ -240,16 +240,16 @@ export function buildExpressionPattern(
     kind: "all-different",
     core: null,
     modifier: exN,
-    insight: `Birth Day ${bd} is the first habit (${plainTrait(bdRaw)}). Expression ${ex} is how you show up (${plainTrait(exRaw)}). Life Path ${lp} is the longer direction (${plainTrait(lpRaw)}). They are three jobs, not three people.`,
-    standsOut: `No digit repeats among the three. Expression ${ex} is the style between the first habit and the longer direction.`,
-    relation: `How you come across (${plainTrait(exRaw)}) sits between the first habit (${plainTrait(bdRaw)}) and the longer direction (${plainTrait(lpRaw)}).`,
+    insight: `You start the day by ${plainStart(bdRaw)} (${bd}). People meet you as ${plainMeet(exRaw)} (${ex}). The longer work is ${plainTrait(lpRaw)} (${lp}). Three jobs, one person.`,
+    standsOut: `No number repeats. Use how people meet you on one longer-work step this week.`,
+    relation: `How people meet you (${plainMeet(exRaw)}) sits between how you start (${plainStart(bdRaw)}) and the longer work (${plainTrait(lpRaw)}).`,
     friction: pairFriction(bdRaw, exRaw),
-    strength: `Using the name style to take one path step: ${plainTrait(lpRaw)}.`,
-    watch: `Treating the spelling as if it replaced your birth date; ${plainWatch(exRaw)}.`,
-    tryLine: `Try: ${plainJob(exRaw)}, then return to ${plainJob(bdRaw)}.`,
-    birthDetail: `Birth Day ${bd} is the first habit: ${plainTrait(bdRaw)}. It is how you naturally begin, not the whole story.`,
-    expressionDetail: `Expression ${ex} is how you show up: ${plainTrait(exRaw)}. It is the style between the first habit and the longer direction — not a second person.`,
-    pathDetail: `Life Path ${lp} is the longer direction: ${plainTrait(lpRaw)}. Expression ${ex} is how that direction looks from the outside.`,
+    strength: `People meet you as ${plainMeet(exRaw)}. Use that on one ${plainTrait(lpRaw)} step this week.`,
+    watch: `${plainWatch(exRaw)}. Do not treat how you come across as the whole job.`,
+    tryLine: `Try: ${plainJob(exRaw)}. Then ${plainJob(bdRaw)}.`,
+    birthDetail: `Birth Day ${bd}: you start an ordinary day by ${plainStart(bdRaw)}. Try: ${plainJob(bdRaw)}.`,
+    expressionDetail: `Expression ${ex}: people meet you as ${plainMeet(exRaw)}. Try: ${plainJob(exRaw)}.`,
+    pathDetail: `Life Path ${lp}: the longer work is ${plainTrait(lpRaw)}. Try: ${plainJob(lpRaw)}.`,
   };
 }
 
@@ -289,29 +289,29 @@ function maturityMicro(opts: {
   const { mat, matRaw, lp, ex, lpRaw, exRaw, matN, lpN, exN } = opts;
   if (matN === lpN && matN === exN) {
     return {
-      tone: `Later habit ${mat} is the same theme as both Life Path and Expression: ${plainTrait(matRaw)}. Age deepens it; it does not add a new one.`,
-      tension: `Watch: ${plainWatch(matRaw)} — doubled for years, this is the habit you do not question.`,
-      gift: `Try today: ${plainJob(matRaw)} in small doses, years ahead of time, so the later habit is chosen rather than automatic.`,
+      tone: `Maturity ${mat} is the same theme as Life Path and Expression: ${plainTrait(matRaw)}. Age deepens it. It does not add a new one.`,
+      tension: `Watch: ${plainWatch(matRaw)} — this is the habit you will not question.`,
+      gift: `Try today: ${plainJob(matRaw)}. Do it small. Do not wait for a later birthday.`,
     };
   }
   if (matN === lpN) {
     return {
-      tone: `Later habit lands back on Life Path ${lp}: ${plainTrait(lpRaw)}. The path tone gets stronger with age rather than changing.`,
-      tension: `Watch: treating Expression ${ex} (${plainTrait(exRaw)}) as if it were the later story, and missing that the path is what remains.`,
-      gift: `Try today: ${plainJob(lpRaw)} — a little at a time, so the later path tone has somewhere to land.`,
+      tone: `Maturity lands back on Life Path ${lp}: ${plainTrait(lpRaw)}. That work gets stronger with age. It does not change into something else.`,
+      tension: `Watch: treating Expression ${ex} as the later story, and missing that the path is what remains.`,
+      gift: `Try today: ${plainJob(lpRaw)}. A little at a time.`,
     };
   }
   if (matN === exN) {
     return {
-      tone: `Later habit lands on Expression ${ex}: ${plainTrait(exRaw)}. The name style is what lasts.`,
-      tension: `Watch: waiting for age to switch on a new personality, when the lasting tone is already how you show up.`,
-      gift: `Try today: ${plainJob(exRaw)} in a calmer dose — the later habit is this style, used with more care.`,
+      tone: `Maturity lands on Expression ${ex}: people already meet you as ${plainMeet(exRaw)}. That is what lasts.`,
+      tension: `Watch: waiting for age to switch on a new personality. The lasting tone is already how people meet you.`,
+      gift: `Try today: ${plainJob(exRaw)} in a calmer dose.`,
     };
   }
   return {
-    tone: `Later habit ${mat} (${plainTrait(matRaw)}) is a third number — not Life Path ${lp} and not Expression ${ex}. It shows once the other two have been lived a while.`,
-    tension: `Watch: ${plainWatch(matRaw)}. Also watch for skipping it because it is not the number people already know you for.`,
-    gift: `Try today: ${plainJob(matRaw)} — small doses, years ahead of time, so the later tone is not a surprise.`,
+    tone: `Maturity ${mat} is ${plainTrait(matRaw)}. That is not Life Path ${lp} and not Expression ${ex}. It gets louder later. Practise it now in a small way.`,
+    tension: `Watch: ${plainWatch(matRaw)}. Also: skipping this because people still know you for ${plainTrait(lpRaw)} or ${plainTrait(exRaw)}.`,
+    gift: `Try today: ${plainJob(matRaw)}. Then stop. You do not wait until your forties.`,
   };
 }
 
@@ -360,12 +360,12 @@ export function buildPythagoreanIdentityLayers(opts: {
 
   const innerOuterInsight =
     suN === peN
-      ? `Soul Urge and Personality are both ${su}. What you want inside and what people see first use the same number: ${plainTrait(suRaw)}. This can feel simple. It is still something to live honestly.`
-      : `People first see Personality ${pe} (${plainTrait(peRaw)}). Inside, Soul Urge ${su} wants ${plainTrait(suRaw)}. These can work together. They do not have to match.`;
+      ? `Soul Urge and Personality are both ${su}. What you want and what people see first are the same: ${plainTrait(suRaw)}. Live it honestly.`
+      : `People first see ${plainMeet(peRaw)} (${pe}). Inside you want ${plainTrait(suRaw)} (${su}). They do not have to match.`;
 
   const innerOuterDeeper =
     suN === peN
-      ? `When both numbers match, people may read you quickly. The work is staying honest when things get hard — not acting the number. ${innerOuterPattern.meet}`
+      ? `When both numbers match, people read you quickly. Stay honest when things get hard. ${innerOuterPattern.meet}`
       : `${innerOuterPattern.looksLike} ${innerOuterPattern.tryLine}`;
 
   // The maturity diagram looks like the expression bridge, so the copy has to
@@ -375,16 +375,16 @@ export function buildPythagoreanIdentityLayers(opts: {
   const matSum = `${lp} + ${ex} = ${lpRaw + exRaw}, which reduces to ${mat}`;
   const matEcho =
     matN === lpN && matN === exN
-      ? `It lands on the same number as both, so this is less a new tone than more of the same.`
+      ? `It is the same number as both, so this is more of the same, not a new tone.`
       : matN === lpN
-        ? `It lands back on Life Path ${lp}, so the path tone gets stronger with age rather than changing.`
+        ? `It lands back on Life Path ${lp}, so the path gets stronger with age rather than changing.`
         : matN === exN
-          ? `It lands on Expression ${ex}, so the name style is what lasts.`
-          : `It is a third number, not Life Path ${lp} and not Expression ${ex} — a tone that only appears once the other two have been lived a while.`;
+          ? `It lands on Expression ${ex}, so how people already meet you is what lasts.`
+          : `It is not Life Path ${lp} and not Expression ${ex}. Later, ${plainTrait(matRaw)} gets louder.`;
 
-  const maturityInsight = `Maturity ${mat} is the sum of the other two: ${matSum}. ${matEcho} Traditions place it loosely around the mid-thirties to mid-forties, and it arrives gradually — nothing switches on at a birthday.`;
+  const maturityInsight = `Maturity ${mat} is Life Path plus Expression: ${matSum}. ${matEcho} Nothing switches on at a birthday. Practise it now in a small way.`;
 
-  const maturityDeeper = `The Expression layer above is about now: Birth Day ${bd} and Expression ${ex} in daily use. Maturity is about later. Life Path ${lp} (${plainTrait(lpRaw)}) and Expression ${ex} (${plainTrait(exRaw)}) add toward ${mat} (${plainTrait(matRaw)}), which is the habit that remains once the busier ones settle. Birth Day ${bd} still colours ordinary days throughout.`;
+  const maturityDeeper = `Expression is about now. Maturity is about later. ${lp} + ${ex} becomes ${mat} (${plainTrait(matRaw)}). Birth Day ${bd} still colours ordinary days.`;
 
   const layers: IdentityLayerCard[] = [
     {
@@ -440,19 +440,19 @@ export function buildPythagoreanIdentityLayers(opts: {
   ];
 
   const dynamicsSummary = [
-    `Birth Day is ${plainTrait(bdRaw)} (${bd}). Expression is ${plainTrait(exRaw)} (${ex}). Life Path is ${plainTrait(lpRaw)} (${lp}). ${expressionPattern.standsOut}`,
-    alignment.band === "aligned"
-      ? `Inside and outside share ${su} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`
-      : `Inside wants ${plainTrait(suRaw)} (${su}). Outside shows ${plainTrait(peRaw)} (${pe}) (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`,
-    `Later, Life Path ${lp} plus Expression ${ex} add toward Maturity ${mat}.`,
+    `You start by ${plainStart(bdRaw)} (${bd}). People meet you as ${plainMeet(exRaw)} (${ex}). The longer work is ${plainTrait(lpRaw)} (${lp}).`,
+    suN === peN
+      ? `Inside and outside share ${su}.`
+      : `Inside you want ${plainTrait(suRaw)} (${su}). People first see ${plainMeet(peRaw)} (${pe}).`,
+    `Later, ${plainTrait(matRaw)} (${mat}) gets louder. That is ${lp} + ${ex}.`,
   ].join(" ");
 
-  const growthInvitation = `This week, use ${plainTrait(exRaw)} (${ex}) on one ${plainTrait(lpRaw)} step. Watch: ${plainWatch(exRaw)}.`;
+  const growthInvitation = `This week: ${plainJob(exRaw)}. Then one ${plainJob(lpRaw)} step. Watch: ${plainWatch(exRaw)}.`;
 
   const reflectivePractice =
     suN === peN
-      ? `Notice one moment when Expression ${ex} helped (or hurried) a Birth Day ${bd} habit — name it without judgment.`
-      : `Let Personality ${pe} greet one conversation, then give Soul Urge ${su} five quiet minutes afterward.`;
+      ? `Notice one moment when how you come across helped — or hurried — how you start. Name it. Do not judge it.`
+      : `Let ${plainMeet(peRaw)} greet one conversation. Then give ${plainTrait(suRaw)} five quiet minutes. Do not skip the quiet.`;
 
   const blueprintLines = [
     `Expression ${ex}: ${layers[0].insight}`,

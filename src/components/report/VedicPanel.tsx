@@ -53,9 +53,9 @@ const EASE_LABEL: Record<string, string> = {
 };
 
 const CARD_SUB: Record<string, string> = {
-  Psychic: "Birth day · first habit",
+  Psychic: "Birth day · how you start",
   Destiny: "Full date · longer work",
-  Name: "Spelling in force now",
+  Name: "This spelling · how people meet you",
 };
 
 export function VedicPanel({
@@ -91,8 +91,9 @@ export function VedicPanel({
         Vedic numbers
       </p>
       <p className="mt-2 text-sm text-paper/75">
-        Three layers: birth-day habit, longer date path, and the name in force.
-        Tap a number for what it means and what to try.
+        Three numbers: how you start the day, the longer work, and how people
+        meet you from this spelling. Tap a number for what it is and what to try
+        this week.
       </p>
       <div className="mt-6 grid grid-cols-3 gap-3">
         {cards.map((c) => {
@@ -127,7 +128,7 @@ export function VedicPanel({
                 </p>
               ) : null}
               <p className="mt-2 text-[10px] text-paper/50">
-                Tap for character
+                Tap for what to try
               </p>
               <div className="mt-2 flex justify-center">
                 <PlanetIcon

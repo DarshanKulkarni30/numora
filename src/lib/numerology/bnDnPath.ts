@@ -48,8 +48,8 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
     id: "bn",
     shortTitle: "Birth · Psychic",
     represents:
-      "From the day of the month you were born. How you react first, before you have thought about it.",
-    tryLine: "Notice your first reaction before you plan.",
+      "From the day of the month you were born. How you start an ordinary day, before you have thought about it.",
+    tryLine: "Notice your first reaction before you make a new plan.",
     watchLine: "Treating that first reaction as the only option.",
     feelsLike: "Notice your first reaction before you plan.",
     shapes: "First reactions. Not the whole life.",
@@ -60,7 +60,7 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
     represents:
       "From the full birth date (day, month, and year added together). This is the longer work life keeps asking of you — at work, at home, and with people close to you.",
     tryLine:
-      "Notice one kind of work that keeps landing on you at work and at home. That repeating work is this number, not a new person.",
+      "Notice one kind of work that keeps landing on you at work and at home. That repeating work is this number.",
     watchLine:
       "Calling yourself a failure because the same kind of work keeps showing up. Repeating work is the longer ask, not a verdict.",
     feelsLike:
@@ -74,7 +74,7 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
     tryLine:
       "Notice one first impression this spelling gives, then check if it matches what you meant.",
     watchLine:
-      "Treating the spelling as if it replaced your birth date. It is how people meet you, not a replacement for the birth-day number.",
+      "Treating the spelling as if it replaced your birth date. It is how people meet you, not a replacement for the birth day.",
     feelsLike:
       "Notice one first impression this spelling gives, then check if it matches what you meant.",
     shapes: "First impressions. Not a replacement for the birth date.",
@@ -135,7 +135,7 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
   const looksLike =
     draft.looksLike ??
     (bn === dn
-      ? `Both numbers are ${bn}: ${plainTrait(bn)}. That shows in how you react first and in the longer direction. It is your strongest skill and the one you are least likely to question.`
+      ? `Both numbers are ${bn}: ${plainTrait(bn)}. That shows in how you start and in the longer work. It is your strongest skill and the one you will not question.`
       : `Your first reaction is ${plainTrait(bn)} (${bn}). The longer ask is ${plainTrait(dn)} (${dn}). You will notice the difference most at home, at work, and with people close to you.`);
   // When Psychic and Destiny are the same digit both sides pull from one
   // theme, so take the next distinct entry instead of repeating the first.
@@ -251,8 +251,8 @@ const CURATED: Record<string, TransitionDraft> = {
 function generatedDraft(bn: number, dn: number): TransitionDraft {
   return {
     feel: `You start with ${plainTrait(bn)} (${bn}). Over time, life also asks for ${plainTrait(dn)} (${dn}). The first number does not go away.`,
-    atmosphere: `Day to day you may still act like ${bn}. The longer work is ${dn}. This can show up at home, at work, or with close people.`,
-    invitation: `Try: ${plainJob(dn)}. Watch: ${plainWatch(bn)}. Keep what is true about ${bn}; do not erase it.`,
+    atmosphere: `Day to day you still start like ${bn}. The longer work is ${dn}. You feel that most at home, at work, and with people close to you.`,
+    invitation: `Try: ${plainJob(dn)}. Watch: ${plainWatch(bn)}. Keep what is true about ${bn}. Do not drop it.`,
   };
 }
 
@@ -287,7 +287,7 @@ export function nameOnBnDnPath(
     return {
       headline: "Name, Birth, and Destiny share one digit",
       detail:
-        "How people meet you matches both the first habit and the longer work. That can feel simple to wear. Try: live that one habit honestly this week. Watch: treating ease as a guarantee.",
+        "How people meet you matches both how you start and the longer work. Try: live that one job honestly this week. Watch: treating ease as a guarantee.",
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -295,7 +295,7 @@ export function nameOnBnDnPath(
   if (nnEqualsBn) {
     return {
       headline: "Name matches Birth",
-      detail: `How people meet you already looks like your first habit (${plainTrait(bn)}). The longer work is still ${plainTrait(dn)}. Try: keep using the first habit, then add one Destiny habit this week. Watch: staying in the first habit so the longer work never starts.`,
+      detail: `How people meet you already looks like how you start (${plainTrait(bn)}). The longer work is still ${plainTrait(dn)}. Try: keep using how you start, then add one Destiny step this week. Watch: staying in the start so the longer work never begins.`,
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -303,7 +303,7 @@ export function nameOnBnDnPath(
   if (nnEqualsDn) {
     return {
       headline: "Name matches Destiny",
-      detail: `How people meet you already looks like the longer work (${plainTrait(dn)}). The birth-day habit (${plainTrait(bn)}) stays yours in private. That can make the longer work show up in public sooner than it feels inside. Try: do one Destiny habit this week. Watch: skipping the birth-day habit because the name already sounds like the goal.`,
+      detail: `How people meet you already looks like the longer work (${plainTrait(dn)}). How you start the day (${plainTrait(bn)}) stays yours in private. Try: do one Destiny step this week. Watch: skipping how you start because the name already sounds like the goal.`,
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -315,18 +315,18 @@ export function nameOnBnDnPath(
     toDn === "Amazing" || toDn === "Favourable"
       ? "often fits the longer work"
       : toDn === "Challenging"
-        ? "tends to slow Destiny decisions — they take longer than you expect"
+        ? "slows Destiny decisions — they take longer than you expect"
         : "sits in a mixed way with the longer work";
   const birthEase =
     toBn === "Amazing" || toBn === "Favourable"
-      ? "and usually fits the birth-day habit"
+      ? "and usually fits how you start the day"
       : toBn === "Challenging"
-        ? "and may contrast the birth-day habit (useful tension, not a flaw)"
-        : "and sits beside the birth-day habit rather than matching it";
+        ? "and can pull against how you start the day — useful tension, not a flaw"
+        : "and sits beside how you start rather than matching it";
 
   return {
     headline: "Name is a first impression, not a replacement",
-    detail: `How people meet you is ${plainTrait(nn)} (${nn}). That is not the birth-day habit (${bn}) and not the longer work (${dn}). It ${ease}, ${birthEase}. Try one name habit this week, then go back to the day habit. Watch: treating the spelling as if it replaced your birth date.`,
+    detail: `How people meet you is ${plainTrait(nn)} (${nn}). That is not how you start (${bn}) and not the longer work (${dn}). It ${ease}, ${birthEase}. This week: ${plainJob(nn)}. Then go back to how you start the day. Watch: treating the spelling as if it replaced the birth day.`,
     nnEqualsBn,
     nnEqualsDn,
   };
@@ -363,6 +363,6 @@ export function twoNameMapsCopy(
       : "Same name, two ways of adding the letters",
     detail: agree
       ? "Two Indian-style alphabets were used. They landed on the same Name digit, so the first-impression number is stable for this spelling. The story above uses this digit."
-      : `Letters get different values in different Indian charts (for example C or H). Chart A reads Name ${main}. Chart B reads Name ${other}. These are two totals from two alphabets — two jobs, not two people. Neither wins. The Vedic story on this page uses the main chart: Name ${main}.`,
+      : `Letters get different values in different Indian charts (for example C or H). Chart A reads Name ${main}. Chart B reads Name ${other}. Two ways to add letters. You are not two people. This page uses Chart A: Name ${main}.`,
   };
 }

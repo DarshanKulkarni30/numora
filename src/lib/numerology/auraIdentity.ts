@@ -307,15 +307,15 @@ function pairSummary(
   const lt = traitOf(left.digit).toLowerCase();
   const rt = traitOf(right.digit).toLowerCase();
   if (kind === "aligned") {
-    return `${left.label} and ${right.label} are both ${left.digit}. The same trait (${lt}) is counted twice, so it becomes your automatic response. That is an advantage when the situation suits it, and a blind spot when it does not — the fix is to notice when you are reaching for it out of habit.`;
+    return `${left.label} and ${right.label} are both ${left.digit}. ${lt} is your automatic move — you reach for it before you think. That helps when the situation needs it. It hurts when you do it out of habit. This week: notice one time you reached for it. Ask if anyone actually asked.`;
   }
   if (kind === "complementary") {
-    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These two work well in the same task: one supplies the push and the other the follow-through. Use both on one job rather than picking a side.`;
+    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). They work on the same task: one starts, the other finishes. Use both on one job this week. Do not pick a side.`;
   }
   if (kind === "neutral") {
-    return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). They cover unrelated ground, so neither helps nor blocks the other. Treat them as two separate tools and use whichever the moment calls for.`;
+    return `${left.label} is ${left.digit} (${lt}). ${right.label} is ${right.digit} (${rt}). Different jobs. They do not help or block each other. Pick which hour this is. Use one. Do not mix both in the same five minutes.`;
   }
-  return `${left.label} is ${left.digit} (${lt}) and ${right.label} is ${right.digit} (${rt}). These pull opposite ways, so when both apply you can stall or flip between them. Give each one its own task — for example let ${rt.split(" & ")[0]} handle the preparation and ${lt.split(" & ")[0]} make the call.`;
+  return `${left.label} is ${left.digit} (${lt}). ${right.label} is ${right.digit} (${rt}). They pull opposite ways. Give each its own task this week — one prepares, the other decides.`;
 }
 
 function parseHex(hex: string): { r: number; g: number; b: number } {
@@ -596,7 +596,7 @@ export function buildAuraIdentity(opts: {
   const sameDigits = new Set(layers.map((l) => l.digit));
   const stretchPair = pairs.find((p) => p.kind === "contrasting");
   const synergySummary = (() => {
-    const intro = `This compares three numbers about you: Life Path ${layers[0].raw} (from your birth date), Vedic Destiny ${layers[1].raw} (same date, different method) and Name number ${layers[2].raw} (from your spelling). When two of them land on the same digit, that trait is being counted twice and becomes your default move.`;
+    const intro = `This compares three numbers: Life Path ${layers[0].raw} (birth date), Vedic Destiny ${layers[1].raw} (same date, other method), and Name number ${layers[2].raw} (this spelling). When two share a digit, that job becomes your automatic move.`;
     const shape =
       sameDigits.size === 1
         ? ` All three are ${layers[0].digit}, so one trait — ${traitOf(layers[0].digit).toLowerCase()} — drives almost everything you do. That makes you consistent and predictable to others, and it means you have few natural alternatives when it stops working.`
@@ -720,8 +720,8 @@ export function auraIdentityPdfLines(aura: AuraIdentity): string[] {
 }
 
 export function synergyKindLabel(kind: AuraSynergyKind): string {
-  if (kind === "aligned") return "Aligned";
-  if (kind === "complementary") return "Complementary";
-  if (kind === "neutral") return "Independent";
-  return "Contrasting";
+  if (kind === "aligned") return "Same job";
+  if (kind === "complementary") return "Work together";
+  if (kind === "neutral") return "Different jobs";
+  return "Pull opposite ways";
 }

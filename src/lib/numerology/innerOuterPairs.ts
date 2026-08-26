@@ -34,12 +34,12 @@ export type InnerOuterPattern = {
 export const INNER_OUTER_DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33] as const;
 
 export const INNER_OUTER_KIND_LABEL: Record<InnerOuterKind, string> = {
-  same: "inside and outside share a digit",
-  "light-face-heavy-want": "light face, heavier inner want",
-  "strong-face-soft-want": "strong face, gentler inner want",
-  "open-face-private-want": "open face, private inner want",
-  "closed-face-connective-want": "closed face, connective inner want",
-  "same-direction": "two numbers that point a similar way",
+  same: "inside and outside match",
+  "light-face-heavy-want": "the outside looks light; inside wants more",
+  "strong-face-soft-want": "the outside looks strong; inside wants less force",
+  "open-face-private-want": "people see movement; you want quiet",
+  "closed-face-connective-want": "you look private; inside you want company",
+  "same-direction": "two numbers that point the same way",
 };
 
 /** How a Personality digit tends to read from the outside. */
@@ -249,12 +249,12 @@ function familyOpenFacePrivateWant(
     band: "tension",
     looksLike: `People meet ${outwardRead(peRaw)} (${pe}), so you can look available. Inside you want ${innerPull(suRaw)} (${su}) — room to think, not more company.`,
     watch: `Because you look open, people may keep talking after you are done. Watch for staying available past the point of quiet.`,
-    tryLine: `Try: greet in the open way, then ${plainJob(suRaw)}. Say when you will come back, so the quiet is a plan, not a disappearance.`,
-    meet: `The open face (${pe}) can buy the private want (${su}) some cover — if you leave before you are empty.`,
+    tryLine: `Try: greet in the open way, then ${plainJob(suRaw)}. Say when you will come back, so the quiet is a plan, not a vanishing.`,
+    meet: `How you look (${pe}) can protect what you want inside (${su}) — if you leave before you are empty.`,
     overInner: `If you have gone fully quiet today, send one short signal that you are still in — then keep the rest of the quiet.`,
     overOuter: `If you have been available all day, take the next ten minutes for ${plainJob(suRaw)} and say when you will be back.`,
-    overInnerWatch: `Watch: going so quiet that people think the open face was a lie.`,
-    overOuterWatch: `Watch: staying in the open face until there is no quiet left for the inner want.`,
+    overInnerWatch: `Watch: going so quiet that people think the friendly front was a lie.`,
+    overOuterWatch: `Watch: staying available until there is no quiet left for what you want inside.`,
   });
 }
 

@@ -142,11 +142,11 @@ function ExpressionBridge({
       {
         id: "bd",
         code: "Birth Day",
-        role: "your first instinct",
+        role: "how you start the day",
         value: birthDay,
-        tip: `Birth Day ${birthDay} — your first habit`,
+        tip: `Birth Day ${birthDay} — how you start an ordinary day`,
         detail: pattern.birthDetail,
-        traitLine: "first habit",
+        traitLine: "how you start",
         guide: { topic: "birth-day", label: "Birth Day", value: birthDay },
       },
       {
@@ -154,21 +154,21 @@ function ExpressionBridge({
         code: "Expression",
         role: echoesBirth
           ? "same number as your birth day, so it doubles up"
-          : "how you come across",
+          : "how people meet you",
         value: expression,
-        tip: `Expression ${expression} — how you show up`,
+        tip: `Expression ${expression} — how people meet you`,
         detail: pattern.expressionDetail,
-        traitLine: "how you show up",
+        traitLine: "how people meet you",
         guide: { topic: "expression", label: "Expression", value: expression },
       },
       {
         id: "lp",
         code: "Life Path",
-        role: "where you are headed",
+        role: "the longer work",
         value: lifePath,
-        tip: `Life Path ${lifePath} — your longer direction`,
+        tip: `Life Path ${lifePath} — the longer work`,
         detail: pattern.pathDetail,
-        traitLine: "longer direction",
+        traitLine: "longer work",
         guide: { topic: "life-path", label: "Life Path", value: lifePath },
       },
     ],
@@ -1016,6 +1016,8 @@ export function PythagoreanIdentityLayers({
             Reflective only —{" "}
             <Link
               href={`/guide/expression/${expression}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-tactile inline text-gold-deep underline underline-offset-2 hover:text-ink"
             >
               Expression guide
