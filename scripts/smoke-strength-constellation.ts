@@ -2,7 +2,9 @@
  * Smoke: weighted strength constellation (core vs supporting vs mix).
  */
 import { STRENGTH_BANK } from "../src/lib/numerology/meanings";
+import { plainTrait } from "../src/lib/numerology/layeredCopy";
 import {
+  STRENGTH_ACTIONS,
   buildStrengthConstellation,
   splitStrengthLabel,
 } from "../src/lib/numerology/strengthConstellation";
@@ -84,5 +86,44 @@ eq(lonely.map[0]?.weight, "stretch", "single non-LP source is stretch");
 has(lonely.map[0]!.watchLine, "Watch:", "stretch gifts still get a watch, not a second try");
 has(model.extra[0]!.tryLine, "Try:", "overflow gifts carry a try");
 has(model.extra[0]!.watchLine, "Watch:", "overflow gifts carry a watch");
+
+const bankLabels = Object.values(STRENGTH_BANK).flat();
+eq(bankLabels.length, 36, "STRENGTH_BANK still has 36 gifts");
+for (const label of bankLabels) {
+  if (!STRENGTH_ACTIONS[label]) {
+    console.error(`FAIL missing STRENGTH_ACTIONS for: ${label}`);
+    process.exit(1);
+  }
+}
+console.log("ok every bank gift has a try/watch row");
+
+const lp3 = buildStrengthConstellation({
+  strengths: STRENGTH_BANK[3]!,
+  lifePath: "3",
+  vedicPsychic: "3",
+});
+const tries = new Set(lp3.nodes.map((n) => n.tryLine));
+eq(tries.size, 3, "Life Path 3 gifts each get a different try");
+const trait3 = plainTrait(3);
+for (const n of lp3.nodes) {
+  const count = n.sourceLine.split(trait3).length - 1;
+  if (count >= 2) {
+    console.error(
+      `FAIL sourceLine repeats the trait: ${n.sourceLine}`,
+    );
+    process.exit(1);
+  }
+}
+console.log("ok sourceLine does not repeat the same trait");
+has(
+  lp3.nodes[0]!.sourceLine,
+  "Life Path 3",
+  "sourceLine names Life Path",
+);
+has(
+  lp3.nodes[0]!.sourceLine,
+  "Psychic 3",
+  "sourceLine names Psychic when it matches",
+);
 
 console.log("strength constellation smoke ok");
