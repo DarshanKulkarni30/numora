@@ -6,6 +6,7 @@
 import { bnDnTransition, nameOnBnDnPath } from "./bnDnPath";
 import { chaldeanCompoundMeaning, CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
+import { plainJob, plainWatch } from "./layeredCopy";
 
 export type LayerCard = {
   title: string;
@@ -34,15 +35,15 @@ export type SystemInsight = {
 export const PYTHAGOREAN_LAYER_MAP: LayerCard[] = [
   {
     title: "Birth Day",
-    body: "From the day you were born only. The talent you bring into ordinary days — the starting color of the chart.",
+    body: "From the day of the month you were born. How you react first on ordinary days.",
   },
   {
     title: "Life Path",
-    body: "From the full birth date. The longer curriculum — themes that keep repeating across chapters.",
+    body: "From the full birth date. The longer work that keeps repeating — at work, at home, and with people close to you.",
   },
   {
     title: "Expression",
-    body: "From every letter of the name (A=1 … I=9, then repeat). How you build and are introduced — the vehicle.",
+    body: "From every letter of the name (A=1 … I=9, then repeat). How people first meet you from this spelling.",
   },
   {
     title: "Soul Urge",
@@ -72,20 +73,20 @@ export function pythagoreanInsight(opts: {
   maturity: string;
 }): SystemInsight {
   const path = bnDnTransition(opts.birthDay, opts.lifePath);
-  const vehicle = nameOnBnDnPath(opts.birthDay, opts.lifePath, opts.expression);
+  const expressionRole = nameOnBnDnPath(opts.birthDay, opts.lifePath, opts.expression);
   const su = reduceToSingleDigit(Number(opts.soulUrge));
   const pe = reduceToSingleDigit(Number(opts.personality));
 
   const innerOuter =
     su === pe
-      ? `Soul Urge and Personality share ${su}. Inner want and outer face often tell a similar story — still a theme to live honestly, not a guarantee of ease.`
+      ? `Soul Urge and Personality share ${su}. Inner want and outer face often tell a similar story — still a habit to live honestly, not a guarantee of ease.`
       : `Soul Urge ${opts.soulUrge} (${trait(opts.soulUrge)}) is the inner want; Personality ${opts.personality} (${trait(opts.personality)}) is the outer face. People may meet ${trait(opts.personality)} first, while you are quietly oriented toward ${trait(opts.soulUrge)}. Use the gap as nuance, not a split to “fix.”`;
 
-  const vehicleBody = vehicle.detail
+  const expressionBody = expressionRole.detail
     .replaceAll("Psychic", "Birth Day")
     .replaceAll("Destiny", "Life Path")
     .replaceAll("Name", "Expression");
-  const vehicleHead = vehicle.headline
+  const expressionHead = expressionRole.headline
     .replaceAll("Name", "Expression")
     .replaceAll("Birth", "Birth Day")
     .replaceAll("Destiny", "Life Path");
@@ -93,21 +94,16 @@ export function pythagoreanInsight(opts: {
   return {
     layers: PYTHAGOREAN_LAYER_MAP,
     path: {
-      kicker: "Your Birth Day → Life Path",
+      kicker: "Birth Day → Life Path (same date math as Destiny)",
       heading: `Birth Day ${path.bn} → Life Path ${path.dn}`,
-      feel: path.feel,
-      atmosphere: path.atmosphere,
-      invitation: path.invitation,
-      looksLike: path.looksLike,
-      helps: path.helps,
-      watch: path.watch,
-      student: path.student,
-      expert: path.expert,
+      feel: `This uses the same full-date math as Vedic Destiny. The full plus and watch live in the Vedic Path story — not a second path. Here: try ${plainJob(path.dn)}. Watch: ${plainWatch(path.bn)}.`,
+      atmosphere: "Not a second path and not a score.",
+      invitation: `Try: ${plainJob(path.dn)}. Watch: ${plainWatch(path.bn)}.`,
     },
     extras: [
       {
-        title: vehicleHead,
-        body: `${vehicleBody} Expression ${opts.expression} reads as ${trait(opts.expression)}.`,
+        title: expressionHead,
+        body: `${expressionBody} Expression ${opts.expression} reads as ${trait(opts.expression)}.`,
       },
       {
         title: "Inner want vs outer face",
@@ -219,7 +215,7 @@ function chaldeanCompoundShift(compound: number, reduced: number): PathCard {
     student:
       "Chaldean: add letter values (1–8 chart), keep the compound, then reduce. Pythagorean Expression uses a 1–9 letter chart on the same spelling.",
     expert:
-      "Disagreement between Chaldean reduced and Pythagorean Expression is expected when letter values differ (for example E, H, S). It is not a second destiny.",
+      "Disagreement between Chaldean reduced and Pythagorean Expression is expected when letter values differ (for example E, H, S). Two ways of adding letters, not two people.",
   };
 }
 
@@ -250,16 +246,15 @@ function chaldeanOnDatePath(opts: {
   const ex = opts.pythExpression
     ? reduceToSingleDigit(Number(opts.pythExpression))
     : null;
-  const path = bnDnTransition(bd, lp);
   const echo =
     ex != null && ex === bd
-      ? ` Pythagorean Expression is also ${ex}, the same as Birth Day ${bd}. The “start” number is in the date and in the name.`
+      ? ` Pythagorean Expression is also ${ex}, the same as Birth Day ${bd}. The start number is in the date and in the name.`
       : "";
   if (ch === lp) {
-    return `Chaldean name number ${ch} is the same as Life Path ${lp}. The name already points to the longer lesson. Birth Day ${bd} is still the starting style. ${path.feel}${echo}`;
+    return `Chaldean name number ${ch} is the same as Life Path ${lp}. The name already points to the longer work. Birth Day ${bd} is still the starting style.${echo}`;
   }
   if (ch === bd) {
-    return `Chaldean name number ${ch} is the same as Birth Day ${bd}. The name repeats the starting style. Life Path ${lp} is the longer lesson. ${path.feel}${echo}`;
+    return `Chaldean name number ${ch} is the same as Birth Day ${bd}. The name repeats the starting style. Life Path ${lp} is the longer work.${echo}`;
   }
-  return `On this chart the date path is Birth Day ${bd} → Life Path ${lp}. ${path.feel} The Chaldean name number is ${ch} (${trait(ch)}) — a third number for the same spelling. Worth checking: your name pushes toward ${trait(ch).toLowerCase()} while your date is still asking you to practise ${bd} → ${lp}. When those two disagree, people tend to expect the name version of you and get the date version — useful to know before you take on a role that only suits one of them.${echo}`;
+  return `On this chart the date path is Birth Day ${bd} → Life Path ${lp}. The Chaldean name number is ${ch} (${trait(ch)}) — a third number for the same spelling. People may expect the name version of you and get the date version. Useful to know before you take on a role that only suits one of them.${echo}`;
 }

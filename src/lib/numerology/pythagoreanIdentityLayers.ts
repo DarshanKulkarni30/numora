@@ -5,7 +5,6 @@
 
 import { CORE_TRAIT } from "./meanings";
 import { reduceToSingleDigit } from "./dateNumbers";
-import { bnDnTransition } from "./bnDnPath";
 import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 import {
   buildInnerOuterPattern,
@@ -246,7 +245,7 @@ export function buildExpressionPattern(
     relation: `How you come across (${plainTrait(exRaw)}) sits between the first habit (${plainTrait(bdRaw)}) and the longer direction (${plainTrait(lpRaw)}).`,
     friction: pairFriction(bdRaw, exRaw),
     strength: `Using the name style to take one path step: ${plainTrait(lpRaw)}.`,
-    watch: `Treating the name as a second destiny; ${plainWatch(exRaw)}.`,
+    watch: `Treating the spelling as if it replaced your birth date; ${plainWatch(exRaw)}.`,
     tryLine: `Try: ${plainJob(exRaw)}, then return to ${plainJob(bdRaw)}.`,
     birthDetail: `Birth Day ${bd} is the first habit: ${plainTrait(bdRaw)}. It is how you naturally begin, not the whole story.`,
     expressionDetail: `Expression ${ex} is how you show up: ${plainTrait(exRaw)}. It is the style between the first habit and the longer direction — not a second person.`,
@@ -331,7 +330,6 @@ export function buildPythagoreanIdentityLayers(opts: {
   const pe = opts.personality;
   const mat = opts.maturity;
 
-  const path = bnDnTransition(bd, lp);
   const suRaw = Number(su);
   const peRaw = Number(pe);
   const bdRaw = Number(bd);
@@ -340,18 +338,16 @@ export function buildPythagoreanIdentityLayers(opts: {
   const matRaw = Number(mat);
   const suN = reduceToSingleDigit(suRaw);
   const peN = reduceToSingleDigit(peRaw);
-  const bdN = reduceToSingleDigit(bdRaw);
   const exN = reduceToSingleDigit(exRaw);
   const innerOuterPattern = buildInnerOuterPattern(su, pe);
   const alignment = buildAlignment(innerOuterPattern);
   const expressionPattern = buildExpressionPattern(bd, lp, ex);
-
   const expressionInsight = expressionPattern.insight;
+
   const expressionDeeper = [
     expressionPattern.standsOut,
     expressionPattern.relation,
     expressionPattern.friction,
-    bdN === reduceToSingleDigit(lpRaw) ? path.looksLike : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -444,14 +440,14 @@ export function buildPythagoreanIdentityLayers(opts: {
   ];
 
   const dynamicsSummary = [
-    `Pattern: BD ${bd} · Ex ${ex} · LP ${lp}. ${expressionPattern.standsOut}`,
+    `Birth Day is ${plainTrait(bdRaw)} (${bd}). Expression is ${plainTrait(exRaw)} (${ex}). Life Path is ${plainTrait(lpRaw)} (${lp}). ${expressionPattern.standsOut}`,
     alignment.band === "aligned"
-      ? `Inner×outer share ${su} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`
-      : `Inner ${su} × outer ${pe} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`,
-    `Convergence: LP ${lp} + Ex ${ex} → Mat ${mat}.`,
+      ? `Inside and outside share ${su} (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`
+      : `Inside wants ${plainTrait(suRaw)} (${su}). Outside shows ${plainTrait(peRaw)} (${pe}) (${INNER_OUTER_KIND_LABEL[innerOuterPattern.kind]}).`,
+    `Later, Life Path ${lp} plus Expression ${ex} add toward Maturity ${mat}.`,
   ].join(" ");
 
-  const growthInvitation = path.invitation;
+  const growthInvitation = `This week, use ${plainTrait(exRaw)} (${ex}) on one ${plainTrait(lpRaw)} step. Watch: ${plainWatch(exRaw)}.`;
 
   const reflectivePractice =
     suN === peN

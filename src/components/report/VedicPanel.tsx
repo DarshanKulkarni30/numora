@@ -54,7 +54,7 @@ const EASE_LABEL: Record<string, string> = {
 
 const CARD_SUB: Record<string, string> = {
   Psychic: "Birth day · first habit",
-  Destiny: "Full date · longer path",
+  Destiny: "Full date · longer work",
   Name: "Spelling in force now",
 };
 
@@ -192,8 +192,8 @@ export function VedicPanel({
           How the three layers work
         </p>
         <p className="mt-1 text-xs text-paper/65">
-          Birth is how you start. Destiny is the longer theme. Name is how
-          people meet you. None of them is a score.
+          Birth is how you start. Destiny is the longer work. Name is how
+          people first meet you. None of them is a score.
         </p>
         <ol className="mt-3 space-y-2">
           {VEDIC_LAYER_MAP.map((layer, i) => (

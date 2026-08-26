@@ -104,7 +104,7 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     glyph: "♡",
     stroke: "rgba(190, 24, 93, 0.55)",
     fill: "#F9A8D4",
-    scan: "Keep one promise. Keep one hour that is for you.",
+    scan: "Keep one promise to someone else. Set aside one hour that is only for you.",
     watch: "Saying yes until you have no rest left.",
   },
   7: {

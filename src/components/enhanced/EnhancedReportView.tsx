@@ -18,6 +18,7 @@ import { ActionPlanPanel } from "@/components/report/ActionPlanPanel";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
+import { ChaldeanEssenceStrip } from "@/components/report/ChaldeanEssenceStrip";
 import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
 import { LivingReportBanner } from "@/components/report/LivingReportBanner";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
@@ -530,26 +531,10 @@ export function EnhancedReportView({
             </div>
           ) : null}
 
-          <div>
-            <h3 className="text-xl text-ink">Name vibration (Chaldean)</h3>
-            <p className="mt-2 brand text-3xl text-ink">
-              {reading.chaldean.compound || "—"}
-              <span className="mx-2 text-lg text-ink-soft">→</span>
-              {reading.chaldean.reduced}
-            </p>
-            <p className="mt-3 text-sm leading-7 text-ink-soft">
-              {reading.chaldean.texture}
-            </p>
-            <p className="mt-2 text-sm leading-7 text-ink-soft">
-              {reading.chaldean.essence}
-            </p>
-            <p className="mt-2 text-sm leading-7 text-ink-soft">
-              {reading.chaldean.combined}
-            </p>
-            <p className="mt-2 text-sm leading-7 text-ink-soft">
-              {reading.chaldean.compare}
-            </p>
-          </div>
+          <ChaldeanEssenceStrip
+            story={reading.chaldean}
+            operatingName={snap.operating_name || person.operating_name || person.full_name}
+          />
 
           <div>
             <h3 className="text-xl text-ink">Vedic energy</h3>

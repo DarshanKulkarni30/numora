@@ -191,6 +191,7 @@ export async function downloadEnhancedPdf(
   addBody(`${reading.chaldean.compound} → ${reading.chaldean.reduced}`);
   addBody(reading.chaldean.texture);
   addBody(reading.chaldean.essence);
+  addBody(reading.chaldean.combined);
   addBody(reading.chaldean.compare);
 
   addBanner("Lo Shu lived effects");

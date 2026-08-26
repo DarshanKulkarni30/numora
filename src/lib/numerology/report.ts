@@ -134,7 +134,7 @@ function ageGuidance(age: number, name: string, lifePath: number): {
     category: "Adult Life Guidance",
     guidance: [
       `For ${name}, adult guidance in numerology traditions may center on conscious self-development rather than prediction.`,
-      "Self-development: Life Path themes can be used as a mirror for habits, values, and the kind of challenges that feel meaningful.",
+      "Self-development: Life Path can be used as a mirror for habits, values, and the kind of work that keeps landing on you.",
       "Career growth: aligning work with Expression and Life Path tendencies may support engagement, while skills and ethics remain the practical drivers of progress.",
       "Relationships: awareness of communication and care styles may improve partnership quality without guaranteeing outcomes.",
       "Personal responsibility: cycles such as Personal Year and Month may suggest pacing—when to initiate, refine, or release—not certainty about events.",

@@ -3,11 +3,11 @@
  * (not Lo Shu rows). Reflective architecture only — not events, health, or fate.
  */
 
-import { bnDnTransition } from "./bnDnPath";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { LO_SHU_NUMBER_META } from "./loShuEffects";
 import { parseDob, reduceNumber } from "./reduce";
 import type { NumerologySnapshot } from "./types";
+import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 
 export type PythAspectTopic =
   | "birth-day"
@@ -418,16 +418,15 @@ export function buildPythagoreanWheel(
   const lp = reduceToSingleDigit(Number(snap.life_path));
   const su = reduceToSingleDigit(Number(snap.soul_urge_number));
   const pe = reduceToSingleDigit(Number(snap.personality_number));
-  const path = bnDnTransition(bn, lp);
 
   const tensions: string[] = [];
   if (Number.isFinite(bn) && Number.isFinite(lp) && bn !== lp) {
     tensions.push(
-      `Birth Day ${snap.birth_day} (${PYTH_NUMBER_KEYWORD[bn]}) and Life Path ${snap.life_path} (${PYTH_NUMBER_KEYWORD[lp]}) sit on different tones — ${path.feel} A lifelong texture to notice, not a split to “fix.”`,
+      `Birth Day ${snap.birth_day} is ${plainTrait(bn)}. Life Path ${snap.life_path} is ${plainTrait(lp)}. Different jobs on the same date — not a second path.`,
     );
   } else if (bn === lp) {
     tensions.push(
-      `Your Birth Day and Life Path are both ${snap.life_path}, so your day-to-day instinct and your long-term direction ask for the same thing. That makes you consistent; it also means you have fewer natural fallbacks when that approach does not fit.`,
+      `Your Birth Day and Life Path are both ${snap.life_path}: ${plainTrait(lp)}. That makes you consistent. Watch: treating that one habit as the only option.`,
     );
   }
   if (Number.isFinite(su) && Number.isFinite(pe) && su !== pe) {
@@ -484,7 +483,7 @@ export function buildPythagoreanWheel(
 
   const architecture = `${dom.label} is the leading layer (${dom.represents}). ${relationLine} ${engineLine} Weather language only.`;
 
-  const narrative = `Birth Day ${snap.birth_day} → Life Path ${snap.life_path}: ${path.feel} ${path.invitation}`;
+  const narrative = `Birth Day ${snap.birth_day} (${plainTrait(bn)}) → Life Path ${snap.life_path} (${plainTrait(lp)}). Try: ${plainJob(lp)}. Watch: ${plainWatch(bn)}.`;
 
   return {
     aspects,

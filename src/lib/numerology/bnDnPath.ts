@@ -6,6 +6,7 @@
 import { reduceToSingleDigit } from "./dateNumbers";
 import { vedicPairTone } from "./vedicCompatibility";
 import { VEDIC_DIGIT_THEMES } from "./vedicNumberThemes";
+import { CARE_HOUR_PRACTICE, plainJob, plainTrait, plainWatch } from "./layeredCopy";
 
 export type BnDnTransition = {
   bn: number;
@@ -51,98 +52,80 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
     tryLine: "Notice your first reaction before you plan.",
     watchLine: "Treating that first reaction as the only option.",
     feelsLike: "Notice your first reaction before you plan.",
-    shapes: "Early habits and first reactions.",
+    shapes: "First reactions. Not the whole life.",
   },
   {
     id: "dn",
     shortTitle: "Destiny",
     represents:
-      "From your full birth date. The theme that keeps coming back across jobs, places and relationships.",
-    tryLine: "Look for the same theme showing up at work and at home.",
-    watchLine: "Calling yourself a failure because the same theme returns.",
-    feelsLike: "Look for the same theme showing up at work and at home.",
-    shapes: "Longer chapters and repeating themes.",
+      "From the full birth date (day, month, and year added together). This is the longer work life keeps asking of you — at work, at home, and with people close to you.",
+    tryLine:
+      "Notice one kind of work that keeps landing on you at work and at home. That repeating work is this number, not a new person.",
+    watchLine:
+      "Calling yourself a failure because the same kind of work keeps showing up. Repeating work is the longer ask, not a verdict.",
+    feelsLike:
+      "Notice one kind of work that keeps landing on you at work and at home.",
+    shapes: "The longer work. Not a score.",
   },
   {
     id: "nn",
     shortTitle: "Name",
-    represents: "From the spelling in force now. How people meet you.",
-    tryLine: "Notice how people meet you from this spelling.",
-    watchLine: "Thinking the name is a second destiny.",
-    feelsLike: "Notice how people meet you from this spelling.",
-    shapes: "First impressions. Not a second destiny.",
+    represents: "From the spelling in force now. How people first meet you.",
+    tryLine:
+      "Notice one first impression this spelling gives, then check if it matches what you meant.",
+    watchLine:
+      "Treating the spelling as if it replaced your birth date. It is how people meet you, not a replacement for the birth-day number.",
+    feelsLike:
+      "Notice one first impression this spelling gives, then check if it matches what you meant.",
+    shapes: "First impressions. Not a replacement for the birth date.",
   },
 ];
 
-const FROM: Record<number, string> = {
-  1: "self-direction",
-  2: "relational sensitivity",
-  3: "expressive warmth",
-  4: "structured effort",
-  5: "restless curiosity",
-  6: "care and harmony",
-  7: "inward study",
-  8: "endurance and ambition",
-  9: "completion and compassion",
-};
-
-const TO: Record<number, string> = {
-  1: "clearer self-authority",
-  2: "patience and partnership",
-  3: "sharing and creative speech",
-  4: "foundations and steady building",
-  5: "flexibility and wider horizons",
-  6: "responsibility and tending others",
-  7: "stillness and inner truth",
-  8: "mastery and long-range aims",
-  9: "release and wider care",
-};
-
 const SAME: Record<number, TransitionDraft> = {
   1: {
-    feel: "Identity intensifies; repeated calls to stand on your own.",
-    atmosphere: "Leadership moments, decisive crossroads, self-reliance as a practice.",
-    invitation: "Claim authority with clarity; refine a personal vision without forcing others.",
+    feel: "Your birth day and your full date are both 1: starting things and deciding for yourself.",
+    atmosphere: "This often shows up when someone has to go first.",
+    invitation: `Try: ${plainJob(1)}. Watch: ${plainWatch(1)}.`,
   },
   2: {
-    feel: "Sensitivity doubles; life keeps asking for cooperation.",
-    atmosphere: "Partnerships, negotiation and reading other people's moods are where most of the learning happens.",
-    invitation: "Honor feeling without disappearing; practice patience as strength.",
+    feel: "Your birth day and your full date are both 2: working with others and being patient.",
+    atmosphere: "This often shows up in partnerships and shared decisions.",
+    invitation: `Try: ${plainJob(2)}. Watch: ${plainWatch(2)}.`,
   },
   3: {
-    feel: "Day habit and long path are the same: talking, play, and sharing ideas.",
+    feel: "Your birth day and your full date are both 3: talking, play, and sharing ideas.",
     atmosphere: "Home, work, and friends may keep handing you speaking or making work.",
-    invitation: "Finish one thing you started saying. Watch: starting many talks and closing none.",
+    invitation: `Try: ${plainJob(3)}. Watch: ${plainWatch(3)}.`,
   },
   4: {
-    feel: "Structure deepens; the lesson is to keep building.",
-    atmosphere: "Routines, systems, slow progress that actually holds.",
-    invitation: "Stay with the scaffold; loosen rigidity where life needs give.",
+    feel: "Your birth day and your full date are both 4: plans, routines, and steady work.",
+    atmosphere: "Routines and slow progress that actually holds.",
+    invitation: `Try: ${plainJob(4)}. Watch: ${plainWatch(4)}.`,
   },
   5: {
-    feel: "Change is home; restlessness keeps coming back.",
-    atmosphere: "Variety, movement of mind, openings that do not stay still.",
-    invitation: "Choose a few experiments; freedom needs a chosen path.",
+    feel: "Your birth day and your full date are both 5: change, freedom, and trying new things.",
+    atmosphere: "Variety and openings that do not stay still.",
+    invitation: `Try: ${plainJob(5)}. Watch: ${plainWatch(5)}.`,
   },
   6: {
-    feel: "Care is both instinct and assignment.",
-    atmosphere: "Home, loyalty, harmony work, tending people and places.",
-    invitation: "Give without emptying; duty and joy can share a room.",
+    feel: "Your birth day and your full date are both 6: care, home, and keeping promises.",
+    atmosphere: "Home, loyalty, and tending people and places.",
+    invitation: `Try: ${CARE_HOUR_PRACTICE} Watch: ${plainWatch(6)}.`,
   },
   7: {
-    feel: "The inner life is both refuge and homework.",
-    atmosphere: "Study, solitude, intuition, meaning-making away from noise.",
-    invitation: "Trust stillness; let insight become usable, not only private.",
+    feel: "Your birth day and your full date are both 7: quiet thinking and study.",
+    atmosphere: "Study, solitude, and meaning away from noise.",
+    invitation: `Try: ${plainJob(7)}. Watch: ${plainWatch(7)}.`,
   },
   8: {
-    feel: "Ambition and endurance keep meeting you.",
-    atmosphere: "Long projects, authority tests, stamina as the weather.",
-    invitation: "Build with integrity; pair drive with rest so mastery can last.",
+    feel: "Your birth day and your full date are both 8: plans, money, and responsibility.",
+    atmosphere: "Long projects and results people can see.",
+    invitation: `Try: ${plainJob(8)}. Watch: ${plainWatch(8)}.`,
   },
   9: {
-    feel: "Completion and compassion stay on the syllabus.",
-    atmosphere: "Endings, forgiveness practice, care that wants to go wider.",
-    invitation: "Close loops cleanly; let love move beyond the personal without bypassing it.",
+    feel: "Your birth day and your full date are both 9: finishing things and helping a wider group.",
+    atmosphere: "Endings, closing loops, and help that goes past close friends.",
+    invitation: `Try: ${plainJob(9)}. Watch: ${plainWatch(9)}.`,
   },
 };
 
@@ -152,8 +135,8 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
   const looksLike =
     draft.looksLike ??
     (bn === dn
-      ? `Both numbers are the same, so the same theme shows up in your daily reactions and in your longer direction. Expect ${from.keyword.toLowerCase()} work to keep landing on you — ${from.psychicFocus} Doubled like this it becomes your strongest skill and your least examined habit, so it is worth checking occasionally whether it actually suits the situation.`
-      : `In practice this looks like your first instinct (${from.keyword}: ${from.psychicFocus}) meeting a longer assignment (${to.keyword}: ${to.destinyFocus}) You will notice the difference most at home, at work and with people close to you — those are the places where the quick reaction and the longer aim have to be reconciled.`);
+      ? `Both numbers are ${bn}: ${plainTrait(bn)}. That shows in how you react first and in the longer direction. It is your strongest skill and the one you are least likely to question.`
+      : `Your first reaction is ${plainTrait(bn)} (${bn}). The longer ask is ${plainTrait(dn)} (${dn}). You will notice the difference most at home, at work, and with people close to you.`);
   // When Psychic and Destiny are the same digit both sides pull from one
   // theme, so take the next distinct entry instead of repeating the first.
   const pickThree = (a: string[], b: string[], fallback: string): string[] => {
@@ -191,28 +174,8 @@ function finish(bn: number, dn: number, draft: TransitionDraft): BnDnTransition 
   };
 }
 
-/** Hand-tuned BN→DN rows (user research, rewritten as reflective themes). */
+/** Hand-tuned BN→DN rows kept when they already speak amateur (what it is + plus + watch). */
 const CURATED: Record<string, TransitionDraft> = {
-  "1-2": {
-    feel: "Shift from self-focus toward relational awareness.",
-    atmosphere: "Partnerships, diplomacy, and emotional sensitivity as growing skills.",
-    invitation: "Learn cooperation and subtle influence without dropping your own centre.",
-  },
-  "1-5": {
-    feel: "Movement from a single focus toward exploration.",
-    atmosphere: "Themes of variety, openings, and a wider field of interest.",
-    invitation: "Stay flexible; expand without treating restlessness as failure.",
-  },
-  "2-4": {
-    feel: "Emotional energy looks for structure and ground.",
-    atmosphere: "Routines, foundations, slow but steady progress.",
-    invitation: "Build resilience and practical strength around a sensitive core.",
-  },
-  "2-7": {
-    feel: "Sensitivity turns inward toward contemplation.",
-    atmosphere: "Solitude, study, spiritual or intellectual depth as weather.",
-    invitation: "Trust intuition; cultivate inner stillness without cutting all ties.",
-  },
   "3-6": {
     feel: "You like to talk, play, and share ideas (3). Over time, life also asks you to take care of people and keep promises (6). You do not have to stop being creative.",
     atmosphere:
@@ -232,7 +195,7 @@ const CURATED: Record<string, TransitionDraft> = {
       "You may avoid a hard talk by being funny or charming",
     ],
     student:
-      "3 is the birth day reduced (Psychic / Birth Day). 6 is the full date reduced (Destiny / Life Path). The report reads “from 3 toward 6.” Creativity is the start; care is the longer lesson.",
+      "3 is the birth day reduced (Psychic / Birth Day). 6 is the full date reduced (Destiny / Life Path). The report reads from 3 toward 6. Creativity is the start; care is the longer work.",
     expert:
       "Vedic Moolank 3 (Jupiter) → Bhagyank 6 (Venus). Pythagorean Birth Day 3 → Life Path 6 is the same date math with optional master numbers on the path. Not a prediction of family or career.",
   },
@@ -241,7 +204,7 @@ const CURATED: Record<string, TransitionDraft> = {
     atmosphere: "Teaching, mentoring, and closing old chapters. Help that goes past close friends.",
     invitation: "Teach what you know in simple words. Finish one thing before you start a new cause.",
     looksLike:
-      "A storyteller who starts teaching. A hobby that turns into helping strangers. It can also look like starting many “good” projects and finishing none.",
+      "A storyteller who starts teaching. A hobby that turns into helping strangers. It can also look like starting many good projects and finishing none.",
     helps: [
       "Your words can help someone, not only entertain",
       "You can end a chapter without calling it failure",
@@ -251,32 +214,12 @@ const CURATED: Record<string, TransitionDraft> = {
       "Too many causes, nothing finished",
     ],
   },
-  "4-1": {
-    feel: "Structure transforms into initiative and independence.",
-    atmosphere: "New beginnings, self-driven paths, tests of personal decision.",
-    invitation: "Step forward; trust your own calls after years of building.",
-  },
-  "4-8": {
-    feel: "Discipline evolves into ambition and mastery.",
-    atmosphere: "Work stamina, long-range aims, authority as a slow craft.",
-    invitation: "Refine strategy and perseverance; let effort become skill, not grind alone.",
-  },
-  "4-9": {
-    feel: "Practicality opens into emotional and spiritual release.",
-    atmosphere: "Endings, completions, maturation of what you have built.",
-    invitation: "Let go gracefully; treat closure as transformation, not failure.",
-  },
-  "5-1": {
-    feel: "Freedom looks for a focused direction.",
-    atmosphere: "New ventures of attention, decisive choices, personal breakthroughs of habit.",
-    invitation: "Commit to a path; turn scattered ideas into one honest action.",
-  },
   "5-6": {
     feel: "You like change and new things (5). Life also asks you to stay and take care of people or a home (6). You can still explore — and someone may need you on ordinary days, not only on trips.",
     atmosphere: "Home, partnership, and being reliable, while your mind still wants movement.",
     invitation: "Choose a few people or habits to stay with. Freedom is still freedom if you come back.",
     looksLike:
-      "Someone who used to move jobs or cities now keeps a home or a team. It can also look like getting angry at “boring” duty.",
+      "Someone who used to move jobs or cities now keeps a home or a team. It can also look like getting angry at boring duty.",
     helps: [
       "You can care for people without becoming rigid",
       "You can keep play inside a stable life",
@@ -286,87 +229,30 @@ const CURATED: Record<string, TransitionDraft> = {
       "Leaving (new job, new city, new crush) when care feels heavy",
     ],
   },
-  "5-8": {
-    feel: "Change sharpens into ambition and achievement themes.",
-    atmosphere: "High-stakes work weather, pressure that can become craft.",
-    invitation: "Harness discipline; turn momentum into mastery instead of more motion.",
-  },
-  "6-3": {
-    feel: "Responsibility softens into creativity and expression.",
-    atmosphere: "Social expansion, artistic pursuits, a lighter emotional tone.",
-    invitation: "Rediscover joy; speak freely while still honoring care.",
-  },
-  "6-8": {
-    feel: "Care evolves into structured ambition.",
-    atmosphere: "Leadership of responsibility, resource themes, authority tests.",
-    invitation: "Balance empathy with firmness; build success that others can live with.",
-  },
-  "6-9": {
-    feel: "Nurturing expands into wider compassion.",
-    atmosphere: "Service, healing-as-presence, release of over-personal worry.",
-    invitation: "Practice forgiveness; let care flow beyond the inner circle.",
-  },
   "7-2": {
-    feel: "Solitude opens into connection and partnership.",
-    atmosphere: "Collaborations, emotional bonds, shared decisions.",
-    invitation: "Learn vulnerability; trust others with some of the inner world.",
-  },
-  "7-3": {
-    feel: "Inner study opens toward warmer expression and counsel.",
-    atmosphere: "Conversation, teaching-in-ordinary-life, insight that wants simple words.",
-    invitation: "Share what you know privately; keep joy beside solitude.",
-  },
-  "7-5": {
-    feel: "Introspection transforms into exploration.",
-    atmosphere: "Learning, unexpected openings, mental expansion as weather.",
-    invitation: "Stay curious; allow life to surprise a careful mind.",
-  },
-  "7-9": {
-    feel: "Inner wisdom looks for a contribution beyond the self.",
-    atmosphere: "Teaching, healing-as-presence, endings, completion of old patterns.",
-    invitation: "Share insights; release what is finished with grace.",
-  },
-  "8-1": {
-    feel: "Ambition resets into fresh beginnings.",
-    atmosphere: "New leadership of the self, independence, bolder choices of direction.",
-    invitation: "Lead with integrity; rebuild with clarity rather than more force.",
-  },
-  "8-2": {
-    feel: "Power softens into cooperation and diplomacy.",
-    atmosphere: "Partnerships, negotiations, emotional refinement of strength.",
-    invitation: "Practice patience; pair firmness with sensitivity.",
-  },
-  "8-4": {
-    feel: "Achievement wants to stabilize into long-term building.",
-    atmosphere: "Structure, discipline, foundational work, steady progress.",
-    invitation: "Commit deeply; build systems that can endure without constant heroics.",
-  },
-  "9-3": {
-    feel: "Completion shifts into creative rebirth.",
-    atmosphere: "Expression, social energy, new ideas, lighter emotional tone.",
-    invitation: "Celebrate renewal; communicate what the last chapter taught.",
-  },
-  "9-6": {
-    feel: "Wide compassion becomes personal care.",
-    atmosphere: "Close-in healing of family patterns, emotional responsibilities, nurturing cycles.",
-    invitation: "Ground empathy at home; create harmony in the near relationships.",
-  },
-  "9-7": {
-    feel: "Emotional release turns into spiritual or intellectual inquiry.",
-    atmosphere: "Solitude, study, inner healing, intuitive development.",
-    invitation: "Seek truth; deepen the inner connection after the wide heart.",
+    feel: "Your first reaction is quiet thinking and study (7). The longer work is working with others and being patient (2). You do not have to stop needing quiet.",
+    atmosphere:
+      "This often shows up in partnerships and shared decisions. Your gift is still thinking first. The extra work is saying something out loud before the other person gives up.",
+    invitation:
+      "Try: wait and work with one other person. Watch: going so quiet that people think you do not care.",
+    looksLike:
+      "You think it through, then someone else has already decided. Or you partner with people but still need hours alone. It can also look like skipping the meeting because the idea is not finished.",
+    helps: [
+      "You can think first, then still show up for someone else",
+      "Quiet can help a partnership if you also speak",
+    ],
+    watch: [
+      "Going so quiet that people think you do not care",
+      "Waiting so long that nothing is said",
+    ],
   },
 };
 
 function generatedDraft(bn: number, dn: number): TransitionDraft {
-  const from = FROM[bn] ?? "your starting tone";
-  const toward = TO[dn] ?? "the next lesson";
-  const fromKw = VEDIC_DIGIT_THEMES[bn]?.keyword ?? String(bn);
-  const toKw = VEDIC_DIGIT_THEMES[dn]?.keyword ?? String(dn);
   return {
-    feel: `You start with ${from} (number ${bn}, ${fromKw}). Over time, life also asks for ${toward} (number ${dn}, ${toKw}). The first number does not go away.`,
-    atmosphere: `Day to day you may still act like ${fromKw}. The longer lesson is ${toKw}. This can show up at home, at work, or with close people.`,
-    invitation: `Keep what is true about number ${bn}. Add practice for number ${dn}. Do not try to erase the first number.`,
+    feel: `You start with ${plainTrait(bn)} (${bn}). Over time, life also asks for ${plainTrait(dn)} (${dn}). The first number does not go away.`,
+    atmosphere: `Day to day you may still act like ${bn}. The longer work is ${dn}. This can show up at home, at work, or with close people.`,
+    invitation: `Try: ${plainJob(dn)}. Watch: ${plainWatch(bn)}. Keep what is true about ${bn}; do not erase it.`,
   };
 }
 
@@ -401,7 +287,7 @@ export function nameOnBnDnPath(
     return {
       headline: "Name, Birth, and Destiny share one digit",
       detail:
-        "How people meet you matches both the first habit and the longer path. That can feel simple to wear. Try: live that one habit honestly this week. Watch: treating ease as a guarantee.",
+        "How people meet you matches both the first habit and the longer work. That can feel simple to wear. Try: live that one habit honestly this week. Watch: treating ease as a guarantee.",
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -409,7 +295,7 @@ export function nameOnBnDnPath(
   if (nnEqualsBn) {
     return {
       headline: "Name matches Birth",
-      detail: `How people meet you already looks like your first habit. The longer path is still the growing work. Try: keep using the first habit, then add one Destiny habit this week. Watch: staying in the first habit so the longer path never starts.`,
+      detail: `How people meet you already looks like your first habit (${plainTrait(bn)}). The longer work is still ${plainTrait(dn)}. Try: keep using the first habit, then add one Destiny habit this week. Watch: staying in the first habit so the longer work never starts.`,
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -417,7 +303,7 @@ export function nameOnBnDnPath(
   if (nnEqualsDn) {
     return {
       headline: "Name matches Destiny",
-      detail: `How people meet you already looks like the longer path. The birth-day habit stays yours in private. That can make the longer theme show up in public sooner than it feels inside. Try: do one Destiny habit this week. Watch: skipping the birth-day habit because the name already sounds like the goal.`,
+      detail: `How people meet you already looks like the longer work (${plainTrait(dn)}). The birth-day habit (${plainTrait(bn)}) stays yours in private. That can make the longer work show up in public sooner than it feels inside. Try: do one Destiny habit this week. Watch: skipping the birth-day habit because the name already sounds like the goal.`,
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -427,10 +313,10 @@ export function nameOnBnDnPath(
   const toDn = vedicPairTone(nn, dn);
   const ease =
     toDn === "Amazing" || toDn === "Favourable"
-      ? "often fits the longer path"
+      ? "often fits the longer work"
       : toDn === "Challenging"
         ? "tends to slow Destiny decisions — they take longer than you expect"
-        : "sits in a mixed way with the longer path";
+        : "sits in a mixed way with the longer work";
   const birthEase =
     toBn === "Amazing" || toBn === "Favourable"
       ? "and usually fits the birth-day habit"
@@ -439,8 +325,8 @@ export function nameOnBnDnPath(
         : "and sits beside the birth-day habit rather than matching it";
 
   return {
-    headline: "Name is a different habit",
-    detail: `How people meet you is not the birth-day habit and not the longer path. They may meet ${VEDIC_DIGIT_THEMES[nn]?.keyword ?? nn} first. It ${ease}, ${birthEase}. Try one name habit this week, then go back to the day habit. Watch: treating the name as a second destiny.`,
+    headline: "Name is a first impression, not a replacement",
+    detail: `How people meet you is ${plainTrait(nn)} (${nn}). That is not the birth-day habit (${bn}) and not the longer work (${dn}). It ${ease}, ${birthEase}. Try one name habit this week, then go back to the day habit. Watch: treating the spelling as if it replaced your birth date.`,
     nnEqualsBn,
     nnEqualsDn,
   };
@@ -474,9 +360,9 @@ export function twoNameMapsCopy(
     otherLabel: otherC ? `${other} (letters added to ${otherC}, then reduced)` : other,
     headline: agree
       ? "Both letter charts agree on this spelling"
-      : "Same name, two letter charts — not two destinies",
+      : "Same name, two ways of adding the letters",
     detail: agree
-      ? "Two Indian-style alphabets were used. They landed on the same Name digit, so the outer-face number is stable for this spelling. The story above uses this digit."
-      : `Letters are given different values in different Indian charts (for example C or H). The Vedic story on this page uses the main chart: Name ${main}. The second chart reads Name ${other} — a cross-check from another school, not a second person and not a contradiction of Birth or Destiny.`,
+      ? "Two Indian-style alphabets were used. They landed on the same Name digit, so the first-impression number is stable for this spelling. The story above uses this digit."
+      : `Letters get different values in different Indian charts (for example C or H). Chart A reads Name ${main}. Chart B reads Name ${other}. These are two totals from two alphabets — two jobs, not two people. Neither wins. The Vedic story on this page uses the main chart: Name ${main}.`,
   };
 }

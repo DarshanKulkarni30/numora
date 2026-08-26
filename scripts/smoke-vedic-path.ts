@@ -24,12 +24,17 @@ function eq(actual: unknown, expected: unknown, label: string) {
 const t73 = bnDnTransition(7, 3);
 eq(t73.bn, 7, "7→3 bn");
 eq(t73.dn, 3, "7→3 dn");
-if (!t73.feel.toLowerCase().includes("inner")) {
-  console.error("FAIL 7→3 feel should mention inner study", t73.feel);
+if (!t73.feel.toLowerCase().includes("quiet") && !t73.feel.toLowerCase().includes("study")) {
+  console.error("FAIL 7→3 feel should mention quiet thinking or study", t73.feel);
   process.exit(1);
 }
 if (t73.helps.length < 2 || t73.watch.length < 2 || t73.looksLike.length < 40) {
   console.error("FAIL 7→3 should carry situations + helps/watch", t73);
+  process.exit(1);
+}
+const blob73 = `${t73.feel} ${t73.looksLike} ${t73.invitation} ${t73.helps.join(" ")} ${t73.watch.join(" ")}`.toLowerCase();
+if (blob73.includes("second destiny") || blob73.includes("meet care")) {
+  console.error("FAIL 7→3 should not treat keywords as people", blob73);
   process.exit(1);
 }
 console.log("ok 7→3 feel", t73.feel);
@@ -50,7 +55,7 @@ if (!t36.watch.some((w) => w.toLowerCase().includes("angry") || w.toLowerCase().
 console.log("ok 3→6", t36.feel);
 
 const same = bnDnTransition(1, 1);
-if (!same.feel.toLowerCase().includes("identity")) {
+if (!same.feel.toLowerCase().includes("starting")) {
   console.error("FAIL 1→1", same);
   process.exit(1);
 }
@@ -61,11 +66,19 @@ if (nn.nnEqualsBn || nn.nnEqualsDn) {
   console.error("FAIL 7-3-6 should be third colour", nn);
   process.exit(1);
 }
-console.log("ok name is a different habit", nn.headline);
+if (!nn.headline.toLowerCase().includes("first impression")) {
+  console.error("FAIL name headline should say first impression", nn);
+  process.exit(1);
+}
+console.log("ok name is a first impression", nn.headline);
 
 const maps = twoNameMapsCopy("6", "2", "42", "47");
 eq(maps?.agree, false, "maps disagree");
-if (!maps?.detail.includes("not two destinies") && !maps?.headline.includes("two letter")) {
+if (
+  !maps?.headline.toLowerCase().includes("two ways") &&
+  !maps?.detail.toLowerCase().includes("two totals") &&
+  !maps?.detail.toLowerCase().includes("neither wins")
+) {
   console.error("FAIL maps copy", maps);
   process.exit(1);
 }

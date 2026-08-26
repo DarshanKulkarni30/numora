@@ -1,4 +1,3 @@
-import { chaldeanCompoundMeaning } from "@/lib/numerology/meanings";
 import { assertSafeCopy } from "@/lib/numerology/safety";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { parseChartNumber } from "./digits";
@@ -24,25 +23,25 @@ export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
 
   const texture = assertSafeCopy(
     compound
-      ? `${chaldeanCompoundMeaning(compound)} The letters first add to ${compound}. That long total is extra detail, not a second person.`
+      ? `The letters first add to ${compound}. That long total is extra detail about this spelling, not a second person.`
       : "The long name total is not stored on this older report. The short name number is shown below.",
     "enhanced.chaldean.texture",
   );
 
   const essence = assertSafeCopy(
-    `Then the name reduces to ${reduced}. People may notice this sooner: ${plainTrait(reduced)}. Try: ${plainJob(reduced)}. Watch: ${plainWatch(reduced)}.`,
+    `Then the name reduces to ${reduced}: ${plainTrait(reduced)}.`,
     "enhanced.chaldean.essence",
   );
 
   const combined = assertSafeCopy(
-    `Together, this spelling points to ${plainTrait(reduced)}. That is a habit, not a job title.`,
+    `A useful day: ${plainJob(reduced)}. Watch: ${plainWatch(reduced)}.`,
     "enhanced.chaldean.combined",
   );
 
   const compare = assertSafeCopy(
     expr === reduced
       ? `Chaldean ${reduced} and Expression ${expr} landed on the same digit for this spelling. Two letter maps agree. Still not a prediction.`
-      : `Same name, two maps. Chaldean ${reduced} is ${plainTrait(reduced)}. Expression ${expr} is ${plainTrait(expr)}. You do not pick a winner. A useful day: ${plainJob(expr)}, then ${plainJob(reduced)}.`,
+      : `Same name, two maps. Chaldean ${reduced} is ${plainTrait(reduced)}. Expression ${expr} is ${plainTrait(expr)}. Two jobs, not two people. Neither wins.`,
     "enhanced.chaldean.compare",
   );
 

@@ -726,7 +726,12 @@ export function ReportView({
           </div>
         </section>
 
-        {extras ? <ChaldeanEssenceStrip story={extras.chaldean} /> : null}
+        {extras ? (
+          <ChaldeanEssenceStrip
+            story={extras.chaldean}
+            operatingName={snap.operating_name || person.operating_name || person.full_name}
+          />
+        ) : null}
 
         <section>
           <h2 className="text-xl text-ink">Core numbers at a glance</h2>

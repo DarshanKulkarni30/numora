@@ -5,6 +5,8 @@
  * not medical, legal, or predictive advice; not third-party verbatim text.
  */
 
+import { CARE_HOUR_PRACTICE } from "./layeredCopy";
+
 export type VedicDigitTheme = {
   keyword: string;
   planet: string;
@@ -27,16 +29,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day drive toward initiative, visibility, and making the first move.",
     destinyFocus:
-      "Outer-path themes of pioneering, self-direction, and standing as an originator.",
+      "The longer work is starting things and deciding for yourself — often going first.",
     strengths: [
-      "Confidence to start when others hesitate",
-      "Clear personal standards",
-      "Creative problem-solving under pressure",
+      "You can start when others wait",
+      "You know what you will and will not do",
+      "You can solve a problem when time is short",
     ],
     watchouts: [
-      "Impatience when results arrive slowly",
-      "Over-controlling rooms that need collaboration",
-      "Clashing with other strong wills for the same lead role",
+      "Starting so many things that none get a second day",
+      "Taking over a room that needed teamwork",
+      "Fighting for the lead when sharing it would finish the job",
     ],
     practice:
       "Start one thing clearly. Then let someone else add their part.",
@@ -49,16 +51,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day sensitivity, peacemaking, and reading how a room feels.",
     destinyFocus:
-      "Path themes of partnership, diplomacy, and progress through cooperation.",
+      "The longer work is working with others and being patient.",
     strengths: [
-      "Emotional intelligence and patience",
-      "Ability to soothe conflict",
-      "Loyalty once trust is built",
+      "You notice how a room feels before you speak",
+      "You can calm a fight without making it worse",
+      "Once you trust someone, you stay",
     ],
     watchouts: [
-      "Taking criticism too personally",
-      "Difficulty saying no",
-      "Quiet withdrawal instead of clear needs",
+      "Taking a comment as an attack on you",
+      "Saying yes when you mean no",
+      "Going quiet instead of saying what you need",
     ],
     practice:
       "Keep the peace, and still say no once this week.",
@@ -71,16 +73,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day expressiveness, humor, and the urge to share ideas aloud.",
     destinyFocus:
-      "Path themes of growth through communication, learning, and optimistic expansion.",
+      "The longer work is talking, play, and sharing ideas.",
     strengths: [
-      "Lively communication",
-      "Idea generation and storytelling",
-      "Social ease that opens doors",
+      "You can say something in a way people remember",
+      "You have more ideas than the week can hold",
+      "You make it easier for people to talk to you",
     ],
     watchouts: [
-      "Scattered focus across too many projects",
-      "Skipping depth for sparkle",
-      "Impulsive spending of time or energy",
+      "Starting many talks and closing none",
+      "Skipping the hard part because the joke landed",
+      "Spending time or energy before you finish one thing",
     ],
     practice:
       "Finish and share one idea. Not ten drafts.",
@@ -93,16 +95,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day preference for structure, honest systems, and dependable effort.",
     destinyFocus:
-      "Path themes of building foundations—often through unconventional or hard-won routes.",
+      "The longer work is plans, routines, and steady work — even when the route is awkward.",
     strengths: [
-      "Discipline and follow-through",
-      "Practical problem-solving",
-      "Reliability when others waver",
+      "You finish what you start",
+      "You can fix a practical problem",
+      "People can count on you when others flake",
     ],
     watchouts: [
-      "Rigidity when plans must change",
-      "Over-serious tone that blocks play",
-      "Restlessness if structure feels empty",
+      "Planning so long that the week never starts",
+      "Being so serious that nobody can play",
+      "Throwing out a good plan because one part changed",
     ],
     practice:
       "Keep one routine. Let one plan change without throwing the rest out.",
@@ -115,16 +117,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day curiosity, quick speech, and appetite for movement and variety.",
     destinyFocus:
-      "Path themes of change, commerce of ideas, and learning through experience.",
+      "The longer work is change, freedom, and trying new things.",
     strengths: [
-      "Adaptability under shifting conditions",
-      "Persuasive, lively communication",
-      "Courage to try the unfamiliar",
+      "You can change course when a plan is stuck",
+      "You can talk people into trying something new",
+      "You will try the unfamiliar",
     ],
     watchouts: [
-      "Restlessness that breaks useful routines",
+      "Changing course every day",
       "Talking past listening",
-      "Commitment fatigue when life feels fenced in",
+      "Leaving a useful routine because it feels fenced in",
     ],
     practice:
       "Try one small new thing. Come back to the routine after.",
@@ -137,19 +139,18 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day warmth, aesthetic sense, and the urge to protect people you love.",
     destinyFocus:
-      "Path themes of responsibility, beauty in daily life, and service through relationship.",
+      "The longer work is care, home, and keeping promises.",
     strengths: [
-      "Devotion and loyalty",
-      "Taste for harmony and craft",
-      "Quiet leadership that people trust",
+      "People can count on you to help",
+      "You notice what a home or group needs",
+      "You can keep a promise when it is dull",
     ],
     watchouts: [
-      "Care that tips into control",
-      "Over-giving until resentment builds",
-      "Avoiding hard truths to keep peace",
+      "Care that turns into control",
+      "Saying yes until you have no rest",
+      "Avoiding a hard truth to keep the peace",
     ],
-    practice:
-      "Keep one promise to someone else, and one hour that is for you.",
+    practice: CARE_HOUR_PRACTICE,
     workTone:
       "Suits healing, teaching, design, hospitality, and family-centered work (reflective cue only).",
   },
@@ -159,16 +160,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day inwardness, analysis, and preference for depth over small talk.",
     destinyFocus:
-      "Path themes of insight, research, and meaning sought beneath appearances.",
+      "The longer work is quiet thinking and study.",
     strengths: [
-      "Strong intuition and pattern sense",
-      "Independent thinking",
-      "Capacity for focused study",
+      "You can sit with a hard question",
+      "You think for yourself",
+      "Quiet time actually helps you think",
     ],
     watchouts: [
-      "Overthinking that stalls action",
-      "Emotional distance that confuses partners",
-      "Critical tone when others move slower",
+      "Thinking until the month is gone",
+      "Going so quiet that people think you do not care",
+      "Sounding sharp when others move slower than you",
     ],
     practice:
       "Tell one honest thought to someone you trust. Then stop.",
@@ -181,16 +182,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day seriousness about duty, results, and earning trust through effort.",
     destinyFocus:
-      "Path themes of material mastery, authority, and rewards that arrive after endurance.",
+      "The longer work is plans, money, and responsibility — results after long effort.",
     strengths: [
-      "Management instinct and judgment of character",
-      "Patience with long games",
-      "Loyalty to word and work",
+      "You can run a long project",
+      "You wait for a result that takes years",
+      "You keep your word at work",
     ],
     watchouts: [
-      "Work that crowds out rest and relationship",
-      "Ambition that forgets joy",
-      "Appearing cold while caring deeply",
+      "Pushing for results with no pause",
+      "Work that crowds out rest and people",
+      "Looking cold while you still care",
     ],
     practice:
       "Finish one real result. Then rest as if rest were part of the job.",
@@ -203,16 +204,16 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     psychicFocus:
       "Day-to-day heat—courage, compassion, and urgency to act for people or causes.",
     destinyFocus:
-      "Path themes of completion, generosity, and channeling fire into service.",
+      "The longer work is finishing things and helping a wider group.",
     strengths: [
-      "Brave follow-through",
-      "Wide empathy and creative fire",
-      "Willingness to stand for others",
+      "You finish when others stall",
+      "You care about people you do not know well",
+      "You will stand up for someone else",
     ],
     watchouts: [
-      "Impulse before reflection",
-      "Holding the past too tightly",
-      "Scattered focus across too many missions",
+      "Acting before you think",
+      "Holding an ending that is already done",
+      "Too many causes, nothing finished",
     ],
     practice:
       "Pick one cause. Do one next step. Then stop.",

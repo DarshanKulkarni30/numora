@@ -61,7 +61,7 @@ eq(lp6.geometry, "hexagon", "life path uses hexagon watermark");
 has(lp6.keyword, "Care", "keyword care");
 has(lp6.core, "care", "core meaning names care");
 has(lp6.showsUp, "you thrive", "shows-up is second person");
-has(lp6.growth, "keep one hour that is for you", "growth cue from life-path 6 practice");
+has(lp6.growth, "set aside one hour that is only for you", "growth cue from life-path 6 practice");
 // The narrative must carry a concrete try and watch, not an abstract summary.
 has(lp6.narrative, "Try ", "mini-narrative for 6 offers something to try");
 has(lp6.narrative, "watch ", "mini-narrative for 6 names what to watch");

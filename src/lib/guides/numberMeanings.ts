@@ -74,7 +74,7 @@ export const LIFE_PATH: Map = {
       "You can keep a promise when it is dull",
     ],
     practice:
-      "Keep one promise, and keep one hour that is for you. Watch: saying yes until you have no rest.",
+      "Keep one promise to someone else. Set aside one hour that is only for you. Watch: saying yes until you have no rest.",
   },
   "7": {
     theme: "A life that grows by quiet thinking and study",

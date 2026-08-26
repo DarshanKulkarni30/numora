@@ -68,3 +68,7 @@ export function plainWatch(n: number): string {
   };
   return map[n] ?? "treating the number as the whole self";
 }
+
+/** Digit 6: two actions, two verbs — "keep" does not work for an hour. */
+export const CARE_HOUR_PRACTICE =
+  "Keep one promise to someone else. Set aside one hour that is only for you.";
