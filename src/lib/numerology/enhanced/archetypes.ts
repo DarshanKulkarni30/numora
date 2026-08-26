@@ -1,50 +1,214 @@
-import type { ThemeFamilyId, ThemeHit } from "./themeGraph";
+import { plainJob, plainTrait, plainWatch } from "@/lib/numerology/layeredCopy";
+import {
+  THEME_FAMILIES,
+  type ChartSeat,
+  type ThemeFamilyId,
+  type ThemeHit,
+} from "./themeGraph";
 
-const BY_THEME: Record<ThemeFamilyId, string> = {
-  wisdom: "The Quiet Seeker",
-  leadership: "The Steady Steward",
-  service: "The Careful Harmoniser",
-  structure: "The Pattern Builder",
-  freedom: "The Adaptive Scout",
-  expression: "The Voice of Completion",
+const TITLE_BY_DIGIT: Record<number, string> = {
+  1: "The Starter",
+  2: "The Partner",
+  3: "The Voice",
+  4: "The Pattern Builder",
+  5: "The Adaptive Scout",
+  6: "The Harmoniser",
+  7: "The Quiet Seeker",
+  8: "The Steady Steward",
+  9: "The Closer",
+  11: "The Intuitive",
+  22: "The Architect",
+  33: "The Teacher",
 };
 
-/** Numora-original archetype from dominant theme + Life Path core. */
-export function archetypeFor(opts: {
-  dominant: ThemeHit | null;
-  lifePath: number;
-  hasStructure: boolean;
-}): { title: string; throughline: string } {
-  const { dominant, lifePath, hasStructure } = opts;
-  const theme = dominant?.id ?? "wisdom";
-  let title = BY_THEME[theme];
+/** Short pull — used only inside the throughline, not as a title. */
+const WANTS: Record<number, string> = {
+  1: "a start that is yours",
+  2: "one other person in the room",
+  3: "ideas in motion",
+  4: "a plan before the first step",
+  5: "room to change course",
+  6: "people looked after",
+  7: "quiet before answering",
+  8: "a result you can measure",
+  9: "things closed",
+  11: "to notice first",
+  22: "a large plan on a calendar",
+  33: "to help without emptying yourself",
+};
 
-  if (theme === "wisdom" && hasStructure) {
-    title = "The Wise Strategist";
-  } else if (theme === "wisdom" && (lifePath === 8 || lifePath === 1)) {
-    title = "The Insightful Director";
-  } else if (theme === "leadership" && (lifePath === 4 || lifePath === 22)) {
-    title = "The Practical Commander";
-  } else if (theme === "service" && (lifePath === 7 || lifePath === 11)) {
-    title = "The Thoughtful Guardian";
-  } else if (theme === "structure" && (lifePath === 7 || lifePath === 11)) {
-    title = "The Wise Strategist";
-  } else if (theme === "freedom" && (lifePath === 4 || lifePath === 8)) {
-    title = "The Grounded Explorer";
+function familyDigits(id: ThemeFamilyId): number[] {
+  return THEME_FAMILIES.find((f) => f.id === id)?.digits ?? [];
+}
+
+/** Count seats per family digit, preferring the raw master when it belongs. */
+export function digitSeatMap(
+  theme: ThemeHit,
+  seats: ChartSeat[],
+): Map<number, string[]> {
+  const allowed = familyDigits(theme.id);
+  const map = new Map<number, string[]>();
+  for (const seat of seats) {
+    const key = allowed.includes(seat.raw)
+      ? seat.raw
+      : allowed.includes(seat.core)
+        ? seat.core
+        : null;
+    if (key == null) continue;
+    const list = map.get(key) ?? [];
+    if (!list.includes(seat.label)) list.push(seat.label);
+    map.set(key, list);
+  }
+  return map;
+}
+
+export function loudestDigit(
+  theme: ThemeHit,
+  seats: ChartSeat[],
+): { digit: number; labels: string[] } {
+  const map = digitSeatMap(theme, seats);
+  let digit = theme.id === "expression" ? 3 : (familyDigits(theme.id)[0] ?? 9);
+  let labels: string[] = [];
+  for (const [n, list] of map) {
+    if (list.length > labels.length || (list.length === labels.length && n > digit)) {
+      digit = n;
+      labels = list;
+    }
+  }
+  if (!labels.length) labels = theme.appearsIn.slice();
+  return { digit, labels };
+}
+
+function titleFor(theme: ThemeHit, seats: ChartSeat[]): string {
+  const map = digitSeatMap(theme, seats);
+  if (theme.id === "expression") {
+    const three = map.get(3)?.length ?? 0;
+    const nine = map.get(9)?.length ?? 0;
+    if (three > 0 && nine > 0 && three === nine) return "The Voice who finishes";
+    if (nine > three) return TITLE_BY_DIGIT[9];
+    if (three > 0) return TITLE_BY_DIGIT[3];
+  }
+  const { digit } = loudestDigit(theme, seats);
+  return TITLE_BY_DIGIT[digit] ?? "The Working Note";
+}
+
+function counterweights(opts: {
+  dominantId: ThemeFamilyId;
+  loudest: number;
+  lifePath: number;
+  birthDay: number;
+  expression: number;
+  soulUrge: number;
+  personality: number;
+}): { n: number; label: string }[] {
+  const allowed = new Set(familyDigits(opts.dominantId));
+  const candidates: { n: number; label: string }[] = [
+    { n: opts.expression, label: "Expression" },
+    { n: opts.soulUrge, label: "Soul Urge" },
+    { n: opts.personality, label: "Personality" },
+    { n: opts.lifePath, label: "Life Path" },
+    { n: opts.birthDay, label: "Birth Day" },
+  ];
+  const out: { n: number; label: string }[] = [];
+  const seen = new Set<number>();
+  for (const c of candidates) {
+    if (c.n === opts.loudest) continue;
+    if (allowed.has(c.n) && c.n === opts.loudest) continue;
+    if (seen.has(c.n)) continue;
+    // A second digit in the same family still counts as a pull (3 vs 9).
+    if (c.n === opts.loudest) continue;
+    seen.add(c.n);
+    out.push(c);
+    if (out.length === 2) break;
+  }
+  return out.filter((c) => c.n !== opts.loudest);
+}
+
+function frictionAction(loudest: number, pulls: { n: number }[]): string {
+  const pullNs = pulls.map((p) => p.n);
+  if (loudest === 3 && pullNs.includes(9)) {
+    return 'Cap active projects at three and define what "done" means before starting a fourth.';
+  }
+  if (loudest === 3 && pullNs.includes(6)) {
+    return "Finish one thing you started saying before taking on another person's task.";
+  }
+  if (loudest === 9 && pullNs.includes(3)) {
+    return 'Close one loop before opening another, and write what "done" looks like first.';
+  }
+  if (loudest === 1 && (pullNs.includes(2) || pullNs.includes(6))) {
+    return "Start one small thing, then ask one person to look at it the same day.";
+  }
+  if ((loudest === 7 || loudest === 11) && (pullNs.includes(1) || pullNs.includes(8))) {
+    return "Take ten quiet minutes, then make the decision the same day.";
+  }
+  if (loudest === 5 && (pullNs.includes(4) || pullNs.includes(22))) {
+    return "Try one small change inside a repeating plan, not a brand-new plan.";
+  }
+  if (loudest === 6 && pullNs.includes(3)) {
+    return "Keep one promise fully before starting a new conversation about care.";
+  }
+  const job = plainJob(loudest);
+  return `${job.charAt(0).toUpperCase()}${job.slice(1)}.`;
+}
+
+function throughlineFor(opts: {
+  dominant: ThemeHit;
+  seats: ChartSeat[];
+  lifePath: number;
+  birthDay: number;
+  expression: number;
+  soulUrge: number;
+  personality: number;
+}): string {
+  const { digit, labels } = loudestDigit(opts.dominant, opts.seats);
+  const seatList = labels.slice(0, 4).join(", ");
+  const pattern = `${digit} sits in ${labels.length} seat${labels.length === 1 ? "" : "s"}${
+    seatList ? ` (${seatList})` : ""
+  }, so ${plainTrait(digit)} is the loudest signal here.`;
+
+  const pulls = counterweights({
+    dominantId: opts.dominant.id,
+    loudest: digit,
+    lifePath: opts.lifePath,
+    birthDay: opts.birthDay,
+    expression: opts.expression,
+    soulUrge: opts.soulUrge,
+    personality: opts.personality,
+  });
+
+  let pullLine = `The friction to expect is ${plainWatch(digit)}.`;
+  if (pulls.length === 1) {
+    const p = pulls[0]!;
+    pullLine = `${p.label} ${p.n} pulls against it: ${p.n} wants ${WANTS[p.n] ?? plainTrait(p.n)}. The friction to expect is ${plainWatch(digit)}.`;
+  } else if (pulls.length >= 2) {
+    const a = pulls[0]!;
+    const b = pulls[1]!;
+    pullLine = `${a.label} ${a.n} and ${b.label} ${b.n} pull against it: ${a.n} wants ${WANTS[a.n] ?? plainTrait(a.n)}, ${b.n} wants ${WANTS[b.n] ?? plainTrait(b.n)}. The friction to expect is ${plainWatch(digit)}.`;
   }
 
-  const throughline =
-    theme === "wisdom"
-      ? "In plain terms: you work things out by living through them rather than by being told. That makes your conclusions well tested and slow to arrive. Watch the point where researching becomes a way of not deciding."
-      : theme === "leadership"
-        ? "In plain terms: you end up in charge, and you take the consequences seriously rather than passing them on. That earns trust and quietly loads you up. Watch carrying decisions that were never actually yours."
-        : theme === "service"
-          ? "In plain terms: people bring you their problems because you deal with them properly. The skill worth building is helping with a stated limit, so that being useful does not become being available to everyone."
-          : theme === "structure"
-            ? "In plain terms: you are the one who turns a loose idea into something that actually runs — a plan, a system, a finished thing. Watch refusing to start until the plan is perfect."
-            : theme === "freedom"
-              ? "In plain terms: you learn by trying things, and you need room to change your mind. The useful discipline is finishing one of the experiments before starting the next three."
-              : "In plain terms: you are good at putting into words what other people only half feel. Watch starting many conversations, pieces or projects and completing none of them.";
+  return `${pattern} ${pullLine} ${frictionAction(digit, pulls)}`;
+}
 
-  return { title, throughline };
+/** Chart-specific archetype: title from the loudest seat, throughline from the actual pulls. */
+export function archetypeFor(opts: {
+  themes: ThemeHit[];
+  seats: ChartSeat[];
+  lifePath: number;
+  birthDay: number;
+  expression: number;
+  soulUrge: number;
+  personality: number;
+}): { title: string; throughline: string } {
+  const dominant = opts.themes[0] ?? {
+    id: "wisdom" as const,
+    label: "Wisdom",
+    appearsIn: [],
+    count: 0,
+    keywords: [],
+    tier: "secondary" as const,
+  };
+  return {
+    title: titleFor(dominant, opts.seats),
+    throughline: throughlineFor({ ...opts, dominant }),
+  };
 }

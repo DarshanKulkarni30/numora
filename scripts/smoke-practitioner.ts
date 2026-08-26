@@ -14,6 +14,7 @@ import {
 import { buildNameChangeDiff } from "../src/lib/numerology/nameChangeDiff";
 import { resolvePythagoreanChart } from "../src/lib/numerology/pythagoreanChart";
 import { generateReport } from "../src/lib/numerology/report";
+import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
 
 let failed = false;
 
@@ -213,6 +214,47 @@ else {
     ["13/4"],
     "diff reports the debt that fell away with the old spelling",
   );
+}
+
+// —— Chart-specific throughlines (same dominant theme, different pulls) ——
+{
+  const fixtures = [
+    { fullName: "Darshan Kulkarni", dateOfBirth: "30/08/1981" },
+    { fullName: "Jennifer Anne Smith", dateOfBirth: "16/03/1990" },
+    { fullName: "Robert James Anderson", dateOfBirth: "19/11/1974" },
+    { fullName: "Amelia Rose Hart", dateOfBirth: "03/03/1988" },
+    { fullName: "Sara Jane Doe", dateOfBirth: "03/03/1993" },
+    { fullName: "Michael Andrew Brown", dateOfBirth: "12/12/1977" },
+  ];
+  const readings = fixtures.map((f) =>
+    buildEnhancedReading(generateReport(f), { now: new Date(2026, 7, 22) }),
+  );
+  const byTheme = new Map<string, typeof readings>();
+  for (const r of readings) {
+    const id = r.themes[0]?.id ?? "none";
+    const list = byTheme.get(id) ?? [];
+    list.push(r);
+    byTheme.set(id, list);
+  }
+  const pair = [...byTheme.values()].find((list) => list.length >= 2);
+  if (!pair) {
+    fail("same-theme fixtures", "could not find two charts sharing a dominant theme");
+  } else {
+    ok(`both charts share dominant theme ${pair[0]!.themes[0]?.id}`);
+    if (pair[0]!.hero.throughline === pair[1]!.hero.throughline) {
+      fail(
+        "throughlines differ for two charts with the same dominant theme",
+        pair[0]!.hero.throughline,
+      );
+    } else ok("throughlines differ when supporting numbers differ");
+  }
+  const sample = readings[0]!;
+  if (sample.hero.throughline.includes("In plain terms: you are good at putting into words")) {
+    fail("throughline is chart-specific", sample.hero.throughline);
+  } else ok("throughline is not the old six-family template");
+  if (sample.narrative.full.includes("Strength language already stored")) {
+    fail("no padding markers", "pad paragraph still present");
+  } else ok("narrative has no padding markers");
 }
 
 if (failed) {

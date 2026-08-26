@@ -14,6 +14,7 @@ import { ReadingLegend } from "@/components/report/ReadingLegend";
 import { ReportGlossary } from "@/components/report/ReportGlossary";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
 import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
+import { ActionPlanPanel } from "@/components/report/ActionPlanPanel";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
@@ -22,6 +23,9 @@ import { LivingReportBanner } from "@/components/report/LivingReportBanner";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
+import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
+import { themeTierLabel } from "@/lib/numerology/enhanced/themeGraph";
+import { plainJob, plainWatch } from "@/lib/numerology/layeredCopy";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { BRAND_NAME } from "@/lib/site";
@@ -309,9 +313,50 @@ export function EnhancedReportView({
         </section>
 
         <section>
+          <h2 className="text-xl text-ink">Try and watch</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            One practice and one risk for each of your main numbers. Do the
+            practice this week; treat the watch as a check, not a prediction.
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {reading.coreStrip
+              .filter((item) =>
+                [
+                  "Life Path",
+                  "Expression",
+                  "Soul Urge",
+                  "Personality",
+                  "Personal Year",
+                ].includes(item.label),
+              )
+              .map((item) => {
+                const n = parseChartNumber(item.value);
+                if (n == null) return null;
+                return (
+                  <li
+                    key={item.label}
+                    className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3"
+                  >
+                    <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                      {item.label} {item.value}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-ink">
+                      Try {plainJob(n)}.
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-ink-soft">
+                      Watch {plainWatch(n)}.
+                    </p>
+                  </li>
+                );
+              })}
+          </ul>
+        </section>
+
+        <section>
           <h2 className="text-xl text-ink">Recurring themes</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Strength is a count of independent chart seats, not a star rating.
+            A strong theme appears in three or more independent seats. A
+            supporting theme appears in two. A secondary theme appears in one.
           </p>
           <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-start">
             <div className="space-y-3">
@@ -325,7 +370,7 @@ export function EnhancedReportView({
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <h3 className="text-lg text-ink">{t.label}</h3>
                       <p className="text-sm text-ink-soft">
-                        {t.count} seat{t.count === 1 ? "" : "s"}
+                        {themeTierLabel(t.tier)}
                       </p>
                     </div>
                     <div
@@ -338,7 +383,7 @@ export function EnhancedReportView({
                       />
                     </div>
                     <p className="mt-2 text-sm text-ink-soft">
-                      Appears in: {t.appearsIn.join(" · ")}
+                      In {t.appearsIn.join(" · ")}
                     </p>
                   </div>
                 );
@@ -663,35 +708,8 @@ export function EnhancedReportView({
 
           <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
             <h3 className="text-xl text-ink">Personal action plan</h3>
-            <p className="mt-1 text-xs text-ink-soft">{reading.actionPlan.purposeNote}</p>
-            {(
-              [
-                reading.actionPlan.days30,
-                reading.actionPlan.days90,
-              ] as const
-            ).map((block) => (
-              <div key={block.title} className="mt-4">
-                <p className="font-medium text-ink">{block.title}</p>
-                <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-ink-soft">
-                  {block.items.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div className="mt-4">
-              <p className="font-medium text-ink">{reading.actionPlan.year.title}</p>
-              <p className="mt-1 text-sm text-ink">
-                Primary: {reading.actionPlan.year.primary}
-              </p>
-              <p className="text-sm text-ink">
-                Secondary: {reading.actionPlan.year.secondary}
-              </p>
-              <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-ink-soft">
-                {reading.actionPlan.year.items.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
+            <div className="mt-2">
+              <ActionPlanPanel plan={reading.actionPlan} />
             </div>
           </div>
         </section>

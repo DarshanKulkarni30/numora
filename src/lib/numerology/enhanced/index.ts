@@ -77,13 +77,20 @@ export function buildEnhancedReading(
   const snap = report.numerology_snapshot;
   const displayName =
     report.person.preferred_name?.trim() || report.person.full_name;
-  const { themes } = buildThemeGraph(snap, report.lo_shu);
+  const { themes, seats } = buildThemeGraph(snap, report.lo_shu);
   const lp = parseChartNumber(snap.life_path) ?? 9;
-  const hasStructure = themes.some((t) => t.id === "structure" && t.count > 0);
+  const bd = parseChartNumber(snap.birth_day) ?? lp;
+  const expr = parseChartNumber(snap.expression_number) ?? 9;
+  const soul = parseChartNumber(snap.soul_urge_number) ?? 9;
+  const pers = parseChartNumber(snap.personality_number) ?? 9;
   const arch = archetypeFor({
-    dominant: themes[0] ?? null,
+    themes,
+    seats,
     lifePath: lp,
-    hasStructure,
+    birthDay: bd,
+    expression: expr,
+    soulUrge: soul,
+    personality: pers,
   });
   const tensions = buildTensions(snap, report.lo_shu);
   const season = buildSeasonBrief(report, asOf);
@@ -93,9 +100,7 @@ export function buildEnhancedReading(
       report,
       displayName,
       archetypeTitle: arch.title,
-      throughline: arch.throughline,
       themes,
-      tensions,
       season,
     });
   } catch {

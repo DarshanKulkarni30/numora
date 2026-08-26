@@ -41,6 +41,7 @@ import { ReadingLegend } from "@/components/report/ReadingLegend";
 import { ReportGlossary } from "@/components/report/ReportGlossary";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
+import { ActionPlanPanel } from "@/components/report/ActionPlanPanel";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { buildChaldeanStory } from "@/lib/numerology/enhanced/chaldeanStory";
 import { formatAsOf } from "@/lib/numerology/enhanced/digits";
@@ -48,6 +49,9 @@ import { HOW_TO_READ_DETAILED } from "@/lib/numerology/enhanced/howToRead";
 import { buildLoShuLived } from "@/lib/numerology/enhanced/loShuLived";
 import { SCHOOL_COMPARE } from "@/lib/numerology/enhanced/schoolCompare";
 import { buildStudentWalkthrough } from "@/lib/numerology/enhanced/studentWalkthrough";
+import { buildSeasonBrief } from "@/lib/numerology/enhanced/seasonBrief";
+import { buildThemeGraph } from "@/lib/numerology/enhanced/themeGraph";
+import { buildActionPlan } from "@/lib/numerology/enhanced/actionPlan";
 import { buildChartDerivations } from "@/lib/numerology/chartDerivations";
 import { buildNameChangeDiff } from "@/lib/numerology/nameChangeDiff";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
@@ -212,12 +216,19 @@ export function ReportView({
   }, [saved]);
   const extras = useMemo(() => {
     try {
+      const asOf = formatAsOf();
+      const { themes } = buildThemeGraph(
+        report.numerology_snapshot,
+        report.lo_shu,
+      );
+      const season = buildSeasonBrief(report, asOf);
       return {
         chaldean: buildChaldeanStory(report),
         loShuLived: buildLoShuLived(report.lo_shu),
         student: buildStudentWalkthrough(report),
         schoolCompare: SCHOOL_COMPARE,
-        asOf: formatAsOf(),
+        asOf,
+        actionPlan: buildActionPlan({ report, season, themes }),
       };
     } catch (err) {
       console.error("Detailed report extras skipped", err);
@@ -884,6 +895,15 @@ export function ReportView({
                 soulUrge={snap.soul_urge_number}
                 vedicPsychic={snap.vedic_psychic}
               />
+            </div>
+          </section>
+        ) : null}
+
+        {extras?.actionPlan ? (
+          <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <h2 className="text-xl text-ink">Personal action plan</h2>
+            <div className="mt-2">
+              <ActionPlanPanel plan={extras.actionPlan} />
             </div>
           </section>
         ) : null}

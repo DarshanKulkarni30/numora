@@ -71,9 +71,42 @@ assert(
   "theme count equals unique seats",
 );
 assert(
-  enhanced.narrative.wordCount >= 500 && enhanced.narrative.wordCount <= 1100,
+  enhanced.themes.every((t) =>
+    t.count >= 3 ? t.tier === "strong" : t.count === 2 ? t.tier === "supporting" : t.tier === "secondary",
+  ),
+  "theme tiers match seat counts",
+);
+assert(
+  enhanced.narrative.wordCount >= 80 && enhanced.narrative.wordCount <= 1100,
   `narrative length ${enhanced.narrative.wordCount}`,
 );
+assert(
+  !enhanced.narrative.full.includes("Strength language already stored"),
+  "no padding paragraph",
+);
+assert(
+  !enhanced.narrative.full.includes("Recommended focus already computed"),
+  "no second pad paragraph",
+);
+assert(
+  !enhanced.narrative.full.toLowerCase().includes("chart seats"),
+  "story uses theme tiers, not raw seat counts",
+);
+assert(
+  !enhanced.narrative.full.includes(enhanced.hero.throughline),
+  "story body does not repeat the hero throughline",
+);
+assert(
+  !enhanced.narrative.teaser.includes(enhanced.hero.throughline),
+  "teaser does not repeat the hero throughline",
+);
+const storyParas = enhanced.narrative.full.split(/\n\n/).filter((p) => p.trim());
+const actionCue =
+  /\b(try|cap |finish |keep |write |start |close |take |define |pick |use |name |read |treat |offer |notice |wait |ask |help |protect |run )\b/i;
+for (const p of storyParas) {
+  if (p.startsWith("Read the numbers as a pattern")) continue;
+  assert(actionCue.test(p), `story paragraph has an action: ${p.slice(0, 80)}`);
+}
 assert(
   !enhanced.narrative.full.toLowerCase().includes("working poem"),
   "enhanced story is not high-english poetry",

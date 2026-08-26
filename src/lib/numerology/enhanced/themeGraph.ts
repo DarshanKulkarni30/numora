@@ -16,13 +16,28 @@ export type ChartSeat = {
   core: number;
 };
 
+export type ThemeTier = "strong" | "supporting" | "secondary";
+
 export type ThemeHit = {
   id: ThemeFamilyId;
   label: string;
   appearsIn: string[];
   count: number;
   keywords: string[];
+  tier: ThemeTier;
 };
+
+export function themeTier(count: number): ThemeTier {
+  if (count >= 3) return "strong";
+  if (count === 2) return "supporting";
+  return "secondary";
+}
+
+export function themeTierLabel(tier: ThemeTier): string {
+  if (tier === "strong") return "strong theme";
+  if (tier === "supporting") return "supporting theme";
+  return "secondary theme";
+}
 
 export const THEME_FAMILIES: {
   id: ThemeFamilyId;
@@ -127,6 +142,7 @@ export function buildThemeGraph(
       appearsIn,
       count: appearsIn.length,
       keywords: f.keywords,
+      tier: themeTier(appearsIn.length),
     };
   })
     .filter((t) => t.count > 0)
