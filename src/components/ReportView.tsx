@@ -8,10 +8,12 @@ import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { ExportPdfButton } from "@/components/report/ExportPdfButton";
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
+import { ExportWorkingSheetButton } from "@/components/report/ExportWorkingSheetButton";
 import { GuideNumberLink } from "@/components/report/GuideNumberLink";
 import { BirthChartsPanel } from "@/components/report/BirthChartsPanel";
 import { ChaldeanEssenceStrip } from "@/components/report/ChaldeanEssenceStrip";
 import { GrowthAreasPanel } from "@/components/report/GrowthAreasPanel";
+import { KarmicDebtPanel } from "@/components/report/KarmicDebtPanel";
 import { IdentitySnapshotPanel } from "@/components/report/IdentitySnapshotPanel";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
 import { TimingDashboard } from "@/components/report/TimingDashboard";
@@ -27,6 +29,7 @@ import {
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
+import { NameChangeDiffPanel } from "@/components/report/NameChangeDiffPanel";
 import { NameEraNote } from "@/components/report/NameEraNote";
 import { InsightTileCard } from "@/components/report/InsightTileCard";
 import { buildDetailedInsightCards } from "@/lib/numerology/insightTiles";
@@ -45,6 +48,8 @@ import { HOW_TO_READ_DETAILED } from "@/lib/numerology/enhanced/howToRead";
 import { buildLoShuLived } from "@/lib/numerology/enhanced/loShuLived";
 import { SCHOOL_COMPARE } from "@/lib/numerology/enhanced/schoolCompare";
 import { buildStudentWalkthrough } from "@/lib/numerology/enhanced/studentWalkthrough";
+import { buildChartDerivations } from "@/lib/numerology/chartDerivations";
+import { buildNameChangeDiff } from "@/lib/numerology/nameChangeDiff";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -248,6 +253,11 @@ export function ReportView({
   const snap = report.numerology_snapshot;
   const person = report.person;
   const pyChart = useMemo(() => resolvePythagoreanChart(report), [report]);
+  const derivations = useMemo(
+    () => buildChartDerivations(report, pyChart),
+    [report, pyChart],
+  );
+  const nameDiff = useMemo(() => buildNameChangeDiff(report), [report]);
 
   const snapshotGroups = [
     {
@@ -597,6 +607,7 @@ export function ReportView({
                 </>
               ) : null}
               <ExportTeaserPdfButton report={report} />
+              {allowPdf ? <ExportWorkingSheetButton report={report} /> : null}
               {allowPdf ? (
                 <ExportPdfButton report={report} />
               ) : (
@@ -734,6 +745,8 @@ export function ReportView({
             />
           </div>
         </section>
+
+        {nameDiff ? <NameChangeDiffPanel diff={nameDiff} /> : null}
 
         <section>
           <h2 className="text-xl text-ink">Vedic number panel</h2>
@@ -922,6 +935,8 @@ export function ReportView({
                   </div>
                   <ClassicProseToggle text={section.body} />
                 </div>
+              ) : section.id === "karmic-debt" && report.karmic_debt ? (
+                <KarmicDebtPanel block={report.karmic_debt} />
               ) : INSIGHT_SECTIONS.has(section.id) ? (
                 <div className="space-y-4">
                   {(insightPack?.[section.id] ?? []).map((card) => (
@@ -1030,6 +1045,7 @@ export function ReportView({
           <StudentCalcDrawer
             student={extras.student}
             schoolCompare={extras.schoolCompare}
+            derivations={derivations}
           />
         ) : null}
 

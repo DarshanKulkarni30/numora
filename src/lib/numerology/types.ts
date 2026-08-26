@@ -235,6 +235,27 @@ export type NumerologyReport = {
     resonance?: string;
     moment_note?: string;
   };
+  /** Karmic debt totals 13/14/16/19 found in date and name positions. */
+  karmic_debt?: {
+    intro: string;
+    none_note: string;
+    name_note: string;
+    items: {
+      label: string;
+      code: number;
+      reduced: number;
+      shows_up_as: string;
+      work_on: string;
+      fixed: boolean;
+      positions: {
+        source: string;
+        label: string;
+        meaning: string;
+        spelling?: string;
+        fixed: boolean;
+      }[];
+    }[];
+  };
   projected_year?: {
     number: string;
     calendar_year: string;

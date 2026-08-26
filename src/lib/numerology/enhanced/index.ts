@@ -1,5 +1,9 @@
 import { DISCLAIMER } from "@/lib/numerology/meanings";
 import { HOW_TO_READ_ENHANCED } from "./howToRead";
+import {
+  buildChartDerivations,
+  type Derivation,
+} from "@/lib/numerology/chartDerivations";
 import { resolvePythagoreanChart, type PythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { buildActionPlan, type ActionPlan } from "./actionPlan";
@@ -55,6 +59,7 @@ export type EnhancedReading = {
   chaldean: ChaldeanStory;
   loShuLived: LoShuLived;
   student: StudentWalkthrough;
+  derivations: Derivation[];
   schoolCompare: SchoolRow[];
   radar: RadarAxis[];
   planets: PlanetPresence[];
@@ -137,6 +142,7 @@ export function buildEnhancedReading(
     chaldean: buildChaldeanStory(report),
     loShuLived: buildLoShuLived(report.lo_shu),
     student: buildStudentWalkthrough(report),
+    derivations: buildChartDerivations(report, pythagoreanChart, now),
     schoolCompare: SCHOOL_COMPARE,
     radar: buildRadarAxes(themes),
     planets: buildPlanetPresence(snap),

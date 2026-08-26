@@ -9,6 +9,14 @@ import {
 } from "./personalYearOutlook";
 import { calculateLoShu } from "./loShu";
 import {
+  allKarmicDebts,
+  groupKarmicDebts,
+  KARMIC_DEBT_INTRO,
+  KARMIC_DEBT_NAME_NOTE,
+  KARMIC_DEBT_NONE,
+  type GroupedKarmicDebt,
+} from "./karmicDebt";
+import {
   CHILD_REPORT_DISCLAIMER,
   DISCLAIMER,
   GROWTH_BANK,
@@ -445,6 +453,53 @@ function executiveCrossMethodNotes(
   return { common, contrast };
 }
 
+function karmicDebtPayload(debt: GroupedKarmicDebt) {
+  return {
+    label: debt.label,
+    code: debt.code as number,
+    reduced: debt.reduced,
+    shows_up_as: debt.showsUpAs,
+    work_on: debt.workOn,
+    fixed: debt.fixed,
+    positions: debt.positions.map((p) => ({
+      source: p.source,
+      label: p.label,
+      meaning: p.meaning,
+      spelling: p.spelling,
+      fixed: p.fixed,
+    })),
+  };
+}
+
+function karmicDebtSectionBody(
+  block: NumerologyReport["karmic_debt"],
+): string {
+  if (!block) return KARMIC_DEBT_NONE;
+  if (block.items.length === 0) {
+    return [block.intro, "", block.none_note].join("\n");
+  }
+  const lines = [block.intro, ""];
+  for (const item of block.items) {
+    lines.push(
+      `${item.label} · found in your ${item.positions
+        .map((p) => p.label.toLowerCase())
+        .join(" and ")}`,
+    );
+    for (const position of item.positions) {
+      lines.push(`• ${position.label}: ${position.meaning}`);
+    }
+    lines.push(
+      `• What it looks like: ${item.shows_up_as}`,
+      `• What to work on: ${item.work_on}`,
+      "",
+    );
+  }
+  if (block.items.some((i) => i.positions.some((p) => !p.fixed))) {
+    lines.push(block.name_note);
+  }
+  return lines.join("\n").trim();
+}
+
 function buildSections(report: Omit<NumerologyReport, "sections">): ReportSection[] {
   const n = displayName({
     fullName: report.person.full_name,
@@ -648,6 +703,11 @@ function buildSections(report: Omit<NumerologyReport, "sections">): ReportSectio
         : "Year outlook not available for this report.",
     },
     {
+      id: "karmic-debt",
+      title: "14c. Karmic debt",
+      body: karmicDebtSectionBody(report.karmic_debt),
+    },
+    {
       id: "personal-month",
       title: "15. Personal Month",
       body: [
@@ -757,6 +817,11 @@ export function generateReport(
     ? calculateVedic(fullName, input.dateOfBirth)
     : vedic;
   const loShu = calculateLoShu(input.dateOfBirth);
+  const karmicDebts = allKarmicDebts(
+    input.dateOfBirth,
+    operatingName,
+    "operating",
+  );
   const pyOutlook = currentWesternOutlook(
     input.dateOfBirth,
     operatingName,
@@ -1167,10 +1232,23 @@ export function generateReport(
       range_label: pyOutlook.rangeLabel ?? undefined,
       pinnacle: `Pinnacle ${pyOutlook.pinnacle.id} · ${pyOutlook.pinnacle.number} ${pyOutlook.pinnacleCopy.name}`,
       karmic: pyOutlook.debts.length
-        ? pyOutlook.debts.map((d) => d.label).join(", ")
+        ? `${groupKarmicDebts(pyOutlook.debts)
+            .map(
+              (d) =>
+                `${d.label} (in your ${d.positions
+                  .map((p) => p.label.toLowerCase())
+                  .join(" and ")})`,
+            )
+            .join(", ")}. Only date-based debts nudge this year's score. Section 14c explains what each one asks of you.`
         : undefined,
       resonance: pyOutlook.land.resonanceLine,
       moment_note: pyOutlook.land.momentNote ?? undefined,
+    },
+    karmic_debt: {
+      intro: KARMIC_DEBT_INTRO,
+      none_note: KARMIC_DEBT_NONE,
+      name_note: KARMIC_DEBT_NAME_NOTE,
+      items: groupKarmicDebts(karmicDebts).map(karmicDebtPayload),
     },
     projected_year: {
       number: String(projected.number),

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { EnhancedExportPdfButton } from "@/components/enhanced/EnhancedExportPdfButton";
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
+import { ExportWorkingSheetButton } from "@/components/report/ExportWorkingSheetButton";
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { LoShuChart } from "@/components/report/LoShuChart";
@@ -150,6 +151,7 @@ export function EnhancedReportView({
               <>
                 <ShareLinkButton reportId={reportId} />
                 <ExportTeaserPdfButton report={live} />
+                {allowPdf ? <ExportWorkingSheetButton report={live} /> : null}
                 {allowPdf ? (
                   <EnhancedExportPdfButton report={live} reportId={reportId} />
                 ) : (
@@ -704,6 +706,7 @@ export function EnhancedReportView({
           <StudentCalcDrawer
             student={reading.student}
             schoolCompare={reading.schoolCompare}
+            derivations={reading.derivations}
           />
 
           <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">

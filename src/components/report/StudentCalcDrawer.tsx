@@ -1,12 +1,18 @@
+import type { Derivation } from "@/lib/numerology/chartDerivations";
 import type { SchoolRow } from "@/lib/numerology/enhanced/schoolCompare";
 import type { StudentWalkthrough } from "@/lib/numerology/enhanced/studentWalkthrough";
 
 type Props = {
   student: StudentWalkthrough;
   schoolCompare: SchoolRow[];
+  derivations?: Derivation[];
 };
 
-export function StudentCalcDrawer({ student, schoolCompare }: Props) {
+export function StudentCalcDrawer({
+  student,
+  schoolCompare,
+  derivations = [],
+}: Props) {
   return (
     <section className="space-y-3">
       <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -38,6 +44,48 @@ export function StudentCalcDrawer({ student, schoolCompare }: Props) {
           </ul>
         </div>
       </details>
+      {derivations.length ? (
+        <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <summary className="cursor-pointer text-lg text-ink">
+            Working for the remaining chart numbers
+          </summary>
+          <p className="mt-2 text-sm text-ink-soft">
+            The numbers below are usually printed as a result with no arithmetic
+            attached. Each one is worked through here so you can check it by
+            hand.
+          </p>
+          <div className="mt-4 space-y-4">
+            {derivations.map((d) => (
+              <article
+                key={d.id}
+                className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-4 text-sm"
+              >
+                <h4 className="text-ink">{d.title}</h4>
+                <p className="mt-1 leading-6 text-ink-soft">{d.purpose}</p>
+                <p className="mt-2 text-[13px] leading-6 text-ink-soft">
+                  <span className="text-ink">Starts from: </span>
+                  {d.inputs}
+                </p>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-ink-soft">
+                  {d.steps.map((s, i) => (
+                    <li key={`${d.id}-${i}`}>
+                      <span className="text-ink">{s.label}:</span> {s.detail}
+                    </li>
+                  ))}
+                </ol>
+                <p className="mt-2 rounded-lg bg-mist/60 px-3 py-2 text-ink">
+                  {d.result}
+                </p>
+                {d.note ? (
+                  <p className="mt-2 text-[13px] leading-6 text-ink-soft">
+                    {d.note}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </details>
+      ) : null}
       <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
         <summary className="cursor-pointer text-lg text-ink">Compare schools</summary>
         <div className="mt-4 overflow-x-auto">

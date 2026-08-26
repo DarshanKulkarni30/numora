@@ -95,6 +95,12 @@ const ENTRIES: Entry[] = [
       "A quality you have to build deliberately because nothing in your name supplies it automatically.",
   },
   {
+    term: "Karmic debt",
+    from: "a total of 13, 14, 16 or 19 appearing while a number is added up",
+    means:
+      "A different thing from a karmic lesson. It marks one place where the quick version of a skill tends not to work for you, so the slower, deliberate version is the way through. Most charts have none.",
+  },
+  {
     term: "Master number",
     from: "totals of 11, 22 or 33",
     means:
