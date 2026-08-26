@@ -46,11 +46,10 @@ function arcPath(r: number, startDeg: number, endDeg: number, gap = 1.4) {
 
 function layerTip(layer: RhythmLayer): string {
   return [
-    `${layer.role} · ${layer.label} ${layer.raw} · ${layer.season.verb}`,
-    `${layer.season.season} · ${layer.season.keyword}`,
-    layer.nature ? `Nature: ${layer.nature}` : "",
+    `${layer.role} · ${layer.label} ${layer.raw}`,
     layer.job,
-    layer.scan,
+    `Try: ${layer.scan}`,
+    `Watch: ${layer.season.watch}`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -93,6 +92,15 @@ export function YearRhythmPanel({
   const month = rhythm.layers[2]!;
   const now = rhythm.clock.sectors[rhythm.clock.nowIndex]!;
 
+  function tipFor(layer: RhythmLayer): string {
+    if (layer.id === "outlook" && rhythm.mix.outlookAgrees) {
+      return [`${layer.role} · ${layer.raw}`, layer.job, rhythm.mix.outlookNote]
+        .filter(Boolean)
+        .join("\n");
+    }
+    return layerTip(layer);
+  }
+
   function focus(id: Focus) {
     const next = selected === id ? null : id;
     setSelected(next);
@@ -103,9 +111,7 @@ export function YearRhythmPanel({
     if (next === "astro") {
       setTip(
         [
-          `Astro season · ${rhythm.sun?.symbol ?? ""} ${sunSignLabel || rhythm.sun?.name || "Sun sign"}`,
-          rhythm.sun ? `${rhythm.sun.element} · ${rhythm.sun.modality} · ${rhythm.sunVerb}` : "",
-          "Tropical sign from month and day — backdrop, not a numerology number.",
+          `Star sign · ${rhythm.sun?.symbol ?? ""} ${sunSignLabel || rhythm.sun?.name || "Sun sign"}`,
           rhythm.sunInfluence,
         ]
           .filter(Boolean)
@@ -114,7 +120,7 @@ export function YearRhythmPanel({
       return;
     }
     const layer = rhythm.layers.find((l) => l.id === next);
-    if (layer) setTip(layerTip(layer));
+    if (layer) setTip(tipFor(layer));
   }
 
   const clockHint = rhythm.clock.fromBirthday
@@ -159,16 +165,26 @@ export function YearRhythmPanel({
 
       <div className="year-rhythm-mix rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-          Your current rhythm
+          Right now
         </p>
-        <p className="brand mt-1 text-2xl text-ink">{rhythm.mix.mixLabel}</p>
-        <p className="mt-1 text-sm text-ink">
-          Year {year.raw}: {year.season.scan}
+        <p className="brand mt-1 text-2xl text-ink">
+          {rhythm.combined.headline}
         </p>
-        <p className="text-sm text-ink">
-          Month {month.raw}: {month.season.scan}
+        <div className="mt-2 space-y-1">
+          {rhythm.combined.lines.map((line) => (
+            <p key={line} className="text-sm leading-6 text-ink">
+              {line}
+            </p>
+          ))}
+        </div>
+        <p className="mt-3 text-sm leading-6 text-ink">
+          <span className="font-medium">Try this week. </span>
+          {rhythm.combined.tryLine}
         </p>
-        <p className="mt-1 text-xs text-ink-soft">{rhythm.mix.outlookNote}</p>
+        <p className="mt-1 text-sm leading-6 text-ink-soft">
+          <span className="font-medium text-ink">Watch. </span>
+          {rhythm.combined.watchLine}
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17.5rem]">
@@ -178,7 +194,7 @@ export function YearRhythmPanel({
               viewBox="0 0 240 240"
               className="h-full w-full overflow-visible"
               role="img"
-              aria-label={`Personal Year clock from ${rhythm.clock.sectors[0]!.label}, now ${now.label}. Month ${month.raw} ${month.season.verb}.`}
+              aria-label={`Year clock from ${rhythm.clock.sectors[0]!.label}, now ${now.label}. This month is ${month.raw}: ${month.season.scan}`}
             >
               <circle
                 cx={CX}
@@ -208,14 +224,14 @@ export function YearRhythmPanel({
                       onMouseEnter={() => {
                         setTip(
                           [
-                            `Climate · Personal Year ${year.raw} · ${year.season.verb}`,
+                            `This year · Personal Year ${year.raw}`,
                             sector.isStart
-                              ? `${sector.label} — cycle begins here`
+                              ? `${sector.label} — your year starts here`
                               : sector.isNow
                                 ? `${sector.label} — you are here`
                                 : sector.label,
-                            clockHint,
-                            year.scan,
+                            `Try: ${year.scan}`,
+                            `Watch: ${year.season.watch}`,
                           ].join("\n"),
                         );
                       }}
@@ -248,7 +264,7 @@ export function YearRhythmPanel({
                 opacity={selected && selected !== "outlook" ? 0.28 : 0.55}
                 className="year-rhythm-pulse"
                 style={{ cursor: "pointer" }}
-                onMouseEnter={() => setTip(layerTip(outlook))}
+                onMouseEnter={() => setTip(tipFor(outlook))}
                 onMouseLeave={() => setTip(null)}
                 onClick={() => focus("outlook")}
               />
@@ -276,8 +292,7 @@ export function YearRhythmPanel({
                 onMouseEnter={() =>
                   setTip(
                     [
-                      `Astro season · ${rhythm.sun?.symbol ?? ""} ${sunSignLabel || rhythm.sun?.name || "Sun sign"}`,
-                      "Tropical sign from month and day — backdrop, not a numerology number.",
+                      `Star sign · ${rhythm.sun?.symbol ?? ""} ${sunSignLabel || rhythm.sun?.name || "Sun sign"}`,
                       rhythm.sunInfluence,
                     ]
                       .filter(Boolean)
@@ -307,7 +322,7 @@ export function YearRhythmPanel({
                 letterSpacing="0.12em"
                 className="pointer-events-none"
               >
-                {month.season.verb}
+                {month.season.phase}
               </text>
               {rhythm.sun ? (
                 <>
@@ -330,7 +345,7 @@ export function YearRhythmPanel({
                     letterSpacing="0.08em"
                     className="pointer-events-none"
                   >
-                    ASTRO SEASON
+                    STAR SIGN
                   </text>
                 </>
               ) : (
@@ -342,7 +357,7 @@ export function YearRhythmPanel({
                   fontSize="4.2"
                   className="pointer-events-none"
                 >
-                  astro season
+                  star sign
                 </text>
               )}
             </svg>
@@ -355,7 +370,7 @@ export function YearRhythmPanel({
                 type="button"
                 aria-pressed={selected === layer.id}
                 onClick={() => focus(layer.id)}
-                onMouseEnter={() => setTip(layerTip(layer))}
+                onMouseEnter={() => setTip(tipFor(layer))}
                 onMouseLeave={() => setTip(null)}
                 className={`btn-tactile rounded-full border px-3 py-1.5 text-xs ${
                   selected === layer.id
@@ -363,7 +378,7 @@ export function YearRhythmPanel({
                     : "border-[var(--line)] bg-white/70 text-ink"
                 }`}
               >
-                {layer.role} · {layer.raw} {layer.season.verb}
+                {layer.role} · {layer.raw}
               </button>
             ))}
             {rhythm.sun ? (
@@ -377,14 +392,15 @@ export function YearRhythmPanel({
                     : "border-[var(--line)] bg-white/70 text-ink"
                 }`}
               >
-                Astro · {rhythm.sun.symbol} {rhythm.sunVerb}
+                Star sign · {rhythm.sun.symbol}{" "}
+                {sunSignLabel || rhythm.sun.name}
               </button>
             ) : null}
           </div>
 
           <ChartTipPanel
             tip={tip}
-            empty={`${clockHint} Tap a month tick for climate, the dashed tint for outlook, the inner disc for this month. Center caption is astro season — not a numerology number.`}
+            empty={`${clockHint} Tap a month on the outer ring for the year, the dashed ring for the second year count, the inner circle for this month. The middle shows your star sign, which is not a numerology number.`}
           />
         </div>
 
@@ -403,8 +419,7 @@ export function YearRhythmPanel({
               </p>
               <p className="mt-0.5 flex items-baseline justify-between gap-2">
                 <span className="text-sm font-medium text-ink">
-                  {layer.season.verb}
-                  <span className="ml-1.5 text-ink-soft">{layer.label}</span>
+                  {layer.job}
                 </span>
                 <GuideNumberLink
                   topic={guideTopic(layer.id)}
@@ -413,13 +428,20 @@ export function YearRhythmPanel({
                   className="brand text-lg text-ink underline decoration-gold/50 underline-offset-2 hover:text-gold-deep"
                 />
               </p>
-              <p className="text-xs text-ink-soft">
-                {layer.season.keyword}
-                {layer.nature ? ` · ${layer.nature}` : ""}
-              </p>
-              <p className="mt-1.5 text-[12px] leading-snug text-ink-soft">
-                {layer.scan}
-              </p>
+              {layer.id === "outlook" && rhythm.mix.outlookAgrees ? (
+                <p className="mt-1.5 text-[12px] leading-snug text-ink-soft">
+                  {rhythm.mix.outlookNote}
+                </p>
+              ) : (
+                <>
+                  <p className="mt-1.5 text-[12px] leading-snug text-ink">
+                    {layer.scan}
+                  </p>
+                  <p className="mt-1 text-[12px] leading-snug text-ink-soft">
+                    Watch: {layer.season.watch}
+                  </p>
+                </>
+              )}
             </article>
           ))}
           {rhythm.sun ? (
@@ -431,17 +453,13 @@ export function YearRhythmPanel({
               }`}
             >
               <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                Astro season
+                Star sign
               </p>
               <p className="mt-0.5 text-sm font-medium text-ink">
-                {rhythm.sunVerb} · {rhythm.sun.symbol}{" "}
-                {sunSignLabel || rhythm.sun.name}
-              </p>
-              <p className="text-xs text-ink-soft">
-                {rhythm.sun.element} · {rhythm.sun.modality} · backdrop
+                {rhythm.sun.symbol} {sunSignLabel || rhythm.sun.name}
               </p>
               <p className="mt-1.5 text-[12px] leading-snug text-ink-soft">
-                Tropical sign from month and day — not a numerology number.
+                {rhythm.sunInfluence}
               </p>
             </article>
           ) : null}
@@ -455,24 +473,9 @@ export function YearRhythmPanel({
         <p className="mt-2 text-sm leading-6 text-ink-soft">{rhythm.yearMonth}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
-          <h3 className="text-ink">Best use of this month</h3>
-          <p className="mt-2 text-sm leading-6 text-ink">{rhythm.mix.bestUse}</p>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">
-            <span className="font-medium text-ink">Practice. </span>
-            {rhythm.practice}
-          </p>
-        </div>
-        <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
-          <h3 className="text-ink">Watch for</h3>
-          <p className="mt-2 text-sm leading-6 text-ink">{rhythm.mix.watchFor}</p>
-          {rhythm.sun ? (
-            <p className="mt-2 text-sm leading-6 text-ink-soft">
-              {rhythm.sun.name} is a calendar backdrop, not a numerology number.
-            </p>
-          ) : null}
-        </div>
+      <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+        <h3 className="text-ink">One habit for the rest of this month</h3>
+        <p className="mt-2 text-sm leading-6 text-ink">{rhythm.practice}</p>
       </div>
     </div>
   );

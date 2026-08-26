@@ -84,7 +84,7 @@ export function GrowthAreasPanel({
   const narrative = useMemo(() => {
     if (!active) return "";
     const monthBit = monthSeason
-      ? `This month’s ${monthSeason.verb} weather may be a useful window for ${active.title.toLowerCase()}. `
+      ? `This is a ${monthSeason.phase} month, which makes it a good time to practise ${active.title.toLowerCase()}. `
       : "";
     const lp = lifePath ? `Life Path ${lifePath}` : "the longer path";
     return `${monthBit}${active.suggestion} Treat it as one skill to practise alongside your Life Path ${lp}, not a judgement on how you are doing.`;

@@ -723,7 +723,7 @@ export async function downloadReportPdf(
     const monthDigit = reduceToSingleDigit(Number(report.personal_month.number));
     if (DIGIT_SEASON[yearDigit] && DIGIT_SEASON[monthDigit]) {
       addBody(
-        `Season mix: ${DIGIT_SEASON[yearDigit].verb} ${yearDigit} → ${DIGIT_SEASON[monthDigit].verb} ${monthDigit} (weather, not events).`,
+        `Right now: a ${DIGIT_SEASON[yearDigit].phase} year (${yearDigit}) and a ${DIGIT_SEASON[monthDigit].phase} month (${monthDigit}). This is pace, not events.`,
         9,
       );
     }

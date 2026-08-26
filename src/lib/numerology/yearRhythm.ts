@@ -17,11 +17,15 @@ export type DigitSeason = {
   element: DigitElement;
   keyword: string;
   verb: string;
+  /** Everyday word for this digit's pace. Safe to show to a first-time reader. */
+  phase: string;
   visual: string;
   glyph: string;
   stroke: string;
   fill: string;
   scan: string;
+  /** One thing to watch while this digit runs the window. */
+  watch: string;
 };
 
 export const DIGIT_SEASON: Record<number, DigitSeason> = {
@@ -30,99 +34,117 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
     element: "Fire",
     keyword: "Beginnings",
     verb: "BEGIN",
+    phase: "starting",
     visual: "rising lines",
     glyph: "△",
     stroke: "rgba(217, 119, 6, 0.7)",
     fill: "#F59E0B",
     scan: "Start one small thing. Not ten openings.",
+    watch: "Opening ten things and finishing none.",
   },
   2: {
     season: "Tide season",
     element: "Water",
     keyword: "Cooperation",
     verb: "RELATE",
+    phase: "slow",
     visual: "soft waves",
     glyph: "☽",
     stroke: "rgba(100, 116, 139, 0.7)",
     fill: "#94A3B8",
     scan: "Go slow with people. Wait before you push.",
+    watch: "Waiting so long that nothing gets decided.",
   },
   3: {
     season: "Voice season",
     element: "Air",
     keyword: "Expression",
     verb: "EXPRESS",
+    phase: "sharing",
     visual: "open sky",
     glyph: "✧",
     stroke: "rgba(14, 116, 144, 0.65)",
     fill: "#7DD3FC",
     scan: "Finish and share one thing. Not ten drafts.",
+    watch: "Talking about the work instead of doing it.",
   },
   4: {
     season: "Earth season",
     element: "Earth",
     keyword: "Structure",
     verb: "BUILD",
+    phase: "planning",
     visual: "a quiet grid",
     glyph: "□",
     stroke: "rgba(120, 53, 15, 0.65)",
     fill: "#A8A29E",
     scan: "Write one repeating plan and keep it this week.",
+    watch: "Planning so much that nothing actually starts.",
   },
   5: {
     season: "Wind season",
     element: "Air",
     keyword: "Movement",
     verb: "MOVE",
+    phase: "changing",
     visual: "flowing lines",
     glyph: "⬠",
     stroke: "rgba(15, 118, 110, 0.7)",
     fill: "#2DD4BF",
     scan: "Try one small change. Do not rewrite the whole plan.",
+    watch: "Changing again before the last change had time to work.",
   },
   6: {
     season: "Hearth season",
     element: "Earth",
     keyword: "Care",
     verb: "TEND",
+    phase: "caring",
     visual: "warm enclosure",
     glyph: "♡",
     stroke: "rgba(190, 24, 93, 0.55)",
     fill: "#F9A8D4",
     scan: "Keep one promise. Keep one hour that is for you.",
+    watch: "Saying yes until you have no rest left.",
   },
   7: {
     season: "Still-water season",
     element: "Water",
     keyword: "Insight",
     verb: "STUDY",
+    phase: "quiet",
     visual: "deep quiet",
     glyph: "◇",
     stroke: "rgba(67, 56, 202, 0.6)",
     fill: "#818CF8",
     scan: "Take quiet time. Do not force a loud push.",
+    watch: "Going so quiet that people cannot reach you.",
   },
   8: {
     season: "Summit season",
     element: "Earth",
     keyword: "Stewardship",
     verb: "STEWARD",
+    phase: "finishing",
     visual: "long ridges",
     glyph: "⬡",
     stroke: "rgba(30, 58, 107, 0.7)",
     fill: "#1E3A5F",
     scan: "Finish one real result, then rest.",
+    watch: "Working with no rest until the result runs you.",
   },
   9: {
     season: "Harvest season",
     element: "Fire",
     keyword: "Completion",
     verb: "HARVEST",
+    phase: "closing",
     visual: "ember glow",
     glyph: "○",
     stroke: "rgba(185, 28, 28, 0.6)",
     fill: "#E07A5F",
     scan: "Close one loop before you open another.",
+    watch: "Holding on to something that is already over.",
   },
 };
 
@@ -144,21 +166,21 @@ const MONTH_LABELS = [
 /** Signature pair lines — element table covers the rest. */
 const YEAR_MONTH_LINE: Record<string, string> = {
   "5-4":
-    "A wind-year (5) meets an earth-month (4). Movement may want a frame — exploration with one boundary.",
+    "The year is about change and this month is about plans. Try one new thing inside one routine.",
   "4-5":
-    "An earth-year (4) meets a wind-month (5). The long build may get a breath of variety — one experiment inside the structure.",
+    "The year is about plans and this month is about change. Try one experiment without dropping the plan.",
   "1-4":
-    "A spark-year (1) meets an earth-month (4). New chapters may land better when one foundation is tended this month.",
+    "The year is about starting and this month is about plans. A new start holds better with one routine behind it.",
   "9-4":
-    "A harvest-year (9) meets an earth-month (4). Completing may want a shelf to sit on — sort and close, rather than reopen ten doors.",
+    "The year is about closing things and this month is about plans. Sort and finish, rather than reopening old ones.",
   "5-5":
-    "Wind on wind — year and month both lean toward movement. One chosen change may keep the breeze from scattering.",
+    "Change in the year and change in the month. Pick one change, so the rest does not scatter you.",
   "4-4":
-    "Earth on earth — year and month both lean toward building. Rest may still be part of the scaffold.",
+    "Plans in the year and plans in the month. Rest counts as part of the plan.",
   "7-5":
-    "Still water (7) beside wind (5): inner study with a little outer motion. Quiet and a small outing may take turns.",
+    "The year is quiet and this month wants a little movement. Take turns: one quiet block, then one small outing.",
   "3-6":
-    "Voice (3) beside hearth (6): share, then tend the near circle. Expression with care.",
+    "The year is about sharing and this month is about care. Share something, then look after the people close to you.",
 };
 
 type ElementMix = {
@@ -170,100 +192,100 @@ type ElementMix = {
 
 const SAME_ELEMENT: Record<DigitElement, ElementMix> = {
   Air: {
-    tension: "Climate and tempo both move.",
-    opportunity: "One chosen change may keep the breeze from scattering.",
-    bestUse: "Repeat one experiment until it becomes a small habit.",
-    watchFor: "Starting many threads and finishing none.",
+    tension: "The year and this month both push you to move and talk.",
+    opportunity: "Pick one thing to move on and it can go a long way this month.",
+    bestUse: "Choose one change, or one thing to share, and finish that one.",
+    watchFor: "Starting many things and finishing none.",
   },
   Earth: {
-    tension: "Climate and tempo both ask for building.",
-    opportunity: "A slower pace may still be productive if the load stays honest.",
-    bestUse: "Keep one foundation steady; rest is part of the scaffold.",
-    watchFor: "Over-planning or treating slow progress as failure.",
+    tension: "The year and this month both ask for steady work.",
+    opportunity: "Slow work still counts, as long as the load stays honest.",
+    bestUse: "Keep one routine going, and count rest as part of the work.",
+    watchFor: "Planning so much that nothing starts, or calling slow progress failure.",
   },
   Fire: {
-    tension: "Climate and tempo both run hot.",
-    opportunity: "Heat may serve one real start or one real close — not both at once.",
-    bestUse: "Channel the spark into one finished gesture.",
-    watchFor: "Burnout from forcing every door open or shut.",
+    tension: "The year and this month both push you to act.",
+    opportunity: "The push can finish one real thing — not two at once.",
+    bestUse: "Put the energy into one start, or one ending, and see it through.",
+    watchFor: "Pushing every door open or shut until you are worn out.",
   },
   Water: {
-    tension: "Climate and tempo both turn inward.",
-    opportunity: "Good conditions for honest conversations and reflective work, as long as you are not rushing a decision.",
-    bestUse: "Protect one quiet block and one honest conversation.",
-    watchFor: "Withdrawing so far that nothing can complete.",
+    tension: "The year and this month both turn inward.",
+    opportunity: "A good time for one honest talk and for thinking things through, as long as you are not rushing a decision.",
+    bestUse: "Keep one quiet block, and have one honest talk.",
+    watchFor: "Going so quiet that nothing gets finished.",
   },
 };
 
 const CROSS_ELEMENT: Record<string, ElementMix> = {
   "Air-Earth": {
-    tension: "Movement may want a frame.",
-    opportunity: "Exploration can become something repeatable this month.",
-    bestUse: "Turn one experiment into a small system.",
-    watchFor: "Restlessness when the frame feels slow.",
+    tension: "The year wants movement; this month wants a plan.",
+    opportunity: "Something you are trying out can turn into a routine this month.",
+    bestUse: "Take one thing you are trying and write it down as a step you can repeat.",
+    watchFor: "Getting restless because the plan feels slow.",
   },
   "Earth-Air": {
-    tension: "The long build may want a breath of variety.",
-    opportunity: "One experiment can sit inside the structure without dismantling it.",
-    bestUse: "Try one variation while keeping the scaffold.",
-    watchFor: "Abandoning the build because progress feels slow.",
+    tension: "The year wants steady building; this month wants variety.",
+    opportunity: "One new thing can fit inside the plan without breaking it.",
+    bestUse: "Try one small variation and keep the rest of the plan.",
+    watchFor: "Dropping the whole plan because progress feels slow.",
   },
   "Fire-Earth": {
-    tension: "Spark may want a hearth.",
-    opportunity: "A new chapter may land better on one tended foundation.",
-    bestUse: "Start or close one thing, then give it a shelf.",
-    watchFor: "Lighting ten fires and building none.",
+    tension: "The year pushes you to act; this month asks for a plan.",
+    opportunity: "A new start holds better when one routine is already in place.",
+    bestUse: "Start or finish one thing, then write down how you will keep it.",
+    watchFor: "Starting many things and building none.",
   },
   "Earth-Fire": {
-    tension: "Structure may meet a push to begin or finish.",
-    opportunity: "The scaffold can host one decisive move.",
-    bestUse: "Use the heat to complete one practical piece.",
-    watchFor: "Scattering the build for a dramatic restart.",
+    tension: "The year is for steady work; this month pushes you to act.",
+    opportunity: "The plan can carry one bold move.",
+    bestUse: "Use the push to finish one practical piece of the plan.",
+    watchFor: "Throwing out the plan for an exciting restart.",
   },
   "Water-Earth": {
-    tension: "The tide may want a shore.",
-    opportunity: "Feeling can settle into a routine that holds it.",
-    bestUse: "Give inner weather one practical container.",
-    watchFor: "Waiting for perfect mood before any structure.",
+    tension: "The year is slow and inward; this month wants a plan.",
+    opportunity: "Feelings settle faster when there is a routine around them.",
+    bestUse: "Give the slow year one simple routine to sit inside.",
+    watchFor: "Waiting to feel ready before you set anything up.",
   },
   "Earth-Water": {
-    tension: "The scaffold may want more feeling in it.",
-    opportunity: "A check-in can keep the build from going dry.",
-    bestUse: "Keep the system, and name what it is for.",
-    watchFor: "Grinding past the point of honest rest.",
+    tension: "The year is for building; this month is slower and more inward.",
+    opportunity: "One check-in keeps the work from feeling empty.",
+    bestUse: "Keep the routine, and say out loud what it is for.",
+    watchFor: "Working past the point where you need rest.",
   },
   "Air-Fire": {
-    tension: "Motion and spark may amplify each other.",
-    opportunity: "Change can stay kind if one aim stays chosen.",
-    bestUse: "Pick one opening and let the rest wait.",
-    watchFor: "Excitement without a place to land.",
+    tension: "The year wants movement; this month pushes you to act.",
+    opportunity: "Change can stay calm if you keep one aim.",
+    bestUse: "Pick one opening and let the others wait.",
+    watchFor: "Excitement with nowhere to put it.",
   },
   "Fire-Air": {
-    tension: "Spark may want more room to move.",
-    opportunity: "A beginning can travel if it stays one beginning.",
-    bestUse: "Take the start on a short, honest outing.",
-    watchFor: "Talking the spark into ten directions.",
+    tension: "The year pushes you to act; this month wants movement and talk.",
+    opportunity: "One start can go a long way if it stays one start.",
+    bestUse: "Take that one start out into the world in a small way.",
+    watchFor: "Talking one idea into ten directions.",
   },
   "Air-Water": {
-    tension: "Movement may meet a need to feel first.",
-    opportunity: "A small pause can keep change from going hollow.",
-    bestUse: "Move, then notice the inner weather once.",
-    watchFor: "Pivoting to avoid sitting with a feeling.",
+    tension: "The year wants movement; this month asks you to feel first.",
+    opportunity: "A short pause keeps a change from feeling empty.",
+    bestUse: "Make the change, then stop once and notice how it feels.",
+    watchFor: "Changing plans to avoid sitting with a feeling.",
   },
   "Water-Air": {
-    tension: "Inward weather may want a little outer motion.",
-    opportunity: "A short outing can refresh study without scattering it.",
-    bestUse: "Alternate a quiet block with one small contact.",
-    watchFor: "Using busyness to skip the inner work.",
+    tension: "The year is slow and inward; this month wants a little movement.",
+    opportunity: "A small outing can refresh quiet work without scattering it.",
+    bestUse: "Keep one quiet block, and make one small contact with someone.",
+    watchFor: "Keeping busy so you do not have to sit still.",
   },
   "Fire-Water": {
-    tension: "Heat may meet a slower emotional tide.",
-    opportunity: "A start or close can stay human if feeling is named.",
-    bestUse: "Do the decisive thing, then give it a cooling hour.",
-    watchFor: "Pushing through mood until something snaps.",
+    tension: "The year pushes you to act; this month is slower.",
+    opportunity: "A big move stays kind if you say how you feel about it.",
+    bestUse: "Do the decisive thing, then give yourself an hour to cool down.",
+    watchFor: "Pushing through a bad mood until something breaks.",
   },
   "Water-Fire": {
-    tension: "A slow year meets a month that wants a start.",
+    tension: "The year is slow; this month wants you to start something.",
     opportunity: "Notice first, then start one small thing.",
     bestUse: "Start one small thing this month, then wait and check it.",
     watchFor: "Thinking until the month is gone, or starting ten things.",
@@ -271,7 +293,7 @@ const CROSS_ELEMENT: Record<string, ElementMix> = {
 };
 
 export const WEATHER_PRINCIPLE =
-  "Year, month, and outlook are pacing clocks — not events written in advance.";
+  "These numbers set your pace for the year and the month. They do not predict events.";
 
 export type RhythmLayer = {
   id: RhythmLayerId;
@@ -313,7 +335,17 @@ export type RhythmMix = {
   bestUse: string;
   watchFor: string;
   outlookNote: string;
+  /** True when the second count for the year lands on the same digit. */
+  outlookAgrees: boolean;
   sunVerb: string | null;
+};
+
+/** All clocks for the current window, said once, in everyday words. */
+export type RhythmCombined = {
+  headline: string;
+  lines: string[];
+  tryLine: string;
+  watchLine: string;
 };
 
 export type YearRhythm = {
@@ -330,6 +362,7 @@ export type YearRhythm = {
   seasonal: string;
   practice: string;
   mix: RhythmMix;
+  combined: RhythmCombined;
   clock: RhythmClock;
   weatherPrinciple: string;
 };
@@ -359,10 +392,11 @@ function elementMix(year: number, month: number): ElementMix {
   if (year === month || ye === me) return SAME_ELEMENT[ye];
   return (
     CROSS_ELEMENT[`${ye}-${me}`] ?? {
-      tension: "Climate and tempo currently differ.",
-      opportunity: "Let the month set tempo; let the year set climate.",
-      bestUse: "Hold both as weather, and pick one small pacing habit.",
-      watchFor: "Treating either number as a forecast of events.",
+      tension: "The year and this month are asking for different things.",
+      opportunity:
+        "Use the month for the next few weeks and the year for the longer aim.",
+      bestUse: "Do this month's job as one step toward the year's.",
+      watchFor: "Reading either number as an event that has to happen.",
     }
   );
 }
@@ -373,9 +407,9 @@ function yearMonthCopy(year: number, month: number): string {
   const ys = DIGIT_SEASON[year];
   const ms = DIGIT_SEASON[month];
   if (year === month) {
-    return `Your year and your month are both ${year} (${ys.season.toLowerCase()}). The same theme applies at both scales, so anything you do this month counts double toward the year — a good month to make the year's main move.`;
+    return `The year and this month are both ${ys.phase}. The same job applies at both sizes, so what you do this month counts twice — a good month to make the year's main move.`;
   }
-  return `The year asks for ${ys.keyword.toLowerCase()} and this month asks for ${ms.keyword.toLowerCase()}. They work at different scales: the year is the goal you are aiming at, the month is how to spend the next few weeks. Do the month's job as one step toward the year's.`;
+  return `The year is the longer aim and the month is how to spend the next few weeks, so they can ask for different things. Do this month's job as one step toward the year's, and let the ${ms.phase} month sit inside the ${ys.phase} year.`;
 }
 
 export function sunVerbFor(sign: SunSignInfo): string {
@@ -385,17 +419,8 @@ export function sunVerbFor(sign: SunSignInfo): string {
   return "STEADY";
 }
 
-function sunCopy(sign: SunSignInfo, yearDigit: number): string {
-  const season = DIGIT_SEASON[yearDigit];
-  const airOnWind =
-    sign.element === "Air" && season.element === "Air"
-      ? `${sign.name} can soften the edges of Year ${yearDigit} — harmony around change, rather than change for its own sake.`
-      : sign.element === "Earth" && season.element === "Air"
-        ? `${sign.name}’s earth can give Year ${yearDigit} a landing strip — movement with a place to return.`
-        : sign.element === "Water"
-          ? `${sign.name}’s water adds feeling to Year ${yearDigit}’s ${season.season.toLowerCase()} — notice the inner weather while the outer one shifts.`
-          : `${sign.name} (${sign.element.toLowerCase()}) colors Year ${yearDigit}: ${sign.theme.toLowerCase()}.`;
-  return `${airOnWind} Reflective tone only.`;
+function sunCopy(sign: SunSignInfo): string {
+  return `${sign.name} comes from your birth month and day, not from a numerology number. It is only the calendar backdrop, so it does not change what the year or the month is asking for.`;
 }
 
 export function buildRhythmClock(opts: {
@@ -480,8 +505,8 @@ export function buildYearRhythm(opts: {
     {
       id: "year",
       label: "Personal Year",
-      role: "Climate",
-      job: "Overall rhythm of this birthday-to-birthday window",
+      role: "This year",
+      job: "The pace of the whole year, birthday to birthday",
       raw: opts.personalYear,
       digit: yearDigit,
       season: yearSeason,
@@ -489,14 +514,14 @@ export function buildYearRhythm(opts: {
       insight:
         opts.yearTheme ??
         PY_NATURE[yearDigit]?.typical ??
-        `${yearSeason.season} — ${yearSeason.keyword.toLowerCase()} as this year’s climate.`,
+        `A ${yearSeason.phase} year. ${yearSeason.scan}`,
       scan: yearSeason.scan,
     },
     {
       id: "outlook",
       label: "Year outlook",
-      role: "Mirror",
-      job: "Second climate for the same window (different formula)",
+      role: "Second count for this year",
+      job: "The same year counted a different way",
       raw: opts.outlook || String(yearDigit),
       digit: outlookDigit ?? yearDigit,
       season: outlookSeason,
@@ -509,15 +534,15 @@ export function buildYearRhythm(opts: {
     {
       id: "month",
       label: "Personal Month",
-      role: "Weather",
-      job: "This calendar month’s pacing",
+      role: "This month",
+      job: "The pace of the next few weeks",
       raw: opts.personalMonth,
       digit: monthDigit,
       season: monthSeason,
       insight:
         opts.monthTheme ??
         PY_NATURE[monthDigit]?.typical ??
-        `${monthSeason.season} — this month’s pacing.`,
+        `A ${monthSeason.phase} month. ${monthSeason.scan}`,
       scan: monthSeason.scan,
     },
   ];
@@ -530,8 +555,8 @@ export function buildYearRhythm(opts: {
 
   const yearMonth = yearMonthCopy(yearDigit, monthDigit);
   const sunInfluence = sun
-    ? sunCopy(sun, yearDigit)
-    : "Sun sign is read from month and day only — add a complete date to place the astro season.";
+    ? sunCopy(sun)
+    : "The star sign is read from birth month and day only. Add a full date of birth to show it.";
 
   const summary = `Year ${yearLabel}: ${yearSeason.scan} Month ${monthLabel}: ${monthSeason.scan}${
     sun ? ` ${sun.name} is calendar backdrop only — not a numerology number.` : ""
@@ -546,13 +571,18 @@ export function buildYearRhythm(opts: {
     PY_NATURE[monthDigit]?.practice ||
     "Pick one small habit to run for the rest of this month. It sets your pace, not a deadline you can miss.";
 
-  const outlookNote =
-    outlookDigit != null && outlookDigit !== yearDigit
-      ? `Outlook ${outlookLabel} is a second reading of the same year (${outlookSeason.scan}) It does not overrule year ${yearLabel} — use both, each on its own calendar.`
-      : `Outlook matches year ${yearLabel}: ${yearSeason.scan}`;
+  const outlookAgrees = outlookDigit == null || outlookDigit === yearDigit;
+  const outlookNote = outlookAgrees
+    ? "This second count agrees with the year above, so there is one job for the year, not two."
+    : `This second count reads ${outlookLabel} where the year reads ${yearLabel}. Both count the same year, from different parts of your date. Run the year's job across the calendar year and this one from birthday to birthday.`;
+
+  const mixLabel =
+    yearDigit === monthDigit
+      ? `A ${yearSeason.phase} year, and a ${monthSeason.phase} month too`
+      : `A ${yearSeason.phase} year, a ${monthSeason.phase} month`;
 
   const mix: RhythmMix = {
-    mixLabel: `${yearSeason.verb} → ${monthSeason.verb}`,
+    mixLabel,
     yearVerb: yearSeason.verb,
     monthVerb: monthSeason.verb,
     tension: mixTone.tension,
@@ -560,7 +590,32 @@ export function buildYearRhythm(opts: {
     bestUse: mixTone.bestUse,
     watchFor: mixTone.watchFor,
     outlookNote,
+    outlookAgrees,
     sunVerb,
+  };
+
+  const combined: RhythmCombined = {
+    headline: mixLabel,
+    lines: [
+      ...(yearDigit === monthDigit
+        ? [`The year and this month ask for the same thing: ${yearSeason.scan}`]
+        : [
+            `This year: ${yearSeason.scan}`,
+            `This month: ${monthSeason.scan}`,
+          ]),
+      ...(outlookDigit != null && outlookDigit !== yearDigit
+        ? [
+            `A second way of counting the same year gives ${outlookLabel}: ${outlookSeason.scan} It does not cancel the year above — it is the same year counted from your birthday instead.`,
+          ]
+        : []),
+      ...(sun
+        ? [
+            `${sun.name} is only the calendar backdrop from your birth month and day. It is not a numerology number.`,
+          ]
+        : []),
+    ],
+    tryLine: mixTone.bestUse,
+    watchLine: mixTone.watchFor,
   };
 
   for (const [key, text] of Object.entries({
@@ -572,6 +627,12 @@ export function buildYearRhythm(opts: {
     outlookNote,
     summary,
     practice,
+    combinedHeadline: combined.headline,
+    combinedTry: combined.tryLine,
+    combinedWatch: combined.watchLine,
+    ...Object.fromEntries(
+      combined.lines.map((line, i) => [`combinedLine${i}`, line]),
+    ),
   })) {
     assertSafeCopy(text, `yearRhythm.${key}`);
   }
@@ -588,6 +649,7 @@ export function buildYearRhythm(opts: {
     seasonal,
     practice,
     mix,
+    combined,
     clock,
     weatherPrinciple: WEATHER_PRINCIPLE,
   };
@@ -600,15 +662,14 @@ export function yearRhythmPdfLines(rhythm: YearRhythm): string[] {
   const now = rhythm.clock.sectors[rhythm.clock.nowIndex]!;
   const start = rhythm.clock.sectors[0]!;
   return [
-    `Annual rhythm — climate PY ${year.raw} ${year.season.verb} · weather Month ${month.raw} ${month.season.verb} · outlook ${outlook.raw} ${outlook.season.verb}${
-      rhythm.sun ? ` · astro ${rhythm.sun.symbol} ${rhythm.sun.name} ${rhythm.sunVerb}` : ""
-    }.`,
-    `Clock: cycle ${rhythm.clock.fromBirthday ? "from birthday" : "calendar"} starting ${start.label} · now ${now.label}.`,
-    `Current rhythm ${rhythm.mix.mixLabel}. ${rhythm.mix.tension} ${rhythm.mix.opportunity}`,
+    `Right now — ${rhythm.combined.headline}. Year ${year.raw}, month ${month.raw}, second year count ${outlook.raw}.`,
+    ...rhythm.combined.lines,
+    `Try: ${rhythm.combined.tryLine}`,
+    `Watch: ${rhythm.combined.watchLine}`,
+    `The year clock ${rhythm.clock.fromBirthday ? "starts at your birthday" : "starts in January"} (${start.label}); you are in ${now.label}.`,
     rhythm.yearMonth,
-    rhythm.mix.outlookNote,
-    `Best use: ${rhythm.mix.bestUse}`,
-    `Watch for: ${rhythm.mix.watchFor}`,
+    `${rhythm.mix.tension} ${rhythm.mix.opportunity}`,
+    ...(rhythm.mix.outlookAgrees ? [rhythm.mix.outlookNote] : []),
     rhythm.sunInfluence,
     `This month’s practice: ${rhythm.practice}`,
     rhythm.weatherPrinciple,
