@@ -30,6 +30,7 @@ import {
   insightCardPdfLines,
 } from "@/lib/numerology/insightTiles";
 import { yearRhythmPdfLines, buildYearRhythm, DIGIT_SEASON } from "@/lib/numerology/yearRhythm";
+import { growthDevelopmentLine } from "@/lib/numerology/growthAreas";
 import { buildStrengthConstellation } from "@/lib/numerology/strengthConstellation";
 import {
   buildPinnacleYearModel,
@@ -718,18 +719,21 @@ export async function downloadReportPdf(
     }
   }
   if (report.growth_areas?.length) {
-    addBody("Catalyst Pathway Map", 10);
+    addBody("Growth Mode", 10);
     const yearDigit = reduceToSingleDigit(Number(report.personal_year.number));
     const monthDigit = reduceToSingleDigit(Number(report.personal_month.number));
     if (DIGIT_SEASON[yearDigit] && DIGIT_SEASON[monthDigit]) {
       addBody(
-        `Right now: a ${DIGIT_SEASON[yearDigit].phase} year (${yearDigit}) and a ${DIGIT_SEASON[monthDigit].phase} month (${monthDigit}). This is pace, not events.`,
+        `This week sits in a ${DIGIT_SEASON[yearDigit].verb} ${yearDigit} year and a ${DIGIT_SEASON[monthDigit].verb} ${monthDigit} month. One practice, not a new identity.`,
         9,
       );
     }
-    for (const g of report.growth_areas.slice(0, 10)) {
-      addBody(`${g.title}: ${g.suggestion}`, 9);
-      if (g.actions?.[0]) addBullet(`Practice: ${g.actions[0]}`);
+    for (const g of report.growth_areas.slice(0, 6)) {
+      const num = growthDevelopmentLine(g);
+      addBody(num ? `${g.title} · ${num}` : g.title, 9);
+      if (g.whyLine) addBody(g.whyLine, 9);
+      else addBody(g.suggestion, 9);
+      if (g.actions?.[0]) addBullet(`This week's experiment: ${g.actions[0]}`);
     }
   }
   if (report.growth_opportunities?.length) {

@@ -65,6 +65,16 @@ export type NumerologySnapshot = {
   natal_given_vedic_name?: string;
 };
 
+export type GrowthOrigin =
+  | "lo-shu-missing"
+  | "lo-shu-engine"
+  | "life-path"
+  | "expression"
+  | "vedic"
+  | "chaldean"
+  | "name"
+  | "bank";
+
 export type LoShuResult = {
   present_numbers: number[];
   missing_numbers: number[];
@@ -218,6 +228,11 @@ export type NumerologyReport = {
     suggestion: string;
     sources: string[];
     actions?: string[];
+    focusNumber?: number;
+    origin?: GrowthOrigin;
+    whyLine?: string;
+    examples?: string[];
+    reflectPrompt?: string;
   }[];
   age_guidance: {
     category: string;

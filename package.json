@@ -16,6 +16,7 @@
     "smoke:trivia": "tsx scripts/smoke-trivia-discovery.ts",
     "smoke:insight-tiles": "tsx scripts/smoke-insight-tiles.ts",
     "smoke:pinnacle-year": "tsx scripts/smoke-pinnacle-year.ts",
+    "smoke:growth-mode": "tsx scripts/smoke-growth-mode.ts",
     "smoke:strengths": "tsx scripts/smoke-strength-constellation.ts",
     "smoke:name-history": "tsx scripts/smoke-name-history.ts",
     "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts",

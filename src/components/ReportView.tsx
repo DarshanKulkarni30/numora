@@ -884,6 +884,7 @@ export function ReportView({
                 personalYear={snap.personal_year}
                 personalMonth={snap.personal_month}
                 lifePath={snap.life_path}
+                reportId={reportId}
               />
             </div>
           </section>

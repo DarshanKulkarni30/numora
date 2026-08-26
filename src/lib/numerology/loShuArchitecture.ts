@@ -255,7 +255,7 @@ function buildCatalysts(missing: number[]): GrowthCatalyst[] {
     return {
       number: n,
       keyword,
-      title: `${keyword} catalyst`,
+      title: keyword,
       actions,
       summary: `Missing ${n} may act as a growth trigger around ${keyword.toLowerCase()}—cultivate through habits, not self-judgment.`,
     };

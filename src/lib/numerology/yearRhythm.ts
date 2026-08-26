@@ -148,6 +148,36 @@ export const DIGIT_SEASON: Record<number, DigitSeason> = {
   },
 };
 
+/** Short user-facing cue for a Personal Year / Month digit. */
+const SEASON_USER_CUE: Record<number, string> = {
+  1: "Start, decide, open one thing",
+  2: "Go slow with people and wait before you push",
+  3: "Share and finish one idea",
+  4: "Plan, structure, keep a routine",
+  5: "Try one small change",
+  6: "Care, maintain, support",
+  7: "Learn, analyse, understand",
+  8: "Finish one real result, then rest",
+  9: "Close one loop before opening another",
+};
+
+export function seasonUserCue(n: number): string {
+  return SEASON_USER_CUE[n] ?? DIGIT_SEASON[n]?.keyword ?? `Tone ${n}`;
+}
+
+export function yearMonthMixLine(yearN: number, monthN: number): string {
+  if (yearN === monthN) {
+    return "Your year and month share the same pace. This month is a good window to make the year's main move — still as one small practice.";
+  }
+  if (yearN === 7 && monthN === 6) {
+    return "Learn deeply, then apply what you learn with care.";
+  }
+  const yearCue = seasonUserCue(yearN);
+  const monthCue = seasonUserCue(monthN);
+  if (!yearCue || !monthCue) return "";
+  return `${yearCue}. Then ${monthCue.charAt(0).toLowerCase()}${monthCue.slice(1)}.`;
+}
+
 const MONTH_LABELS = [
   "Jan",
   "Feb",
