@@ -12,12 +12,12 @@ import { LO_SHU_NUMBER_META } from "@/lib/numerology/loShuEffects";
 import {
   buildLoShuArchitecture,
   loShuBlueprintJson,
+  loShuYearCardCopy,
   type LoShuArchitecture,
   type StrengthEngine,
 } from "@/lib/numerology/loShuArchitecture";
 import type { LoShuResult } from "@/lib/numerology/types";
 import { personalYearForCalendarYear } from "@/lib/numerology/cycles";
-import { reduceNumber } from "@/lib/numerology/reduce";
 
 /** Classic Lo Shu compass angles (deg, 0 = east; SVG y-down). */
 const NODE_ANGLE: Record<number, number> = {
@@ -216,21 +216,30 @@ function YearTimeline({
   dateOfBirth: string;
   architecture: LoShuArchitecture;
 }) {
-  const years = useMemo(() => {
-    const now = new Date().getFullYear();
+  const asOfYear = new Date().getFullYear();
+  const cards = useMemo(() => {
+    const missing = architecture.catalysts.map((c) => c.number);
     try {
-      return [now - 1, now, now + 1, now + 2].map((y) => ({
-        year: y,
-        py: personalYearForCalendarYear(dateOfBirth, y),
-      }));
+      return [asOfYear - 1, asOfYear, asOfYear + 1, asOfYear + 2].map((y) =>
+        loShuYearCardCopy({
+          year: y,
+          py: personalYearForCalendarYear(dateOfBirth, y),
+          missing,
+          asOfYear,
+        }),
+      );
     } catch {
       return [];
     }
-  }, [dateOfBirth]);
+  }, [architecture, asOfYear, dateOfBirth]);
+  const [selectedYear, setSelectedYear] = useState<number>(asOfYear);
+  const selected =
+    cards.find((c) => c.year === selectedYear) ??
+    cards.find((c) => c.isCurrent) ??
+    cards[0] ??
+    null;
 
-  if (!years.length) return null;
-
-  const catalystNums = new Set(architecture.catalysts.map((c) => c.number));
+  if (!cards.length) return null;
 
   return (
     <div className="rounded-xl border border-[var(--line)] bg-white/50 px-4 py-3">
@@ -238,39 +247,68 @@ function YearTimeline({
         Yearly timeline
       </p>
       <p className="mt-1 text-[11px] text-ink-soft">
-        Each card is that calendar year’s Personal Year. “Quiet-digit year”
-        means the year number matches a quiet Lo Shu cell — a year to practice
-        that skill, not a special fate.
+        Tap a year. Each card is that calendar year’s Personal Year — what to
+        try, and what to watch. “Quiet cell” means the year number matches a
+        light Lo Shu cell: a year to practise that skill, not a special fate.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
-        {years.map(({ year, py }) => {
-          const digit = reduceNumber(py, []);
-          const hit =
-            catalystNums.has(digit) || catalystNums.has(py);
+        {cards.map((card) => {
+          const active = selected?.year === card.year;
           return (
-            <div
-              key={year}
-              className={`min-w-[4.5rem] rounded-lg border px-2.5 py-2 text-center ${
-                year === new Date().getFullYear()
-                  ? "border-gold/70 bg-gold/10"
-                  : "border-[var(--line)] bg-white/70"
+            <button
+              key={card.year}
+              type="button"
+              aria-pressed={active}
+              onClick={() => setSelectedYear(card.year)}
+              className={`btn-tactile min-w-[4.5rem] rounded-lg border px-2.5 py-2 text-center ${
+                active
+                  ? "border-ink bg-ink text-paper"
+                  : card.isCurrent
+                    ? "border-gold/70 bg-gold/10 text-ink"
+                    : "border-[var(--line)] bg-white/70 text-ink"
               }`}
             >
-              <p className="text-[10px] text-ink-soft">{year}</p>
-              <p className="brand text-lg text-ink">{py}</p>
-              {hit ? (
-                <p className="text-[9px] text-gold-deep">
-                  Quiet-digit year
-                </p>
-              ) : (
-                <p className="text-[9px] text-ink-soft">
-                  {year === new Date().getFullYear() ? "This year" : "Personal year"}
-                </p>
-              )}
-            </div>
+              <p
+                className={`text-[10px] ${active ? "text-paper/70" : "text-ink-soft"}`}
+              >
+                {card.year}
+              </p>
+              <p className={`brand text-lg ${active ? "text-paper" : "text-ink"}`}>
+                {card.py}
+              </p>
+              <p
+                className={`text-[9px] ${active ? "text-paper/80" : card.isQuietCell ? "text-gold-deep" : "text-ink-soft"}`}
+              >
+                {card.badge}
+              </p>
+            </button>
           );
         })}
       </div>
+      {selected ? (
+        <div className="mt-3 rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2">
+          <p className="text-sm font-medium text-ink">
+            {selected.year} · Personal Year {selected.py}
+          </p>
+          <p className="mt-1 text-[12px] leading-5 text-ink">{selected.meaning}</p>
+          <p className="mt-2 text-[12px] leading-5 text-ink">
+            <span className="font-medium">Try. </span>
+            {selected.tryLine}.
+          </p>
+          <p className="mt-1 text-[12px] leading-5 text-ink-soft">
+            <span className="font-medium text-ink">Watch. </span>
+            {selected.watchLine}.
+          </p>
+          {selected.quietNote ? (
+            <p className="mt-2 text-[12px] leading-5 text-ink-soft">
+              {selected.quietNote}
+            </p>
+          ) : null}
+          <p className="mt-2 text-[11px] text-ink-soft">
+            These numbers set pace. They do not predict events.
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

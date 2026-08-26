@@ -1,5 +1,8 @@
+import { reduceToSingleDigit } from "./dateNumbers";
+import { plainJob, plainWatch } from "./layeredCopy";
 import { LO_SHU_NUMBER_META } from "./loShuEffects";
 import type { LoShuResult } from "./types";
+import { DIGIT_SEASON } from "./yearRhythm";
 
 export type PlaneId = "emotional" | "mental" | "practical";
 
@@ -542,5 +545,64 @@ export function loShuBlueprintJson(
     blueprint_lines: architecture.blueprint.lines,
     disclaimer:
       "Belief-based numerology for reflection only—not medical, financial, or legal advice.",
+  };
+}
+
+export type LoShuYearCard = {
+  year: number;
+  py: number;
+  digit: number;
+  isCurrent: boolean;
+  isQuietCell: boolean;
+  phase: string;
+  badge: string;
+  meaning: string;
+  tryLine: string;
+  watchLine: string;
+  quietNote: string | null;
+};
+
+function capJob(job: string): string {
+  return job.charAt(0).toUpperCase() + job.slice(1);
+}
+
+/** One calendar-year card on the Lo Shu timeline: Personal Year job + quiet-cell note. */
+export function loShuYearCardCopy(opts: {
+  year: number;
+  py: number;
+  missing: number[];
+  asOfYear: number;
+}): LoShuYearCard {
+  const digit = reduceToSingleDigit(opts.py);
+  const season = DIGIT_SEASON[digit] ?? DIGIT_SEASON[1];
+  const isCurrent = opts.year === opts.asOfYear;
+  const isQuietCell = opts.missing.includes(digit);
+  const master = opts.py !== digit;
+  const meaning = master
+    ? `A ${season.phase} year. Personal Year ${opts.py} is kept as ${opts.py} and works like a ${digit}. ${season.scan}`
+    : `A ${season.phase} year. ${season.scan}`;
+  const quietNote = isQuietCell
+    ? `This year number matches a quiet cell on your date grid. That skill is usually light for you, so this is a year to practise it: ${capJob(plainJob(digit))}. Not a special fate.`
+    : null;
+  const when =
+    opts.year === opts.asOfYear
+      ? "This year"
+      : opts.year === opts.asOfYear - 1
+        ? "Last year"
+        : opts.year === opts.asOfYear + 1
+          ? "Next year"
+          : "Personal year";
+  return {
+    year: opts.year,
+    py: opts.py,
+    digit,
+    isCurrent,
+    isQuietCell,
+    phase: season.phase,
+    badge: isQuietCell ? "Quiet cell" : when,
+    meaning,
+    tryLine: capJob(plainJob(master ? opts.py : digit)),
+    watchLine: capJob(plainWatch(master ? opts.py : digit)),
+    quietNote,
   };
 }
