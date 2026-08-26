@@ -550,6 +550,8 @@ export async function downloadReportPdf(
     lifePath: snap.life_path,
     vedicDestiny: snap.vedic_destiny,
     chaldeanName: snap.chaldean_name_number,
+    personalYear: snap.personal_year,
+    personalMonth: snap.personal_month,
   });
   for (const line of auraIdentityPdfLines(aura)) {
     addBody(line);

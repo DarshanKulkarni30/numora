@@ -6,6 +6,7 @@ import { EnhancedExportPdfButton } from "@/components/enhanced/EnhancedExportPdf
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { ExportWorkingSheetButton } from "@/components/report/ExportWorkingSheetButton";
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
+import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
@@ -496,6 +497,22 @@ export function EnhancedReportView({
             <p className="mt-2 text-sm leading-7 text-ink-soft">
               {reading.flow.secondaryNarrative}
             </p>
+          </div>
+
+          <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+            <h3 className="text-xl text-ink">
+              Your three main numbers, and what tradition links to them
+            </h3>
+            <div className="mt-4">
+              <AssociationsPanel
+                lifePath={snap.life_path}
+                vedicDestiny={snap.vedic_destiny}
+                chaldeanName={snap.chaldean_name_number}
+                fullName={person.operating_name || person.full_name}
+                personalYear={snap.personal_year}
+                personalMonth={snap.personal_month}
+              />
+            </div>
           </div>
 
           {live.strengths.length ? (

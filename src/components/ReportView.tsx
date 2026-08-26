@@ -1045,6 +1045,8 @@ export function ReportView({
               vedicDestiny={snap.vedic_destiny}
               chaldeanName={snap.chaldean_name_number}
               fullName={person.operating_name || person.full_name}
+              personalYear={snap.personal_year}
+              personalMonth={snap.personal_month}
             />
           </div>
         </section>

@@ -7,9 +7,11 @@ import { planetGuideHref } from "@/lib/guides/planets";
 import {
   buildAuraIdentity,
   synergyKindLabel,
+  type AuraClimate,
   type AuraIdentity,
   type AuraLayer,
   type AuraLayerId,
+  type AuraSwatch,
 } from "@/lib/numerology/auraIdentity";
 
 type Props = {
@@ -17,6 +19,8 @@ type Props = {
   vedicDestiny: string;
   chaldeanName: string;
   fullName?: string;
+  personalYear?: string;
+  personalMonth?: string;
 };
 
 const RING: Record<
@@ -177,12 +181,20 @@ export function AssociationsPanel({
   vedicDestiny,
   chaldeanName,
   fullName,
+  personalYear,
+  personalMonth,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const aura = useMemo(
     () =>
-      buildAuraIdentity({ lifePath, vedicDestiny, chaldeanName }),
-    [lifePath, vedicDestiny, chaldeanName],
+      buildAuraIdentity({
+        lifePath,
+        vedicDestiny,
+        chaldeanName,
+        personalYear,
+        personalMonth,
+      }),
+    [lifePath, vedicDestiny, chaldeanName, personalYear, personalMonth],
   );
   const [tip, setTip] = useState<string | null>(null);
   const [selected, setSelected] = useState<AuraLayerId | null>(null);
@@ -213,7 +225,7 @@ export function AssociationsPanel({
       </p>
 
       <div className="rounded-2xl border border-[var(--line)] bg-white/55 px-4 py-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-3">
           <div>
             {displayName ? (
               <p className="text-sm font-medium text-ink">{displayName}</p>
@@ -229,19 +241,22 @@ export function AssociationsPanel({
               <span className="brand text-base text-ink">{chaldeanName}</span>
             </p>
           </div>
-          <div className="min-w-[10rem] max-w-[26rem]">
+          <div>
             <p className="text-[10px] uppercase tracking-wider text-ink-soft">
               Do these three numbers pull the same way?
             </p>
             <p className="mt-0.5 text-sm font-medium text-ink">
               {aura.synergyLabel}
             </p>
-            <p className="mt-1 text-xs leading-5 text-ink-soft">
+            <p className="mt-1 text-sm leading-6 text-ink-soft">
               {aura.synergySummary}
             </p>
           </div>
         </div>
       </div>
+
+      <PaletteCard aura={aura} />
+      {aura.climate ? <ClimateCard climate={aura.climate} /> : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17.5rem]">
         <div className="space-y-4">
@@ -279,7 +294,6 @@ export function AssociationsPanel({
         </div>
 
         <div className="space-y-4">
-          <PaletteCard aura={aura} />
           <CrystalsCard aura={aura} />
           <AnchorsCard aura={aura} />
           <RhythmCard aura={aura} />
@@ -339,35 +353,137 @@ function SelectedLayerCard({ layer }: { layer: AuraLayer }) {
   );
 }
 
+function SwatchBadges({ sources }: { sources: AuraSwatch["sources"] }) {
+  const labels: Record<AuraLayerId, string> = {
+    path: "PATH",
+    destiny: "DESTINY",
+    name: "NAME",
+  };
+  if (!sources.length) return null;
+  return (
+    <span className="inline-flex flex-wrap gap-0.5">
+      {sources.map((s) => (
+        <span
+          key={`${s.id}-${s.raw}`}
+          className={`rounded-full border px-1.5 py-0 text-[9px] uppercase tracking-wide ${LAYER_CHIP[s.id]}`}
+        >
+          {labels[s.id]} {s.raw}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function PaletteCard({ aura }: { aura: AuraIdentity }) {
   const swatches = [
     aura.palette.primary,
     aura.palette.secondary,
     aura.palette.highlight,
   ];
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
       <p className="text-xs uppercase tracking-wider text-ink-soft">
-        Aura palette
+        Your aura palette
       </p>
       <div
-        className="mt-2 h-10 overflow-hidden rounded-full border border-[var(--line)]"
-        style={{
-          background: `linear-gradient(90deg, ${aura.palette.primary.hex} 0%, ${aura.palette.secondary.hex} 52%, ${aura.palette.highlight.hex} 100%)`,
-        }}
+        className="mt-2 flex h-10 overflow-hidden rounded-full border border-[var(--line)]"
         aria-hidden
-      />
-      <ul className="mt-2 space-y-1.5">
+      >
         {swatches.map((s) => (
-          <li key={s.role} className="flex items-center gap-2 text-sm">
+          <span
+            key={s.role}
+            className="h-full min-w-0 flex-1"
+            style={{ backgroundColor: s.hex }}
+            title={`${s.name} · ${s.role}`}
+          />
+        ))}
+      </div>
+      <ul className="mt-3 space-y-2">
+        {swatches.map((s) => {
+          const expanded = open === s.role;
+          return (
+            <li key={s.role}>
+              <button
+                type="button"
+                aria-expanded={expanded}
+                onClick={() => setOpen((cur) => (cur === s.role ? null : s.role))}
+                className="btn-tactile flex w-full items-start gap-3 rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-left hover:bg-white"
+              >
+                <span
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded-full border border-black/10"
+                  style={{ backgroundColor: s.hex }}
+                  aria-hidden
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="text-[10px] uppercase tracking-wide text-ink-soft">
+                      {s.role}
+                    </span>
+                    <span className="text-sm font-medium text-ink">{s.name}</span>
+                    <SwatchBadges sources={s.sources} />
+                  </span>
+                  <span className="mt-0.5 block text-sm text-ink">
+                    {s.title} — {s.job}
+                  </span>
+                </span>
+                <span className="mt-1 text-[10px] uppercase tracking-wide text-ink-soft">
+                  {expanded ? "Less" : "More"}
+                </span>
+              </button>
+              {expanded ? (
+                <div className="border-x border-b border-[var(--line)] bg-white/70 px-3 py-3">
+                  <p className="text-[11px] leading-5 text-ink-soft">{s.indicates}</p>
+                  <p className="mt-1 text-[11px] text-ink-soft">
+                    {s.tags.join(" · ")}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-ink">{s.line}</p>
+                  <p className="mt-2 text-sm leading-6 text-ink">
+                    <span className="font-medium">Try this: </span>
+                    {s.action}
+                  </p>
+                  <p className="mt-1 text-[12px] leading-5 text-ink-soft">{s.use}</p>
+                </div>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-3 text-sm leading-6 text-ink">{aura.paletteSummary}</p>
+    </div>
+  );
+}
+
+function ClimateCard({ climate }: { climate: AuraClimate }) {
+  const bands = [climate.year, climate.month];
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/45 px-4 py-3">
+      <p className="text-xs uppercase tracking-wider text-ink-soft">
+        This season&apos;s tint
+      </p>
+      <p className="mt-1 text-[12px] leading-5 text-ink-soft">{climate.caption}</p>
+      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        {bands.map((b) => (
+          <li
+            key={b.kind}
+            className="flex items-start gap-2 rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2"
+          >
             <span
-              className="h-3.5 w-3.5 rounded-full border border-black/10"
-              style={{ backgroundColor: s.hex }}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded-full border border-black/10"
+              style={{ backgroundColor: b.hex }}
+              aria-hidden
             />
-            <span className="text-[10px] uppercase tracking-wide text-ink-soft">
-              {s.role}
+            <span>
+              <span className="text-[10px] uppercase tracking-wide text-ink-soft">
+                {b.kind === "year" ? "Personal Year" : "Personal Month"} {b.number}
+              </span>
+              <span className="mt-0.5 block text-sm font-medium text-ink">
+                {b.name} · {b.title}
+              </span>
+              <span className="mt-0.5 block text-[12px] leading-5 text-ink-soft">
+                {b.line}
+              </span>
             </span>
-            <span className="text-ink">{s.name}</span>
           </li>
         ))}
       </ul>

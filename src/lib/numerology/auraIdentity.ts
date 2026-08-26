@@ -5,12 +5,14 @@
 
 import {
   associationsForNumber,
+  type AssociationColor,
   type NumberAssociations,
 } from "./associations";
 import { pairTone, type CompatTone } from "./compatibility";
 import { reduceToSingleDigit } from "./dateNumbers";
 import { CORE_TRAIT } from "./meanings";
 import { PLANETS, planetForPythagorean, planetForVedic, type PlanetInfo } from "./planets";
+import { assertSafeCopy, assertSafeList } from "./safety";
 
 export type AuraLayerId = "path" | "destiny" | "name";
 export type AuraSynergyKind =
@@ -40,7 +42,40 @@ export type AuraPair = {
   summary: string;
 };
 
-export type AuraSwatch = { name: string; hex: string; role: string };
+export type AuraSwatchRole = "Primary" | "Secondary" | "Highlight";
+
+export type AuraSwatchSource = { id: AuraLayerId; raw: string };
+
+export type AuraSwatch = {
+  name: string;
+  hex: string;
+  role: AuraSwatchRole;
+  job: string;
+  indicates: string;
+  title: string;
+  tags: string[];
+  line: string;
+  action: string;
+  use: string;
+  layers: AuraLayerId[];
+  sources: AuraSwatchSource[];
+};
+
+export type AuraClimateBand = {
+  kind: "year" | "month";
+  number: string;
+  trait: string;
+  name: string;
+  hex: string;
+  title: string;
+  line: string;
+};
+
+export type AuraClimate = {
+  caption: string;
+  year: AuraClimateBand;
+  month: AuraClimateBand;
+};
 
 export type AuraCrystal = {
   name: string;
@@ -73,6 +108,8 @@ export type AuraIdentity = {
   /** Plain-words replacement for the old 0–100 synergy score. */
   synergySummary: string;
   palette: { primary: AuraSwatch; secondary: AuraSwatch; highlight: AuraSwatch };
+  paletteSummary: string;
+  climate: AuraClimate | null;
   crystals: AuraCrystal[];
   anchors: AuraAnchor[];
   rhythms: AuraRhythm[];
@@ -297,33 +334,152 @@ function hexDist(a: string, b: string): number {
   return Math.abs(pa.r - pb.r) + Math.abs(pa.g - pb.g) + Math.abs(pa.b - pb.b);
 }
 
+const INK_FALLBACK: AssociationColor = {
+  name: "Ink",
+  hex: "#183a6b",
+  title: "Quiet focus",
+  tags: ["Calm", "Clear", "Steady"],
+  line: "A default ink tone when no traditional colour is listed — use it as a cue to slow down and name the next step.",
+  action: "Write the next step in one sentence.",
+  use: "Keep a dark notebook nearby when the chart colour list is empty.",
+};
+
+const ROLE_FRAME: Record<
+  AuraSwatchRole,
+  { job: string; indicates: string }
+> = {
+  Primary: {
+    job: "Your baseline state",
+    indicates: "Your core operating frequency and natural comfort zone.",
+  },
+  Secondary: {
+    job: "Your action engine",
+    indicates: "The energy you project outward when doing daily work.",
+  },
+  Highlight: {
+    job: "Your clarity reset",
+    indicates: "The boundary that keeps the other two from spilling into burnout.",
+  },
+};
+
+function asColor(c: AssociationColor | { name: string; hex: string }): AssociationColor {
+  if ("title" in c && "tags" in c && "line" in c && "action" in c && "use" in c) {
+    return c;
+  }
+  return { ...INK_FALLBACK, name: c.name, hex: c.hex };
+}
+
+function sourcesForColor(
+  layers: AuraLayer[],
+  color: AssociationColor,
+): AuraSwatchSource[] {
+  const hex = color.hex.toLowerCase();
+  return layers
+    .filter((l) =>
+      l.assoc.colors.some((c) => c.hex.toLowerCase() === hex),
+    )
+    .map((l) => ({ id: l.id, raw: l.raw }));
+}
+
+function enrichSwatch(
+  color: AssociationColor,
+  role: AuraSwatchRole,
+  layers: AuraLayer[],
+): AuraSwatch {
+  const sources = sourcesForColor(layers, color);
+  const frame = ROLE_FRAME[role];
+  const key = `aura.swatch.${role.toLowerCase()}`;
+  return {
+    name: color.name,
+    hex: color.hex,
+    role,
+    job: assertSafeCopy(frame.job, `${key}.job`),
+    indicates: assertSafeCopy(frame.indicates, `${key}.indicates`),
+    title: assertSafeCopy(color.title, `${key}.title`),
+    tags: assertSafeList([...color.tags], `${key}.tags`),
+    line: assertSafeCopy(color.line, `${key}.line`),
+    action: assertSafeCopy(color.action, `${key}.action`),
+    use: assertSafeCopy(color.use, `${key}.use`),
+    layers: sources.map((s) => s.id),
+    sources,
+  };
+}
+
 function pickPalette(layers: AuraLayer[]): AuraIdentity["palette"] {
   const path = layers[0].assoc.colors;
   const dest = layers[1].assoc.colors;
   const name = layers[2].assoc.colors;
-  const primary = path[0] ?? { name: "Ink", hex: "#183a6b" };
-  const secondary =
+  const primary = asColor(path[0] ?? INK_FALLBACK);
+  const secondary = asColor(
     path[1] ??
-    dest.find((c) => c.hex.toLowerCase() !== primary.hex.toLowerCase()) ??
-    dest[0] ??
-    primary;
+      dest.find((c) => c.hex.toLowerCase() !== primary.hex.toLowerCase()) ??
+      dest[0] ??
+      primary,
+  );
   const used = new Set([primary.hex.toLowerCase(), secondary.hex.toLowerCase()]);
   const unusedName = name.filter((c) => !used.has(c.hex.toLowerCase()));
   const silver = unusedName.find((c) => c.name.toLowerCase() === "silver");
-  const highlight =
+  const highlight = asColor(
     silver ??
-    unusedName.sort(
-      (a, b) =>
-        hexDist(b.hex, primary.hex) +
-        hexDist(b.hex, secondary.hex) -
-        (hexDist(a.hex, primary.hex) + hexDist(a.hex, secondary.hex)),
-    )[0] ??
-    name[0] ??
-    primary;
+      [...unusedName].sort(
+        (a, b) =>
+          hexDist(b.hex, primary.hex) +
+          hexDist(b.hex, secondary.hex) -
+          (hexDist(a.hex, primary.hex) + hexDist(a.hex, secondary.hex)),
+      )[0] ??
+      name[0] ??
+      primary,
+  );
   return {
-    primary: { ...primary, role: "Primary" },
-    secondary: { ...secondary, role: "Secondary" },
-    highlight: { ...highlight, role: "Highlight" },
+    primary: enrichSwatch(primary, "Primary", layers),
+    secondary: enrichSwatch(secondary, "Secondary", layers),
+    highlight: enrichSwatch(highlight, "Highlight", layers),
+  };
+}
+
+function paletteSummaryFor(palette: AuraIdentity["palette"]): string {
+  return assertSafeCopy(
+    `Your aura blends ${palette.primary.title.toLowerCase()} (${palette.primary.name.toLowerCase()}), ${palette.secondary.title.toLowerCase()} (${palette.secondary.name.toLowerCase()}), and ${palette.highlight.title.toLowerCase()} (${palette.highlight.name.toLowerCase()}).`,
+    "aura.palette.summary",
+  );
+}
+
+function climateBand(
+  kind: "year" | "month",
+  raw: string,
+): AuraClimateBand {
+  const assoc = associationsForNumber(raw);
+  const color = assoc.colors[0] ?? INK_FALLBACK;
+  const trait = traitOf(assoc.number);
+  const label = kind === "year" ? "Personal Year" : "Personal Month";
+  return {
+    kind,
+    number: String(raw),
+    trait,
+    name: color.name,
+    hex: color.hex,
+    title: assertSafeCopy(color.title, `aura.climate.${kind}.title`),
+    line: assertSafeCopy(
+      `${label} ${raw} tints toward ${color.name.toLowerCase()} (${color.title.toLowerCase()}) — ${trait.toLowerCase()}. This is seasonal weather, not a rewrite of your natal colours.`,
+      `aura.climate.${kind}.line`,
+    ),
+  };
+}
+
+function buildAuraClimate(
+  personalYear?: string,
+  personalMonth?: string,
+): AuraClimate | null {
+  const year = personalYear?.trim();
+  const month = personalMonth?.trim();
+  if (!year || !month) return null;
+  return {
+    caption: assertSafeCopy(
+      "This is this year's weather, not your natal aura. Year and month tints shift; the three colours above stay with your Path, Destiny and Name.",
+      "aura.climate.caption",
+    ),
+    year: climateBand("year", year),
+    month: climateBand("month", month),
   };
 }
 
@@ -352,6 +508,8 @@ export function buildAuraIdentity(opts: {
   lifePath: string;
   vedicDestiny: string;
   chaldeanName: string;
+  personalYear?: string;
+  personalMonth?: string;
 }): AuraIdentity {
   const pathDigit = digitOf(opts.lifePath);
   const destDigit = digitOf(opts.vedicDestiny);
@@ -452,6 +610,8 @@ export function buildAuraIdentity(opts: {
   })();
 
   const palette = pickPalette(layers);
+  const paletteSummary = paletteSummaryFor(palette);
+  const climate = buildAuraClimate(opts.personalYear, opts.personalMonth);
 
   const stoneMap = new Map<string, AuraLayerId[]>();
   const metalMap = new Map<string, AuraLayerId[]>();
@@ -515,6 +675,8 @@ export function buildAuraIdentity(opts: {
     synergyLabel,
     synergySummary,
     palette,
+    paletteSummary,
+    climate,
     crystals,
     anchors,
     rhythms,
@@ -524,12 +686,31 @@ export function buildAuraIdentity(opts: {
 }
 
 export function auraIdentityPdfLines(aura: AuraIdentity): string[] {
-  const pal = `${aura.palette.primary.name}, ${aura.palette.secondary.name}, highlight ${aura.palette.highlight.name}`;
+  const swatches = [
+    aura.palette.primary,
+    aura.palette.secondary,
+    aura.palette.highlight,
+  ];
+  const palLines = swatches.map((s) => {
+    const badges = s.sources
+      .map((src) => `${src.id === "path" ? "PATH" : src.id === "destiny" ? "DESTINY" : "NAME"} ${src.raw}`)
+      .join(" / ");
+    return `${s.role} (${s.job}) — ${s.name}: ${s.title}. ${s.line} Try this: ${s.action}${badges ? ` [${badges}]` : ""}.`;
+  });
   const crystals = aura.crystals.map((c) => `${c.name} (${c.keyword})`).join(", ");
   const days = aura.rhythms.map((r) => `${r.weekday} ${r.planet.symbol}`).join(", ");
+  const climateLines = aura.climate
+    ? [
+        aura.climate.caption,
+        aura.climate.year.line,
+        aura.climate.month.line,
+      ]
+    : [];
   return [
     `Your three main numbers — Life Path ${aura.layers[0].raw}, Vedic Destiny ${aura.layers[1].raw}, Name ${aura.layers[2].raw}. ${aura.synergyLabel}. ${aura.synergySummary}`,
-    `Colours linked to these numbers: ${pal}.`,
+    aura.paletteSummary,
+    ...palLines,
+    ...climateLines,
     aura.narrative,
     crystals ? `Stones traditionally linked to these numbers: ${crystals}.` : "",
     days
