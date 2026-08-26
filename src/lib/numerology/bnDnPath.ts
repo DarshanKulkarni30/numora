@@ -33,6 +33,11 @@ export type VedicLayerExplainer = {
   id: VedicLayerId;
   shortTitle: string;
   represents: string;
+  /** Everyday try for this layer. */
+  tryLine: string;
+  /** Everyday watch for this layer. */
+  watchLine: string;
+  /** Kept for older callers that still read feelsLike. */
   feelsLike: string;
   shapes: string;
 };
@@ -43,25 +48,29 @@ export const VEDIC_LAYER_MAP: VedicLayerExplainer[] = [
     shortTitle: "Birth · Psychic",
     represents:
       "From the day of the month you were born. How you react first, before you have thought about it.",
-    feelsLike:
-      "This is how you behave on an ordinary day when nothing is being demanded of you.",
-    shapes: "Early habits, instinctive reactions, natural strengths.",
+    tryLine: "Notice your first reaction before you plan.",
+    watchLine: "Treating that first reaction as the only option.",
+    feelsLike: "Notice your first reaction before you plan.",
+    shapes: "Early habits and first reactions.",
   },
   {
     id: "dn",
     shortTitle: "Destiny",
     represents:
       "From your full birth date. The theme that keeps coming back across jobs, places and relationships.",
-    feelsLike:
-      "This is the lesson that keeps reappearing in different forms until you get good at it.",
-    shapes: "Major chapters, recurring lessons, how the path matures.",
+    tryLine: "Look for the same theme showing up at work and at home.",
+    watchLine: "Calling yourself a failure because the same theme returns.",
+    feelsLike: "Look for the same theme showing up at work and at home.",
+    shapes: "Longer chapters and repeating themes.",
   },
   {
     id: "nn",
     shortTitle: "Name",
-    represents: "The outer face of this spelling — how you are introduced.",
-    feelsLike: "This is the tone I carry into rooms, work, and first impressions.",
-    shapes: "Social ease, how others meet you, the “vehicle” on the Birth → Destiny road.",
+    represents: "From the spelling in force now. How people meet you.",
+    tryLine: "Notice how people meet you from this spelling.",
+    watchLine: "Thinking the name is a second destiny.",
+    feelsLike: "Notice how people meet you from this spelling.",
+    shapes: "First impressions. Not a second destiny.",
   },
 ];
 
@@ -111,7 +120,7 @@ const SAME: Record<number, TransitionDraft> = {
     invitation: "Stay with the scaffold; loosen rigidity where life needs give.",
   },
   5: {
-    feel: "Change is home; restlessness is the curriculum.",
+    feel: "Change is home; restlessness keeps coming back.",
     atmosphere: "Variety, movement of mind, openings that do not stay still.",
     invitation: "Choose a few experiments; freedom needs a chosen path.",
   },
@@ -392,23 +401,23 @@ export function nameOnBnDnPath(
     return {
       headline: "Name, Birth, and Destiny share one digit",
       detail:
-        "The outer face matches both the default self and the long path. That can feel simple to wear — still a theme to live honestly, not a guarantee of ease.",
+        "How people meet you matches both the first habit and the longer path. That can feel simple to wear. Try: live that one habit honestly this week. Watch: treating ease as a guarantee.",
       nnEqualsBn,
       nnEqualsDn,
     };
   }
   if (nnEqualsBn) {
     return {
-      headline: "Name echoes Birth",
-      detail: `Name ${nn} repeats Psychic ${bn}. The world may meet the person you already are, while Destiny ${dn} is the growing edge. The name can support Birth traits; the path still asks the Birth → Destiny stretch.`,
+      headline: "Name matches Birth",
+      detail: `How people meet you already looks like your first habit. The longer path is still the growing work. Try: keep using the first habit, then add one Destiny habit this week. Watch: staying in the first habit so the longer path never starts.`,
       nnEqualsBn,
       nnEqualsDn,
     };
   }
   if (nnEqualsDn) {
     return {
-      headline: "Name already speaks Destiny",
-      detail: `Name ${nn} matches Destiny ${dn}. The outer identity may advertise the curriculum you are growing into, while Birth ${bn} stays the private default. That can make the transition more visible — sometimes sooner than it feels inside.`,
+      headline: "Name matches Destiny",
+      detail: `How people meet you already looks like the longer path. The birth-day habit stays yours in private. That can make the longer theme show up in public sooner than it feels inside. Try: do one Destiny habit this week. Watch: skipping the birth-day habit because the name already sounds like the goal.`,
       nnEqualsBn,
       nnEqualsDn,
     };
@@ -418,20 +427,20 @@ export function nameOnBnDnPath(
   const toDn = vedicPairTone(nn, dn);
   const ease =
     toDn === "Amazing" || toDn === "Favourable"
-      ? "often sits more easily with Destiny"
+      ? "often fits the longer path"
       : toDn === "Challenging"
-        ? "tends to add friction on the Destiny side, which usually means decisions there take longer than you expect"
-        : "sits in a mixed way with Destiny";
+        ? "tends to slow Destiny decisions — they take longer than you expect"
+        : "sits in a mixed way with the longer path";
   const birthEase =
     toBn === "Amazing" || toBn === "Favourable"
-      ? "and usually cooperates with Birth"
+      ? "and usually fits the birth-day habit"
       : toBn === "Challenging"
-        ? "and may contrast Birth (useful tension, not a flaw)"
-        : "and is a third color beside Birth";
+        ? "and may contrast the birth-day habit (useful tension, not a flaw)"
+        : "and sits beside the birth-day habit rather than matching it";
 
   return {
-      headline: "Name is a third habit on the path",
-      detail: `Name ${nn} is not Birth ${bn} and not Destiny ${dn}. People may meet ${VEDIC_DIGIT_THEMES[nn]?.keyword ?? nn} first. It ${ease}, ${birthEase}. Try one name habit, then return to the day habit. Not a second destiny.`,
+    headline: "Name is a different habit",
+    detail: `How people meet you is not the birth-day habit and not the longer path. They may meet ${VEDIC_DIGIT_THEMES[nn]?.keyword ?? nn} first. It ${ease}, ${birthEase}. Try one name habit this week, then go back to the day habit. Watch: treating the name as a second destiny.`,
     nnEqualsBn,
     nnEqualsDn,
   };

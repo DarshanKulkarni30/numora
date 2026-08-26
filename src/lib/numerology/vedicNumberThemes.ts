@@ -39,7 +39,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Clashing with other strong wills for the same lead role",
     ],
     practice:
-      "Lead with clarity, then leave space for others to contribute—solar warmth without scorched earth.",
+      "Start one thing clearly. Then let someone else add their part.",
     workTone:
       "Suits roles with autonomy, ownership, and visible responsibility (reflective cue only).",
   },
@@ -47,7 +47,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
     keyword: "Harmony",
     planet: "Moon",
     psychicFocus:
-      "Day-to-day sensitivity, peacemaking, and reading the emotional weather of a room.",
+      "Day-to-day sensitivity, peacemaking, and reading how a room feels.",
     destinyFocus:
       "Path themes of partnership, diplomacy, and progress through cooperation.",
     strengths: [
@@ -61,7 +61,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Quiet withdrawal instead of clear needs",
     ],
     practice:
-      "Protect soft pacing with firm boundaries—harmony includes your own rest.",
+      "Keep the peace, and still say no once this week.",
     workTone:
       "Suits teaching, mediation, care, and collaborative crafts (reflective cue only).",
   },
@@ -83,7 +83,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Impulsive spending of time or energy",
     ],
     practice:
-      "Pick one creative thread and finish it—Jupiter expands best with a container.",
+      "Finish and share one idea. Not ten drafts.",
     workTone:
       "Suits media, teaching, design, and people-facing storytelling roles (reflective cue only).",
   },
@@ -105,7 +105,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Restlessness if structure feels empty",
     ],
     practice:
-      "Keep the scaffold, loosen the grip—stable systems with room for surprise.",
+      "Keep one routine. Let one plan change without throwing the rest out.",
     workTone:
       "Suits analysis, building, technical craft, and orderly stewardship (reflective cue only).",
   },
@@ -127,7 +127,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Commitment fatigue when life feels fenced in",
     ],
     practice:
-      "Channel Mercury motion into chosen experiments—freedom with a return ticket.",
+      "Try one small new thing. Come back to the routine after.",
     workTone:
       "Suits sales, travel-adjacent work, writing, and fast-feedback roles (reflective cue only).",
   },
@@ -149,7 +149,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Avoiding hard truths to keep peace",
     ],
     practice:
-      "Care includes you—protect without caging, give without disappearing.",
+      "Keep one promise to someone else, and one hour that is for you.",
     workTone:
       "Suits healing, teaching, design, hospitality, and family-centered work (reflective cue only).",
   },
@@ -171,7 +171,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Critical tone when others move slower",
     ],
     practice:
-      "Share one honest insight with someone trusted—wisdom grows when it leaves the cave.",
+      "Tell one honest thought to someone you trust. Then stop.",
     workTone:
       "Suits research, writing, counseling, and specialist craft (reflective cue only).",
   },
@@ -193,7 +193,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Appearing cold while caring deeply",
     ],
     practice:
-      "Schedule recovery as seriously as output—Saturn respects sustainable strength.",
+      "Finish one real result. Then rest as if rest were part of the job.",
     workTone:
       "Suits finance, operations, law, and enterprise building (reflective cue only).",
   },
@@ -215,7 +215,7 @@ export const VEDIC_DIGIT_THEMES: Record<number, VedicDigitTheme> = {
       "Scattered focus across too many missions",
     ],
     practice:
-      "Aim the Mars heat: one cause, one next step, then rest the blade.",
+      "Pick one cause. Do one next step. Then stop.",
     workTone:
       "Suits healing, defense of others, arts with impact, and high-energy craft (reflective cue only).",
   },

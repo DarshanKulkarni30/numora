@@ -61,7 +61,7 @@ if (nn.nnEqualsBn || nn.nnEqualsDn) {
   console.error("FAIL 7-3-6 should be third colour", nn);
   process.exit(1);
 }
-console.log("ok name third color", nn.headline);
+console.log("ok name is a different habit", nn.headline);
 
 const maps = twoNameMapsCopy("6", "2", "42", "47");
 eq(maps?.agree, false, "maps disagree");

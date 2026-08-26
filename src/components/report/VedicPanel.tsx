@@ -142,7 +142,7 @@ export function VedicPanel({
         })}
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
         {[
           {
             label: "Psychic",
@@ -154,8 +154,19 @@ export function VedicPanel({
             value: destiny,
             role: "destiny" as const,
           },
+          {
+            label: "Name",
+            value: nameNumber,
+            role: "name" as const,
+          },
         ].map(({ label, value, role }) => {
           const t = vedicDigitTheme(value);
+          const focus =
+            role === "psychic"
+              ? t.psychicFocus
+              : role === "destiny"
+                ? t.destinyFocus
+                : "How people meet you from this spelling.";
           return (
             <div
               key={label}
@@ -164,11 +175,9 @@ export function VedicPanel({
               <p className="text-[10px] uppercase tracking-wider text-sand">
                 {label} · {t.keyword}
               </p>
-              <p className="mt-1 text-xs leading-5 text-paper/75">
-                {role === "psychic" ? t.psychicFocus : t.destinyFocus}
-              </p>
-              <p className="mt-2 text-[11px] text-paper/60">
-                Strengths: {t.strengths.slice(0, 2).join(" · ")}
+              <p className="mt-1 text-xs leading-5 text-paper/75">{focus}</p>
+              <p className="mt-2 text-[11px] text-paper/90">
+                Try: {t.practice}
               </p>
               <p className="mt-1 text-[11px] text-paper/60">
                 Watch: {t.watchouts[0]}
@@ -183,8 +192,8 @@ export function VedicPanel({
           How the three layers work
         </p>
         <p className="mt-1 text-xs text-paper/65">
-          Read them as a path, not a score: Birth → Destiny, with Name as the
-          vehicle.
+          Birth is how you start. Destiny is the longer theme. Name is how
+          people meet you. None of them is a score.
         </p>
         <ol className="mt-3 space-y-2">
           {VEDIC_LAYER_MAP.map((layer, i) => (
@@ -198,8 +207,11 @@ export function VedicPanel({
               <p className="mt-1 text-xs leading-5 text-paper/90">
                 {layer.represents}
               </p>
-              <p className="mt-1 text-[11px] italic text-paper/60">
-                {layer.feelsLike}
+              <p className="mt-1 text-[11px] text-paper/90">
+                Try: {layer.tryLine}
+              </p>
+              <p className="mt-1 text-[11px] text-paper/60">
+                Watch: {layer.watchLine}
               </p>
             </li>
           ))}
@@ -227,8 +239,8 @@ export function VedicPanel({
           />
         </div>
         <p className="mt-3 text-[11px] text-paper/60">
-          Weather language only — not a forecast of events or a verdict on
-          worth.
+          These numbers describe pace and habit. They do not predict events,
+          and they are not a verdict on worth.
         </p>
       </div>
 
