@@ -21,7 +21,7 @@ import {
 import { analyzeCompanyNameChaldean } from "@/lib/numerology/companyNameBreakdown";
 import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
 import { parseMobile } from "@/lib/numerology/mobileNumber";
-import { MobileDigitSplit } from "@/components/mobile/MobileDigitSplit";
+import { MobileFitPanel } from "@/components/mobile/MobileFitPanel";
 import { CompanyChaldeanMatrix } from "@/components/business/CompanyChaldeanMatrix";
 import { UpgradeRequired } from "@/components/UpgradeRequired";
 import {
@@ -377,141 +377,65 @@ export function BusinessExplorer({
             <UpgradeRequired feature="Company / brand-name scoring" />
           ) : featureTab === "mobile" ? (
             <section className="space-y-4">
-              <label className="block text-sm text-ink">
-                Mobile number (national, no country code)
-                <input
-                  type="text"
-                  inputMode="tel"
-                  value={mobileRaw}
-                  onChange={(e) => setMobileRaw(e.target.value)}
-                  placeholder="e.g. 98765 43210"
-                  className="mt-1.5 w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2 text-ink outline-none ring-gold focus:ring-2"
-                  autoComplete="tel-national"
-                />
-              </label>
-              {!mobile.ok && mobileRaw.trim() ? (
-                <p className="text-sm text-rose-800">{mobile.error}</p>
-              ) : null}
+              <MobileFitPanel
+                title="Business mobile"
+                use="business"
+                dob={owners[0]?.person.date_of_birth ?? ""}
+                value={mobileRaw}
+                onChange={setMobileRaw}
+              />
 
               {mobile.ok ? (
-                <>
-                  <MobileDigitSplit
-                    mobile={mobile}
-                    emphasizeLast4
-                    part="split"
-                  />
-
-                  <div className="space-y-3">
-                    {owners.map((o) => (
-                      <div
-                        key={`mobile-domain-${o.key}`}
-                        className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
-                      >
-                        <p className="text-sm font-medium text-ink">
-                          Domain fit · {o.label}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
+                <div className="space-y-3">
+                  {owners.map((o) => (
+                    <div
+                      key={`mobile-domain-${o.key}`}
+                      className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
+                    >
+                      <p className="text-sm font-medium text-ink">
+                        Domain fit · {o.label}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <DomainFitChip
+                          fit={domainFit(mobile.core, domain, "mobile")}
+                          label={`full ${mobile.core} · domain`}
+                        />
+                        {mobile.last4 ? (
                           <DomainFitChip
-                            fit={domainFit(mobile.core, domain, "mobile")}
-                            label={`full ${mobile.core} · domain`}
+                            fit={domainFit(
+                              mobile.last4.core,
+                              domain,
+                              "mobile",
+                            )}
+                            label={`last-4 ${mobile.last4.core} · domain`}
                           />
-                          {mobile.last4 ? (
-                            <DomainFitChip
-                              fit={domainFit(
-                                mobile.last4.core,
-                                domain,
-                                "mobile",
-                              )}
-                              label={`last-4 ${mobile.last4.core} · domain`}
-                            />
-                          ) : null}
-                        </div>
-                        <p className="mt-2 text-xs text-ink-soft">
-                          {o.prominence.caption}
-                        </p>
-                      </div>
-                    ))}
-                    <p className="text-xs text-ink-soft">
-                      Preferred mobile digits for this domain:{" "}
-                      {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
-                      {domain.carefulMobileDigits.join(", ") || "—"}.
-                    </p>
-                  </div>
-
-                  {owners.map((o) => {
-                    const fullTrio = vedicTrio(o.psychic, o.destiny, mobile.core);
-                    const last4Trio =
-                      mobile.last4 != null
-                        ? vedicTrio(o.psychic, o.destiny, mobile.last4.core)
-                        : null;
-                    return (
-                      <div
-                        key={o.key}
-                        className="space-y-3 rounded-2xl border border-[var(--line)] bg-white/70 p-4"
-                      >
-                        <h3 className="text-lg text-ink">
-                          Compatibility · {o.label}
-                        </h3>
-                        <OwnerNumberChips owner={o} />
-                        <div
-                          className={`rounded-2xl border-2 px-5 py-4 shadow-sm ${BAND_STYLE[fullTrio.band]}`}
-                        >
-                          <p className="text-[10px] uppercase tracking-wider opacity-80">
-                            Full chart · Psychic {o.psychic} × Destiny{" "}
-                            {o.destiny} × full {mobile.core}
-                          </p>
-                          <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                            {TRIO_BAND_ICON[fullTrio.band]}{" "}
-                            {BAND_WORD[fullTrio.band]}
-                          </p>
-                          <p className="mt-1 text-base font-medium opacity-90">
-                            {fullTrio.label}
-                          </p>
-                          <p className="mt-2 text-sm leading-6">
-                            {fullTrio.summary}
-                          </p>
-                          <p className="mt-1 text-xs opacity-80">
-                            {TRIO_BAND_HINT[fullTrio.band]}
-                          </p>
-                        </div>
-                        {last4Trio && mobile.last4 ? (
-                          <div
-                            className={`rounded-xl border px-4 py-3 ${BAND_STYLE[last4Trio.band]}`}
-                          >
-                            <p className="text-[10px] uppercase tracking-wider opacity-80">
-                              Full chart · last-4 {mobile.last4.core}
-                            </p>
-                            <p className="mt-1 text-sm font-medium">
-                              {TRIO_BAND_ICON[last4Trio.band]}{" "}
-                              {BAND_WORD[last4Trio.band]} · {last4Trio.label}
-                            </p>
-                          </div>
                         ) : null}
                       </div>
-                    );
-                  })}
-
+                      <p className="mt-2 text-xs text-ink-soft">
+                        {o.prominence.caption}
+                      </p>
+                    </div>
+                  ))}
                   <p className="text-xs text-ink-soft">
-                    Full method tables:{" "}
+                    Preferred mobile digits for this domain:{" "}
+                    {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
+                    {domain.carefulMobileDigits.join(", ") || "—"}.
+                  </p>
+                  <p className="text-xs text-ink-soft">
+                    Personal and business side by side:{" "}
                     <Link
                       href="/mobile"
                       className="text-gold-deep underline underline-offset-2 hover:text-ink"
                     >
-                      classic Mobile fit
+                      Mobile numbers
                     </Link>
                     .
                   </p>
-
-                  <MobileDigitSplit
-                    mobile={mobile}
-                    emphasizeLast4
-                    part="detail"
-                  />
-                </>
+                </div>
               ) : (
                 <p className="text-sm text-ink-soft">
-                  Type a national mobile number to score it against each owner
-                  and domain.
+                  Type a national mobile number to score it against domain and
+                  owners.
                 </p>
               )}
             </section>
