@@ -25,9 +25,12 @@ function ok(cond: unknown, label: string) {
 }
 
 eq(rootFitTone(1, 9), "Favourable", "1 vs 9 favourable");
-eq(rootFitTone(1, 5), "Steady", "1 vs 5 steady");
+eq(rootFitTone(1, 5), "Favourable", "1 vs 5 favourable");
+eq(rootFitTone(1, 4), "Steady", "1 vs 4 steady");
 eq(rootFitTone(1, 8), "Heavy", "1 vs 8 heavy");
-eq(rootFitTone(3, 6), "Heavy", "3 vs 6 heavy");
+eq(rootFitTone(3, 6), "Favourable", "3 vs 6 favourable");
+eq(rootFitTone(3, 8), "Heavy", "3 vs 8 heavy");
+eq(rootFitTone(1, 1), "Steady", "1 vs 1 unlisted sits steady");
 
 const windows = slidingPairs("98765");
 eq(
@@ -52,28 +55,35 @@ if (easy.ok) {
   eq(easy.fit.verdict, "Supportive", "easy verdict");
 }
 
-const strain = evaluateMobileFit("01/01/1990", "6666666666", "personal");
+const strain = evaluateMobileFit("01/01/1990", "8888888888", "personal");
 ok(strain.ok, "strain number parses");
 if (strain.ok) {
-  eq(strain.fit.core, 6, "core 6");
-  eq(strain.fit.bnTone, "Heavy", "BN 1 vs 6 heavy");
-  eq(strain.fit.dnTone, "Heavy", "DN 3 vs 6 heavy");
-  ok(strain.fit.strainRuns.length > 0, "sequential strain run on 6");
+  eq(strain.fit.core, 8, "core 8");
+  eq(strain.fit.bnTone, "Heavy", "BN 1 vs 8 heavy");
+  eq(strain.fit.dnTone, "Heavy", "DN 3 vs 8 heavy");
+  ok(strain.fit.strainRuns.length > 0, "sequential strain run on 8");
   ok(strain.fit.score <= 44, `capped score ${strain.fit.score} <= 44`);
   eq(strain.fit.verdict, "Caution", "capped verdict");
 }
 
-const mixed = evaluateMobileFit("01/01/1990", "5123456789", "personal");
+const mixed = evaluateMobileFit("01/01/1990", "9876543214", "personal");
 ok(mixed.ok, "mixed number parses");
 if (mixed.ok) {
-  eq(mixed.fit.core, 5, "core 5");
-  eq(mixed.fit.bnTone, "Steady", "BN 1 vs 5 steady");
-  eq(mixed.fit.dnTone, "Heavy", "DN 3 vs 5 heavy");
+  eq(mixed.fit.core, 4, "core 4");
+  eq(mixed.fit.bnTone, "Steady", "BN 1 vs 4 steady");
+  eq(mixed.fit.dnTone, "Steady", "DN 3 vs 4 steady");
+  ok(mixed.fit.verdict !== "Supportive", "steady+steady root is not Supportive");
+}
+
+const strainRepeat = evaluateMobileFit("01/01/1990", "8123456780", "personal");
+ok(strainRepeat.ok, "two 8s parse");
+if (strainRepeat.ok) {
   ok(
-    mixed.fit.flags.some((f) => f.kind === "strainRepeat" && f.digit === 5),
-    "5 strain-repeat flag",
+    strainRepeat.fit.flags.some(
+      (f) => f.kind === "strainRepeat" && f.digit === 8,
+    ),
+    "8 strain-repeat flag",
   );
-  ok(mixed.fit.verdict !== "Supportive", "steady+heavy is not Supportive");
 }
 
 const over = evaluateMobileFit("01/01/1990", "1111111113", "personal");

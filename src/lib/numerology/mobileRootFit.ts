@@ -1,34 +1,36 @@
 /**
  * Mobile-only 1–9 alignment of a number’s root vs a person’s birth or destiny.
- * Researched from a last-page mapping; never labeled with source names in the UI.
+ * UI uses Favourable / Steady / Heavy only.
  */
 
 import { reduceToSingleDigit } from "./dateNumbers";
 
 export type RootFitTone = "Favourable" | "Steady" | "Heavy";
 
+/** Self number → digits that sit easily with it. */
 const FAVOURABLE: Record<number, number[]> = {
-  1: [1, 2, 3, 9],
-  2: [1, 2, 3, 7],
-  3: [1, 2, 3, 9],
-  4: [2, 4, 5, 6, 7],
-  5: [1, 4, 5, 6, 7],
-  6: [4, 5, 6, 8],
-  7: [4, 7, 8],
-  8: [4, 5, 6],
-  9: [1, 2, 3, 9],
+  1: [2, 3, 5, 6, 9],
+  2: [1, 3, 5, 7],
+  3: [1, 2, 5, 6, 9],
+  4: [1, 4, 6, 8],
+  5: [1, 2, 3, 5, 6, 8],
+  6: [1, 4, 5, 6, 8],
+  7: [2, 7, 9],
+  8: [4, 5, 6, 8],
+  9: [1, 3, 7, 9],
 };
 
+/** Self number → digits that sit in the middle. Unlisted self-pairs (1, 2, 3) sit here. */
 const STEADY: Record<number, number[]> = {
-  1: [5, 7],
-  2: [6, 8, 9],
-  3: [4, 7, 8],
-  4: [9],
-  5: [3, 8, 9],
-  6: [3, 7, 9],
-  7: [3, 5, 6],
-  8: [3, 7],
-  9: [6, 8],
+  1: [1, 4, 7],
+  2: [2, 4, 6],
+  3: [3, 4, 7],
+  4: [2, 3],
+  5: [4, 7],
+  6: [2, 3, 9],
+  7: [1, 4],
+  8: [2, 3],
+  9: [2, 4, 5, 6],
 };
 
 export function rootFitTone(
