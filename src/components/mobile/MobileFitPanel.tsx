@@ -429,8 +429,6 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
           <MobileLoShuPair
             person={fit.personLoShu}
             mobile={fit.mobileLoShu}
-            flags={fit.flags}
-            filledMissing={fit.filledMissing}
             impact={fit.loShuImpact}
           />
 

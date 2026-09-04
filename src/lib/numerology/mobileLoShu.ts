@@ -10,6 +10,7 @@ import {
   type CompoundPair,
   type PairKind,
 } from "./mobileCompoundPairs";
+import { findConsecutiveRuns } from "./mobileNumber";
 import type { LoShuResult } from "./types";
 
 export type LoShuBreakdown = {
@@ -20,6 +21,23 @@ export type LoShuBreakdown = {
   remedialDigits: number[];
   contaminatedBy: string[];
   integrityNote: string;
+  cells: Record<number, LoShuCellView>;
+};
+
+/** Position sets significance; sequence/repetition/conflict set clean vs flagged. */
+export type LoShuCellTone =
+  | "quiet"
+  | "present"
+  | "cleanRemedy"
+  | "watchRemedy"
+  | "patternFlag"
+  | "conflictRemedy"
+  | "pileUp";
+
+export type LoShuCellView = {
+  digit: number;
+  tone: LoShuCellTone;
+  note: string;
 };
 
 function clamp(n: number, lo: number, hi: number): number {
@@ -143,6 +161,7 @@ export function scoreLoShu(
   person: Pick<LoShuResult, "grid">,
   counts: number[],
   pairs: CompoundPair[],
+  digits: string,
 ): LoShuBreakdown {
   const raw = rawRemedialPoints(person, counts);
   const remedial = new Set(raw.filledMissing);
@@ -162,5 +181,156 @@ export function scoreLoShu(
       exposure.other,
       integrity,
     ),
+    cells: classifyLoShuCells(person, counts, pairs, digits),
   };
+}
+
+const CENTER = 5;
+
+/** ABAB blocks such as 5656 / 6565 (length ≥ 4). */
+export function findAlternatingBlocks(
+  digits: string,
+): { pair: string; start: number; length: number }[] {
+  const blocks: { pair: string; start: number; length: number }[] = [];
+  let i = 0;
+  while (i <= digits.length - 4) {
+    const a = digits[i];
+    const b = digits[i + 1];
+    if (a !== b && digits[i + 2] === a && digits[i + 3] === b) {
+      let length = 4;
+      while (
+        i + length + 1 < digits.length &&
+        digits[i + length] === a &&
+        digits[i + length + 1] === b
+      ) {
+        length += 2;
+      }
+      blocks.push({ pair: `${a}${b}`, start: i, length });
+      i += length;
+    } else {
+      i += 1;
+    }
+  }
+  return blocks;
+}
+
+function longestRun(digits: string, digit: number): number {
+  const runs = findConsecutiveRuns(digits, 2).filter((r) => r.digit === String(digit));
+  return runs.reduce((m, r) => Math.max(m, r.length), 0);
+}
+
+function adversePairsFor(
+  pairs: CompoundPair[],
+  digit: number,
+): CompoundPair[] {
+  const ch = String(digit);
+  return pairs.filter((p) => isAdverseKind(p.kind) && p.pair.includes(ch));
+}
+
+function centerNote(pattern: string): string {
+  return `Because 5 occupies the central Lo Shu position, repeated or strongly patterned use of 5 receives additional structural scrutiny. In this number, the ${pattern} sequence prevents the ×2 presence of 5 from being treated as a simple clean remedy.`;
+}
+
+export function classifyLoShuCells(
+  person: Pick<LoShuResult, "grid">,
+  counts: number[],
+  pairs: CompoundPair[],
+  digits: string,
+): Record<number, LoShuCellView> {
+  const alts = findAlternatingBlocks(digits);
+  const cells: Record<number, LoShuCellView> = {};
+  for (let n = 1; n <= 9; n++) {
+    const personC = person.grid[n] ?? 0;
+    const mobileC = counts[n] ?? 0;
+    const missing = personC === 0;
+    const run = longestRun(digits, n);
+    const alt = alts.find((b) => b.pair.includes(String(n)));
+    const adverse = adversePairsFor(pairs, n);
+    const isCenter = n === CENTER;
+
+    if (mobileC === 0) {
+      cells[n] = {
+        digit: n,
+        tone: "quiet",
+        note: missing ? "Quiet on both grids." : "Quiet in this number.",
+      };
+      continue;
+    }
+
+    if (!missing && mobileC >= 2) {
+      cells[n] = {
+        digit: n,
+        tone: "pileUp",
+        note: `${n} is already on the birth grid; this number adds more — examine further.`,
+      };
+      continue;
+    }
+
+    if (missing && alt) {
+      const shown = digits.slice(alt.start, alt.start + alt.length);
+      cells[n] = {
+        digit: n,
+        tone: "patternFlag",
+        note: isCenter
+          ? centerNote(shown)
+          : `${n} covers a quiet cell, but it arrives through ${shown}, so this is flagged for sequence intensity — not because of its Lo Shu seat.`,
+      };
+      continue;
+    }
+
+    if (missing && isCenter && run >= 2) {
+      cells[n] = {
+        digit: n,
+        tone: "patternFlag",
+        note: centerNote("5".repeat(run)),
+      };
+      continue;
+    }
+
+    if (missing && !isCenter && run >= 3) {
+      cells[n] = {
+        digit: n,
+        tone: "patternFlag",
+        note: `${n} covers a quiet cell, but a ${String(n).repeat(run)} run is intense enough to examine further.`,
+      };
+      continue;
+    }
+
+    if (missing && adverse.length) {
+      const labels = [...new Set(adverse.map((p) => p.pair))].join(", ");
+      cells[n] = {
+        digit: n,
+        tone: "conflictRemedy",
+        note: `${n} covers a quiet cell, but it arrives through ${labels}. Rose means examine further — not that the digit is inherently unhelpful.`,
+      };
+      continue;
+    }
+
+    if (missing && !isCenter && run === 2) {
+      cells[n] = {
+        digit: n,
+        tone: "watchRemedy",
+        note: `${n} covers a quiet cell. A short ${String(n).repeat(2)} run is worth a look, not an automatic problem.`,
+      };
+      continue;
+    }
+
+    if (missing) {
+      cells[n] = {
+        digit: n,
+        tone: "cleanRemedy",
+        note: isCenter
+          ? "Covers the central 5 cleanly. The center has higher structural significance, but this introduction is not a patterned run."
+          : `Covers quiet ${n} with no intense run or conflicting join.`,
+      };
+      continue;
+    }
+
+    cells[n] = {
+      digit: n,
+      tone: "present",
+      note: `Already on the birth grid; this number adds ×${mobileC}.`,
+    };
+  }
+  return cells;
 }

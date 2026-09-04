@@ -9,7 +9,7 @@ import {
 } from "../src/lib/numerology/mobileCompoundPairs";
 import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
-import { scoreLoShu } from "../src/lib/numerology/mobileLoShu";
+import { classifyLoShuCells, scoreLoShu } from "../src/lib/numerology/mobileLoShu";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -162,7 +162,7 @@ const birthLike = {
 const cover98 = parseMobile("9833127652");
 ok(cover98.ok, "9833127652 parses");
 if (cover98.ok) {
-  const lo = scoreLoShu(birthLike, cover98.digitCounts, slidingPairs(cover98.digits));
+  const lo = scoreLoShu(birthLike, cover98.digitCounts, slidingPairs(cover98.digits), cover98.digits);
   eq(lo.filledMissing, [2, 3, 6, 7, 8], "five quiet cells covered");
   eq(lo.raw, 15, "raw cover is full");
   eq(lo.integrity, 2, "98 + cover-digit joins 27/76 → 2/5, not a 50% cut");
@@ -176,16 +176,70 @@ const noTouchGrid = {
 const elsewhere = parseMobile("9911111112");
 ok(elsewhere.ok, "9911111112 parses");
 if (elsewhere.ok) {
-  const lo = scoreLoShu(noTouchGrid, elsewhere.digitCounts, slidingPairs(elsewhere.digits));
+  const lo = scoreLoShu(noTouchGrid, elsewhere.digitCounts, slidingPairs(elsewhere.digits), elsewhere.digits);
   eq(lo.integrity, 5, "99 does not cut Lo Shu when it does not touch a cover digit");
 }
 
 const repeat98 = parseMobile("9898127653");
 ok(repeat98.ok, "9898127653 parses");
 if (repeat98.ok) {
-  const lo = scoreLoShu(birthLike, repeat98.digitCounts, slidingPairs(repeat98.digits));
+  const lo = scoreLoShu(birthLike, repeat98.digitCounts, slidingPairs(repeat98.digits), repeat98.digits);
   ok(lo.integrity <= 1, `repeated 98/89 integrity ${lo.integrity} <= 1`);
   ok(lo.total < 18, `repeated conflict Lo Shu ${lo.total} < single-98 score`);
+}
+
+const miss56 = {
+  grid: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 0, 6: 0, 7: 1, 8: 1, 9: 1 },
+};
+
+function tones(digits: string) {
+  const parsed = parseMobile(digits);
+  if (!parsed.ok) {
+    console.error("FAIL parse", digits);
+    process.exit(1);
+  }
+  return classifyLoShuCells(
+    miss56,
+    parsed.digitCounts,
+    slidingPairs(parsed.digits),
+    parsed.digits,
+  );
+}
+
+const clean5 = tones("5152371938");
+eq(clean5[5]?.tone, "cleanRemedy", "scattered 5 ×2 is teal, not rose for being center");
+
+const run5 = tones("5512371938");
+eq(run5[5]?.tone, "patternFlag", "55 run flags central 5");
+ok(
+  (run5[5]?.note ?? "").includes("central Lo Shu position"),
+  "55 note is structural scrutiny, not 5-is-bad",
+);
+
+const alt56 = tones("5656371938");
+eq(alt56[5]?.tone, "patternFlag", "5656 flags 5 for the pattern");
+eq(alt56[6]?.tone, "patternFlag", "5656 also flags 6 for sequence intensity");
+ok(
+  (alt56[5]?.note ?? "").includes("5656"),
+  "5 note names the 5656 sequence",
+);
+
+const watch6 = tones("6652371938");
+eq(watch6[6]?.tone, "watchRemedy", "66 on a quiet outer cell is amber, not auto-clean");
+
+const miss8 = {
+  grid: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 0, 9: 1 },
+};
+const conflict8 = parseMobile("9812376543");
+ok(conflict8.ok, "9812376543 parses");
+if (conflict8.ok) {
+  const cells = classifyLoShuCells(
+    miss8,
+    conflict8.digitCounts,
+    slidingPairs(conflict8.digits),
+    conflict8.digits,
+  );
+  eq(cells[8]?.tone, "conflictRemedy", "8 via 98 is conflict-affected cover");
 }
 
 console.log("smoke-mobile-fit passed");

@@ -23,7 +23,7 @@ import {
   type PairInsight,
   type SequenceBreakdown,
 } from "./mobileSequence";
-import { scoreLoShu } from "./mobileLoShu";
+import { scoreLoShu, type LoShuCellView } from "./mobileLoShu";
 import {
   alignmentPoints,
   rootFitTone,
@@ -64,6 +64,7 @@ export type LoShuImpact = {
   integrity: number;
   integrityNote: string;
   contaminatedBy: string[];
+  cells: Record<number, LoShuCellView>;
   line: string;
 };
 
@@ -147,6 +148,7 @@ function loShuImpactLine(
   integrity: number,
   integrityNote: string,
   contaminatedBy: string[],
+  cells: Record<number, LoShuCellView>,
 ): LoShuImpact {
   const stillQuiet = person.missing_numbers.filter((n) => (counts[n] ?? 0) === 0);
   const pilesOn: number[] = [];
@@ -181,6 +183,7 @@ function loShuImpactLine(
     integrity,
     integrityNote,
     contaminatedBy,
+    cells,
     line: `This number ${bits.join("; ")}. Cover ${Math.round(raw)}/15. ${integrityNote}`,
   };
 }
@@ -330,7 +333,12 @@ export function evaluateMobileFit(
   const destiny = alignmentPoints(destinyNumber, core);
   const birth = alignmentPoints(birthNumber, core) * (20 / 25);
 
-  const loShu = scoreLoShu(personLoShu, parsed.digitCounts, pairs);
+  const loShu = scoreLoShu(
+    personLoShu,
+    parsed.digitCounts,
+    pairs,
+    parsed.digits,
+  );
   const loShuImpact = loShuImpactLine(
     personLoShu,
     parsed.digitCounts,
@@ -339,6 +347,7 @@ export function evaluateMobileFit(
     loShu.integrity,
     loShu.integrityNote,
     loShu.contaminatedBy,
+    loShu.cells,
   );
 
   let score =
