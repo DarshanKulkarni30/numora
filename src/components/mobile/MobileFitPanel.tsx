@@ -13,7 +13,7 @@ import {
 import { PAIR_LABEL, type CompoundPair } from "@/lib/numerology/mobileCompoundPairs";
 import { stripMobileInput } from "@/lib/numerology/mobileNumber";
 import type { PairInsight, SequenceBreakdown } from "@/lib/numerology/mobileSequence";
-import type { RootFitTone } from "@/lib/numerology/mobileRootFit";
+import { strainRunCaption, type RootFitTone } from "@/lib/numerology/mobileRootFit";
 import { isValidDob } from "@/lib/profile/date";
 
 type Props = {
@@ -75,9 +75,11 @@ function IconBtn({
 
 function flagTitle(flags: DigitFlag[], digit: number): string | undefined {
   const kinds = flags.filter((f) => f.digit === digit).map((f) => f.kind);
-  if (kinds.includes("strainSequence")) return "This run stacks a heavy digit.";
+  if (kinds.includes("strainSequence")) {
+    return "A same-digit run sits uneasy vs birth or destiny — not a high-conflict pair.";
+  }
   if (kinds.includes("strainRepeat")) {
-    return "This digit already sits heavy on this chart.";
+    return "This digit already sits uneasy on this chart.";
   }
   if (kinds.includes("overCount") || kinds.includes("alreadyInGrid")) {
     return "Repeated more than this chart likes.";
@@ -397,19 +399,20 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                   p.kind === "severeConflict" &&
                   (i === p.index || i === p.index + 1),
               );
+              const cls = inSevere
+                ? "rounded bg-rose-200 px-0.5 font-semibold text-rose-950"
+                : inStrain
+                  ? "rounded bg-amber-100 px-0.5 text-amber-950"
+                  : "text-ink";
               return (
                 <span
                   key={`${i}-${ch}`}
-                  className={
-                    inStrain || inSevere
-                      ? "rounded bg-rose-200 px-0.5 font-semibold text-rose-950"
-                      : "text-ink"
-                  }
+                  className={cls}
                   title={
                     inSevere
                       ? "Traditionally high-conflict pair."
                       : inStrain
-                        ? "This run stacks a heavy digit."
+                        ? "Same-digit run sits uneasy vs birth or destiny — not a high-conflict pair."
                         : undefined
                   }
                 >
@@ -419,11 +422,17 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             })}
           </p>
           {fit.strainRuns.length > 0 ? (
-            <p className="text-xs text-rose-900">
-              This run stacks a heavy digit:{" "}
+            <p className="text-xs text-amber-900">
               {fit.strainRuns
-                .map((r) => r.digit.repeat(r.length))
-                .join(" · ")}
+                .map((r) =>
+                  strainRunCaption(
+                    Number(r.digit),
+                    r.length,
+                    fit.birthNumber,
+                    fit.destinyNumber,
+                  ),
+                )
+                .join(" ")}
             </p>
           ) : null}
 

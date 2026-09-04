@@ -77,3 +77,22 @@ export function strainDigitsForChart(
   }
   return heavy;
 }
+
+/** Copy for a same-digit run: names BN/DN, not the pair as “heavy”. */
+export function strainRunCaption(
+  digit: number,
+  length: number,
+  birthNumber: number,
+  destinyNumber: number,
+): string {
+  const vsBn = rootFitTone(birthNumber, digit);
+  const vsDn = rootFitTone(destinyNumber, digit);
+  const vs: string[] = [];
+  if (vsBn === "Heavy") vs.push(`birth ${birthNumber}`);
+  if (vsDn === "Heavy") vs.push(`destiny ${destinyNumber}`);
+  const stack = length >= 3 ? `${length} ${digit}s in a row` : `Two ${digit}s in a row`;
+  if (vs.length === 0) {
+    return `${stack}. Pair ${digit}${digit} is scored on the pair cards, not as a chart conflict.`;
+  }
+  return `${stack} — digit ${digit} sits uneasy vs ${vs.join(" and ")}. That is not the pair ${digit}${digit} as a high-conflict join.`;
+}

@@ -12,7 +12,11 @@ import {
   assertMobilePairMatrix,
   missingPairMatrixKeys,
 } from "../src/lib/numerology/mobilePairMatrix";
-import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
+import {
+  alignmentPoints,
+  rootFitTone,
+  strainRunCaption,
+} from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
 import { classifyLoShuCells, scoreLoShu } from "../src/lib/numerology/mobileLoShu";
 import {
@@ -43,6 +47,11 @@ eq(rootFitTone(1, 8), "Heavy", "1 vs 8 heavy");
 eq(rootFitTone(2, 2), "Favourable", "destiny/root exact 2 is favourable");
 eq(rootFitTone(1, 1), "Favourable", "exact 1 is favourable");
 eq(rootFitTone(3, 3), "Favourable", "exact 3 is favourable");
+ok(
+  strainRunCaption(3, 2, 7, 2).includes("birth 7") &&
+    strainRunCaption(3, 2, 7, 2).includes("not the pair 33"),
+  "33 run copy names birth 7, not a heavy pair",
+);
 eq(alignmentPoints(3, 3), 25, "exact match 25");
 eq(alignmentPoints(1, 9), 22, "favourable 22");
 eq(alignmentPoints(1, 4), 13, "steady 13");
