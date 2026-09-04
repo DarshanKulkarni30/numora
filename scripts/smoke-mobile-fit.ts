@@ -40,6 +40,9 @@ function ok(cond: unknown, label: string) {
 
 eq(rootFitTone(1, 9), "Favourable", "1 vs 9 favourable");
 eq(rootFitTone(1, 8), "Heavy", "1 vs 8 heavy");
+eq(rootFitTone(2, 2), "Favourable", "destiny/root exact 2 is favourable");
+eq(rootFitTone(1, 1), "Favourable", "exact 1 is favourable");
+eq(rootFitTone(3, 3), "Favourable", "exact 3 is favourable");
 eq(alignmentPoints(3, 3), 25, "exact match 25");
 eq(alignmentPoints(1, 9), 22, "favourable 22");
 eq(alignmentPoints(1, 4), 13, "steady 13");

@@ -20,11 +20,11 @@ const FAVOURABLE: Record<number, number[]> = {
   9: [1, 3, 7, 9],
 };
 
-/** Self number → digits that sit in the middle. Unlisted self-pairs (1, 2, 3) sit here. */
+/** Self number → digits that sit in the middle. Same-number pairs are Favourable. */
 const STEADY: Record<number, number[]> = {
-  1: [1, 4, 7],
-  2: [2, 4, 6],
-  3: [3, 4, 7],
+  1: [4, 7],
+  2: [4, 6],
+  3: [4, 7],
   4: [2, 3],
   5: [4, 7],
   6: [2, 3, 9],
@@ -39,6 +39,7 @@ export function rootFitTone(
 ): RootFitTone {
   const self = reduceToSingleDigit(selfRaw);
   const partner = reduceToSingleDigit(partnerRaw);
+  if (self === partner) return "Favourable";
   if (FAVOURABLE[self]?.includes(partner)) return "Favourable";
   if (STEADY[self]?.includes(partner)) return "Steady";
   return "Heavy";
