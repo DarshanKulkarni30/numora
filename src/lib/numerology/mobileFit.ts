@@ -12,12 +12,9 @@ import {
   type MobileParseOk,
 } from "./mobileNumber";
 import {
-  compoundPairKey,
   isSeverePair,
-  normalizePairRaw,
   pairDirectionNote,
   pairFrequencies,
-  pairRawScore,
   type CompoundPair,
 } from "./mobileCompoundPairs";
 import {
@@ -135,21 +132,6 @@ function classify(score: number, hasSevere: boolean): MobileVerdict {
     return "Good";
   }
   return band;
-}
-
-function compoundVsChart(compound: number, chartNumber: number): number {
-  const key = compoundPairKey(compound);
-  const pairPts = normalizePairRaw(pairRawScore(key)) * 25;
-  const digits = String(compound)
-    .split("")
-    .map(Number)
-    .filter((d) => d >= 1 && d <= 9);
-  const digitPts =
-    digits.length === 0
-      ? 13
-      : digits.reduce((s, d) => s + alignmentPoints(chartNumber, d), 0) /
-        digits.length;
-  return (pairPts + digitPts) / 2;
 }
 
 /**
@@ -293,9 +275,9 @@ function verdictLine(
     parts.push("the inner sequence is uneven");
   }
   if (pillars.destiny < 12) {
-    parts.push("the total sits awkwardly with destiny");
+    parts.push("the mobile root sits awkwardly with destiny");
   } else if (pillars.birth < 10) {
-    parts.push("the total sits awkwardly with the birth number");
+    parts.push("the mobile root sits awkwardly with the birth number");
   }
   if (pillars.loShu < 8) {
     parts.push("the grid adds more pile-up than cover");
@@ -384,13 +366,8 @@ export function evaluateMobileFit(
   const sequence = seq.breakdown.total;
   const ending = seq.breakdown.ending;
 
-  const dnRoot = alignmentPoints(destinyNumber, core);
-  const dnCompound = compoundVsChart(compound, destinyNumber);
-  const destiny = (dnRoot + dnCompound) / 2;
-
-  const bnRoot = alignmentPoints(birthNumber, core);
-  const bnCompound = compoundVsChart(compound, birthNumber);
-  const birth = ((bnRoot + bnCompound) / 2) * (20 / 25);
+  const destiny = alignmentPoints(destinyNumber, core);
+  const birth = alignmentPoints(birthNumber, core) * (20 / 25);
 
   const pairNorm = seq.breakdown.base / 15;
   const alignOk = destiny / 25 >= 0.35 && birth / 20 >= 0.35;
@@ -408,7 +385,11 @@ export function evaluateMobileFit(
     loShu.filledMissing,
   );
 
-  let score = Math.round(sequence + destiny + birth + loShu.points);
+  let score =
+    Math.round(sequence) +
+    Math.round(destiny) +
+    Math.round(birth) +
+    Math.round(loShu.points);
   score = clamp(score, 0, 100);
   if (hasSevereConflict) {
     score = Math.min(score, 79);

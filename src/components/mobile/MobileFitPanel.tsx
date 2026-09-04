@@ -339,7 +339,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             className={`rounded-2xl border-2 px-4 py-3 ${VERDICT_STYLE[fit.verdict]}`}
           >
             <p className="text-[10px] uppercase tracking-wider opacity-80">
-              Overall · {fit.compound} → {fit.core}
+              Digit total {fit.compound} → root {fit.core}
             </p>
             <p className="mt-0.5 text-2xl font-semibold tracking-tight">
               {fit.score} · {fit.verdict}
@@ -381,7 +381,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                 key={label}
                 className={`rounded-full border px-2.5 py-1 text-xs ${TONE_STYLE[tone]}`}
               >
-                {label} {n} ↔ {fit.compound}→{fit.core} · {tone}
+                {label} {n} ↔ root {fit.core} · {tone}
               </span>
             ))}
           </div>

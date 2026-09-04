@@ -141,4 +141,18 @@ if (venus.ok) {
   ok(venus.fit.loShuImpact.covers.length + venus.fit.loShuImpact.stillQuiet.length >= 0, "impact fields present");
 }
 
+const rootOnly = evaluateMobileFit("03/12/1986", "9920931535", "business");
+ok(rootOnly.ok, "9920931535 parses");
+if (rootOnly.ok) {
+  eq(rootOnly.fit.compound, 46, "digit total 46 kept as metadata");
+  eq(rootOnly.fit.core, 1, "mobile root is 1");
+  eq(rootOnly.fit.birthNumber, 3, "BN 3");
+  eq(rootOnly.fit.destinyNumber, 3, "DN 3");
+  eq(rootOnly.fit.bnTone, "Favourable", "root 1 vs BN 3");
+  eq(rootOnly.fit.dnTone, "Favourable", "root 1 vs DN 3");
+  eq(rootOnly.fit.pillars.destiny, 22, "DN scores root only, not pair 46");
+  eq(rootOnly.fit.pillars.birth, 17.6, "BN scores root only, scaled to 20");
+  ok(rootOnly.fit.hasSevereConflict, "99 is still a sequence hard-stop");
+}
+
 console.log("smoke-mobile-fit passed");
