@@ -14,12 +14,18 @@ import {
 import {
   compoundPairKey,
   isSeverePair,
-  meanNormalizedPairs,
   normalizePairRaw,
+  pairDirectionNote,
+  pairFrequencies,
   pairRawScore,
-  slidingPairs,
   type CompoundPair,
 } from "./mobileCompoundPairs";
+import {
+  chartNoteForPair,
+  scoreSequence,
+  type PairInsight,
+  type SequenceBreakdown,
+} from "./mobileSequence";
 import {
   alignmentPoints,
   rootFitTone,
@@ -51,12 +57,21 @@ export type DigitFlag = {
   count: number;
 };
 
+export type LoShuImpact = {
+  covers: number[];
+  stillQuiet: number[];
+  pilesOn: number[];
+  overdose: number[];
+  line: string;
+};
+
 export type MobilePillars = {
   sequence: number;
   ending: number;
   destiny: number;
   birth: number;
   loShu: number;
+  pairing: SequenceBreakdown;
 };
 
 export type MobileFit = {
@@ -76,7 +91,9 @@ export type MobileFit = {
   flags: DigitFlag[];
   strainRuns: ConsecutiveRun[];
   pairs: CompoundPair[];
+  pairInsights: PairInsight[];
   filledMissing: number[];
+  loShuImpact: LoShuImpact;
   hasSevereConflict: boolean;
   pillars: MobilePillars;
   score: number;
@@ -187,6 +204,80 @@ function loShuPoints(args: {
   return { points: clamp(pts, 0, 20), filledMissing };
 }
 
+function loShuImpactLine(
+  person: LoShuResult,
+  counts: number[],
+  filledMissing: number[],
+): LoShuImpact {
+  const stillQuiet = person.missing_numbers.filter((n) => (counts[n] ?? 0) === 0);
+  const pilesOn: number[] = [];
+  const overdose: number[] = [];
+  for (let n = 1; n <= 9; n++) {
+    const p = person.grid[n] ?? 0;
+    const m = counts[n] ?? 0;
+    if (p >= 1 && m >= 2) pilesOn.push(n);
+    if (p >= 2 && m >= 3) overdose.push(n);
+  }
+  const bits: string[] = [];
+  if (filledMissing.length) {
+    bits.push(`covers quiet ${filledMissing.join(", ")}`);
+  }
+  if (stillQuiet.length) {
+    bits.push(`leaves ${stillQuiet.join(", ")} quiet`);
+  }
+  if (overdose.length) {
+    bits.push(`overloads ${overdose.join(", ")} already strong on the birth grid`);
+  } else if (pilesOn.length) {
+    bits.push(`adds extra ${pilesOn.join(", ")} on cells the birth grid already has`);
+  }
+  if (bits.length === 0) {
+    bits.push("adds little new coverage and little extra pile-up");
+  }
+  return {
+    covers: filledMissing,
+    stillQuiet,
+    pilesOn,
+    overdose,
+    line: `This number ${bits.join("; ")}.`,
+  };
+}
+
+function buildPairInsights(
+  pairs: CompoundPair[],
+  digits: string,
+  birthNumber: number,
+  destinyNumber: number,
+): PairInsight[] {
+  const freq = pairFrequencies(pairs);
+  const runs = findConsecutiveRuns(digits, 2);
+  const seen = new Set<string>();
+  const out: PairInsight[] = [];
+  for (const p of pairs) {
+    if (seen.has(p.pair)) continue;
+    seen.add(p.pair);
+    const run = runs.find(
+      (r) =>
+        r.digit === p.pair[0] &&
+        p.pair[0] === p.pair[1] &&
+        p.index >= r.start &&
+        p.index < r.start + r.length,
+    );
+    out.push({
+      pair: p.pair,
+      kind: p.kind,
+      raw: p.raw,
+      motif: p.motif,
+      count: freq.get(p.pair) ?? 1,
+      firstIndex: p.index,
+      inRun: Boolean(run),
+      runLength: run?.length ?? 0,
+      directionNote: pairDirectionNote(p.pair),
+      chartNote: chartNoteForPair(p.pair, birthNumber, destinyNumber),
+    });
+  }
+  return out;
+}
+
 function verdictLine(
   verdict: MobileVerdict,
   pillars: MobilePillars,
@@ -198,7 +289,7 @@ function verdictLine(
       "A traditionally high-conflict pair is present, so this stays a careful pick",
     );
   }
-  if (pillars.sequence + pillars.ending < 18) {
+  if (pillars.sequence < 18) {
     parts.push("the inner sequence is uneven");
   }
   if (pillars.destiny < 12) {
@@ -256,10 +347,15 @@ export function evaluateMobileFit(
     return d >= 1 && d <= 9 && strainDigits.has(d);
   });
 
-  const pairs = slidingPairs(parsed.digits);
-  const last4 = parsed.digits.slice(-4);
-  const endingPairs = slidingPairs(last4);
+  const seq = scoreSequence(parsed.digits, birthNumber, destinyNumber);
+  const pairs = seq.pairs;
   const hasSevereConflict = pairs.some((p) => isSeverePair(p.pair));
+  const pairInsights = buildPairInsights(
+    pairs,
+    parsed.digits,
+    birthNumber,
+    destinyNumber,
+  );
 
   const flags: DigitFlag[] = [];
   for (let d = 0; d <= 9; d++) {
@@ -285,8 +381,8 @@ export function evaluateMobileFit(
     flags.push({ digit: 0, kind: "severePair", count: 1 });
   }
 
-  const sequence = 25 * meanNormalizedPairs(pairs);
-  const ending = 10 * meanNormalizedPairs(endingPairs);
+  const sequence = seq.breakdown.total;
+  const ending = seq.breakdown.ending;
 
   const dnRoot = alignmentPoints(destinyNumber, core);
   const dnCompound = compoundVsChart(compound, destinyNumber);
@@ -296,7 +392,7 @@ export function evaluateMobileFit(
   const bnCompound = compoundVsChart(compound, birthNumber);
   const birth = ((bnRoot + bnCompound) / 2) * (20 / 25);
 
-  const pairNorm = meanNormalizedPairs(pairs);
+  const pairNorm = seq.breakdown.base / 15;
   const alignOk = destiny / 25 >= 0.35 && birth / 20 >= 0.35;
   const sequenceSafe = !hasSevereConflict && pairNorm >= 0.4;
   const loShu = loShuPoints({
@@ -306,10 +402,13 @@ export function evaluateMobileFit(
     sequenceSafe,
     alignOk,
   });
-
-  let score = Math.round(
-    sequence + ending + destiny + birth + loShu.points,
+  const loShuImpact = loShuImpactLine(
+    personLoShu,
+    parsed.digitCounts,
+    loShu.filledMissing,
   );
+
+  let score = Math.round(sequence + destiny + birth + loShu.points);
   score = clamp(score, 0, 100);
   if (hasSevereConflict) {
     score = Math.min(score, 79);
@@ -321,6 +420,7 @@ export function evaluateMobileFit(
     destiny,
     birth,
     loShu: loShu.points,
+    pairing: seq.breakdown,
   };
   const verdict = classify(score, hasSevereConflict);
 
@@ -343,7 +443,9 @@ export function evaluateMobileFit(
       flags,
       strainRuns,
       pairs,
+      pairInsights,
       filledMissing: loShu.filledMissing,
+      loShuImpact,
       hasSevereConflict,
       pillars,
       score,

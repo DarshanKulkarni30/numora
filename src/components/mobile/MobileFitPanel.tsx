@@ -9,7 +9,9 @@ import {
   type MobileUse,
   type MobileVerdict,
 } from "@/lib/numerology/mobileFit";
+import { PAIR_LABEL, type CompoundPair } from "@/lib/numerology/mobileCompoundPairs";
 import { stripMobileInput } from "@/lib/numerology/mobileNumber";
+import type { PairInsight, SequenceBreakdown } from "@/lib/numerology/mobileSequence";
 import type { RootFitTone } from "@/lib/numerology/mobileRootFit";
 import { isValidDob } from "@/lib/profile/date";
 
@@ -80,6 +82,129 @@ function flagTitle(flags: DigitFlag[], digit: number): string | undefined {
     return "Repeated more than this chart likes.";
   }
   return undefined;
+}
+
+function runNote(insight: PairInsight): string {
+  if (!insight.inRun) {
+    return "This join is not inside a same-digit run.";
+  }
+  const n = insight.runLength;
+  const digit = insight.pair[0];
+  if (n === 2) {
+    return `Sits in a short ${digit}${digit} run. Repetition amplifies the pair; it is not automatically negative.`;
+  }
+  if (n === 3) {
+    return `Sits in a ${digit.repeat(3)} run — the vibration is concentrated. Traditional schools treat this more cautiously than a single ${digit}${digit}.`;
+  }
+  return `Sits in a ${digit.repeat(n)} run. Traditional mobile readings treat long same-digit stretches as excess, even when a short ${digit}${digit} is useful.`;
+}
+
+function AdjacentPairsBlock({
+  digits,
+  pairs,
+  insights,
+  pairing,
+  openPair,
+  onToggle,
+}: {
+  digits: string;
+  pairs: CompoundPair[];
+  insights: PairInsight[];
+  pairing: SequenceBreakdown;
+  openPair: string | null;
+  onToggle: (next: string | null) => void;
+}) {
+  const selected = insights.find((p) => p.pair === openPair) ?? null;
+  return (
+    <div className="space-y-2.5">
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-ink">
+          Adjacent pairs
+        </p>
+        <p className="mt-0.5 text-[11px] leading-4 text-ink-soft">
+          {digits.length} digits → {pairs.length} conjunctions. Direction is
+          kept (84 is not 48). Tap a pair for rating, count, and chart note.
+        </p>
+      </div>
+      <p className="font-mono text-sm tracking-wide text-ink">
+        {pairs.map((p, i) => (
+          <span key={`${p.pair}-${p.index}`}>
+            {i > 0 ? (
+              <span className="px-0.5 text-ink-soft/50">·</span>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => onToggle(openPair === p.pair ? null : p.pair)}
+              className={`btn-tactile rounded px-0.5 ${
+                openPair === p.pair ? "bg-white font-semibold" : ""
+              }`}
+            >
+              {p.pair}
+            </button>
+          </span>
+        ))}
+      </p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {insights.map((p) => {
+          const open = openPair === p.pair;
+          return (
+            <button
+              key={p.pair}
+              type="button"
+              onClick={() => onToggle(open ? null : p.pair)}
+              className={`btn-tactile rounded-xl border px-3 py-2.5 text-left ${PAIR_STYLE[p.kind]} ${
+                open ? "ring-2 ring-gold" : ""
+              }`}
+            >
+              <span className="flex items-baseline justify-between gap-2">
+                <span className="brand text-xl leading-none">{p.pair}</span>
+                <span className="text-[11px] font-medium">×{p.count}</span>
+              </span>
+              <span className="mt-1 block text-[11px] leading-4">
+                {PAIR_LABEL[p.kind]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      {selected ? (
+        <div className={`rounded-xl border px-3 py-3 ${PAIR_STYLE[selected.kind]}`}>
+          <p className="text-[10px] uppercase tracking-wider opacity-80">
+            {PAIR_LABEL[selected.kind]} · {selected.count}{" "}
+            {selected.count === 1 ? "join" : "joins"}
+          </p>
+          <p className="mt-1 text-base font-medium">{selected.motif}</p>
+          <ul className="mt-2 space-y-1 text-sm leading-5">
+            <li>{selected.directionNote}</li>
+            <li>
+              Occurs {selected.count} time{selected.count === 1 ? "" : "s"} in
+              this number
+              {selected.count >= 2
+                ? " — later joins weigh more than the first, not a simple ×2."
+                : "."}
+            </li>
+            <li>{runNote(selected)}</li>
+            <li>{selected.chartNote}</li>
+          </ul>
+        </div>
+      ) : (
+        <p className="text-xs text-ink-soft">
+          Tap a pair card for direction, how often it occurs, any run, and how
+          it sits on this birth chart.
+        </p>
+      )}
+      <p className="text-[11px] leading-4 text-ink-soft">
+        Sequence split: base {Math.round(pairing.base)} · frequency{" "}
+        {Math.round(pairing.frequency)} · run {Math.round(pairing.run)} · last
+        four {Math.round(pairing.ending)} · conflict density{" "}
+        {Math.round(pairing.density)} / 3
+        {pairing.conflictDensity > 0
+          ? ` (${Math.round(pairing.conflictDensity * 100)}% adverse weight).`
+          : "."}{" "}
+        Traditional reading only.
+      </p>
+    </div>
+  );
 }
 
 export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
@@ -223,11 +348,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             <div className="mt-3 grid grid-cols-4 gap-1.5 text-center text-[10px] leading-tight">
               {(
                 [
-                  [
-                    "Sequence",
-                    fit.pillars.sequence + fit.pillars.ending,
-                    35,
-                  ],
+                  ["Sequence", fit.pillars.sequence, 35],
                   ["Destiny", fit.pillars.destiny, 25],
                   ["Birth", fit.pillars.birth, 20],
                   ["Lo Shu", fit.pillars.loShu, 20],
@@ -271,8 +392,9 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                 (r) => i >= r.start && i < r.start + r.length,
               );
               const inSevere = fit.pairs.some(
-                (p, pi) =>
-                  p.kind === "severeConflict" && (i === pi || i === pi + 1),
+                (p) =>
+                  p.kind === "severeConflict" &&
+                  (i === p.index || i === p.index + 1),
               );
               return (
                 <span
@@ -309,6 +431,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             mobile={fit.mobileLoShu}
             flags={fit.flags}
             filledMissing={fit.filledMissing}
+            impact={fit.loShuImpact}
           />
 
           <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-white/55">
@@ -338,36 +461,14 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             </div>
           </div>
 
-          <div>
-            <p className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-soft">
-              Adjacent pairs
-            </p>
-            <div className="flex flex-wrap gap-1">
-              {fit.pairs.map((p, i) => {
-                const key = `${p.pair}-${i}`;
-                const open = openPair === key;
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setOpenPair(open ? null : key)}
-                    className={`btn-tactile rounded-lg border px-2 py-1 text-xs ${PAIR_STYLE[p.kind]}`}
-                  >
-                    {p.pair}
-                  </button>
-                );
-              })}
-            </div>
-            {openPair ? (
-              <p className="mt-2 text-xs leading-5 text-ink-soft">
-                {fit.pairs.find((p, i) => `${p.pair}-${i}` === openPair)?.motif}
-              </p>
-            ) : (
-              <p className="mt-2 text-xs text-ink-soft">
-                Tap a pair for a short note.
-              </p>
-            )}
-          </div>
+          <AdjacentPairsBlock
+            digits={fit.parsed.digits}
+            pairs={fit.pairs}
+            insights={fit.pairInsights}
+            pairing={fit.pillars.pairing}
+            openPair={openPair}
+            onToggle={setOpenPair}
+          />
 
           <div>
             <button

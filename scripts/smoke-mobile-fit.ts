@@ -1,5 +1,5 @@
 /**
- * Smoke: hierarchical mobile fit (35/25/20/20), pair grades, hard-stop.
+ * Smoke: hierarchical mobile fit, pair grades, multiplicity, hard-stop.
  */
 import { evaluateMobileFit } from "../src/lib/numerology/mobileFit";
 import {
@@ -37,11 +37,13 @@ eq(alignmentPoints(1, 8), 3, "heavy 3");
 
 eq(pairKind("48"), "severeConflict", "48 severe");
 eq(pairKind("84"), "severeConflict", "84 severe");
-eq(pairKind("36"), "severeConflict", "36 severe");
-eq(pairKind("63"), "severeConflict", "63 severe");
+eq(pairKind("36"), "neutral", "36 not automatic severe");
+eq(pairKind("63"), "strongConflict", "63 high conflict, not severe");
 eq(isSeverePair("28"), true, "28 severe");
+eq(isSeverePair("36"), false, "36 not in hard-stop set");
 eq(pairKind("15"), "highlyFavourable", "15 highly favourable");
-eq(pairKind("12"), "neutral", "12 neutral");
+eq(pairKind("12"), "highlyFavourable", "12 lift");
+eq(pairKind("66"), "favourable", "66 lift");
 
 const windows = slidingPairs("98765");
 eq(
@@ -50,25 +52,40 @@ eq(
   "sliding adjacent pairs",
 );
 
+eq(
+  slidingPairs("6666").filter((p) => p.pair === "66").length,
+  3,
+  "6666 has three 66 windows",
+);
+
+eq(
+  slidingPairs("9876543210").length,
+  9,
+  "10 digits = 9 adjacent pairs",
+);
+
 const parsed = parseMobile("98765 43210");
 ok(parsed.ok && parsed.core === 9 && parsed.compound === 45, "9876543210 → 45 → 9");
 
-const easy = evaluateMobileFit("01/01/1990", "9876543210", "personal");
+const easy = evaluateMobileFit("01/01/1990", "1915173513", "personal");
 ok(easy.ok, "easy number parses");
 if (easy.ok) {
   eq(easy.fit.birthNumber, 1, "BN 1");
   eq(easy.fit.destinyNumber, 3, "DN 3");
   eq(easy.fit.core, 9, "root 9");
-  eq(easy.fit.compound, 45, "compound 45 kept");
+  eq(easy.fit.compound, 36, "compound 36 → 9");
   eq(easy.fit.bnTone, "Favourable", "BN 1 vs 9");
   eq(easy.fit.dnTone, "Favourable", "DN 3 vs 9");
+  eq(easy.fit.pairs.length, 9, "easy number has 9 pairs");
+  ok(!easy.fit.hasSevereConflict, "lift sequence has no hard-stop pair");
   ok(easy.fit.score >= 60, `easy score ${easy.fit.score} >= 60`);
   ok(
     easy.fit.verdict !== "Avoid" && easy.fit.verdict !== "Weak",
     `easy verdict ${easy.fit.verdict} is not weak`,
   );
   ok(easy.fit.pillars.sequence > 0, "sequence pillar");
-  ok(easy.fit.pillars.ending > 0, "ending pillar");
+  ok(easy.fit.pillars.pairing.base > 0, "pair base points");
+  ok(easy.fit.loShuImpact.line.length > 10, "Lo Shu impact line");
 }
 
 const severe = evaluateMobileFit("01/01/1990", "9848123456", "personal");
@@ -95,14 +112,15 @@ if (strain.ok) {
   );
 }
 
-const oneSevere = evaluateMobileFit("01/01/1990", "1234563670", "personal");
-ok(oneSevere.ok, "mixed sequence parses");
-if (oneSevere.ok) {
+const mixed36 = evaluateMobileFit("01/01/1990", "1235365710", "personal");
+ok(mixed36.ok, "mixed 36 sequence parses");
+if (mixed36.ok) {
   ok(
-    oneSevere.fit.pairs.some((p) => p.pair === "36"),
+    mixed36.fit.pairs.some((p) => p.pair === "36"),
     "36 present but does not zero the number",
   );
-  ok(oneSevere.fit.score > 20, "one high-conflict pair is not a total fail");
+  ok(!mixed36.fit.hasSevereConflict, "36 is not a hard-stop");
+  ok(mixed36.fit.score > 20, "one mixed pair is not a total fail");
 }
 
 const over = evaluateMobileFit("01/01/1990", "1111111113", "personal");
@@ -112,6 +130,15 @@ if (over.ok) {
     over.fit.flags.some((f) => f.kind === "overCount" && f.digit === 1),
     "1 over-count flag",
   );
+}
+
+const venus = evaluateMobileFit("01/01/1990", "1266663510", "personal");
+ok(venus.ok, "venus-run number parses");
+if (venus.ok) {
+  const sixes = venus.fit.pairInsights.find((p) => p.pair === "66");
+  ok(sixes && sixes.count === 3, "66 occurs three times in 6666");
+  ok(sixes && sixes.inRun && sixes.runLength === 4, "66 sits in a 6666 run");
+  ok(venus.fit.loShuImpact.covers.length + venus.fit.loShuImpact.stillQuiet.length >= 0, "impact fields present");
 }
 
 console.log("smoke-mobile-fit passed");
