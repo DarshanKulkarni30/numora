@@ -257,7 +257,18 @@ if (conflict8.ok) {
     slidingPairs(conflict8.digits),
     conflict8.digits,
   );
-  eq(cells[8]?.tone, "conflictRemedy", "8 via 98 is conflict-affected cover");
+  eq(cells[8]?.tone, "cleanRemedy", "quiet 8 + 8×1 is teal cover even via 98");
+  ok(
+    (cells[8]?.note ?? "").toLowerCase().includes("useful lo shu remedy"),
+    "8 note is cover, not pair-blame",
+  );
+  const lo8 = scoreLoShu(
+    miss8,
+    conflict8.digitCounts,
+    slidingPairs(conflict8.digits),
+    conflict8.digits,
+  );
+  ok(lo8.contaminatedBy.includes("98"), "integrity still notes 98 on the cover digit");
 }
 
 const tail3651 = analyzeLastFour("1111113651", 3, 3);

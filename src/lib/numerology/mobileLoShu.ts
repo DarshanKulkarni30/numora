@@ -24,7 +24,7 @@ export type LoShuBreakdown = {
   cells: Record<number, LoShuCellView>;
 };
 
-/** Position sets significance; sequence/repetition/conflict set clean vs flagged. */
+/** Position sets significance; cover vs pile-up vs pattern set the cell color. */
 export type LoShuCellTone =
   | "quiet"
   | "present"
@@ -219,14 +219,6 @@ function longestRun(digits: string, digit: number): number {
   return runs.reduce((m, r) => Math.max(m, r.length), 0);
 }
 
-function adversePairsFor(
-  pairs: CompoundPair[],
-  digit: number,
-): CompoundPair[] {
-  const ch = String(digit);
-  return pairs.filter((p) => isAdverseKind(p.kind) && p.pair.includes(ch));
-}
-
 function centerNote(pattern: string): string {
   return `Because 5 occupies the central Lo Shu position, repeated or strongly patterned use of 5 receives additional structural scrutiny. In this number, the ${pattern} sequence prevents the ×2 presence of 5 from being treated as a simple clean remedy.`;
 }
@@ -234,7 +226,7 @@ function centerNote(pattern: string): string {
 export function classifyLoShuCells(
   person: Pick<LoShuResult, "grid">,
   counts: number[],
-  pairs: CompoundPair[],
+  _pairs: CompoundPair[],
   digits: string,
 ): Record<number, LoShuCellView> {
   const alts = findAlternatingBlocks(digits);
@@ -245,7 +237,6 @@ export function classifyLoShuCells(
     const missing = personC === 0;
     const run = longestRun(digits, n);
     const alt = alts.find((b) => b.pair.includes(String(n)));
-    const adverse = adversePairsFor(pairs, n);
     const isCenter = n === CENTER;
 
     if (mobileC === 0) {
@@ -296,16 +287,6 @@ export function classifyLoShuCells(
       continue;
     }
 
-    if (missing && adverse.length) {
-      const labels = [...new Set(adverse.map((p) => p.pair))].join(", ");
-      cells[n] = {
-        digit: n,
-        tone: "conflictRemedy",
-        note: `${n} covers a quiet cell, but it arrives through ${labels}. Rose means examine further — not that the digit is inherently unhelpful.`,
-      };
-      continue;
-    }
-
     if (missing && !isCenter && run === 2) {
       cells[n] = {
         digit: n,
@@ -320,8 +301,8 @@ export function classifyLoShuCells(
         digit: n,
         tone: "cleanRemedy",
         note: isCenter
-          ? "Covers the central 5 cleanly. The center has higher structural significance, but this introduction is not a patterned run."
-          : `Covers quiet ${n} with no intense run or conflicting join.`,
+          ? "Covers the central 5. Pair quality is scored in the sequence, not on this cell."
+          : `Covers quiet ${n} — a useful Lo Shu remedy. Pair joins are scored in the sequence.`,
       };
       continue;
     }

@@ -81,8 +81,8 @@ function NumberGrid({
         This number
       </p>
       <p className="mb-2 mt-0.5 text-[11px] leading-4 text-ink-soft">
-        Teal = clean cover. Amber = mild repeat. Rose = examine further (pattern,
-        conflict, or pile-up).
+        Teal = useful cover. Amber = mild repeat. Rose = pile-up or a strong
+        pattern. Pair joins are scored in the sequence, not by this color.
       </p>
       <div className="grid grid-cols-3 gap-1.5">
         {ROWS.flat().map((n) => {
