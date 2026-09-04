@@ -22,9 +22,12 @@ type Props = {
 };
 
 const VERDICT_STYLE: Record<MobileVerdict, string> = {
-  Supportive: "border-emerald-300 bg-emerald-50 text-emerald-950",
-  Mixed: "border-slate-200 bg-slate-50 text-slate-800",
-  Caution: "border-rose-200 bg-rose-50 text-rose-950",
+  Exceptional: "border-emerald-400 bg-emerald-50 text-emerald-950",
+  Excellent: "border-emerald-300 bg-emerald-50 text-emerald-950",
+  Good: "border-teal-200 bg-teal-50 text-teal-950",
+  Acceptable: "border-slate-200 bg-slate-50 text-slate-800",
+  Weak: "border-amber-200 bg-amber-50 text-amber-950",
+  Avoid: "border-rose-200 bg-rose-50 text-rose-950",
 };
 
 const TONE_STYLE: Record<RootFitTone, string> = {
@@ -34,9 +37,12 @@ const TONE_STYLE: Record<RootFitTone, string> = {
 };
 
 const PAIR_STYLE = {
-  supportive: "border-emerald-200 bg-emerald-50 text-emerald-950",
-  mixed: "border-slate-200 bg-slate-50 text-slate-800",
-  caution: "border-rose-200 bg-rose-50 text-rose-950",
+  highlyFavourable: "border-emerald-300 bg-emerald-50 text-emerald-950",
+  favourable: "border-teal-200 bg-teal-50 text-teal-950",
+  neutral: "border-slate-200 bg-slate-50 text-slate-800",
+  mildConflict: "border-amber-200 bg-amber-50 text-amber-950",
+  strongConflict: "border-orange-200 bg-orange-50 text-orange-950",
+  severeConflict: "border-rose-300 bg-rose-50 text-rose-950",
 } as const;
 
 function IconBtn({
@@ -208,7 +214,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             className={`rounded-2xl border-2 px-4 py-3 ${VERDICT_STYLE[fit.verdict]}`}
           >
             <p className="text-[10px] uppercase tracking-wider opacity-80">
-              Overall · root {fit.core}
+              Overall · {fit.compound} → {fit.core}
             </p>
             <p className="mt-0.5 text-2xl font-semibold tracking-tight">
               {fit.score} · {fit.verdict}
@@ -217,10 +223,14 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
             <div className="mt-3 grid grid-cols-4 gap-1.5 text-center text-[10px] leading-tight">
               {(
                 [
-                  ["Root", fit.pillars.root, 50],
-                  ["Gaps", fit.pillars.gaps, 20],
-                  ["Pairs", fit.pillars.pairs, 20],
-                  ["Repeats", fit.pillars.repeats, 10],
+                  [
+                    "Sequence",
+                    fit.pillars.sequence + fit.pillars.ending,
+                    35,
+                  ],
+                  ["Destiny", fit.pillars.destiny, 25],
+                  ["Birth", fit.pillars.birth, 20],
+                  ["Lo Shu", fit.pillars.loShu, 20],
                 ] as const
               ).map(([label, value, weight]) => (
                 <div
@@ -231,7 +241,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                     {label} {weight}
                   </p>
                   <p className="mt-0.5 text-ink-soft">
-                    {Math.round(value * 100)}
+                    {Math.round(value)}
                   </p>
                 </div>
               ))}
@@ -250,7 +260,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                 key={label}
                 className={`rounded-full border px-2.5 py-1 text-xs ${TONE_STYLE[tone]}`}
               >
-                {label} {n} → {fit.core} · {tone}
+                {label} {n} ↔ {fit.compound}→{fit.core} · {tone}
               </span>
             ))}
           </div>
@@ -260,16 +270,24 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
               const inStrain = fit.strainRuns.some(
                 (r) => i >= r.start && i < r.start + r.length,
               );
+              const inSevere = fit.pairs.some(
+                (p, pi) =>
+                  p.kind === "severeConflict" && (i === pi || i === pi + 1),
+              );
               return (
                 <span
                   key={`${i}-${ch}`}
                   className={
-                    inStrain
+                    inStrain || inSevere
                       ? "rounded bg-rose-200 px-0.5 font-semibold text-rose-950"
                       : "text-ink"
                   }
                   title={
-                    inStrain ? "This run stacks a heavy digit." : undefined
+                    inSevere
+                      ? "Traditionally high-conflict pair."
+                      : inStrain
+                        ? "This run stacks a heavy digit."
+                        : undefined
                   }
                 >
                   {ch}
@@ -333,7 +351,7 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                     key={key}
                     type="button"
                     onClick={() => setOpenPair(open ? null : key)}
-                    className={`btn-tactile rounded-lg border px-2 py-1 text-xs ${PAIR_STYLE[p.polarity]}`}
+                    className={`btn-tactile rounded-lg border px-2 py-1 text-xs ${PAIR_STYLE[p.kind]}`}
                   >
                     {p.pair}
                   </button>

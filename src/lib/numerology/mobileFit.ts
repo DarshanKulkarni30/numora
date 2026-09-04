@@ -12,12 +12,16 @@ import {
   type MobileParseOk,
 } from "./mobileNumber";
 import {
-  pairScore,
+  compoundPairKey,
+  isSeverePair,
+  meanNormalizedPairs,
+  normalizePairRaw,
+  pairRawScore,
   slidingPairs,
   type CompoundPair,
 } from "./mobileCompoundPairs";
 import {
-  rootFitScore,
+  alignmentPoints,
   rootFitTone,
   strainDigitsForChart,
   type RootFitTone,
@@ -26,13 +30,20 @@ import type { LoShuResult } from "./types";
 
 export type MobileUse = "personal" | "business";
 
-export type MobileVerdict = "Supportive" | "Mixed" | "Caution";
+export type MobileVerdict =
+  | "Exceptional"
+  | "Excellent"
+  | "Good"
+  | "Acceptable"
+  | "Weak"
+  | "Avoid";
 
 export type DigitFlagKind =
   | "overCount"
   | "alreadyInGrid"
   | "strainRepeat"
-  | "strainSequence";
+  | "strainSequence"
+  | "severePair";
 
 export type DigitFlag = {
   digit: number;
@@ -41,10 +52,11 @@ export type DigitFlag = {
 };
 
 export type MobilePillars = {
-  root: number;
-  gaps: number;
-  pairs: number;
-  repeats: number;
+  sequence: number;
+  ending: number;
+  destiny: number;
+  birth: number;
+  loShu: number;
 };
 
 export type MobileFit = {
@@ -54,6 +66,7 @@ export type MobileFit = {
   destinyNumber: number;
   lifePath: number;
   core: number;
+  compound: number;
   bnTone: RootFitTone;
   dnTone: RootFitTone;
   lpTone: RootFitTone;
@@ -64,6 +77,7 @@ export type MobileFit = {
   strainRuns: ConsecutiveRun[];
   pairs: CompoundPair[];
   filledMissing: number[];
+  hasSevereConflict: boolean;
   pillars: MobilePillars;
   score: number;
   verdict: MobileVerdict;
@@ -88,47 +102,128 @@ function mobileGridFromCounts(counts: number[]): Record<number, number> {
   return grid;
 }
 
-function clamp01(n: number): number {
-  if (n < 0) return 0;
-  if (n > 1) return 1;
-  return n;
+function clamp(n: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, n));
 }
 
-function weakestPillar(p: MobilePillars): keyof MobilePillars {
-  const keys = ["root", "gaps", "pairs", "repeats"] as const;
-  return keys.reduce((a, b) => (p[b] < p[a] ? b : a));
+function classify(score: number, hasSevere: boolean): MobileVerdict {
+  let band: MobileVerdict;
+  if (score >= 90) band = "Exceptional";
+  else if (score >= 80) band = "Excellent";
+  else if (score >= 70) band = "Good";
+  else if (score >= 60) band = "Acceptable";
+  else if (score >= 50) band = "Weak";
+  else band = "Avoid";
+  if (hasSevere && (band === "Exceptional" || band === "Excellent")) {
+    return "Good";
+  }
+  return band;
+}
+
+function compoundVsChart(compound: number, chartNumber: number): number {
+  const key = compoundPairKey(compound);
+  const pairPts = normalizePairRaw(pairRawScore(key)) * 25;
+  const digits = String(compound)
+    .split("")
+    .map(Number)
+    .filter((d) => d >= 1 && d <= 9);
+  const digitPts =
+    digits.length === 0
+      ? 13
+      : digits.reduce((s, d) => s + alignmentPoints(chartNumber, d), 0) /
+        digits.length;
+  return (pairPts + digitPts) / 2;
+}
+
+/**
+ * Lo Shu is a controlled bonus: fill quiet cells, do not overdose a strong
+ * digit, and do not award a fill that sits inside a high-conflict pair.
+ */
+function loShuPoints(args: {
+  person: LoShuResult;
+  counts: number[];
+  pairs: CompoundPair[];
+  sequenceSafe: boolean;
+  alignOk: boolean;
+}): { points: number; filledMissing: number[] } {
+  const { person, counts, pairs, sequenceSafe, alignOk } = args;
+  const allowBonus = sequenceSafe && alignOk;
+  let pts = 10;
+  const filledMissing: number[] = [];
+
+  for (let n = 1; n <= 9; n++) {
+    const personC = person.grid[n] ?? 0;
+    const mobileC = counts[n] ?? 0;
+    if (mobileC === 0) continue;
+    if (personC === 0) filledMissing.push(n);
+
+    const conflictedFill = pairs.some(
+      (p) => p.kind === "severeConflict" && p.pair.includes(String(n)),
+    );
+
+    let delta = 0;
+    if (personC === 0) {
+      if (mobileC === 1) delta = 5;
+      else if (mobileC === 2) delta = 3;
+      else delta = -3;
+      if (conflictedFill) delta = Math.min(delta, 0);
+    } else if (personC === 1) {
+      if (mobileC === 1) delta = 3;
+      else if (mobileC === 2) delta = 1;
+      else delta = -3;
+    } else if (mobileC === 1) {
+      delta = 0;
+    } else if (mobileC <= 3) {
+      delta = -3;
+    } else {
+      delta = -5;
+    }
+    if (mobileC >= 4) delta = Math.min(delta, -5);
+
+    if (!allowBonus && delta > 0) delta = 0;
+    pts += delta;
+  }
+
+  return { points: clamp(pts, 0, 20), filledMissing };
 }
 
 function verdictLine(
   verdict: MobileVerdict,
   pillars: MobilePillars,
-  bnTone: RootFitTone,
-  dnTone: RootFitTone,
+  hasSevere: boolean,
 ): string {
-  const weak = weakestPillar(pillars);
-  const rootNote =
-    bnTone === "Favourable" && dnTone === "Favourable"
-      ? "The total sits easily with birth number and destiny"
-      : bnTone === "Heavy" && dnTone === "Heavy"
-        ? "The total sits heavy with both birth number and destiny"
-        : "The total is mixed against birth number and destiny";
-
-  const extra =
-    weak === "root"
-      ? ""
-      : weak === "gaps"
-        ? "; missing chart digits are only partly covered"
-        : weak === "pairs"
-          ? "; the adjacent pairs lean heavy"
-          : "; some digits repeat more than this chart likes";
-
-  if (verdict === "Supportive") {
-    return `${rootNote}.`;
+  const parts: string[] = [];
+  if (hasSevere) {
+    parts.push(
+      "A traditionally high-conflict pair is present, so this stays a careful pick",
+    );
   }
-  if (verdict === "Caution") {
-    return `${rootNote}${extra || "; treat this number as a careful check"}.`;
+  if (pillars.sequence + pillars.ending < 18) {
+    parts.push("the inner sequence is uneven");
   }
-  return `${rootNote}${extra}.`;
+  if (pillars.destiny < 12) {
+    parts.push("the total sits awkwardly with destiny");
+  } else if (pillars.birth < 10) {
+    parts.push("the total sits awkwardly with the birth number");
+  }
+  if (pillars.loShu < 8) {
+    parts.push("the grid adds more pile-up than cover");
+  } else if (pillars.loShu >= 14 && !hasSevere) {
+    parts.push("quiet birth-grid cells get a useful lift");
+  }
+
+  const note =
+    parts.length > 0
+      ? parts.join("; ")
+      : "Sequence and chart alignment sit in a workable range";
+
+  if (verdict === "Exceptional" || verdict === "Excellent") {
+    return `${note}. Traditional reading only—not a prediction of events.`;
+  }
+  if (verdict === "Avoid" || verdict === "Weak") {
+    return `${note}. Traditional reading only—not a prediction of events.`;
+  }
+  return `${note}. Traditional reading only—not a prediction of events.`;
 }
 
 export function evaluateMobileFit(
@@ -143,6 +238,7 @@ export function evaluateMobileFit(
   const destinyNumber = vedicDestinyFromDob(dob);
   const lifePath = reduceToSingleDigit(lifePathFromDob(dob));
   const core = parsed.core;
+  const compound = parsed.compound;
 
   const bnTone = rootFitTone(birthNumber, core);
   const dnTone = rootFitTone(destinyNumber, core);
@@ -159,6 +255,11 @@ export function evaluateMobileFit(
     const d = Number(run.digit);
     return d >= 1 && d <= 9 && strainDigits.has(d);
   });
+
+  const pairs = slidingPairs(parsed.digits);
+  const last4 = parsed.digits.slice(-4);
+  const endingPairs = slidingPairs(last4);
+  const hasSevereConflict = pairs.some((p) => isSeverePair(p.pair));
 
   const flags: DigitFlag[] = [];
   for (let d = 0; d <= 9; d++) {
@@ -180,53 +281,48 @@ export function evaluateMobileFit(
       count: run.length,
     });
   }
-
-  const missing = personLoShu.missing_numbers;
-  const filledMissing = missing.filter(
-    (n) => (parsed.digitCounts[n] ?? 0) > 0,
-  );
-  const gaps =
-    missing.length === 0 ? 1 : filledMissing.length / missing.length;
-
-  const pairs = slidingPairs(parsed.digits);
-  const pairPillar =
-    pairs.length === 0
-      ? 0.5
-      : pairs.reduce((s, p) => s + pairScore(p.polarity), 0) / pairs.length;
-
-  const overCountDigits = new Set(
-    flags.filter((f) => f.kind === "overCount").map((f) => f.digit),
-  );
-  const strainRepeatDigits = new Set(
-    flags.filter((f) => f.kind === "strainRepeat").map((f) => f.digit),
-  );
-  let repeats = 1;
-  repeats -= overCountDigits.size * 0.25;
-  repeats -= strainRepeatDigits.size * 0.25;
-  repeats -= strainRuns.length * 0.35;
-  repeats = clamp01(repeats);
-
-  const root = (rootFitScore(bnTone) + rootFitScore(dnTone)) / 2;
-  const pillars: MobilePillars = {
-    root,
-    gaps,
-    pairs: pairPillar,
-    repeats,
-  };
-
-  let score = Math.round(
-    100 * (0.5 * root + 0.2 * gaps + 0.2 * pairPillar + 0.1 * repeats),
-  );
-  const bothHeavy = bnTone === "Heavy" && dnTone === "Heavy";
-  const hasStrainSeq = strainRuns.length > 0;
-  if (hasStrainSeq || bothHeavy) {
-    score = Math.min(score, 44);
+  if (hasSevereConflict) {
+    flags.push({ digit: 0, kind: "severePair", count: 1 });
   }
 
-  let verdict: MobileVerdict;
-  if (score < 45) verdict = "Caution";
-  else if (score >= 70 && root >= 0.75 && !hasStrainSeq) verdict = "Supportive";
-  else verdict = "Mixed";
+  const sequence = 25 * meanNormalizedPairs(pairs);
+  const ending = 10 * meanNormalizedPairs(endingPairs);
+
+  const dnRoot = alignmentPoints(destinyNumber, core);
+  const dnCompound = compoundVsChart(compound, destinyNumber);
+  const destiny = (dnRoot + dnCompound) / 2;
+
+  const bnRoot = alignmentPoints(birthNumber, core);
+  const bnCompound = compoundVsChart(compound, birthNumber);
+  const birth = ((bnRoot + bnCompound) / 2) * (20 / 25);
+
+  const pairNorm = meanNormalizedPairs(pairs);
+  const alignOk = destiny / 25 >= 0.35 && birth / 20 >= 0.35;
+  const sequenceSafe = !hasSevereConflict && pairNorm >= 0.4;
+  const loShu = loShuPoints({
+    person: personLoShu,
+    counts: parsed.digitCounts,
+    pairs,
+    sequenceSafe,
+    alignOk,
+  });
+
+  let score = Math.round(
+    sequence + ending + destiny + birth + loShu.points,
+  );
+  score = clamp(score, 0, 100);
+  if (hasSevereConflict) {
+    score = Math.min(score, 79);
+  }
+
+  const pillars: MobilePillars = {
+    sequence,
+    ending,
+    destiny,
+    birth,
+    loShu: loShu.points,
+  };
+  const verdict = classify(score, hasSevereConflict);
 
   return {
     ok: true,
@@ -237,6 +333,7 @@ export function evaluateMobileFit(
       destinyNumber,
       lifePath,
       core,
+      compound,
       bnTone,
       dnTone,
       lpTone,
@@ -246,11 +343,12 @@ export function evaluateMobileFit(
       flags,
       strainRuns,
       pairs,
-      filledMissing,
+      filledMissing: loShu.filledMissing,
+      hasSevereConflict,
       pillars,
       score,
       verdict,
-      line: verdictLine(verdict, pillars, bnTone, dnTone),
+      line: verdictLine(verdict, pillars, hasSevereConflict),
     },
   };
 }

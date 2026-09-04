@@ -48,10 +48,11 @@ export default async function MobilePage() {
           <h1 className="text-4xl text-ink">Mobile numbers</h1>
           <p className="mt-3 text-ink-soft">
             Pick someone from your profile and check a personal number and a
-            business number side by side. Each panel scores the total against
-            birth number and destiny, covers quiet Lo Shu cells, reads adjacent
-            digit pairs, and flags repeats. Reflective only—not telecom or legal
-            advice. For company name + domain + mobile together, use{" "}
+            business number side by side. Sequence comes first, then how the
+            compound and root sit with destiny and birth number, then Lo Shu as
+            a supporting lift. Traditional reading only—not a prediction of
+            events, and not telecom or legal advice. For company name + domain +
+            mobile together, use{" "}
             <a href="/business" className="text-gold-deep underline">
               Business numbers
             </a>

@@ -50,6 +50,20 @@ export function rootFitScore(tone: RootFitTone): number {
   return 0;
 }
 
+/**
+ * Graded 0–25 alignment (not a 3-step friend/enemy cliff).
+ * Exact match sits at the top; Heavy sits low but not always zero.
+ */
+export function alignmentPoints(selfRaw: number, partnerRaw: number): number {
+  const self = reduceToSingleDigit(selfRaw);
+  const partner = reduceToSingleDigit(partnerRaw);
+  if (self === partner) return 25;
+  const tone = rootFitTone(self, partner);
+  if (tone === "Favourable") return 22;
+  if (tone === "Steady") return 13;
+  return 3;
+}
+
 /** Digits that sit heavy vs this birth number or destiny (union). */
 export function strainDigitsForChart(
   birthNumber: number,

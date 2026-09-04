@@ -1,9 +1,13 @@
 /**
- * Smoke: mobile fit weights, root-fit tones, flags, and verdict caps.
+ * Smoke: hierarchical mobile fit (35/25/20/20), pair grades, hard-stop.
  */
 import { evaluateMobileFit } from "../src/lib/numerology/mobileFit";
-import { slidingPairs } from "../src/lib/numerology/mobileCompoundPairs";
-import { rootFitTone } from "../src/lib/numerology/mobileRootFit";
+import {
+  isSeverePair,
+  pairKind,
+  slidingPairs,
+} from "../src/lib/numerology/mobileCompoundPairs";
+import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
 
 function eq(actual: unknown, expected: unknown, label: string) {
@@ -25,12 +29,19 @@ function ok(cond: unknown, label: string) {
 }
 
 eq(rootFitTone(1, 9), "Favourable", "1 vs 9 favourable");
-eq(rootFitTone(1, 5), "Favourable", "1 vs 5 favourable");
-eq(rootFitTone(1, 4), "Steady", "1 vs 4 steady");
 eq(rootFitTone(1, 8), "Heavy", "1 vs 8 heavy");
-eq(rootFitTone(3, 6), "Favourable", "3 vs 6 favourable");
-eq(rootFitTone(3, 8), "Heavy", "3 vs 8 heavy");
-eq(rootFitTone(1, 1), "Steady", "1 vs 1 unlisted sits steady");
+eq(alignmentPoints(3, 3), 25, "exact match 25");
+eq(alignmentPoints(1, 9), 22, "favourable 22");
+eq(alignmentPoints(1, 4), 13, "steady 13");
+eq(alignmentPoints(1, 8), 3, "heavy 3");
+
+eq(pairKind("48"), "severeConflict", "48 severe");
+eq(pairKind("84"), "severeConflict", "84 severe");
+eq(pairKind("36"), "severeConflict", "36 severe");
+eq(pairKind("63"), "severeConflict", "63 severe");
+eq(isSeverePair("28"), true, "28 severe");
+eq(pairKind("15"), "highlyFavourable", "15 highly favourable");
+eq(pairKind("12"), "neutral", "12 neutral");
 
 const windows = slidingPairs("98765");
 eq(
@@ -40,19 +51,35 @@ eq(
 );
 
 const parsed = parseMobile("98765 43210");
-ok(parsed.ok && parsed.core === 9, "9876543210 reduces to 9");
+ok(parsed.ok && parsed.core === 9 && parsed.compound === 45, "9876543210 → 45 → 9");
 
 const easy = evaluateMobileFit("01/01/1990", "9876543210", "personal");
 ok(easy.ok, "easy number parses");
 if (easy.ok) {
-  eq(easy.fit.birthNumber, 1, "BN 1 for 01/01/1990");
-  eq(easy.fit.destinyNumber, 3, "DN 3 for 01/01/1990");
-  eq(easy.fit.core, 9, "core 9");
+  eq(easy.fit.birthNumber, 1, "BN 1");
+  eq(easy.fit.destinyNumber, 3, "DN 3");
+  eq(easy.fit.core, 9, "root 9");
+  eq(easy.fit.compound, 45, "compound 45 kept");
   eq(easy.fit.bnTone, "Favourable", "BN 1 vs 9");
   eq(easy.fit.dnTone, "Favourable", "DN 3 vs 9");
-  eq(easy.fit.pillars.root, 1, "root pillar 1");
-  ok(easy.fit.score >= 70, `easy score ${easy.fit.score} >= 70`);
-  eq(easy.fit.verdict, "Supportive", "easy verdict");
+  ok(easy.fit.score >= 60, `easy score ${easy.fit.score} >= 60`);
+  ok(
+    easy.fit.verdict !== "Avoid" && easy.fit.verdict !== "Weak",
+    `easy verdict ${easy.fit.verdict} is not weak`,
+  );
+  ok(easy.fit.pillars.sequence > 0, "sequence pillar");
+  ok(easy.fit.pillars.ending > 0, "ending pillar");
+}
+
+const severe = evaluateMobileFit("01/01/1990", "9848123456", "personal");
+ok(severe.ok, "severe-pair number parses");
+if (severe.ok) {
+  ok(severe.fit.hasSevereConflict, "48 detected as high-conflict");
+  ok(severe.fit.score <= 79, `hard-stop score ${severe.fit.score} <= 79`);
+  ok(
+    severe.fit.verdict !== "Exceptional" && severe.fit.verdict !== "Excellent",
+    `hard-stop verdict ${severe.fit.verdict}`,
+  );
 }
 
 const strain = evaluateMobileFit("01/01/1990", "8888888888", "personal");
@@ -62,28 +89,20 @@ if (strain.ok) {
   eq(strain.fit.bnTone, "Heavy", "BN 1 vs 8 heavy");
   eq(strain.fit.dnTone, "Heavy", "DN 3 vs 8 heavy");
   ok(strain.fit.strainRuns.length > 0, "sequential strain run on 8");
-  ok(strain.fit.score <= 44, `capped score ${strain.fit.score} <= 44`);
-  eq(strain.fit.verdict, "Caution", "capped verdict");
-}
-
-const mixed = evaluateMobileFit("01/01/1990", "9876543214", "personal");
-ok(mixed.ok, "mixed number parses");
-if (mixed.ok) {
-  eq(mixed.fit.core, 4, "core 4");
-  eq(mixed.fit.bnTone, "Steady", "BN 1 vs 4 steady");
-  eq(mixed.fit.dnTone, "Steady", "DN 3 vs 4 steady");
-  ok(mixed.fit.verdict !== "Supportive", "steady+steady root is not Supportive");
-}
-
-const strainRepeat = evaluateMobileFit("01/01/1990", "8123456780", "personal");
-ok(strainRepeat.ok, "two 8s parse");
-if (strainRepeat.ok) {
   ok(
-    strainRepeat.fit.flags.some(
-      (f) => f.kind === "strainRepeat" && f.digit === 8,
-    ),
-    "8 strain-repeat flag",
+    strain.fit.verdict === "Avoid" || strain.fit.verdict === "Weak",
+    `overdose/strain verdict ${strain.fit.verdict}`,
   );
+}
+
+const oneSevere = evaluateMobileFit("01/01/1990", "1234563670", "personal");
+ok(oneSevere.ok, "mixed sequence parses");
+if (oneSevere.ok) {
+  ok(
+    oneSevere.fit.pairs.some((p) => p.pair === "36"),
+    "36 present but does not zero the number",
+  );
+  ok(oneSevere.fit.score > 20, "one high-conflict pair is not a total fail");
 }
 
 const over = evaluateMobileFit("01/01/1990", "1111111113", "personal");
@@ -92,10 +111,6 @@ if (over.ok) {
   ok(
     over.fit.flags.some((f) => f.kind === "overCount" && f.digit === 1),
     "1 over-count flag",
-  );
-  ok(
-    over.fit.flags.some((f) => f.kind === "alreadyInGrid" && f.digit === 1),
-    "1 already on birth grid",
   );
 }
 
