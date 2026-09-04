@@ -304,18 +304,8 @@ function lastFourPattern(digits: string): {
   return { pattern: "mixed", note: slope.note, score: 0.28 };
 }
 
-function slotTone(
-  index: number,
-  isZero: boolean,
-  pairs: CompoundPair[],
-): LastFourSlotTone {
-  if (isZero) return "conflict";
-  const touched = pairs.filter((p) => p.index === index || p.index === index - 1);
-  if (touched.some((p) => p.kind === "severeConflict" || p.kind === "strongConflict")) {
-    return "conflict";
-  }
-  if (touched.some((p) => p.kind === "mildConflict")) return "watch";
-  return "clean";
+function slotTone(isZero: boolean): LastFourSlotTone {
+  return isZero ? "conflict" : "clean";
 }
 
 function layerA(slots: LastFourSlot[]): number {
@@ -374,7 +364,7 @@ export function analyzeLastFour(
       note: ROLE_NOTE[meta.role][digit] ?? "A mixed last-four slot.",
       label: meta.label,
       hint,
-      tone: slotTone(i, isZero, pairs),
+      tone: slotTone(isZero),
     };
   });
 

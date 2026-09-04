@@ -67,6 +67,10 @@ export function MobileLastFour({
           </div>
         ))}
       </div>
+      <p className="text-[11px] leading-4 text-ink-soft">
+        Teal = the slot has a digit. Rose = zero in that seat. Pair quality is
+        in L4-B and L4-C, not this color.
+      </p>
       <div>
         <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-soft">
           Last-4 layers · 5 sequence points

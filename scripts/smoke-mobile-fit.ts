@@ -297,6 +297,10 @@ if (tail3651) {
   const purpose = scorePurposeSuitability(tail3651, 6, 3, 3);
   ok(purpose.business >= 70, `3651 business ${purpose.business} >= 70`);
   ok(purpose.wealth >= 65, `3651 wealth ${purpose.wealth} >= 65`);
+  ok(
+    tail3651.slots.every((s) => s.tone === "clean"),
+    "3651 slots stay teal; pair 36 is L4-B, not slot color",
+  );
 }
 
 const tail3650 = analyzeLastFour("1111113650", 3, 3);
@@ -304,7 +308,8 @@ ok(tail3650, "3650 last four parses");
 if (tail3651 && tail3650) {
   eq(tail3650.root, 5, "3650 last-four root 5");
   ok(tail3650.slots[3]?.isZero, "10th position 0 is flagged");
-  ok(tail3650.slots[3]?.tone === "conflict", "D10=0 is rose, not a center-5 rule");
+  ok(tail3650.slots[3]?.tone === "conflict", "D10=0 is rose because it is zero");
+  ok(tail3650.slots[0]?.tone === "clean", "3650 D7=3 stays teal despite pair 36");
   ok(
     tail3650.slots[3]!.raw < tail3651.slots[3]!.raw,
     "0 in last slot weakens more than a 1 there",
@@ -319,6 +324,17 @@ if (tail3651 && tail3650) {
     p1.wealth - p0.wealth > p1.relationships - p0.relationships,
     "D10=0 lowers wealth more than relationships",
   );
+}
+
+const tail3563 = analyzeLastFour("1111113563", 3, 3);
+ok(tail3563, "3563 last four parses");
+if (tail3563) {
+  eq(tail3563.digits, "3563", "3563 digits");
+  ok(
+    tail3563.slots.every((s) => s.tone === "clean"),
+    "6 and 3 stay teal; pair 63 is L4-C, not slot color",
+  );
+  ok(tail3563.layers.c < 0.5, `3563 L4-C ${tail3563.layers.c} shows 63`);
 }
 
 const tail5065 = analyzeLastFour("1111115065", 3, 3);
