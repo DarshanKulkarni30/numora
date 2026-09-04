@@ -1,7 +1,13 @@
 /**
- * Adjacent two-digit conjunctions. Ratings are research-weighted traditional
- * lean, not objective harm. Motifs are original Numora lines.
+ * Adjacent two-digit conjunctions. Ratings come from the shared 00–99 matrix.
+ * Motifs are original Numora lines, not JSON slogans.
  */
+
+import {
+  getPairMatrixEntry,
+  pairMatrixClass,
+  type PairClass,
+} from "./mobilePairMatrix";
 
 export type PairKind =
   | "highlyFavourable"
@@ -37,31 +43,22 @@ export const PAIR_LABEL: Record<PairKind, string> = {
   severeConflict: "Severe conflict",
 };
 
-/** Hard-stop set: clearest overlapping traditional warnings. */
-const SEVERE = new Set([
-  "00", "14", "16", "18", "22", "26", "28", "34", "43", "44", "45", "46",
-  "48", "49", "61", "62", "64", "68", "77", "81", "82", "84", "86", "88",
-  "89", "94", "98", "99",
+const HARD_STOP_CLASS: ReadonlySet<PairClass> = new Set([
+  "severe_conflict",
+  "strong_conflict",
 ]);
 
-const STRONG = new Set([
-  "04", "08", "21", "27", "54", "58", "63", "72", "76", "78", "80", "85",
-  "87",
-]);
-
-const HIGHLY = new Set([
-  "10", "12", "13", "15", "17", "19", "23", "24", "25", "29", "31", "35",
-  "37", "47", "51", "52", "53", "56", "57", "65", "71", "73", "74", "75",
-  "83", "91", "95",
-]);
-
-const FAVOURABLE = new Set([
-  "11", "33", "39", "50", "55", "59", "66", "69", "79", "92", "93", "97",
-]);
-
-const MILD = new Set([
-  "32", "38", "41", "96",
-]);
+export function pairClassToKind(cls: PairClass, score: number): PairKind {
+  if (cls === "severe_conflict" || cls === "strong_conflict") {
+    return "severeConflict";
+  }
+  if (cls === "conflict" || cls === "strong_caution") return "strongConflict";
+  if (cls === "caution") return "mildConflict";
+  if (cls === "neutral" || cls === "contextual") return "neutral";
+  if (cls === "strong_positive") return "highlyFavourable";
+  if (cls === "positive") return score >= 5 ? "highlyFavourable" : "favourable";
+  return "neutral";
+}
 
 /** Short original themes — not source prose. */
 const THEME: Record<string, string> = {
@@ -168,16 +165,12 @@ const THEME: Record<string, string> = {
 };
 
 export function pairKind(pair: string): PairKind {
-  if (SEVERE.has(pair)) return "severeConflict";
-  if (HIGHLY.has(pair)) return "highlyFavourable";
-  if (FAVOURABLE.has(pair)) return "favourable";
-  if (STRONG.has(pair)) return "strongConflict";
-  if (MILD.has(pair)) return "mildConflict";
-  return "neutral";
+  const entry = getPairMatrixEntry(pair);
+  return pairClassToKind(entry.class, entry.base_score);
 }
 
 export function pairRawScore(pair: string): number {
-  return PAIR_RAW[pairKind(pair)];
+  return getPairMatrixEntry(pair).base_score;
 }
 
 export function normalizePairRaw(raw: number): number {
@@ -185,7 +178,7 @@ export function normalizePairRaw(raw: number): number {
 }
 
 export function isSeverePair(pair: string): boolean {
-  return SEVERE.has(pair);
+  return HARD_STOP_CLASS.has(pairMatrixClass(pair));
 }
 
 export function pairMotif(pair: string): string {
@@ -213,7 +206,7 @@ export function slidingPairs(digits: string): CompoundPair[] {
     out.push({
       pair,
       kind,
-      raw: PAIR_RAW[kind],
+      raw: pairRawScore(pair),
       motif: pairMotif(pair),
       index: i,
     });

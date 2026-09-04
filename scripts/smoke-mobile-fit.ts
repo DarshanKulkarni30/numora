@@ -5,8 +5,13 @@ import { evaluateMobileFit } from "../src/lib/numerology/mobileFit";
 import {
   isSeverePair,
   pairKind,
+  pairRawScore,
   slidingPairs,
 } from "../src/lib/numerology/mobileCompoundPairs";
+import {
+  assertMobilePairMatrix,
+  missingPairMatrixKeys,
+} from "../src/lib/numerology/mobilePairMatrix";
 import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
 import { classifyLoShuCells, scoreLoShu } from "../src/lib/numerology/mobileLoShu";
@@ -40,14 +45,23 @@ eq(alignmentPoints(1, 9), 22, "favourable 22");
 eq(alignmentPoints(1, 4), 13, "steady 13");
 eq(alignmentPoints(1, 8), 3, "heavy 3");
 
+assertMobilePairMatrix();
+eq(missingPairMatrixKeys().length, 0, "100 directional 00–99 keys");
 eq(pairKind("48"), "severeConflict", "48 severe");
 eq(pairKind("84"), "severeConflict", "84 severe");
-eq(pairKind("36"), "neutral", "36 not automatic severe");
+eq(pairKind("36"), "strongConflict", "36 conflict, not severe");
 eq(pairKind("63"), "strongConflict", "63 high conflict, not severe");
 eq(isSeverePair("28"), true, "28 severe");
 eq(isSeverePair("36"), false, "36 not in hard-stop set");
+eq(isSeverePair("00"), false, "00 leaves hard-stop");
+eq(isSeverePair("22"), false, "22 leaves hard-stop");
+eq(isSeverePair("16"), true, "16 stays hard-stop");
+eq(isSeverePair("14"), true, "14 strong_conflict is hard-stop");
+eq(pairKind("11"), "mildConflict", "11 caution");
 eq(pairKind("15"), "highlyFavourable", "15 highly favourable");
 eq(pairKind("12"), "highlyFavourable", "12 lift");
+eq(pairKind("21"), "favourable", "21 positive, not reverse of 12");
+ok(pairRawScore("12") !== pairRawScore("21"), "12 !== 21 directional scores");
 eq(pairKind("66"), "favourable", "66 lift");
 
 const windows = slidingPairs("98765");
@@ -177,8 +191,8 @@ if (cover98.ok) {
 const noTouchGrid = {
   grid: { 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 1 },
 };
-const elsewhere = parseMobile("9911111112");
-ok(elsewhere.ok, "9911111112 parses");
+const elsewhere = parseMobile("9917171717");
+ok(elsewhere.ok, "9917171717 parses");
 if (elsewhere.ok) {
   const lo = scoreLoShu(noTouchGrid, elsewhere.digitCounts, slidingPairs(elsewhere.digits), elsewhere.digits);
   eq(lo.integrity, 5, "99 does not cut Lo Shu when it does not touch a cover digit");
@@ -254,6 +268,21 @@ if (tail3651) {
   eq(tail3651.root, 6, "last-four root 6");
   eq(tail3651.slots[3]?.digit, 1, "10th is 1");
   ok(!tail3651.slots[3]?.isZero, "3651 last slot is not zero");
+  const layerSum =
+    tail3651.layers.a +
+    tail3651.layers.b +
+    tail3651.layers.c +
+    tail3651.layers.d +
+    tail3651.layers.e;
+  ok(
+    Math.abs(layerSum - tail3651.points) < 1e-9,
+    "L4-A…E sum to the 5-point slice",
+  );
+  ok(tail3651.layers.a <= 2.5, "L4-A max 2.5");
+  ok(tail3651.layers.b <= 1, "L4-B max 1");
+  ok(tail3651.layers.c <= 1, "L4-C max 1");
+  ok(tail3651.layers.d <= 0.5, "L4-D max 0.5");
+  ok(tail3651.layers.e <= 0.5, "L4-E max 0.5");
   const purpose = scorePurposeSuitability(tail3651, 6, 3, 3);
   ok(purpose.business >= 70, `3651 business ${purpose.business} >= 70`);
   ok(purpose.wealth >= 65, `3651 wealth ${purpose.wealth} >= 65`);
@@ -264,14 +293,21 @@ ok(tail3650, "3650 last four parses");
 if (tail3651 && tail3650) {
   eq(tail3650.root, 5, "3650 last-four root 5");
   ok(tail3650.slots[3]?.isZero, "10th position 0 is flagged");
+  ok(tail3650.slots[3]?.tone === "conflict", "D10=0 is rose, not a center-5 rule");
   ok(
     tail3650.slots[3]!.raw < tail3651.slots[3]!.raw,
     "0 in last slot weakens more than a 1 there",
   );
   ok(tail3650.points < tail3651.points, "3650 last-four slice < 3651");
+  ok(tail3650.layers.a < tail3651.layers.a, "D10=0 cuts L4-A via zero multiplier");
+  ok(tail3650.layers.e < tail3651.layers.e, "D10=0 cuts L4-E zero integrity");
   const p0 = scorePurposeSuitability(tail3650, 5, 3, 3);
   const p1 = scorePurposeSuitability(tail3651, 6, 3, 3);
   ok(p0.wealth < p1.wealth, "0 in last slot lowers wealth suitability");
+  ok(
+    p1.wealth - p0.wealth > p1.relationships - p0.relationships,
+    "D10=0 lowers wealth more than relationships",
+  );
 }
 
 const tail5065 = analyzeLastFour("1111115065", 3, 3);
@@ -279,6 +315,42 @@ ok(tail5065, "5065 last four parses");
 if (tail5065) {
   ok(tail5065.slots[1]?.isZero, "0 in 8th weakens receiver emotion");
   eq(tail5065.pairs.map((p) => p.pair), ["50", "06", "65"], "5065 last-four pairs");
+}
+
+const tail5606 = analyzeLastFour("1111115606", 3, 3);
+ok(tail5606, "5606 last four parses");
+if (tail5606) {
+  eq(tail5606.compound, 17, "5606 last-four total 17 is metadata");
+  eq(tail5606.root, 8, "5606 last-four root 8 is metadata, not a verdict");
+  ok(tail5606.slots[2]?.isZero, "D9=0 flagged");
+  ok(
+    (tail5606.slots[2]?.note ?? "").toLowerCase().includes("incoming tone"),
+    "5606 copy flags D9=0 incoming tone",
+  );
+  ok(tail5606.slots[3]?.digit === 6, "D10 stays 6 when D9 is 0");
+}
+
+const tail5656 = analyzeLastFour("1111115656", 3, 3);
+ok(tail5656, "5656 last four parses");
+if (tail5656) {
+  eq(tail5656.pattern, "alternate", "5656 is an alternate pattern");
+  ok(
+    (tail5656.patternNote ?? "").includes("5656"),
+    "L4-D names the 5656 alternate",
+  );
+  ok(tail5656.layers.d > 0.3, "5656 still scores L4-D as a pulse, not a wipe");
+}
+
+const d10five = analyzeLastFour("1111111235", 3, 3);
+const d10one = analyzeLastFour("1111111231", 3, 3);
+ok(d10five && d10one, "D10=5 vs D10=1 last four parse");
+if (d10five && d10one) {
+  const p5 = scorePurposeSuitability(d10five, d10five.root, 3, 3);
+  const p1 = scorePurposeSuitability(d10one, d10one.root, 3, 3);
+  ok(
+    p5.business > p1.business,
+    `D10=5 business ${p5.business} > D10=1 business ${p1.business}`,
+  );
 }
 
 console.log("smoke-mobile-fit passed");

@@ -5,10 +5,13 @@
  */
 
 import {
+  isAdverseKind,
   meanNormalizedPairs,
+  normalizePairRaw,
   slidingPairs,
   type CompoundPair,
 } from "./mobileCompoundPairs";
+import { pairPurposeAffinities } from "./mobilePairMatrix";
 import { mobileCompound, mobileCore } from "./mobileNumber";
 import { alignmentPoints } from "./mobileRootFit";
 
@@ -24,6 +27,18 @@ export type LastFourDirection =
   | "mixed"
   | "level"
   | "paused";
+
+export type LastFourPattern =
+  | "rising"
+  | "falling"
+  | "alternate"
+  | "repeat"
+  | "mirror"
+  | "abrupt"
+  | "mixed"
+  | "paused";
+
+export type LastFourSlotTone = "clean" | "watch" | "conflict";
 
 export type MobilePurpose =
   | "business"
@@ -42,6 +57,15 @@ export type LastFourSlot = {
   note: string;
   label: string;
   hint: string;
+  tone: LastFourSlotTone;
+};
+
+export type LastFourLayers = {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
 };
 
 export type LastFourAnalysis = {
@@ -52,14 +76,33 @@ export type LastFourAnalysis = {
   pairs: CompoundPair[];
   direction: LastFourDirection;
   directionNote: string;
+  pattern: LastFourPattern;
+  patternNote: string;
+  layers: LastFourLayers;
   bnTonePoints: number;
   dnTonePoints: number;
-  /** 0–5 sequence slice. */
+  /** 0–5 sequence slice = L4-A…E. */
   points: number;
   schoolNote: string;
 };
 
 export type PurposeScores = Record<MobilePurpose, number>;
+
+export const LAST_FOUR_LAYER_MAX: LastFourLayers = {
+  a: 2.5,
+  b: 1,
+  c: 1,
+  d: 0.5,
+  e: 0.5,
+};
+
+export const LAST_FOUR_LAYER_LABEL: Record<keyof LastFourLayers, string> = {
+  a: "L4-A · slots",
+  b: "L4-B · D7–D8",
+  c: "L4-C · D9–D10",
+  d: "L4-D · pattern",
+  e: "L4-E · zeros",
+};
 
 const ROLES: {
   role: LastFourRole;
@@ -94,6 +137,14 @@ const ROLE_RAW: Record<LastFourRole, number[]> = {
   receiverEmotion: [1.2, 3.2, 4.8, 3.6, 2.0, 3.6, 4.8, 2.6, 2.0, 3.4],
   callerTone: [1.2, 3.6, 4.2, 4.2, 2.2, 4.2, 4.2, 2.6, 2.2, 4.2],
   callerOutcome: [0.8, 4.6, 3.2, 3.6, 2.2, 4.2, 4.6, 2.2, 3.2, 4.2],
+};
+
+/** Engine-design zero multipliers, not traditional constants. */
+const ZERO_MULT: Record<LastFourRole, number> = {
+  receiverOuter: 0.8,
+  receiverEmotion: 0.75,
+  callerTone: 0.75,
+  callerOutcome: 0.65,
 };
 
 const ROLE_NOTE: Record<LastFourRole, string[]> = {
@@ -198,12 +249,100 @@ function patternDirection(digits: string): {
   };
 }
 
-function directionScore01(direction: LastFourDirection): number {
-  if (direction === "rising") return 0.85;
-  if (direction === "level") return 0.5;
-  if (direction === "mixed") return 0.55;
-  if (direction === "paused") return 0.4;
-  return 0.32;
+function lastFourPattern(digits: string): {
+  pattern: LastFourPattern;
+  note: string;
+  score: number;
+} {
+  const d = digits.split("").map(Number);
+  const slope = patternDirection(digits);
+
+  if (d[0] === d[1] && d[1] === d[2] && d[2] === d[3]) {
+    return {
+      pattern: "repeat",
+      note: "All four slots repeat one digit — intensity is high; the tail does not travel.",
+      score: 0.22,
+    };
+  }
+  if (d[0] === d[2] && d[1] === d[3] && d[0] !== d[1]) {
+    const named = digits === "5656" ? " (5656)" : "";
+    return {
+      pattern: "alternate",
+      note: `The last four alternate two digits${named} — a pulse, not a climb.`,
+      score: 0.4,
+    };
+  }
+  if (d[0] === d[3] && d[1] === d[2] && d[0] !== d[1]) {
+    return {
+      pattern: "mirror",
+      note: "The last four mirror (outer digits match, inner digits match).",
+      score: 0.36,
+    };
+  }
+
+  let maxJump = 0;
+  for (let i = 1; i < 4; i++) {
+    if (d[i] === 0 || d[i - 1] === 0) continue;
+    maxJump = Math.max(maxJump, Math.abs(d[i]! - d[i - 1]!));
+  }
+  if (maxJump >= 7) {
+    return {
+      pattern: "abrupt",
+      note: "An abrupt jump between neighbouring last-four digits breaks a smooth tail.",
+      score: 0.18,
+    };
+  }
+  if (slope.direction === "rising") {
+    return { pattern: "rising", note: slope.note, score: 0.48 };
+  }
+  if (slope.direction === "falling") {
+    return { pattern: "falling", note: slope.note, score: 0.16 };
+  }
+  if (slope.direction === "paused") {
+    return { pattern: "paused", note: slope.note, score: 0.18 };
+  }
+  return { pattern: "mixed", note: slope.note, score: 0.28 };
+}
+
+function slotTone(
+  index: number,
+  isZero: boolean,
+  pairs: CompoundPair[],
+): LastFourSlotTone {
+  if (isZero) return "conflict";
+  const touched = pairs.filter((p) => p.index === index || p.index === index - 1);
+  if (touched.some((p) => p.kind === "severeConflict" || p.kind === "strongConflict")) {
+    return "conflict";
+  }
+  if (touched.some((p) => p.kind === "mildConflict")) return "watch";
+  return "clean";
+}
+
+function layerA(slots: LastFourSlot[]): number {
+  const mean =
+    slots.reduce((s, sl) => {
+      const q = sl.raw / 5;
+      const z = sl.isZero ? ZERO_MULT[sl.role] : 1;
+      return s + q * z;
+    }, 0) / slots.length;
+  return clamp(2.5 * mean, 0, LAST_FOUR_LAYER_MAX.a);
+}
+
+function layerFromPair(pair: CompoundPair | undefined, max: number): number {
+  if (!pair) return max * 0.5;
+  return clamp(max * normalizePairRaw(pair.raw), 0, max);
+}
+
+function layerE(digits: string, pairs: CompoundPair[]): number {
+  const zeros = digits.split("").filter((c) => c === "0").length;
+  if (zeros === 0) return LAST_FOUR_LAYER_MAX.e;
+  let pts = LAST_FOUR_LAYER_MAX.e;
+  pts -= zeros * 0.07;
+  if (digits[3] === "0") pts -= 0.12;
+  for (const p of pairs) {
+    if (p.pair.includes("0") && isAdverseKind(p.kind)) pts -= 0.08;
+  }
+  return clamp(pts, 0, LAST_FOUR_LAYER_MAX.e);
 }
 
 export function analyzeLastFour(
@@ -216,7 +355,8 @@ export function analyzeLastFour(
   const tenDigit = fullDigits.length === 10;
   const compound = mobileCompound(digits);
   const root = mobileCore(compound || 9);
-  const pattern = patternDirection(digits);
+  const slope = patternDirection(digits);
+  const patterned = lastFourPattern(digits);
   const pairs = slidingPairs(digits);
 
   const slots: LastFourSlot[] = ROLES.map((meta, i) => {
@@ -224,28 +364,31 @@ export function analyzeLastFour(
     const hint = tenDigit
       ? `${7 + i}th digit`
       : `${meta.hint} of the active tail`;
+    const isZero = digit === 0;
     return {
       role: meta.role,
       index: i,
       digit,
-      isZero: digit === 0,
+      isZero,
       raw: slotRaw(meta.role, digit),
       note: ROLE_NOTE[meta.role][digit] ?? "A mixed last-four slot.",
       label: meta.label,
       hint,
+      tone: slotTone(i, isZero, pairs),
     };
   });
 
-  const positional01 =
-    slots.reduce((s, sl) => s + sl.raw / 5, 0) / slots.length;
+  const layers: LastFourLayers = {
+    a: layerA(slots),
+    b: layerFromPair(pairs[0], LAST_FOUR_LAYER_MAX.b),
+    c: layerFromPair(pairs[2], LAST_FOUR_LAYER_MAX.c),
+    d: clamp(patterned.score, 0, LAST_FOUR_LAYER_MAX.d),
+    e: layerE(digits, pairs),
+  };
   const bnTonePoints = alignmentPoints(birthNumber, root);
   const dnTonePoints = alignmentPoints(destinyNumber, root);
-  const root01 = (bnTonePoints + dnTonePoints) / 2 / 25;
   const points = clamp(
-    5 *
-      (0.5 * positional01 +
-        0.2 * directionScore01(pattern.direction) +
-        0.3 * root01),
+    layers.a + layers.b + layers.c + layers.d + layers.e,
     0,
     5,
   );
@@ -256,13 +399,16 @@ export function analyzeLastFour(
     root,
     slots,
     pairs,
-    direction: pattern.direction,
-    directionNote: pattern.note,
+    direction: slope.direction,
+    directionNote: slope.note,
+    pattern: patterned.pattern,
+    patternNote: patterned.note,
+    layers,
     bnTonePoints,
     dnTonePoints,
     points,
     schoolNote:
-      "Last-four roles follow a receiver/caller school used in this engine — one traditional map among several, not a proven causal effect.",
+      "Last-4 positional model — Numora receiver/caller school. Traditional reading only; other schools map these four slots differently.",
   };
 }
 
@@ -280,6 +426,18 @@ function slot01(analysis: LastFourAnalysis, role: LastFourRole): number {
   return (sl?.raw ?? 2) / 5;
 }
 
+function meanPairAff(
+  pairs: CompoundPair[],
+  key: keyof ReturnType<typeof pairPurposeAffinities>,
+): number {
+  if (pairs.length === 0) return 0.4;
+  const sum = pairs.reduce(
+    (s, p) => s + pairPurposeAffinities(p.pair)[key] / 5,
+    0,
+  );
+  return sum / pairs.length;
+}
+
 export function scorePurposeSuitability(
   analysis: LastFourAnalysis,
   core: number,
@@ -290,6 +448,7 @@ export function scorePurposeSuitability(
   const h = slot01(analysis, "receiverEmotion");
   const i = slot01(analysis, "callerTone");
   const j = slot01(analysis, "callerOutcome");
+  const d10 = analysis.slots.find((s) => s.role === "callerOutcome")?.digit ?? 0;
   const lastRoot =
     (analysis.bnTonePoints + analysis.dnTonePoints) / 2 / 25;
   const coreFit =
@@ -299,27 +458,60 @@ export function scorePurposeSuitability(
     25;
   const pair01 = meanNormalizedPairs(analysis.pairs);
   const meanSlots = (g + h + i + j) / 4;
+  const seq01 = analysis.points / 5;
+  const pairBiz = meanPairAff(analysis.pairs, "business");
+  const pairCareer = meanPairAff(analysis.pairs, "career");
+  const pairRel = meanPairAff(analysis.pairs, "relationship");
+  const pairWealth = meanPairAff(analysis.pairs, "wealth");
+  const pairNet = meanPairAff(analysis.pairs, "networking");
+  const d10Business = d10 === 5 ? 1 : d10 === 0 ? 0.2 : 0.7;
+  const wealthSlot = d10 === 0 ? j * 0.45 : j;
 
   const pct = (...parts: number[]) =>
     Math.round(clamp(parts.reduce((s, p) => s + p, 0) * 100, 0, 100));
 
   return {
-    business: pct(0.22 * g, 0.2 * i, 0.26 * j, 0.18 * lastRoot, 0.14 * pair01),
-    career: pct(0.18 * g, 0.22 * i, 0.24 * j, 0.22 * lastRoot, 0.14 * pair01),
-    relationships: pct(
-      0.3 * h,
-      0.26 * i,
-      0.18 * j,
-      0.14 * lastRoot,
-      0.12 * pair01,
+    business: pct(
+      0.18 * g,
+      0.18 * i,
+      0.22 * j,
+      0.12 * d10Business,
+      0.16 * lastRoot,
+      0.14 * pairBiz,
     ),
-    networking: pct(0.28 * g, 0.24 * i, 0.2 * j, 0.14 * lastRoot, 0.14 * pair01),
-    wealth: pct(0.2 * g, 0.32 * j, 0.28 * lastRoot, 0.2 * pair01),
+    career: pct(
+      0.22 * g,
+      0.22 * j,
+      0.2 * seq01,
+      0.2 * coreFit,
+      0.16 * pairCareer,
+    ),
+    relationships: pct(
+      0.28 * h,
+      0.22 * i,
+      0.18 * j,
+      0.16 * lastRoot,
+      0.16 * pairRel,
+    ),
+    networking: pct(
+      0.26 * g,
+      0.22 * i,
+      0.22 * j,
+      0.14 * lastRoot,
+      0.16 * pairNet,
+    ),
+    wealth: pct(
+      0.08 * g,
+      0.42 * wealthSlot,
+      0.18 * lastRoot,
+      0.16 * coreFit,
+      0.16 * pairWealth,
+    ),
     personal: pct(
-      0.24 * h,
-      0.28 * meanSlots,
-      0.28 * lastRoot,
-      0.1 * coreFit,
+      0.28 * h,
+      0.24 * meanSlots,
+      0.22 * lastRoot,
+      0.16 * coreFit,
       0.1 * pair01,
     ),
   };

@@ -1,0 +1,1308 @@
+{
+  "version": "1.0",
+  "methodology": "NumoraOracle Mobile Numerology",
+  "pair_count": 100,
+  "directional": true,
+  "pairs": {
+    "10": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "11": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 2,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "12": {
+      "class": "positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 5,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "13": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "14": {
+      "class": "strong_conflict",
+      "base_score": -5,
+      "risk": "high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "15": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 5,
+        "wealth": 5,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "16": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "17": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "18": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "19": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "20": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "21": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "22": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 2,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "23": {
+      "class": "positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 5,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "24": {
+      "class": "positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 5,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "25": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "26": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "27": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "28": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "29": {
+      "class": "positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 5,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "30": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "31": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "32": {
+      "class": "contextual",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 2
+      },
+      "source_type": "traditional_numerology"
+    },
+    "33": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 4
+      },
+      "source_type": "traditional_numerology"
+    },
+    "34": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "35": {
+      "class": "positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 5
+      },
+      "source_type": "traditional_numerology"
+    },
+    "36": {
+      "class": "conflict",
+      "base_score": -3,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "37": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "38": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "medium",
+      "purpose": {
+        "business": 4,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "39": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 5,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "40": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 2,
+        "career": 2,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "41": {
+      "class": "strong_conflict",
+      "base_score": -5,
+      "risk": "high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "42": {
+      "class": "contextual",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "43": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "44": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "45": {
+      "class": "strong_conflict",
+      "base_score": -5,
+      "risk": "high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "46": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "47": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "48": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "49": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "50": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 2
+      },
+      "source_type": "traditional_numerology"
+    },
+    "51": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 5,
+        "networking": 5
+      },
+      "source_type": "traditional_numerology"
+    },
+    "52": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "53": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 5
+      },
+      "source_type": "traditional_numerology"
+    },
+    "54": {
+      "class": "strong_conflict",
+      "base_score": -5,
+      "risk": "high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "55": {
+      "class": "caution",
+      "base_score": 2,
+      "risk": "medium",
+      "purpose": {
+        "business": 2,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 2
+      },
+      "source_type": "traditional_numerology"
+    },
+    "56": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 4,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 4
+      },
+      "source_type": "traditional_numerology"
+    },
+    "57": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "58": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "59": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 4,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "60": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "61": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "62": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "63": {
+      "class": "conflict",
+      "base_score": -3,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "64": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "65": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 4,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 4
+      },
+      "source_type": "traditional_numerology"
+    },
+    "66": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 4,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "67": {
+      "class": "contextual",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "68": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "69": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 4,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "70": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "71": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "72": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "73": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "74": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "75": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 5
+      },
+      "source_type": "traditional_numerology"
+    },
+    "76": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 2,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "77": {
+      "class": "strong_caution",
+      "base_score": -2,
+      "risk": "high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "78": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "79": {
+      "class": "contextual",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 2,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "80": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "81": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "82": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "83": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "medium",
+      "purpose": {
+        "business": 4,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "84": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "85": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "86": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "87": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "88": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "89": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "90": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 2,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "91": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 5,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "92": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "93": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "94": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "95": {
+      "class": "strong_positive",
+      "base_score": 5,
+      "risk": "low",
+      "purpose": {
+        "business": 5,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 5
+      },
+      "source_type": "traditional_numerology"
+    },
+    "96": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 4,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "97": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "98": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "99": {
+      "class": "severe_conflict",
+      "base_score": -5,
+      "risk": "very_high",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "00": {
+      "class": "neutral",
+      "base_score": 0,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "01": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "02": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "03": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 4,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 4
+      },
+      "source_type": "traditional_numerology"
+    },
+    "04": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 2,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "05": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 4,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 4
+      },
+      "source_type": "traditional_numerology"
+    },
+    "06": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 4,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "07": {
+      "class": "neutral",
+      "base_score": 2,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "08": {
+      "class": "caution",
+      "base_score": 0,
+      "risk": "medium",
+      "purpose": {
+        "business": 0,
+        "career": 0,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    },
+    "09": {
+      "class": "positive",
+      "base_score": 4,
+      "risk": "low",
+      "purpose": {
+        "business": 0,
+        "career": 4,
+        "relationship": 0,
+        "wealth": 0,
+        "networking": 0
+      },
+      "source_type": "traditional_numerology"
+    }
+  }
+}
