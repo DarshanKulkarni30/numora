@@ -22,6 +22,7 @@ const EXPLORE_LINKS = [
   { href: "/name", label: "Name" },
   { href: "/years", label: "Years" },
   { href: "/place", label: "Place" },
+  { href: "/mobile", label: "Mobile" },
   { href: "/business", label: "Business" },
   { href: "/trivia", label: "Trivia" },
   { href: "/family", label: "Pairs" },

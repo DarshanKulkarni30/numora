@@ -41,7 +41,7 @@ type Props = {
   canUseCompany?: boolean;
 };
 
-type FeatureTab = "mobile" | "company";
+type FeatureTab = "personal" | "business" | "company";
 
 type OwnerBits = {
   key: string;
@@ -150,13 +150,14 @@ export function BusinessExplorer({
     const first = self ?? selectable[0];
     return first ? [personKey(first)] : [];
   });
-  const [featureTab, setFeatureTab] = useState<FeatureTab>("mobile");
+  const [featureTab, setFeatureTab] = useState<FeatureTab>("personal");
   const [domainId, setDomainId] = useState("general");
   const [mobileRaw, setMobileRaw] = useState("");
   const [companyRaw, setCompanyRaw] = useState("");
 
   const showCompanyUpgrade = featureTab === "company" && !canUseCompany;
-  const tabHighlight: FeatureTab = featureTab;
+  const isPersonal = featureTab === "personal";
+  const isBusinessSurface = featureTab === "business" || featureTab === "company";
   const domain = getBusinessDomain(domainId);
 
   const owners: OwnerBits[] = useMemo(() => {
@@ -239,23 +240,58 @@ export function BusinessExplorer({
 
   return (
     <div className="space-y-8">
+      <div className="max-w-2xl">
+        <h1 className="text-4xl text-ink">
+          {isPersonal ? "Personal number" : "Business numbers"}
+        </h1>
+        <p className="mt-3 text-ink-soft">
+          {isPersonal
+            ? "Check a personal national number against this person’s birth and destiny numbers. Area of business is not used here."
+            : "Score a business mobile and a company or brand name against the owner’s Psychic, Destiny, and personal name—plus your area of business. Company × mobile fit is domain-aware. Reflective branding notes only, not legal or financial advice."}
+        </p>
+      </div>
+
       {selectable.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[var(--line)] bg-white/50 px-5 py-8 text-center text-sm text-ink-soft">
           Save at least one complete profile person (name + DOB) to explore
-          business numbers.{" "}
+          numbers.{" "}
           <Link href="/profile" className="text-gold-deep underline">
             Open profile
           </Link>
         </div>
       ) : (
         <>
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
+            {(
+              [
+                ["personal", "Personal number"],
+                ["business", "Business mobile"],
+                ["company", "Company name"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setFeatureTab(id)}
+                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
+                  featureTab === id
+                    ? "bg-ink text-paper shadow-sm"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                {label}
+                {id === "company" && !canUseCompany ? " · Pro" : ""}
+              </button>
+            ))}
+          </div>
+
+          <div className={`grid gap-4 ${isBusinessSurface ? "lg:grid-cols-2" : ""}`}>
             <div>
               <p className="mb-1 text-sm text-ink-soft">
-                Owners from your profile
+                {isPersonal ? "Person from your profile" : "Owners from your profile"}
               </p>
               <div className="space-y-2">
-                {selectedKeys.map((key, index) => {
+                {(isPersonal ? selectedKeys.slice(0, 1) : selectedKeys).map((key, index) => {
                   const current = selectable.find((p) => personKey(p) === key);
                   const options = selectable.filter(
                     (p) =>
@@ -279,7 +315,7 @@ export function BusinessExplorer({
                           </option>
                         ))}
                       </select>
-                      {selectedKeys.length > 1 ? (
+                      {isBusinessSurface && selectedKeys.length > 1 ? (
                         <button
                           type="button"
                           onClick={() => removeOwnerAt(index)}
@@ -292,22 +328,25 @@ export function BusinessExplorer({
                     </div>
                   );
                 })}
-                <button
-                  type="button"
-                  onClick={addOwnerSlot}
-                  disabled={unusedOwners.length === 0}
-                  className="rounded-xl border border-dashed border-[var(--line)] bg-white/60 px-3 py-2 text-sm text-ink transition duration-200 hover:-translate-y-px hover:border-sea/40 hover:bg-mist/60 hover:shadow-sm active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
-                >
-                  Add owner
-                </button>
+                {isBusinessSurface ? (
+                  <button
+                    type="button"
+                    onClick={addOwnerSlot}
+                    disabled={unusedOwners.length === 0}
+                    className="rounded-xl border border-dashed border-[var(--line)] bg-white/60 px-3 py-2 text-sm text-ink transition duration-200 hover:-translate-y-px hover:border-sea/40 hover:bg-mist/60 hover:shadow-sm active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                  >
+                    Add owner
+                  </button>
+                ) : null}
               </div>
               <p className="mt-2 text-xs text-ink-soft">
-                Each owner gets their own compatibility section. Use Add owner
-                for co-founders or family on the same venture.
+                {isPersonal
+                  ? "This reading uses one person from your profile."
+                  : "Each owner gets their own compatibility section. Use Add owner for co-founders or family on the same venture."}
               </p>
               {owners.length > 0 ? (
                 <ul className="mt-2 space-y-1 text-xs text-ink-soft">
-                  {owners.map((o) => (
+                  {(isPersonal ? owners.slice(0, 1) : owners).map((o) => (
                     <li key={o.key}>
                       <span className="font-medium text-ink">{o.label}</span>
                       : Psychic{" "}
@@ -327,6 +366,7 @@ export function BusinessExplorer({
               ) : null}
             </div>
 
+            {isBusinessSurface ? (
             <div>
               <label
                 htmlFor="biz-domain"
@@ -348,38 +388,16 @@ export function BusinessExplorer({
               </select>
               <p className="mt-2 text-xs text-ink-soft">{domain.blurb}</p>
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
-            {(
-              [
-                ["mobile", "Mobile number"],
-                ["company", "Company name"],
-              ] as const
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setFeatureTab(id)}
-                className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
-                  tabHighlight === id
-                    ? "bg-ink text-paper shadow-sm"
-                    : "text-ink-soft hover:text-ink"
-                }`}
-              >
-                {label}
-                {id === "company" && !canUseCompany ? " · Pro" : ""}
-              </button>
-            ))}
+            ) : null}
           </div>
 
           {showCompanyUpgrade ? (
             <UpgradeRequired feature="Company / brand-name scoring" />
-          ) : featureTab === "mobile" ? (
+          ) : featureTab === "personal" || featureTab === "business" ? (
             <section className="space-y-4">
               <MobileFitPanel
-                title="Business mobile"
-                use="business"
+                title={isPersonal ? "Personal mobile" : "Business mobile"}
+                use={isPersonal ? "personal" : "business"}
                 dob={owners[0]?.person.date_of_birth ?? ""}
                 value={mobileRaw}
                 onChange={setMobileRaw}
@@ -387,40 +405,44 @@ export function BusinessExplorer({
 
               {mobile.ok ? (
                 <div className="space-y-3">
-                  {owners.map((o) => (
-                    <div
-                      key={`mobile-domain-${o.key}`}
-                      className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
-                    >
-                      <p className="text-sm font-medium text-ink">
-                        Domain fit · {o.label}
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        <DomainFitChip
-                          fit={domainFit(mobile.core, domain, "mobile")}
-                          label={`full ${mobile.core} · domain`}
-                        />
-                        {mobile.last4 ? (
-                          <DomainFitChip
-                            fit={domainFit(
-                              mobile.last4.core,
-                              domain,
-                              "mobile",
-                            )}
-                            label={`last-4 ${mobile.last4.core} · domain`}
-                          />
-                        ) : null}
-                      </div>
-                      <p className="mt-2 text-xs text-ink-soft">
-                        {o.prominence.caption}
-                      </p>
-                    </div>
-                  ))}
-                  <p className="text-xs text-ink-soft">
-                    Preferred mobile digits for this domain:{" "}
-                    {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
-                    {domain.carefulMobileDigits.join(", ") || "—"}.
-                  </p>
+                  {featureTab === "business"
+                    ? owners.map((o) => (
+                        <div
+                          key={`mobile-domain-${o.key}`}
+                          className="rounded-xl border border-[var(--line)] bg-white/55 px-4 py-3"
+                        >
+                          <p className="text-sm font-medium text-ink">
+                            Domain fit · {o.label}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <DomainFitChip
+                              fit={domainFit(mobile.core, domain, "mobile")}
+                              label={`full ${mobile.core} · domain`}
+                            />
+                            {mobile.last4 ? (
+                              <DomainFitChip
+                                fit={domainFit(
+                                  mobile.last4.core,
+                                  domain,
+                                  "mobile",
+                                )}
+                                label={`last-4 ${mobile.last4.core} · domain`}
+                              />
+                            ) : null}
+                          </div>
+                          <p className="mt-2 text-xs text-ink-soft">
+                            {o.prominence.caption}
+                          </p>
+                        </div>
+                      ))
+                    : null}
+                  {featureTab === "business" ? (
+                    <p className="text-xs text-ink-soft">
+                      Preferred mobile digits for this domain:{" "}
+                      {domain.preferredMobileDigits.join(", ")}. Careful:{" "}
+                      {domain.carefulMobileDigits.join(", ") || "—"}.
+                    </p>
+                  ) : null}
                   <p className="text-xs text-ink-soft">
                     Personal and business side by side:{" "}
                     <Link
@@ -434,8 +456,9 @@ export function BusinessExplorer({
                 </div>
               ) : (
                 <p className="text-sm text-ink-soft">
-                  Type a national mobile number to score it against domain and
-                  owners.
+                  {isPersonal
+                    ? "Type a national mobile number to score it for this person."
+                    : "Type a national mobile number to score it against domain and owners."}
                 </p>
               )}
             </section>

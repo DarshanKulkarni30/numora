@@ -61,16 +61,7 @@ export default async function BusinessPage() {
     <div>
       <SiteHeader email={user.email} />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">Business numbers</h1>
-          <p className="mt-3 text-ink-soft">
-            Score a national mobile number and a company or brand name against
-            the owner&apos;s Psychic, Destiny, and personal name—plus your area
-            of business. Company × mobile fit is domain-aware. Reflective
-            branding notes only, not legal or financial advice.
-          </p>
-        </div>
-        <div className="mt-10">
+        <div className="mt-2">
           <BusinessExplorer
             people={people}
             canUseCompany={entitlements.features.business}
