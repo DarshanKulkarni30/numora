@@ -25,6 +25,11 @@ import {
 } from "./mobileSequence";
 import { scoreLoShu, type LoShuCellView } from "./mobileLoShu";
 import {
+  scorePurposeSuitability,
+  type LastFourAnalysis,
+  type PurposeScores,
+} from "./mobileLastFour";
+import {
   alignmentPoints,
   rootFitTone,
   strainDigitsForChart,
@@ -97,6 +102,8 @@ export type MobileFit = {
   pairInsights: PairInsight[];
   filledMissing: number[];
   loShuImpact: LoShuImpact;
+  lastFour: LastFourAnalysis | null;
+  purpose: PurposeScores | null;
   hasSevereConflict: boolean;
   pillars: MobilePillars;
   score: number;
@@ -349,6 +356,10 @@ export function evaluateMobileFit(
     loShu.contaminatedBy,
     loShu.cells,
   );
+  const lastFour = seq.lastFour;
+  const purpose = lastFour
+    ? scorePurposeSuitability(lastFour, core, birthNumber, destinyNumber)
+    : null;
 
   let score =
     Math.round(sequence) +
@@ -392,6 +403,8 @@ export function evaluateMobileFit(
       pairInsights,
       filledMissing: loShu.filledMissing,
       loShuImpact,
+      lastFour,
+      purpose,
       hasSevereConflict,
       pillars,
       score,

@@ -10,6 +10,10 @@ import {
 import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
 import { classifyLoShuCells, scoreLoShu } from "../src/lib/numerology/mobileLoShu";
+import {
+  analyzeLastFour,
+  scorePurposeSuitability,
+} from "../src/lib/numerology/mobileLastFour";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -240,6 +244,41 @@ if (conflict8.ok) {
     conflict8.digits,
   );
   eq(cells[8]?.tone, "conflictRemedy", "8 via 98 is conflict-affected cover");
+}
+
+const tail3651 = analyzeLastFour("1111113651", 3, 3);
+ok(tail3651, "3651 last four parses");
+if (tail3651) {
+  eq(tail3651.digits, "3651", "last four digits");
+  eq(tail3651.compound, 15, "last-four total is metadata 15");
+  eq(tail3651.root, 6, "last-four root 6");
+  eq(tail3651.slots[3]?.digit, 1, "10th is 1");
+  ok(!tail3651.slots[3]?.isZero, "3651 last slot is not zero");
+  const purpose = scorePurposeSuitability(tail3651, 6, 3, 3);
+  ok(purpose.business >= 70, `3651 business ${purpose.business} >= 70`);
+  ok(purpose.wealth >= 65, `3651 wealth ${purpose.wealth} >= 65`);
+}
+
+const tail3650 = analyzeLastFour("1111113650", 3, 3);
+ok(tail3650, "3650 last four parses");
+if (tail3651 && tail3650) {
+  eq(tail3650.root, 5, "3650 last-four root 5");
+  ok(tail3650.slots[3]?.isZero, "10th position 0 is flagged");
+  ok(
+    tail3650.slots[3]!.raw < tail3651.slots[3]!.raw,
+    "0 in last slot weakens more than a 1 there",
+  );
+  ok(tail3650.points < tail3651.points, "3650 last-four slice < 3651");
+  const p0 = scorePurposeSuitability(tail3650, 5, 3, 3);
+  const p1 = scorePurposeSuitability(tail3651, 6, 3, 3);
+  ok(p0.wealth < p1.wealth, "0 in last slot lowers wealth suitability");
+}
+
+const tail5065 = analyzeLastFour("1111115065", 3, 3);
+ok(tail5065, "5065 last four parses");
+if (tail5065) {
+  ok(tail5065.slots[1]?.isZero, "0 in 8th weakens receiver emotion");
+  eq(tail5065.pairs.map((p) => p.pair), ["50", "06", "65"], "5065 last-four pairs");
 }
 
 console.log("smoke-mobile-fit passed");

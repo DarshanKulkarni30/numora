@@ -5,6 +5,7 @@ import {
   slidingPairs,
   type CompoundPair,
 } from "./mobileCompoundPairs";
+import { analyzeLastFour, type LastFourAnalysis } from "./mobileLastFour";
 import { findConsecutiveRuns, type ConsecutiveRun } from "./mobileNumber";
 import { rootFitTone, type RootFitTone } from "./mobileRootFit";
 
@@ -125,23 +126,26 @@ export function scoreSequence(
 ): {
   pairs: CompoundPair[];
   endingPairs: CompoundPair[];
+  lastFour: LastFourAnalysis | null;
   breakdown: SequenceBreakdown;
   allRuns: ConsecutiveRun[];
 } {
   const pairs = slidingPairs(digits);
-  const endingPairs = slidingPairs(digits.slice(-4));
+  const lastFour = analyzeLastFour(digits, birthNumber, destinyNumber);
+  const endingPairs = lastFour?.pairs ?? slidingPairs(digits.slice(-4));
   const run = runScore01(digits, birthNumber, destinyNumber);
   const density = conflictDensity(pairs);
 
   const base = 15 * meanNormalizedPairs(pairs);
   const frequency = 7 * frequencyScore01(pairs);
   const runPts = 5 * run.score01;
-  const ending = 5 * meanNormalizedPairs(endingPairs);
+  const ending = lastFour?.points ?? 5 * meanNormalizedPairs(endingPairs);
   const densityPts = 3 * (1 - density);
 
   return {
     pairs,
     endingPairs,
+    lastFour,
     allRuns: run.runs,
     breakdown: {
       base,

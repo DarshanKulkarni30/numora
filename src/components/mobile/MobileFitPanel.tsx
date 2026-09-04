@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { MobileDigitSplit } from "@/components/mobile/MobileDigitSplit";
+import { MobileLastFour } from "@/components/mobile/MobileLastFour";
 import { MobileLoShuPair } from "@/components/mobile/MobileLoShuPair";
 import {
   evaluateMobileFit,
@@ -424,6 +425,15 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
                 .map((r) => r.digit.repeat(r.length))
                 .join(" · ")}
             </p>
+          ) : null}
+
+          {fit.lastFour && fit.purpose ? (
+            <MobileLastFour
+              lastFour={fit.lastFour}
+              purpose={fit.purpose}
+              birthNumber={fit.birthNumber}
+              destinyNumber={fit.destinyNumber}
+            />
           ) : null}
 
           <MobileLoShuPair
