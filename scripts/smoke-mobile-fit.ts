@@ -9,6 +9,7 @@ import {
 } from "../src/lib/numerology/mobileCompoundPairs";
 import { alignmentPoints, rootFitTone } from "../src/lib/numerology/mobileRootFit";
 import { parseMobile } from "../src/lib/numerology/mobileNumber";
+import { scoreLoShu } from "../src/lib/numerology/mobileLoShu";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -153,6 +154,38 @@ if (rootOnly.ok) {
   eq(rootOnly.fit.pillars.destiny, 22, "DN scores root only, not pair 46");
   eq(rootOnly.fit.pillars.birth, 17.6, "BN scores root only, scaled to 20");
   ok(rootOnly.fit.hasSevereConflict, "99 is still a sequence hard-stop");
+}
+
+const birthLike = {
+  grid: { 1: 2, 2: 0, 3: 0, 4: 1, 5: 2, 6: 0, 7: 0, 8: 0, 9: 3 },
+};
+const cover98 = parseMobile("9833127652");
+ok(cover98.ok, "9833127652 parses");
+if (cover98.ok) {
+  const lo = scoreLoShu(birthLike, cover98.digitCounts, slidingPairs(cover98.digits));
+  eq(lo.filledMissing, [2, 3, 6, 7, 8], "five quiet cells covered");
+  eq(lo.raw, 15, "raw cover is full");
+  eq(lo.integrity, 2, "98 + cover-digit joins 27/76 → 2/5, not a 50% cut");
+  eq(lo.total, 17, "one 98 cluster stays in 16–18 Lo Shu");
+  ok(lo.contaminatedBy.includes("98"), "98 marked as remedial contamination");
+}
+
+const noTouchGrid = {
+  grid: { 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 1 },
+};
+const elsewhere = parseMobile("9911111112");
+ok(elsewhere.ok, "9911111112 parses");
+if (elsewhere.ok) {
+  const lo = scoreLoShu(noTouchGrid, elsewhere.digitCounts, slidingPairs(elsewhere.digits));
+  eq(lo.integrity, 5, "99 does not cut Lo Shu when it does not touch a cover digit");
+}
+
+const repeat98 = parseMobile("9898127653");
+ok(repeat98.ok, "9898127653 parses");
+if (repeat98.ok) {
+  const lo = scoreLoShu(birthLike, repeat98.digitCounts, slidingPairs(repeat98.digits));
+  ok(lo.integrity <= 1, `repeated 98/89 integrity ${lo.integrity} <= 1`);
+  ok(lo.total < 18, `repeated conflict Lo Shu ${lo.total} < single-98 score`);
 }
 
 console.log("smoke-mobile-fit passed");

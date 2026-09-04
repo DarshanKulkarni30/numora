@@ -142,7 +142,7 @@ export function MobileLoShuPair({
           Overall Lo Shu impact
         </p>
         <p className="mt-1 text-sm leading-5 text-ink">{impact.line}</p>
-        <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-ink-soft sm:grid-cols-4">
+        <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-ink-soft sm:grid-cols-3">
           <div>
             <dt className="uppercase tracking-wider">Covers</dt>
             <dd className="font-medium text-teal-800">
@@ -165,6 +165,16 @@ export function MobileLoShuPair({
             <dt className="uppercase tracking-wider">Overload</dt>
             <dd className="font-medium text-rose-800">
               {chipList(impact.overdose, "none")}
+            </dd>
+          </div>
+          <div>
+            <dt className="uppercase tracking-wider">Cover</dt>
+            <dd className="font-medium text-ink">{Math.round(impact.raw)}/15</dd>
+          </div>
+          <div>
+            <dt className="uppercase tracking-wider">Integrity</dt>
+            <dd className="font-medium text-ink">
+              {Math.round(impact.integrity)}/5
             </dd>
           </div>
         </dl>

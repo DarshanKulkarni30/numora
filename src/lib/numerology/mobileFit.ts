@@ -23,6 +23,7 @@ import {
   type PairInsight,
   type SequenceBreakdown,
 } from "./mobileSequence";
+import { scoreLoShu } from "./mobileLoShu";
 import {
   alignmentPoints,
   rootFitTone,
@@ -59,6 +60,10 @@ export type LoShuImpact = {
   stillQuiet: number[];
   pilesOn: number[];
   overdose: number[];
+  raw: number;
+  integrity: number;
+  integrityNote: string;
+  contaminatedBy: string[];
   line: string;
 };
 
@@ -134,62 +139,14 @@ function classify(score: number, hasSevere: boolean): MobileVerdict {
   return band;
 }
 
-/**
- * Lo Shu is a controlled bonus: fill quiet cells, do not overdose a strong
- * digit, and do not award a fill that sits inside a high-conflict pair.
- */
-function loShuPoints(args: {
-  person: LoShuResult;
-  counts: number[];
-  pairs: CompoundPair[];
-  sequenceSafe: boolean;
-  alignOk: boolean;
-}): { points: number; filledMissing: number[] } {
-  const { person, counts, pairs, sequenceSafe, alignOk } = args;
-  const allowBonus = sequenceSafe && alignOk;
-  let pts = 10;
-  const filledMissing: number[] = [];
-
-  for (let n = 1; n <= 9; n++) {
-    const personC = person.grid[n] ?? 0;
-    const mobileC = counts[n] ?? 0;
-    if (mobileC === 0) continue;
-    if (personC === 0) filledMissing.push(n);
-
-    const conflictedFill = pairs.some(
-      (p) => p.kind === "severeConflict" && p.pair.includes(String(n)),
-    );
-
-    let delta = 0;
-    if (personC === 0) {
-      if (mobileC === 1) delta = 5;
-      else if (mobileC === 2) delta = 3;
-      else delta = -3;
-      if (conflictedFill) delta = Math.min(delta, 0);
-    } else if (personC === 1) {
-      if (mobileC === 1) delta = 3;
-      else if (mobileC === 2) delta = 1;
-      else delta = -3;
-    } else if (mobileC === 1) {
-      delta = 0;
-    } else if (mobileC <= 3) {
-      delta = -3;
-    } else {
-      delta = -5;
-    }
-    if (mobileC >= 4) delta = Math.min(delta, -5);
-
-    if (!allowBonus && delta > 0) delta = 0;
-    pts += delta;
-  }
-
-  return { points: clamp(pts, 0, 20), filledMissing };
-}
-
 function loShuImpactLine(
   person: LoShuResult,
   counts: number[],
   filledMissing: number[],
+  raw: number,
+  integrity: number,
+  integrityNote: string,
+  contaminatedBy: string[],
 ): LoShuImpact {
   const stillQuiet = person.missing_numbers.filter((n) => (counts[n] ?? 0) === 0);
   const pilesOn: number[] = [];
@@ -220,7 +177,11 @@ function loShuImpactLine(
     stillQuiet,
     pilesOn,
     overdose,
-    line: `This number ${bits.join("; ")}.`,
+    raw,
+    integrity,
+    integrityNote,
+    contaminatedBy,
+    line: `This number ${bits.join("; ")}. Cover ${Math.round(raw)}/15. ${integrityNote}`,
   };
 }
 
@@ -281,7 +242,7 @@ function verdictLine(
   }
   if (pillars.loShu < 8) {
     parts.push("the grid adds more pile-up than cover");
-  } else if (pillars.loShu >= 14 && !hasSevere) {
+  } else if (pillars.loShu >= 14) {
     parts.push("quiet birth-grid cells get a useful lift");
   }
 
@@ -369,27 +330,22 @@ export function evaluateMobileFit(
   const destiny = alignmentPoints(destinyNumber, core);
   const birth = alignmentPoints(birthNumber, core) * (20 / 25);
 
-  const pairNorm = seq.breakdown.base / 15;
-  const alignOk = destiny / 25 >= 0.35 && birth / 20 >= 0.35;
-  const sequenceSafe = !hasSevereConflict && pairNorm >= 0.4;
-  const loShu = loShuPoints({
-    person: personLoShu,
-    counts: parsed.digitCounts,
-    pairs,
-    sequenceSafe,
-    alignOk,
-  });
+  const loShu = scoreLoShu(personLoShu, parsed.digitCounts, pairs);
   const loShuImpact = loShuImpactLine(
     personLoShu,
     parsed.digitCounts,
     loShu.filledMissing,
+    loShu.raw,
+    loShu.integrity,
+    loShu.integrityNote,
+    loShu.contaminatedBy,
   );
 
   let score =
     Math.round(sequence) +
     Math.round(destiny) +
     Math.round(birth) +
-    Math.round(loShu.points);
+    Math.round(loShu.total);
   score = clamp(score, 0, 100);
   if (hasSevereConflict) {
     score = Math.min(score, 79);
@@ -400,7 +356,7 @@ export function evaluateMobileFit(
     ending,
     destiny,
     birth,
-    loShu: loShu.points,
+    loShu: loShu.total,
     pairing: seq.breakdown,
   };
   const verdict = classify(score, hasSevereConflict);
