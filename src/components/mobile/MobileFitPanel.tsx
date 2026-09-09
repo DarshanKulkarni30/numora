@@ -2,8 +2,15 @@
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { MobileDigitSplit } from "@/components/mobile/MobileDigitSplit";
+import { MobileGuidancePanel } from "@/components/mobile/MobileGuidancePanel";
 import { MobileLastFour } from "@/components/mobile/MobileLastFour";
 import { MobileLoShuPair } from "@/components/mobile/MobileLoShuPair";
+import {
+  buildMobileGuidance,
+  buildNumberChange,
+  buildSoulBirthNameAlignment,
+  taggedChartFromPerson,
+} from "@/lib/numerology/alignment";
 import {
   evaluateMobileFit,
   type DigitFlag,
@@ -18,6 +25,7 @@ import { isValidDob } from "@/lib/profile/date";
 
 type Props = {
   dob: string;
+  fullName?: string;
   use: MobileUse;
   value: string;
   onChange: (next: string) => void;
@@ -210,11 +218,19 @@ function AdjacentPairsBlock({
   );
 }
 
-export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
+export function MobileFitPanel({
+  dob,
+  fullName = "",
+  use,
+  value,
+  onChange,
+  title,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
   const [openPair, setOpenPair] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [candidate, setCandidate] = useState("");
 
   const hasText = value.trim().length > 0;
   const ready = isValidDob(dob);
@@ -225,6 +241,35 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
 
   const fit = result?.ok ? result.fit : null;
   const parseError = result && !result.ok ? result.error : null;
+
+  const chart = useMemo(() => {
+    if (!ready || !fullName.trim()) return null;
+    try {
+      return taggedChartFromPerson(fullName, dob);
+    } catch {
+      return null;
+    }
+  }, [fullName, dob, ready]);
+
+  const personAlignment = useMemo(
+    () => (chart ? buildSoulBirthNameAlignment(chart) : null),
+    [chart],
+  );
+
+  const guidance = useMemo(() => {
+    if (!fit || !chart) return null;
+    return buildMobileGuidance(fit, chart, personAlignment ?? undefined);
+  }, [fit, chart, personAlignment]);
+
+  const candidateResult = useMemo(() => {
+    if (!ready || !candidate.trim()) return null;
+    return evaluateMobileFit(dob, candidate, use);
+  }, [dob, candidate, use, ready]);
+
+  const change = useMemo(() => {
+    if (!fit || !candidateResult?.ok) return null;
+    return buildNumberChange(fit, candidateResult.fit);
+  }, [fit, candidateResult]);
 
   async function copyDigits() {
     const digits = stripMobileInput(value).replace(/\D/g, "");
@@ -505,6 +550,37 @@ export function MobileFitPanel({ dob, use, value, onChange, title }: Props) {
               </div>
             ) : null}
           </div>
+
+          <div>
+            <label
+              htmlFor={`mobile-candidate-${use}`}
+              className="mb-1 block text-sm text-ink-soft"
+            >
+              Optional candidate (compare, does not replace this number)
+            </label>
+            <input
+              id={`mobile-candidate-${use}`}
+              type="tel"
+              inputMode="numeric"
+              value={candidate}
+              onChange={(e) => setCandidate(e.target.value)}
+              placeholder="Another national number"
+              className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-ink outline-none ring-gold focus:ring-2"
+              autoComplete="off"
+            />
+            {candidateResult && !candidateResult.ok ? (
+              <p className="mt-1.5 text-sm text-rose-800">{candidateResult.error}</p>
+            ) : null}
+          </div>
+
+          {guidance ? (
+            <MobileGuidancePanel guidance={guidance} change={change} />
+          ) : (
+            <p className="text-xs text-ink-soft">
+              Save a full name on this person to add Soul and Name alignment
+              under the score.
+            </p>
+          )}
         </>
       )}
     </section>

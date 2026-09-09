@@ -28,6 +28,7 @@ import {
 } from "@/lib/numerology/westernPath";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { TrioFitPanel } from "@/components/report/TrioFitPanel";
+import { AlignmentEnginePanel } from "@/components/report/AlignmentEnginePanel";
 import { VedicPanel } from "@/components/report/VedicPanel";
 import { NameChangeDiffPanel } from "@/components/report/NameChangeDiffPanel";
 import { NameEraNote } from "@/components/report/NameEraNote";
@@ -56,6 +57,10 @@ import { buildChartDerivations } from "@/lib/numerology/chartDerivations";
 import { buildNameChangeDiff } from "@/lib/numerology/nameChangeDiff";
 import { resolvePythagoreanChart } from "@/lib/numerology/pythagoreanChart";
 import { BRAND_NAME } from "@/lib/site";
+import {
+  buildSoulBirthNameAlignment,
+  taggedChartFromSnapshot,
+} from "@/lib/numerology/alignment";
 
 type Props = {
   report: NumerologyReport;
@@ -269,6 +274,15 @@ export function ReportView({
     [report, pyChart],
   );
   const nameDiff = useMemo(() => buildNameChangeDiff(report), [report]);
+  const alignment = useMemo(
+    () =>
+      buildSoulBirthNameAlignment(taggedChartFromSnapshot(snap), {
+        young:
+          person.report_type === "child" ||
+          person.report_type === "adolescent",
+      }),
+    [snap, person.report_type],
+  );
 
   const snapshotGroups = [
     {
@@ -801,11 +815,23 @@ export function ReportView({
         </section>
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
+          <h2 className="text-xl text-ink">Soul → Birth → Name</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            How the inner wish, the day tone, and the Chaldean name sit
+            together. This is not the triangle below.
+          </p>
+          <div className="mt-4">
+            <AlignmentEnginePanel reading={alignment} showMeta />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Tri-Identity Harmony</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Birth, Destiny, and Name as a triangle — pair lines, center score,
-            and classic table on demand. The Vedic panel above still explains
-            Birth → Destiny in plain language.
+            The flow above is Soul, Birth, and Name. This triangle is Birth,
+            Destiny, and Name — pair lines, center score, and classic table on
+            demand. The Vedic panel above still explains Birth → Destiny in
+            plain language.
           </p>
           <div className="mt-4">
             <TrioFitPanel

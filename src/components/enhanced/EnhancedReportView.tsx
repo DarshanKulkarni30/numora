@@ -6,21 +6,14 @@ import { EnhancedExportPdfButton } from "@/components/enhanced/EnhancedExportPdf
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
 import { ExportWorkingSheetButton } from "@/components/report/ExportWorkingSheetButton";
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
-import { AssociationsPanel } from "@/components/report/AssociationsPanel";
+import { AlignmentEnginePanel } from "@/components/report/AlignmentEnginePanel";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
-import { PythagoreanIdentityLayers } from "@/components/report/PythagoreanIdentityLayers";
-import { ReadingLegend } from "@/components/report/ReadingLegend";
-import { ReportGlossary } from "@/components/report/ReportGlossary";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
-import { StudentCalcDrawer } from "@/components/report/StudentCalcDrawer";
 import { ActionPlanPanel } from "@/components/report/ActionPlanPanel";
-import { TimingDashboard } from "@/components/report/TimingDashboard";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
-import { VedicPanel } from "@/components/report/VedicPanel";
 import { ChaldeanEssenceStrip } from "@/components/report/ChaldeanEssenceStrip";
-import { PythagoreanChartPanel } from "@/components/report/PythagoreanChartPanel";
 import { LivingReportBanner } from "@/components/report/LivingReportBanner";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
@@ -29,7 +22,6 @@ import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
 import { themeTierLabel } from "@/lib/numerology/enhanced/themeGraph";
 import { plainJob, plainWatch } from "@/lib/numerology/layeredCopy";
 import type { NumerologyReport } from "@/lib/numerology/types";
-import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { BRAND_NAME } from "@/lib/site";
 
 type Props = {
@@ -88,10 +80,6 @@ export function EnhancedReportView({
 
   const person = live.person;
   const snap = live.numerology_snapshot;
-  const yearsHref = yearsHrefForPerson({
-    dateOfBirth: person.date_of_birth,
-    fullName: person.operating_name || person.full_name,
-  });
   const roomHref = sessionHref || `/report/${reportId}/session`;
   const shared = mode === "shared";
 
@@ -115,7 +103,6 @@ export function EnhancedReportView({
           {[
             ["#quick", "Quick"],
             ["#insights", "Insights"],
-            ["#expert", "Expert"],
           ].map(([href, label]) => (
             <a
               key={href}
@@ -130,7 +117,7 @@ export function EnhancedReportView({
               href={reading.detailedHref}
               className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
             >
-              Detailed report
+              Detailed catalog
             </Link>
           )}
           <Link
@@ -179,15 +166,9 @@ export function EnhancedReportView({
         />
 
         <div id="quick" className="scroll-mt-16 space-y-4">
-          <ReadingLegend
-            lines={reading.howToRead}
-            startHere={reading.coreStrip
-              .filter((c) =>
-                ["Life Path", "Expression", "Psychic"].includes(c.label),
-              )
-              .map((c) => ({ label: c.label, value: c.value }))}
-          />
-          <ReportGlossary />
+          <p className="text-sm leading-6 text-ink-soft">
+            {reading.howToRead.join(" ")}
+          </p>
         </div>
 
         <section className="space-y-4">
@@ -311,6 +292,16 @@ export function EnhancedReportView({
                   <p className="mt-0.5 text-[11px] text-ink-soft">{item.role}</p>
                 </div>
               ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl text-ink">How your numbers work together</h2>
+          <p className="mt-1 text-sm text-ink-soft">
+            Soul, Birth, and Name as a flow — not three separate essays.
+          </p>
+          <div className="mt-4">
+            <AlignmentEnginePanel reading={reading.alignment} />
           </div>
         </section>
 
@@ -472,48 +463,13 @@ export function EnhancedReportView({
 
         <section id="insights" className="scroll-mt-16 space-y-8">
           <h2 className="text-2xl text-ink">Deep insights</h2>
-
-          <div>
-            <h3 className="text-xl text-ink">How your numbers work together</h3>
-            <div className="mt-4">
-              <PythagoreanIdentityLayers
-                birthDay={snap.birth_day}
-                lifePath={snap.life_path}
-                expression={snap.expression_number}
-                soulUrge={snap.soul_urge_number}
-                personality={snap.personality_number}
-                maturity={snap.maturity_number}
-              />
-            </div>
-            <p className="mt-3 text-sm leading-7 text-ink-soft">
-              {reading.flow.primaryNarrative}
-            </p>
-            <p className="mt-4 text-sm font-medium text-ink">Inner and outer</p>
-            <p className="mt-1 text-sm text-ink">
-              {reading.flow.secondary
-                .map((n) => `${n.label} ${n.number}`)
-                .join(" ↔ ")}
-            </p>
-            <p className="mt-2 text-sm leading-7 text-ink-soft">
-              {reading.flow.secondaryNarrative}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <h3 className="text-xl text-ink">
-              Your three main numbers, and what tradition links to them
-            </h3>
-            <div className="mt-4">
-              <AssociationsPanel
-                lifePath={snap.life_path}
-                vedicDestiny={snap.vedic_destiny}
-                chaldeanName={snap.chaldean_name_number}
-                fullName={person.operating_name || person.full_name}
-                personalYear={snap.personal_year}
-                personalMonth={snap.personal_month}
-              />
-            </div>
-          </div>
+          <p className="text-sm text-ink-soft">
+            Inner and outer:{" "}
+            {reading.flow.secondary
+              .map((n) => `${n.label} ${n.number}`)
+              .join(" ↔ ")}
+            . {reading.flow.secondaryNarrative}
+          </p>
 
           {live.strengths.length ? (
             <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -554,90 +510,13 @@ export function EnhancedReportView({
           />
 
           <div>
-            <h3 className="text-xl text-ink">Vedic energy</h3>
-            <VedicPanel
-              psychic={snap.vedic_psychic}
-              destiny={snap.vedic_destiny}
-              nameNumber={snap.vedic_name}
-              unitName={snap.unit_name}
-              unitCompound={snap.unit_name_compound}
-              nameCompound={snap.vedic_name_compound}
-              natalNameNumber={snap.natal_vedic_name}
-              rulingPlanet={live.vedic.ruling_planet}
-              destinyRulingPlanet={live.vedic.destiny_ruling_planet}
-              unitSystem={live.vedic.unitSystem}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-xl text-ink">Lo Shu — lived effects</h3>
+            <h3 className="text-xl text-ink">Lo Shu grid</h3>
             <p className="mt-2 text-sm leading-7 text-ink-soft">
               {reading.loShuLived.summary}
             </p>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-ink-soft">
-              {reading.loShuLived.items.map((item) => (
-                <li key={`${item.kind}-${item.number}`}>
-                  <span className="font-medium text-ink">
-                    {item.kind === "missing" ? "Quiet" : "Loud"} {item.number}.
-                  </span>{" "}
-                  {item.effect}
-                </li>
-              ))}
-            </ul>
             <div className="mt-4">
               <LoShuChart loShu={live.lo_shu} dateOfBirth={person.date_of_birth} />
             </div>
-          </div>
-
-          <div>
-            <h3 className="text-xl text-ink">Timing dashboard</h3>
-            <TimingDashboard
-              personalYear={live.personal_year}
-              personalMonth={live.personal_month}
-              projectedYear={live.projected_year}
-              sunSignId={snap.sun_sign}
-              sunSignLabel={snap.sun_sign_label}
-              dateOfBirth={person.date_of_birth}
-              yearsHref={yearsHref}
-              lifePath={snap.life_path}
-              expression={snap.expression_number}
-              asOf={reading.season.asOf}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-xl text-ink">Pythagorean chart</h3>
-            <p className="mt-1 text-sm text-ink-soft">
-              Challenges, Period Cycles, Balance, Hidden Passion, missing-letter
-              Lessons, name Planes, Personal Day, and Essence — birth-certificate
-              spelling. Full windows live in the detailed report.
-            </p>
-            <div className="mt-4">
-              <PythagoreanChartPanel
-                chart={reading.pythagoreanChart}
-                compact
-              />
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <h3 className="text-xl text-ink">Lifestyle tendencies</h3>
-            <dl className="mt-3 space-y-3 text-sm">
-              {(
-                [
-                  ["Learning", reading.lifestyle.learning],
-                  ["Leadership", reading.lifestyle.leadership],
-                  ["Communication", reading.lifestyle.communication],
-                  ["Under strain", reading.lifestyle.stress],
-                  ["Recovery", reading.lifestyle.recovery],
-                ] as const
-              ).map(([k, v]) => (
-                <div key={k}>
-                  <dt className="text-ink">{k}</dt>
-                  <dd className="mt-0.5 text-ink-soft">{v}</dd>
-                </div>
-              ))}
-            </dl>
           </div>
 
           <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
@@ -714,49 +593,6 @@ export function EnhancedReportView({
               <ActionPlanPanel plan={reading.actionPlan} />
             </div>
           </div>
-        </section>
-
-        <section id="expert" className="scroll-mt-16 space-y-4">
-          <h2 className="text-2xl text-ink">Expert mode</h2>
-          <p className="text-sm text-ink-soft">
-            Calculation details, school comparison, and planet seat counts.
-            Closed by default so a first read can stay short.
-          </p>
-
-          <StudentCalcDrawer
-            student={reading.student}
-            schoolCompare={reading.schoolCompare}
-            derivations={reading.derivations}
-          />
-
-          <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <summary className="cursor-pointer text-lg text-ink">
-              Planet chart presence
-            </summary>
-            <div className="mt-4">
-              <ul className="space-y-2 text-sm text-ink-soft">
-                {reading.planets.map((p) => (
-                  <li key={p.name}>
-                    <span className="text-ink">
-                      {p.symbol} {p.name}
-                    </span>{" "}
-                    — {p.count} seat{p.count === 1 ? "" : "s"}: {p.seats.join(", ")}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
-
-          <details className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-            <summary className="cursor-pointer text-lg text-ink">
-              Methodology notes
-            </summary>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink-soft">
-              {reading.student.methodNotes.map((s) => (
-                <li key={s.slice(0, 40)}>{s}</li>
-              ))}
-            </ul>
-          </details>
         </section>
 
         <footer className="space-y-3 text-sm leading-7 text-ink-soft">

@@ -399,6 +399,7 @@ export function BusinessExplorer({
                 title={isPersonal ? "Personal mobile" : "Business mobile"}
                 use={isPersonal ? "personal" : "business"}
                 dob={owners[0]?.person.date_of_birth ?? ""}
+                fullName={owners[0]?.person.full_name ?? ""}
                 value={mobileRaw}
                 onChange={setMobileRaw}
               />

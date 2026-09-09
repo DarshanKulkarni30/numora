@@ -118,6 +118,9 @@ assert(
 assert(enhanced.season.asOf.includes("2026"), "season as-of date");
 assert(enhanced.season.doThis.length >= 1, "season practise list");
 assert(enhanced.flow.primary.length === 4, "primary flow has four nodes");
+assert(enhanced.alignment.flowLabel.includes("→"), "alignment flow");
+assert(enhanced.alignment.pairs.length === 3, "three alignment pairs");
+assert(enhanced.alignment.bridge.number > 0, "bridge number");
 assert(enhanced.actionPlan.days30.items.length >= 1, "30-day plan");
 assert(enhanced.actionPlan.days90.items.length >= 1, "90-day plan");
 assert(enhanced.lifestyle.learning.length > 20, "lifestyle learning");

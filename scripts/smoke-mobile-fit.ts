@@ -3,6 +3,10 @@
  */
 import { evaluateMobileFit } from "../src/lib/numerology/mobileFit";
 import {
+  buildMobileGuidance,
+  taggedChartFromPerson,
+} from "../src/lib/numerology/alignment";
+import {
   isSeverePair,
   pairKind,
   pairRawScore,
@@ -390,6 +394,16 @@ if (d10five && d10one) {
     p5.business > p1.business,
     `D10=5 business ${p5.business} > D10=1 business ${p1.business}`,
   );
+}
+
+if (easy.ok) {
+  const chart = taggedChartFromPerson("Ada Lovelace", "01/01/1990");
+  const guide = buildMobileGuidance(easy.fit, chart);
+  eq(guide.blueprint.score, easy.fit.score, "guidance reuses 100-point score");
+  eq(guide.verdict.verdict, easy.fit.verdict, "guidance reuses verdict");
+  ok(guide.personMobile.links.length === 4, "four person↔mobile links");
+  ok(guide.dna.length === 5, "five DNA layers");
+  ok(guide.verdict.methodology.length >= 3, "methodology lines");
 }
 
 console.log("smoke-mobile-fit passed");

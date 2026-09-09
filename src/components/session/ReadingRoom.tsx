@@ -78,6 +78,28 @@ function buildSteps(reading: EnhancedReading): Step[] {
       chips: timing.map(chip),
     },
     {
+      kicker: "How they work together",
+      title: reading.alignment.flowLabel,
+      body: `${reading.alignment.headline} ${reading.alignment.overallLabel} ${reading.alignment.bridge.body} Fortuna ${reading.alignment.fortuna.number} is Destiny minus Birth — not the bridge.`,
+      chips: [
+        {
+          label: "Soul",
+          value: String(reading.alignment.soul.number),
+          meaning: "Inner driver",
+        },
+        {
+          label: "Birth",
+          value: String(reading.alignment.birth.number),
+          meaning: "Natural energy · the bridge",
+        },
+        {
+          label: "Name",
+          value: String(reading.alignment.name.number),
+          meaning: "Outer expression (Chaldean)",
+        },
+      ],
+    },
+    {
       kicker: "Today only",
       title: `Today is a ${day.number} day`,
       body: `${day.summary} ${essence.summary} This one changes daily, so treat it as a nudge about pacing rather than anything to plan around.`,

@@ -27,6 +27,11 @@ import {
   type ThemeHit,
 } from "./themeGraph";
 import { buildTriviaEnergies, type TriviaEnergies } from "./triviaEnergies";
+import {
+  buildSoulBirthNameAlignment,
+  taggedChartFromSnapshot,
+  type SoulBirthNameAlignment,
+} from "@/lib/numerology/alignment";
 
 export type CoreStripItem = {
   label: string;
@@ -53,6 +58,7 @@ export type EnhancedReading = {
   narrative: ProfileNarrative;
   season: SeasonBrief;
   flow: RelationshipFlow;
+  alignment: SoulBirthNameAlignment;
   actionPlan: ActionPlan;
   lifestyle: LifestyleInsights;
   trivia: TriviaEnergies;
@@ -124,6 +130,11 @@ export function buildEnhancedReading(
       ? `Natal ${snap.natal_name} · in force ${snap.operating_name}${snap.name_era_label ? ` (${snap.name_era_label})` : ""}`
       : undefined;
   const pythagoreanChart = resolvePythagoreanChart(report, now);
+  const alignment = buildSoulBirthNameAlignment(taggedChartFromSnapshot(snap), {
+    young:
+      report.person.report_type === "child" ||
+      report.person.report_type === "adolescent",
+  });
 
   return {
     asOf,
@@ -141,6 +152,7 @@ export function buildEnhancedReading(
     narrative,
     season,
     flow: buildRelationshipFlow(snap),
+    alignment,
     actionPlan,
     lifestyle,
     trivia,

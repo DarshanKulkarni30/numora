@@ -1,0 +1,4 @@
+.tmp-pg
+supabase/.temp
+.env*
+.env.production.pull

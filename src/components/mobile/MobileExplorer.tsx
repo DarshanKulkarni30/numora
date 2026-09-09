@@ -103,6 +103,7 @@ export function MobileExplorer({ people }: Props) {
               title="Personal mobile"
               use="personal"
               dob={dob}
+              fullName={selected?.full_name ?? ""}
               value={personal}
               onChange={setPersonal}
             />
@@ -110,6 +111,7 @@ export function MobileExplorer({ people }: Props) {
               title="Business mobile"
               use="business"
               dob={dob}
+              fullName={selected?.full_name ?? ""}
               value={business}
               onChange={setBusiness}
             />

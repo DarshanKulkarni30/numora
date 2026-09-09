@@ -23,6 +23,7 @@ import { buildPythagoreanIdentityLayers } from "@/lib/numerology/pythagoreanIden
 import { buildPythagoreanTrigonum } from "@/lib/numerology/pythagoreanTrigonum";
 import { buildPythagoreanBirthPyramid } from "@/lib/numerology/pythagoreanBirthPyramid";
 import { buildTriIdentityHarmony } from "@/lib/numerology/triIdentityHarmony";
+import { alignmentPdfLines, taggedChartFromSnapshot, buildSoulBirthNameAlignment } from "@/lib/numerology/alignment";
 import { vedicTrio } from "@/lib/numerology/trioMatrix";
 import { buildIdentitySnapshot } from "@/lib/numerology/identitySnapshot";
 import {
@@ -494,6 +495,21 @@ export async function downloadReportPdf(
     `Name ${report.vedic.name_number.number}: ${report.vedic.name_number.meaning}`,
   );
   addBody(report.vedic.analysis);
+
+  addBanner("Soul → Birth → Name", "vedic");
+  addBody(
+    "Soul Urge, Birth (Psychic), and Chaldean Name as a relationship flow. Fortuna is Destiny minus Birth.",
+    9,
+  );
+  for (const line of alignmentPdfLines(
+    buildSoulBirthNameAlignment(taggedChartFromSnapshot(snap), {
+      young:
+        report.person.report_type === "child" ||
+        report.person.report_type === "adolescent",
+    }),
+  )) {
+    addBody(line, 9);
+  }
 
   addBanner("Tri-Identity Harmony", "vedic");
   addBody(

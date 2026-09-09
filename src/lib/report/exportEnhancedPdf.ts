@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
+import { alignmentPdfLines } from "@/lib/numerology/alignment";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
-import { pythagoreanChartPdfLines } from "@/lib/numerology/pythagoreanChart";
 import {
   buildYearForecast,
   yearForecastPdfLines,
@@ -179,13 +179,7 @@ export async function downloadEnhancedPdf(
   }
 
   addBanner("How numbers work together");
-  addBody(
-    reading.flow.primary.map((n) => `${n.label} ${n.number}`).join(" → "),
-  );
-  addBody(reading.flow.primaryNarrative);
-  addBody(
-    `${reading.flow.secondary.map((n) => `${n.label} ${n.number}`).join(" ↔ ")}. ${reading.flow.secondaryNarrative}`,
-  );
+  for (const line of alignmentPdfLines(reading.alignment)) addBody(line, 9);
 
   addBanner("Chaldean name vibration");
   addBody(`${reading.chaldean.compound} → ${reading.chaldean.reduced}`);
@@ -196,21 +190,11 @@ export async function downloadEnhancedPdf(
 
   addBanner("Lo Shu lived effects");
   addBody(reading.loShuLived.summary);
-  for (const item of reading.loShuLived.items) {
-    addBullet(`${item.kind === "missing" ? "Quiet" : "Loud"} ${item.number}: ${item.effect}`);
-  }
 
-  addBanner("Pythagorean chart");
-  for (const line of pythagoreanChartPdfLines(reading.pythagoreanChart)) {
-    addBody(line, 9);
+  addBanner("Life domains");
+  for (const d of reading.alignment.domains) {
+    addBody(`${d.label} ${d.score}% (${d.primaryInteraction}). ${d.insight}`);
   }
-
-  addBanner("Lifestyle tendencies");
-  addBody(`Learning: ${reading.lifestyle.learning}`);
-  addBody(`Leadership: ${reading.lifestyle.leadership}`);
-  addBody(`Communication: ${reading.lifestyle.communication}`);
-  addBody(`Under strain: ${reading.lifestyle.stress}`);
-  addBody(`Recovery: ${reading.lifestyle.recovery}`);
 
   addBanner("Personal energies");
   addBody(reading.trivia.note);
@@ -233,28 +217,6 @@ export async function downloadEnhancedPdf(
   addBody(`Primary: ${reading.actionPlan.year.primary}`);
   addBody(`Secondary: ${reading.actionPlan.year.secondary}`);
   for (const x of reading.actionPlan.year.items) addBullet(x);
-
-  addBanner("Expert — calculations");
-  for (const s of reading.student.lifePathSteps) addBody(`${s.label}: ${s.detail}`, 9);
-  for (const s of reading.student.nameSteps) addBody(`${s.label}: ${s.detail}`, 9);
-  addH("Master-number rules");
-  for (const s of reading.student.masterRules) addBullet(s);
-
-  addBanner("Expert — school compare");
-  for (const row of reading.schoolCompare) {
-    addH(row.topic);
-    addBody(`Pythagorean: ${row.pythagorean}`, 9);
-    addBody(`Chaldean: ${row.chaldean}`, 9);
-    addBody(`Vedic: ${row.vedic}`, 9);
-  }
-
-  addBanner("Chart presence");
-  addBody(
-    `Themes: ${reading.radar.map((a) => `${a.label} ${a.count}`).join(" · ")}`,
-  );
-  for (const p of reading.planets) {
-    addBody(`${p.name} — ${p.count} seats: ${p.seats.join(", ")}`, 9);
-  }
 
   addBanner("Notes");
   addBody(reading.disclaimer);
