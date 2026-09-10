@@ -113,7 +113,7 @@ function clampScore(n: number): number {
 function overallLabel(internal: number, external: number): string {
   const innerWord = internal >= 80 ? "Strong" : internal >= 65 ? "Moderate" : "Mixed";
   const outerWord = external >= 80 ? "strong" : external >= 65 ? "moderate" : "mixed";
-  return `${innerWord} internal alignment, ${outerWord} external alignment.`;
+  return `${innerWord} internal match (Soul vs Birth), ${outerWord} external match (with the name).`;
 }
 
 function pairInterpretation(
@@ -130,7 +130,7 @@ function pairInterpretation(
   if (id === "birth-name") {
     return `The day’s energy is ${plainTrait(a)} (Birth ${a}). The name people meet is ${plainTrait(b)} (Name ${b}). ${BAND_COMPAT_LABEL[band]}: the outer spelling may ${band === "friction" || band === "block" ? "look quieter or more private than" : "support"} the day-tone.`;
   }
-  return `Soul ${a} wants ${plainTrait(a)}. The name tone is ${plainTrait(b)} (Name ${b}). ${BAND_COMPAT_LABEL[band]}: the outer vibration may ${band === "friction" || band === "block" ? "prefer depth and distance while the inner wish wants to be seen" : "help the inner wish show up in the room"}.`;
+  return `Soul ${a} wants ${plainTrait(a)}. The name people meet is ${plainTrait(b)} (Name ${b}). ${BAND_COMPAT_LABEL[band]}: the outer spelling may ${band === "friction" || band === "block" ? "prefer depth and distance while the inner wish wants to be seen" : "help the inner wish show up in the room"}.`;
 }
 
 function usesFor(a: number, b: number): string[] {

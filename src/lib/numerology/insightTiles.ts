@@ -105,7 +105,7 @@ const SHOW_UP: Record<string, (trait: string) => string> = {
     `Rooms often meet ${t.toLowerCase()} before they know the rest of you.`,
   maturity: (t) => `Later chapters may ripen toward ${t.toLowerCase()}.`,
   "chaldean-name": (t) =>
-    `This spelling’s vibration often reads as ${t.toLowerCase()}.`,
+    `This spelling’s name number often reads as ${t.toLowerCase()}.`,
   "vedic-psychic": (t) =>
     `First reactions often lean toward ${t.toLowerCase()}.`,
   "vedic-destiny": (t) =>

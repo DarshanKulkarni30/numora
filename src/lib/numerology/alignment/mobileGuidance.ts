@@ -208,10 +208,10 @@ export function buildMobileGuidance(
     : 60;
 
   const dimensions: DimensionScore[] = [
-    { id: "personal", label: "Personal alignment", score: personalAlign },
-    { id: "vibration", label: "Number vibration", score: vibration },
-    { id: "structure", label: "Structural quality", score: structural },
-    { id: "purpose", label: "Purpose suitability", score: purposeAvg },
+    { id: "personal", label: "Personal fit", score: personalAlign },
+    { id: "vibration", label: "Root vs date", score: vibration },
+    { id: "structure", label: "Structure", score: structural },
+    { id: "purpose", label: "Purpose fit", score: purposeAvg },
   ];
 
   const flow = personAlignment?.flowLabel ?? `${chart.soul.number} → ${chart.birth.number} → ${chart.name.number}`;

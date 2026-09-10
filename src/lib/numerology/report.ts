@@ -963,7 +963,7 @@ export function generateReport(
 
   const chaldeanAnalysis = assertSafeCopy(
     [
-      `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) offers a traditional vibration reading of the name in force now (${operatingName}).`,
+      `Chaldean Name Number ${chald.nameNumber} (compound ${chald.compound}) is a traditional reading of the name in force now (${operatingName}).`,
       names.differs
         ? `Birth-certificate spelling ${fullName} reads as Chaldean ${natalChald.nameNumber} (compound ${natalChald.compound}).`
         : null,

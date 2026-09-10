@@ -113,12 +113,20 @@ export function EnhancedReportView({
             </a>
           ))}
           {shared ? null : (
-            <Link
-              href={reading.detailedHref}
-              className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
-            >
-              Detailed catalog
-            </Link>
+            <>
+              <Link
+                href={reading.detailedHref}
+                className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
+              >
+                Detailed catalog
+              </Link>
+              <Link
+                href={`/report/${reportId}/comprehensive`}
+                className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
+              >
+                Comprehensive
+              </Link>
+            </>
           )}
           <Link
             href={roomHref}
@@ -173,7 +181,7 @@ export function EnhancedReportView({
 
         <section className="space-y-4">
           <p className="text-sm uppercase tracking-[0.18em] text-gold-deep">
-            Your numerology DNA
+            Your main numbers in one story
           </p>
           <h2 className="brand text-3xl text-ink md:text-4xl">
             {reading.hero.archetype}
@@ -219,6 +227,7 @@ export function EnhancedReportView({
                   topic: "soul-urge",
                   value: snap.soul_urge_number,
                   system: "pythagorean",
+                  subtitle: "Vowels — what you want inside",
                 },
                 {
                   label: "Personality",
@@ -298,7 +307,9 @@ export function EnhancedReportView({
         <section>
           <h2 className="text-xl text-ink">How your numbers work together</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Soul, Birth, and Name as a flow — not three separate essays.
+            Soul (vowels — what you want inside), Birth (the day you were born),
+            and Name (Chaldean letters) as one flow — not three separate essays.
+            On this page Soul is Pythagorean; Name is Chaldean.
           </p>
           <div className="mt-4">
             <AlignmentEnginePanel reading={reading.alignment} />

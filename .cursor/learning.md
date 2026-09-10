@@ -5,3 +5,4 @@
 | Topic | Gotcha | Fix |
 |-------|--------|-----|
 | Alignment trio | Soul → Birth → Name is not Tri-Identity | Keep Birth × Destiny × Name; tag Soul as Pythagorean vowels and Name as Chaldean |
+| Comprehensive vs Enhanced Soul | Same name, two Soul numbers | Comprehensive uses Chaldean vowels (e.g. 10/1); Enhanced/Detailed keep Pythagorean Soul. Do not overwrite snapshot `soul_urge_number`. |

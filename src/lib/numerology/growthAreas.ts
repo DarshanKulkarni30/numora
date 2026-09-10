@@ -257,7 +257,7 @@ export function synthesizeGrowthAreas(input: Input): GrowthArea[] {
     push({
       id: `chaldean-kd-${compound}`,
       title: "Name pressure",
-      suggestion: `Compound ${compound} is traditionally read as a growth pressure in the name vibration. Meet it with patience, ethics, and steady skill rather than drama.`,
+      suggestion: `Compound ${compound} is traditionally read as a growth pressure in the name number. Meet it with patience, ethics, and steady skill rather than drama.`,
       sources: [`Chaldean compound ${compound}`],
       focusNumber: compound,
       origin: "chaldean",

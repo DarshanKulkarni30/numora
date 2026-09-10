@@ -41,11 +41,11 @@ export const BAND_PERCENT: Record<TrioBand, number> = {
 };
 
 export const BAND_COMPAT_LABEL: Record<TrioBand, string> = {
-  amazing: "High compatibility",
-  favourable: "Strong compatibility",
-  neutral: "Moderate compatibility",
-  friction: "Mixed compatibility",
-  block: "Challenging compatibility",
+  amazing: "They sit well together",
+  favourable: "They support each other",
+  neutral: "They can work with a little care",
+  friction: "They pull in different directions",
+  block: "They sit uneasily together",
 };
 
 export function pairDigit(n: number): number {

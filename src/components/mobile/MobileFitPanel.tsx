@@ -21,11 +21,13 @@ import { PAIR_LABEL, type CompoundPair } from "@/lib/numerology/mobileCompoundPa
 import { stripMobileInput } from "@/lib/numerology/mobileNumber";
 import type { PairInsight, SequenceBreakdown } from "@/lib/numerology/mobileSequence";
 import { strainRunCaption, type RootFitTone } from "@/lib/numerology/mobileRootFit";
+import { MobileChartExtras } from "@/components/mobile/MobileChartExtras";
 import { isValidDob } from "@/lib/profile/date";
 
 type Props = {
   dob: string;
   fullName?: string;
+  gender?: string | null;
   use: MobileUse;
   value: string;
   onChange: (next: string) => void;
@@ -105,7 +107,7 @@ function runNote(insight: PairInsight): string {
     return `Sits in a short ${digit}${digit} run. Repetition amplifies the pair; it is not automatically negative.`;
   }
   if (n === 3) {
-    return `Sits in a ${digit.repeat(3)} run — the vibration is concentrated. Traditional schools treat this more cautiously than a single ${digit}${digit}.`;
+    return `Sits in a ${digit.repeat(3)} run — that digit is concentrated. Traditional schools treat this more cautiously than a single ${digit}${digit}.`;
   }
   return `Sits in a ${digit.repeat(n)} run. Traditional mobile readings treat long same-digit stretches as excess, even when a short ${digit}${digit} is useful.`;
 }
@@ -221,6 +223,7 @@ function AdjacentPairsBlock({
 export function MobileFitPanel({
   dob,
   fullName = "",
+  gender = null,
   use,
   value,
   onChange,
@@ -489,6 +492,15 @@ export function MobileFitPanel({
               destinyNumber={fit.destinyNumber}
             />
           ) : null}
+
+          <MobileChartExtras
+            dob={dob}
+            gender={gender}
+            birthNumber={fit.birthNumber}
+            destinyNumber={fit.destinyNumber}
+            totalRoot={fit.core}
+            lastFourRoot={fit.lastFour?.root ?? null}
+          />
 
           <MobileLoShuPair
             person={fit.personLoShu}

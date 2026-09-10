@@ -286,6 +286,12 @@ export function ReportsList({ initialReports }: Props) {
                   >
                     Detailed
                   </Link>
+                  <Link
+                    href={`/report/${r.id}/comprehensive`}
+                    className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
+                  >
+                    Comprehensive
+                  </Link>
                   <Link href={`/report/${r.id}`} className="text-right">
                     <div className="flex items-end justify-end gap-3">
                       <div className="text-center">

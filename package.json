@@ -26,7 +26,8 @@
     "smoke:person-backup": "tsx scripts/smoke-person-backup.ts",
     "smoke:practitioner": "tsx scripts/smoke-practitioner.ts",
     "smoke:mobile-fit": "tsx scripts/smoke-mobile-fit.ts",
-    "smoke:alignment": "tsx scripts/smoke-alignment.ts"
+    "smoke:alignment": "tsx scripts/smoke-alignment.ts",
+    "smoke:chaldean-comprehensive": "tsx scripts/smoke-chaldean-comprehensive.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

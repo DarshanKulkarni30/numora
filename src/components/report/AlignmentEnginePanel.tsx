@@ -63,9 +63,9 @@ export function AlignmentEnginePanel({
         <p className="mt-3 text-lg leading-7 text-ink">{reading.headline}</p>
         <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {[
-            ["Inner driver", reading.soul.number, "Soul"],
-            ["Natural energy", reading.birth.number, "Birth · bridge"],
-            ["Outer expression", reading.name.number, "Name / luck"],
+            ["Soul number", reading.soul.number, "Vowels — what you want inside"],
+            ["Birth number", reading.birth.number, "Day of the month — the working habit"],
+            ["Name number", reading.name.number, "Whole name, Chaldean letters"],
           ].map(([label, value, role]) => (
             <div
               key={String(role)}
@@ -80,12 +80,14 @@ export function AlignmentEnginePanel({
           ))}
         </div>
         <p className="mt-4 text-sm text-ink-soft">
-          Fortuna {reading.fortuna.number} — Destiny {reading.destiny.number} minus
+          Fortuna {reading.fortuna.number} is Destiny {reading.destiny.number} minus
           Birth {reading.birth.number}
           {reading.fortuna.number === 0
-            ? ". The date path and the day tone match."
+            ? " — the date path and the day tone match."
             : "."}{" "}
-          Birth stays the bridge in the flow above.
+          It is a Numora extra, not a classic Chaldean number. Birth stays the
+          working habit in the flow above. On this page Soul uses Pythagorean
+          vowels; Name uses Chaldean letters.
         </p>
       </div>
 
@@ -105,11 +107,11 @@ export function AlignmentEnginePanel({
       ) : null}
 
       <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
-        <h3 className="text-lg text-ink">Alignment profile</h3>
+        <h3 className="text-lg text-ink">How the numbers sit together</h3>
         <p className="mt-1 text-sm font-medium text-ink">{reading.overallLabel}</p>
         <p className="mt-1 text-xs text-ink-soft">
-          Percents are derived from pair bands. They explain the relationship —
-          they are not a single compatibility score.
+          Percents explain how two numbers sit. They are not a single luck
+          score.
         </p>
         <ul className="mt-4 space-y-3">
           {reading.pairs.map((p) => (
@@ -173,7 +175,7 @@ export function AlignmentEnginePanel({
           </p>
           <p className="brand mt-1 text-3xl text-ink">{reading.bridge.number}</p>
           <p className="mt-1 text-sm font-medium text-ink">
-            {reading.bridge.title}
+            Working habit
           </p>
           <p className="mt-2 text-sm leading-6 text-ink-soft">
             {reading.bridge.body}

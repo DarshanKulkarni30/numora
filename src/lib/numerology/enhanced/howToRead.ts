@@ -9,7 +9,7 @@ export const HOW_TO_READ_ENHANCED = assertSafeList(
   [
     ...SHARED,
     "Pair percents are derived from how two numbers sit together, not a scientific score.",
-    "This page is the through-line: how Soul, Birth, and Name work together. Open the detailed report for method notes and the full catalog.",
+    "This page is one story: how Soul (vowels — what you want inside), Birth (the day you were born), and Name (Chaldean letters) work together. Open Detailed for every method, or Comprehensive for a Chaldean-first story.",
   ],
   "howto.enhanced",
 );
@@ -18,8 +18,18 @@ export const HOW_TO_READ_DETAILED = assertSafeList(
   [
     ...SHARED,
     "Counts (themes, threads, planet seats) are how many chart positions cite a tone, not scores or percentages.",
-    "The Soul → Birth → Name flow is a relationship engine. Tri-Identity Harmony below it is Birth × Destiny × Name — a different trio.",
-    "This page is the full catalog. Open Enhanced for one profile-level story, season, and plan.",
+    "The Soul → Birth → Name flow is a relationship check. Tri-Identity Harmony below it is Birth × Destiny × Name — a different trio.",
+    "This page is the full catalog. Open Enhanced for one story, or Comprehensive for a Chaldean-first story.",
   ],
   "howto.detailed",
+);
+
+export const HOW_TO_READ_COMPREHENSIVE = assertSafeList(
+  [
+    ...SHARED,
+    "Soul, Personality, and Name on this page use Chaldean letter values. Birth and Destiny still come from the date.",
+    "Soul number: vowels — what you want inside. Birth number: day of the month, 1–9. Destiny number: full date digits, 1–9. Name number: long total / one digit of the whole name.",
+    "Percents are Numora’s check of how two numbers sit. They are not extra Chaldean digits and not a promise of luck.",
+  ],
+  "howto.comprehensive",
 );

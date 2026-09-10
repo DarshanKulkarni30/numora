@@ -357,7 +357,7 @@ export function ReportView({
     {
       system: "chaldean" as const,
       title: "Chaldean",
-      blurb: "Name vibration on the older 1–8 letter chart — keep the compound and the reduced digit together.",
+      blurb: "Name number on the older 1–8 letter chart — keep the long total and the one-digit label together.",
       insight: chaldeanInsight({
         compound: snap.compound_number,
         reduced: snap.chaldean_name_number,
@@ -370,7 +370,7 @@ export function ReportView({
           label: "Name number",
           topic: "chaldean-name" as const,
           value: snap.chaldean_name_number,
-          note: `Reduced name vibration · ${CORE_TRAIT[Number(snap.chaldean_name_number)] ?? ""}`.trim(),
+          note: `Reduced name number · ${CORE_TRAIT[Number(snap.chaldean_name_number)] ?? ""}`.trim(),
         },
         {
           label: "Before reduce",
@@ -622,6 +622,12 @@ export function ReportView({
                   >
                     Enhanced report
                   </Link>
+                  <Link
+                    href={`/report/${reportId}/comprehensive`}
+                    className="btn-tactile rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm text-ink"
+                  >
+                    Comprehensive
+                  </Link>
                   <ShareLinkButton reportId={reportId} />
                   <Link
                     href={`/report/${reportId}/session`}
@@ -817,8 +823,9 @@ export function ReportView({
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Soul → Birth → Name</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            How the inner wish, the day tone, and the Chaldean name sit
-            together. This is not the triangle below.
+            How what you want inside (Soul, Pythagorean vowels), the day you
+            were born (Birth), and the Chaldean name sit together. This is not
+            the triangle below.
           </p>
           <div className="mt-4">
             <AlignmentEnginePanel reading={alignment} showMeta />

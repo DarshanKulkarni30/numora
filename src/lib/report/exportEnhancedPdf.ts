@@ -181,7 +181,7 @@ export async function downloadEnhancedPdf(
   addBanner("How numbers work together");
   for (const line of alignmentPdfLines(reading.alignment)) addBody(line, 9);
 
-  addBanner("Chaldean name vibration");
+  addBanner("Chaldean name number");
   addBody(`${reading.chaldean.compound} → ${reading.chaldean.reduced}`);
   addBody(reading.chaldean.texture);
   addBody(reading.chaldean.essence);

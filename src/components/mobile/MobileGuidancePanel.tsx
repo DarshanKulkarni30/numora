@@ -38,7 +38,7 @@ export function MobileGuidancePanel({ guidance, change }: Props) {
       </p>
 
       <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-4">
-        <h3 className="text-lg text-ink">Mobile number blueprint</h3>
+        <h3 className="text-lg text-ink">How this number sits</h3>
         <p className="mt-1 font-mono text-sm text-ink-soft">{blueprint.digits}</p>
         <p className="mt-2 text-xl font-semibold text-ink">
           {blueprint.overallLabel}
@@ -99,7 +99,7 @@ export function MobileGuidancePanel({ guidance, change }: Props) {
       </div>
 
       <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-4">
-        <h3 className="text-lg text-ink">Mobile DNA</h3>
+        <h3 className="text-lg text-ink">Number layers</h3>
         <div className="mt-3 grid gap-2 sm:grid-cols-5">
           {dna.map((layer) => (
             <div

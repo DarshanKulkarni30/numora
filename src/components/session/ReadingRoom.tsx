@@ -85,17 +85,17 @@ function buildSteps(reading: EnhancedReading): Step[] {
         {
           label: "Soul",
           value: String(reading.alignment.soul.number),
-          meaning: "Inner driver",
+          meaning: "Vowels — what you want inside (Pythagorean on this walkthrough)",
         },
         {
           label: "Birth",
           value: String(reading.alignment.birth.number),
-          meaning: "Natural energy · the bridge",
+          meaning: "Day of the month — the working habit",
         },
         {
           label: "Name",
           value: String(reading.alignment.name.number),
-          meaning: "Outer expression (Chaldean)",
+          meaning: "Whole name (Chaldean letters)",
         },
       ],
     },
