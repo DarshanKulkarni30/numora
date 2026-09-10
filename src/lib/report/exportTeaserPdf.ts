@@ -6,6 +6,7 @@ import {
 } from "@/lib/numerology/yearForecast";
 import { buildDailyLoop, dailyLoopPdfLines } from "@/lib/numerology/dailyLoop";
 import type { NumerologyReport } from "@/lib/numerology/types";
+import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { BRAND_NAME } from "@/lib/site";
 
 const NAVY: [number, number, number] = [30, 58, 107];
@@ -38,8 +39,9 @@ async function loadLogoDataUrl(): Promise<string | null> {
  * Distinct from the full detailed / enhanced dumps.
  */
 export async function downloadTeaserPdf(
-  report: NumerologyReport,
+  raw: NumerologyReport,
 ): Promise<void> {
+  const report = applyLivingTiming(raw);
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();

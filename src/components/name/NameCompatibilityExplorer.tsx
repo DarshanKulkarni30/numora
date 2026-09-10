@@ -27,6 +27,7 @@ import {
 import { ownerProminenceFromDob } from "@/lib/numerology/ownerAgeProminence";
 import { AgeFocusNumberChips } from "@/components/AgeFocusNumberChips";
 import { NameSpellingModePicker } from "@/components/name/NameSpellingModePicker";
+import { calculateChaldeanNameSet } from "@/lib/numerology/chaldeanName";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import { operatingFullName } from "@/lib/profile/nameHistory";
 import {
@@ -312,6 +313,8 @@ export function NameCompatibilityExplorer({ people }: Props) {
     const rVedic = calculateVedic(rightEffectiveName, right.dob);
     const lChald = calculateChaldean(leftEffectiveName);
     const rChald = calculateChaldean(rightEffectiveName);
+    const lNames = calculateChaldeanNameSet(leftEffectiveName);
+    const rNames = calculateChaldeanNameSet(rightEffectiveName);
     const lPyth = calculatePythagorean(leftEffectiveName, left.dob);
     const rPyth = calculatePythagorean(rightEffectiveName, right.dob);
 
@@ -319,8 +322,8 @@ export function NameCompatibilityExplorer({ people }: Props) {
     const rName = reduceToSingleDigit(rVedic.nameNumber);
     const lChName = reduceToSingleDigit(lChald.nameNumber);
     const rChName = reduceToSingleDigit(rChald.nameNumber);
-    const lExpr = reduceToSingleDigit(lPyth.expression);
-    const rExpr = reduceToSingleDigit(rPyth.expression);
+    const lExpr = reduceToSingleDigit(lNames.expression.root);
+    const rExpr = reduceToSingleDigit(rNames.expression.root);
 
     const psychic = pairTones(lPsychic, rPsychic, "vedic");
     const destiny = pairTones(lDestiny, rDestiny, "vedic");

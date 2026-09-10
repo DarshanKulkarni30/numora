@@ -8,6 +8,7 @@ import { ExportWorkingSheetButton } from "@/components/report/ExportWorkingSheet
 import { EnhancedThemeRadar } from "@/components/enhanced/EnhancedThemeRadar";
 import { AlignmentEnginePanel } from "@/components/report/AlignmentEnginePanel";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
+import { PythagoreanCompareStrip } from "@/components/report/PythagoreanCompareStrip";
 import { LoShuChart } from "@/components/report/LoShuChart";
 import { NameEraNote } from "@/components/report/NameEraNote";
 import { StrengthsConstellation } from "@/components/report/StrengthsConstellation";
@@ -220,20 +221,28 @@ export function EnhancedReportView({
                   label: "Expression",
                   topic: "expression",
                   value: snap.expression_number,
-                  system: "pythagorean",
+                  system: "chaldean",
+                  subtitle: snap.expression_compound
+                    ? `${snap.expression_compound}/${snap.expression_number}`
+                    : undefined,
                 },
                 {
                   label: "Soul Urge",
                   topic: "soul-urge",
                   value: snap.soul_urge_number,
-                  system: "pythagorean",
-                  subtitle: "Vowels — what you want inside",
+                  system: "chaldean",
+                  subtitle: snap.soul_urge_compound
+                    ? `${snap.soul_urge_compound}/${snap.soul_urge_number} · vowels`
+                    : "Vowels — what you want inside",
                 },
                 {
                   label: "Personality",
                   topic: "personality",
                   value: snap.personality_number,
-                  system: "pythagorean",
+                  system: "chaldean",
+                  subtitle: snap.personality_compound
+                    ? `${snap.personality_compound}/${snap.personality_number}`
+                    : undefined,
                 },
                 {
                   label: "Maturity",
@@ -304,12 +313,17 @@ export function EnhancedReportView({
           </div>
         </section>
 
+        <PythagoreanCompareStrip
+          fullName={snap.operating_name || person.operating_name || person.full_name}
+          dob={person.date_of_birth}
+        />
+
         <section>
           <h2 className="text-xl text-ink">How your numbers work together</h2>
           <p className="mt-1 text-sm text-ink-soft">
             Soul (vowels — what you want inside), Birth (the day you were born),
-            and Name (Chaldean letters) as one flow — not three separate essays.
-            On this page Soul is Pythagorean; Name is Chaldean.
+            and Name as one flow — not three separate essays. Soul, Personality,
+            and Name use Chaldean letters.
           </p>
           <div className="mt-4">
             <AlignmentEnginePanel reading={reading.alignment} />

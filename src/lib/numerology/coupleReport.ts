@@ -8,6 +8,7 @@ import { personalMonth, personalYearCycleAt } from "./cycles";
 import { vedicPsychicFromDob } from "./dateNumbers";
 import { plainJob, plainTrait, plainWatch } from "./layeredCopy";
 import { CORE_TRAIT, coreTraitFor } from "./meanings";
+import { calculateChaldeanNameSet } from "./chaldeanName";
 import { calculatePythagorean } from "./pythagorean";
 import { assertSafeCopy, assertSafeList } from "./safety";
 
@@ -126,12 +127,13 @@ function personView(
   asOf: Date,
 ): CouplePersonView {
   const pyth = calculatePythagorean(p.fullName || p.label, p.dateOfBirth);
+  const names = calculateChaldeanNameSet(p.fullName || p.label);
   return {
     label: p.label,
     lifePath: pyth.lifePath,
-    expression: pyth.expression,
-    soulUrge: pyth.soulUrge,
-    personality: pyth.personality,
+    expression: names.expression.root,
+    soulUrge: names.soul.root,
+    personality: names.personality.root,
     psychic: vedicPsychicFromDob(p.dateOfBirth),
     personalYear: personalYearCycleAt(p.dateOfBirth, asOf).number,
   };

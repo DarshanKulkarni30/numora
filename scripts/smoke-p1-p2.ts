@@ -94,6 +94,6 @@ const report = generateReport(
 );
 assert(report.numerology_snapshot.minor_expression_number, "minor expression snapshot");
 assert(report.numerology_snapshot.attitude_number === "2", "snapshot attitude");
-assert(report.numerology_snapshot.subconscious_self === "7", "snapshot ss");
+assert(report.numerology_snapshot.subconscious_self === "6", "snapshot ss");
 
 console.log("smoke:p1-p2 passed");

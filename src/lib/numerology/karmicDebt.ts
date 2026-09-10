@@ -6,7 +6,7 @@
  * force, so they can appear or disappear when someone changes their name.
  */
 
-import { PYTHAGOREAN, sumMappedLetters } from "./mappings";
+import { CHALDEAN, sumMappedLetters } from "./mappings";
 import { digitSum, isVowel, parseDob, reduceNumber } from "./reduce";
 
 export const KARMIC_DEBT_MAP = {
@@ -197,19 +197,19 @@ export function karmicDebtsFromName(
   }[] = [
     {
       source: "expression",
-      total: sumMappedLetters(name, PYTHAGOREAN),
+      total: sumMappedLetters(name, CHALDEAN),
       describe: (code, total) =>
         `Every letter of ${whose} adds up to ${chainText(total)}, passing through ${code} on the way to your Expression number. Expression covers how you get things done, so this shows up in your working style.`,
     },
     {
       source: "soul-urge",
-      total: sumMappedLetters(name, PYTHAGOREAN, (ch) => isVowel(ch)),
+      total: sumMappedLetters(name, CHALDEAN, (ch) => isVowel(ch)),
       describe: (code, total) =>
         `The vowels in ${whose} add up to ${chainText(total)}, passing through ${code} on the way to your Soul Urge number. Soul Urge covers what you privately want, so this shows up in what you reach for when nobody is watching.`,
     },
     {
       source: "personality",
-      total: sumMappedLetters(name, PYTHAGOREAN, (ch) => !isVowel(ch)),
+      total: sumMappedLetters(name, CHALDEAN, (ch) => !isVowel(ch)),
       describe: (code, total) =>
         `The consonants in ${whose} add up to ${chainText(total)}, passing through ${code} on the way to your Personality number. Personality covers the first impression you give, so this shows up in how you come across before people know you.`,
     },

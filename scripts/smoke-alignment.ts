@@ -89,7 +89,7 @@ const report = generateReport({
   purpose: "Self-reflection",
 });
 const fromSnap = taggedChartFromSnapshot(report.numerology_snapshot);
-eq(fromSnap.soul.system, "Pythagorean", "snapshot soul stays Pythagorean");
+eq(fromSnap.soul.system, "Chaldean", "snapshot soul is Chaldean");
 eq(fromSnap.soul.number, Number(report.numerology_snapshot.soul_urge_number), "snapshot soul");
 eq(
   fromSnap.name.number,

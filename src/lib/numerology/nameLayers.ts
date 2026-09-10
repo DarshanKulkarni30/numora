@@ -3,6 +3,7 @@
  */
 
 import { calculateChaldean } from "./chaldean";
+import { calculateChaldeanNameSet, maturityFrom } from "./chaldeanName";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateVedic } from "./vedic";
 import {
@@ -34,16 +35,17 @@ export type DualNameChart = {
 
 function bundle(spelling: string, dob: string, givenSpelling: string): NameNumberBundle {
   const pyth = calculatePythagorean(spelling, dob);
+  const names = calculateChaldeanNameSet(spelling);
   const vedic = calculateVedic(spelling, dob);
   const chald = calculateChaldean(spelling);
   const given = calculateVedic(givenSpelling || spelling, dob);
   return {
     lifePath: pyth.lifePath,
     birthDay: pyth.birthDay,
-    expression: pyth.expression,
-    soulUrge: pyth.soulUrge,
-    personality: pyth.personality,
-    maturity: pyth.maturity,
+    expression: names.expression.root,
+    soulUrge: names.soul.root,
+    personality: names.personality.root,
+    maturity: maturityFrom(pyth.lifePath, names.expression.root),
     vedicName: vedic.nameNumber,
     vedicCompound: vedic.nameCompound,
     unitName: vedic.unitSystemNameNumber,

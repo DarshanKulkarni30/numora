@@ -26,6 +26,7 @@ import {
   gendersForProfile,
   SUGGESTED_NAMES,
 } from "@/lib/numerology/nameSuggestions";
+import { calculateChaldeanNameSet } from "@/lib/numerology/chaldeanName";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import { dualNameChart } from "@/lib/numerology/nameLayers";
 import { resolveNameInForce, NAME_ERA_REASON_LABEL } from "@/lib/profile/nameHistory";
@@ -112,10 +113,11 @@ function SuggestionMethodCell({
 
 function nameLayers(fullName: string, dob: string) {
   const pyth = calculatePythagorean(fullName, dob);
+  const names = calculateChaldeanNameSet(fullName);
   const chald = calculateChaldean(fullName);
   const vedic = calculateVedic(fullName, dob);
   return {
-    expression: pyth.expression,
+    expression: names.expression.root,
     chaldean: chald.nameNumber,
     vedicName: vedic.nameNumber,
     unitName: vedic.unitSystemNameNumber,

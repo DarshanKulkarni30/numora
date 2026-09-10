@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import type { NumerologyReport } from "@/lib/numerology/types";
+import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import {
   normalizeCompatTone,
   type CompatTone,
@@ -102,8 +103,9 @@ async function loadLogoDataUrl(): Promise<string | null> {
  * Build and download a branded multi-page PDF of a saved report.
  */
 export async function downloadReportPdf(
-  report: NumerologyReport,
+  raw: NumerologyReport,
 ): Promise<void> {
+  const report = applyLivingTiming(raw);
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -419,6 +421,9 @@ export async function downloadReportPdf(
 
   // —— Pythagorean ——
   addBanner("Pythagorean", "pythagorean");
+  addBody(
+    "Life Path and Birth Day use the Western date method. Expression, Soul, and Personality below use Chaldean letters (compound kept, then root). Pythagorean letter totals are comparison-only.",
+  );
   addBody(
     `Life Path ${report.pythagorean.life_path.number}: ${report.pythagorean.life_path.meaning}`,
   );

@@ -22,6 +22,10 @@ export type NumerologySnapshot = {
   soul_urge_number: string;
   personality_number: string;
   maturity_number: string;
+  /** Chaldean long totals kept beside the root (e.g. 43 with root 7). */
+  expression_compound?: string;
+  soul_urge_compound?: string;
+  personality_compound?: string;
   chaldean_name_number: string;
   compound_number: string;
   vedic_psychic: string;
@@ -300,6 +304,8 @@ export type NumerologyReport = {
   /** Extra legal/safety notices shown prominently in the UI */
   safety_notices: string[];
   recommendations_disclaimer: string;
+  /** Live Chaldean name traces (compound + root) attached at view time. */
+  name_engine?: import("./chaldeanName").ChaldeanNameSet;
 };
 
 export type ReportSection = {

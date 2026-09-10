@@ -9,7 +9,8 @@ export const HOW_TO_READ_ENHANCED = assertSafeList(
   [
     ...SHARED,
     "Pair percents are derived from how two numbers sit together, not a scientific score.",
-    "This page is one story: how Soul (vowels — what you want inside), Birth (the day you were born), and Name (Chaldean letters) work together. Open Detailed for every method, or Comprehensive for a Chaldean-first story.",
+    "This page is one story: how Soul (vowels — what you want inside), Birth (the day you were born), and Name work together. Name numbers use Chaldean letters (compound kept, then root). Open Detailed for every method, or Comprehensive for the four-node Chaldean story.",
+    "Timing on the live HTML page updates when you open it. A saved PDF stays as of the download.",
   ],
   "howto.enhanced",
 );
@@ -19,6 +20,7 @@ export const HOW_TO_READ_DETAILED = assertSafeList(
     ...SHARED,
     "Counts (themes, threads, planet seats) are how many chart positions cite a tone, not scores or percentages.",
     "The Soul → Birth → Name flow is a relationship check. Tri-Identity Harmony below it is Birth × Destiny × Name — a different trio.",
+    "Name seats (Expression, Soul, Personality) use Chaldean letters. The Pythagorean letter totals sit in a short comparison strip. Date seats stay the date method.",
     "This page is the full catalog. Open Enhanced for one story, or Comprehensive for a Chaldean-first story.",
   ],
   "howto.detailed",

@@ -10,7 +10,7 @@
 
 import { personalMonth, personalYearCycleAt } from "./cycles";
 import { reduceToSingleDigit } from "./dateNumbers";
-import { PYTHAGOREAN } from "./mappings";
+import { CHALDEAN } from "./mappings";
 import { coreTraitFor } from "./meanings";
 import { pinnacleAtAge, pinnaclesForDob } from "./pinnacles";
 import {
@@ -220,7 +220,7 @@ function partDigit(n: number): number {
 }
 
 function letterValue(ch: string): number {
-  return PYTHAGOREAN[ch] ?? 0;
+  return CHALDEAN[ch] ?? 0;
 }
 
 function nameParts(name: string): string[] {
@@ -422,24 +422,24 @@ export function buildPythagoreanChart(opts: {
       "pyth.passion.practice",
     ),
     student: assertSafeCopy(
-      "We count how often each letter-value 1–9 appears in the birth-certificate name. The highest count is Hidden Passion. If two numbers tie, both stay.",
+      "We count how often each Chaldean letter-value 1–8 appears in the birth-certificate name. The highest count is Hidden Passion. If two numbers tie, both stay.",
       "pyth.passion.student",
     ),
     expert: assertSafeCopy(
-      "Pythagorean A=1…I=9, then J=1 again. Hidden Passion is the modal letter-value, not a destiny claim or a grade.",
+      "Chaldean letter values (1–8; no 9 on a letter). Hidden Passion is the letter-value that appears most often, not a destiny claim or a grade.",
       "pyth.passion.expert",
     ),
   };
 
-  const missing = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((n) => counts[n] === 0);
+  const missing = [1, 2, 3, 4, 5, 6, 7, 8].filter((n) => counts[n] === 0);
   const softened = missing.filter((n) => cores.includes(n));
   const karmicLessons = {
     numbers: missing,
     softened,
     summary: assertSafeCopy(
       missing.length === 0
-        ? "Every number from 1 to 9 appears at least once in the letters of the birth name. In this method there is no missing-letter lesson on this spelling."
-        : `We give each letter a number (A=1, B=2, … I=9, then J=1 again). If a number from 1 to 9 never appears in the birth name, this method calls it a Karmic Lesson. Yours are ${missing.join(", ")}. This does not judge your character. It only means those skills may need extra practice.${
+        ? "Every number from 1 to 8 appears at least once in the letters of the birth name. In this method there is no missing-letter lesson on this spelling."
+        : `We give each letter a Chaldean number (A=1, I=1, … — letters use 1–8). If a number from 1 to 8 never appears in the birth name, this method calls it a Karmic Lesson. Yours are ${missing.join(", ")}. This does not judge your character. It only means those skills may need extra practice.${
             softened.length
               ? ` ${softened.join(" and ")} also appear in your main chart numbers (for example Life Path or Birth Day), so those lessons are usually easier.`
               : " None of these missing numbers already sit in your main chart, so they may need a little more practice."
@@ -447,11 +447,11 @@ export function buildPythagoreanChart(opts: {
       "pyth.lessons.summary",
     ),
     student: assertSafeCopy(
-      "This is Pythagorean name math (letters 1–9), not Vedic or Chaldean. “Easier” means the same digit already appears in a main number such as Life Path, Birth Day, or Expression.",
+      "This is Chaldean name math (letters 1–8). “Easier” means the same digit already appears in a main number such as Life Path, Birth Day, or Expression.",
       "pyth.lessons.student",
     ),
     expert: assertSafeCopy(
-      "Traditional Pythagorean Karmic Lessons are the absent letter-values 1–9 in the natal spelling. Softening when the digit is already a core seat is a Numora teaching note, not a universal rule.",
+      "Karmic Lessons here are the absent letter-values in the natal spelling on the Chaldean 1–8 map. Softening when the digit is already a core seat is a Numora teaching note, not a universal rule.",
       "pyth.lessons.expert",
     ),
     items: missing.map((number) => ({
@@ -617,9 +617,9 @@ export function buildPythagoreanChart(opts: {
     summary: assertSafeCopy(
       ssNumber === 0
         ? "Subconscious Self needs Latin letters in the birth-certificate name."
-        : `Subconscious Self ${ssNumber} means ${ssNumber} of the nine letter-values appear in the birth name${
-            ssNumber === 9
-              ? " — a complete letter toolkit."
+        : `Subconscious Self ${ssNumber} means ${ssNumber} of the eight Chaldean letter-values (1–8) appear in the birth name${
+            ssNumber === 8
+              ? " — a complete letter toolkit on this map."
               : ` (${presentDigits.join(", ")} present).`
           }`,
       "pyth.ss.summary",
@@ -627,15 +627,15 @@ export function buildPythagoreanChart(opts: {
     practice: assertSafeCopy(
       ssNumber === 0
         ? "Add a Latin spelling to read Subconscious Self."
-        : ssNumber === 9
-          ? "Every letter-value is present — practise choosing which tool, not hunting a missing one."
+        : ssNumber === 8
+          ? "Every Chaldean letter-value (1–8) is present — practise choosing which tool, not hunting a missing one."
           : "Subconscious Self counts what the name already holds. Missing letter-values are the Karmic Lessons on this spelling.",
       "pyth.ss.practice",
     ),
   };
 
   const methodNote = assertSafeCopy(
-    "Pythagorean extras on the birth-certificate spelling. Challenges share Pinnacle age windows. Period Cycles use month / day / year digits (Formative / Productive / Harvest). Attitude is month+day. Subconscious Self counts which of 1–9 appear as letters. Personal Day and Essence are dated to today.",
+    "Pythagorean extras on the birth-certificate spelling. Challenges share Pinnacle age windows. Period Cycles use month / day / year digits (Formative / Productive / Harvest). Attitude is month+day. Name-letter Hidden Passion and missing-letter Lessons use Chaldean values (1–8). Personal Day and Essence are dated to today.",
     "pyth.method",
   );
 

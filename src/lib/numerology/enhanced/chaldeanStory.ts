@@ -1,7 +1,8 @@
 import { assertSafeCopy } from "@/lib/numerology/safety";
 import { chaldeanCompoundMeaning } from "@/lib/numerology/meanings";
 import type { NumerologyReport } from "@/lib/numerology/types";
-import { parseChartNumber } from "./digits";
+import { pythagoreanNameCompare } from "@/lib/numerology/chaldeanName";
+import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
 import { plainJob, plainTrait, plainWatch } from "@/lib/numerology/layeredCopy";
 
 export type ChaldeanStory = {
@@ -39,17 +40,23 @@ export function buildChaldeanStory(report: NumerologyReport): ChaldeanStory {
     "enhanced.chaldean.combined",
   );
 
+  const name =
+    report.numerology_snapshot.operating_name ||
+    report.person.operating_name ||
+    report.person.full_name;
+  const pythExpr = name.trim()
+    ? pythagoreanNameCompare(name, report.person.date_of_birth).expression
+    : expr;
+
   const compare = assertSafeCopy(
-    expr === reduced
-      ? `Chaldean ${reduced} and Expression ${expr} landed on the same digit for this spelling. Two letter maps agree. Still not a prediction.`
-      : `Same name, two maps. Chaldean ${reduced} is ${plainTrait(reduced)}. Expression ${expr} is ${plainTrait(expr)}. Two ways to count. Neither wins.`,
+    `Expression on this page is the Chaldean name number ${reduced}. The Western sequential letter chart gives Expression ${pythExpr} for the same spelling — shown only as a comparison, not a second engine.`,
     "enhanced.chaldean.compare",
   );
 
   return {
     compound,
     reduced,
-    pythagoreanExpression: expr,
+    pythagoreanExpression: pythExpr,
     texture,
     essence,
     combined,

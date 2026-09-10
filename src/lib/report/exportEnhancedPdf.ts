@@ -5,6 +5,7 @@ import {
   buildYearForecast,
   yearForecastPdfLines,
 } from "@/lib/numerology/yearForecast";
+import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import type { NumerologyReport } from "@/lib/numerology/types";
 import { BRAND_NAME } from "@/lib/site";
 
@@ -38,7 +39,7 @@ export async function downloadEnhancedPdf(
   report: NumerologyReport,
   reportId: string,
 ): Promise<void> {
-  const reading = buildEnhancedReading(report, { reportId });
+  const reading = buildEnhancedReading(applyLivingTiming(report), { reportId });
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();

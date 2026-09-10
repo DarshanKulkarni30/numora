@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AssociationsPanel } from "@/components/report/AssociationsPanel";
 import { LearningConceptLink } from "@/components/learning/LearningConceptLink";
 import { CompatibilityMatrix } from "@/components/report/CompatibilityMatrix";
+import { PythagoreanCompareStrip } from "@/components/report/PythagoreanCompareStrip";
 import { CoreNumbersChart } from "@/components/report/CoreNumbersChart";
 import { ExportPdfButton } from "@/components/report/ExportPdfButton";
 import { ExportTeaserPdfButton } from "@/components/report/ExportTeaserPdfButton";
@@ -288,7 +289,7 @@ export function ReportView({
     {
       system: "pythagorean" as const,
       title: "Pythagorean",
-      blurb: "Western core map from full name and birth date — path, name craft, inner want, and outer face.",
+      blurb: "Date path and birth day from the Western date method. Expression, Soul, and Personality on this page use Chaldean letters (compound kept, then root).",
       insight: pythagoreanInsight({
         birthDay: snap.birth_day,
         lifePath: snap.life_path,
@@ -314,7 +315,7 @@ export function ReportView({
           label: "Expression",
           topic: "expression" as const,
           value: snap.expression_number,
-          note: `Name in force now · ${CORE_TRAIT[Number(snap.expression_number)] ?? ""}`.trim(),
+          note: `Chaldean letters of the name in force${snap.expression_compound ? ` · ${snap.expression_compound}/${snap.expression_number}` : ""} · ${CORE_TRAIT[Number(snap.expression_number)] ?? ""}`.trim(),
         },
         ...(snap.natal_expression_number
           ? [
@@ -338,13 +339,13 @@ export function ReportView({
           label: "Soul Urge",
           topic: "soul-urge" as const,
           value: snap.soul_urge_number,
-          note: `Vowels — inner want · ${CORE_TRAIT[Number(snap.soul_urge_number)] ?? ""}`.trim(),
+          note: `Chaldean vowels — inner want${snap.soul_urge_compound ? ` · ${snap.soul_urge_compound}/${snap.soul_urge_number}` : ""} · ${CORE_TRAIT[Number(snap.soul_urge_number)] ?? ""}`.trim(),
         },
         {
           label: "Personality",
           topic: "personality" as const,
           value: snap.personality_number,
-          note: `Consonants — outer face · ${CORE_TRAIT[Number(snap.personality_number)] ?? ""}`.trim(),
+          note: `Chaldean consonants — outer face${snap.personality_compound ? ` · ${snap.personality_compound}/${snap.personality_number}` : ""} · ${CORE_TRAIT[Number(snap.personality_number)] ?? ""}`.trim(),
         },
         {
           label: "Maturity",
@@ -513,19 +514,19 @@ export function ReportView({
       label: "Expression",
       topic: "expression" as const,
       value: snap.expression_number,
-      system: "pythagorean" as const,
+      system: "chaldean" as const,
     },
     {
       label: "Soul Urge",
       topic: "soul-urge" as const,
       value: snap.soul_urge_number,
-      system: "pythagorean" as const,
+      system: "chaldean" as const,
     },
     {
       label: "Personality",
       topic: "personality" as const,
       value: snap.personality_number,
-      system: "pythagorean" as const,
+      system: "chaldean" as const,
     },
     {
       label: "Maturity",
@@ -732,6 +733,12 @@ export function ReportView({
             <SnapshotBySystem groups={snapshotGroups} />
           </div>
           <div className="mt-6">
+            <PythagoreanCompareStrip
+              fullName={snap.operating_name || person.operating_name || person.full_name}
+              dob={person.date_of_birth}
+            />
+          </div>
+          <div className="mt-6">
             <PythagoreanIdentityLayers
               birthDay={snap.birth_day}
               lifePath={snap.life_path}
@@ -823,7 +830,7 @@ export function ReportView({
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-xl text-ink">Soul → Birth → Name</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            How what you want inside (Soul, Pythagorean vowels), the day you
+            How what you want inside (Soul, Chaldean vowels), the day you
             were born (Birth), and the Chaldean name sit together. This is not
             the triangle below.
           </p>

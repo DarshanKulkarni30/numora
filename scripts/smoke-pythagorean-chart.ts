@@ -41,9 +41,10 @@ const chart = buildPythagoreanChart({
 });
 
 eq(chart.balance.number, 6, "D+K balance 4+2=6");
-eq(chart.hiddenPassion.numbers, [1], "Hidden Passion 1 (four A's/S values)");
-assert(chart.karmicLessons.numbers.includes(6), "missing 6 is a lesson");
+eq(chart.hiddenPassion.numbers, [1, 2], "Hidden Passion 1 and 2 tie on Chaldean counts");
 assert(chart.karmicLessons.numbers.includes(7), "missing 7 is a lesson");
+assert(chart.karmicLessons.numbers.includes(8), "missing 8 is a lesson");
+assert(!chart.karmicLessons.numbers.includes(6), "U is Chaldean 6 so 6 is present");
 assert(!chart.karmicLessons.numbers.includes(1), "1 is present so not a lesson");
 eq(
   chart.challenges.map((c) => c.number),
@@ -74,7 +75,7 @@ assert(
     chart.karmicLessons.summary.toLowerCase().includes("every number from 1"),
   "karmic lesson summary is plain",
 );
-eq(chart.subconsciousSelf.number, 7, "subconscious self = 9 minus two lessons");
+eq(chart.subconsciousSelf.number, 6, "subconscious self = eight letter-values minus two lessons");
 assert(chart.essence.transits.length >= 1, "essence transits");
 assert(
   !chart.hiddenPassion.summary.toLowerCase().includes("native appetite"),
@@ -330,6 +331,6 @@ const emptyish = buildPythagoreanChart({
   asOf,
 });
 assert(emptyish.balance.number === 0, "non-Latin name has no balance digit");
-assert(emptyish.karmicLessons.numbers.length === 9, "all letter-values missing");
+assert(emptyish.karmicLessons.numbers.length === 8, "all Chaldean letter-values missing");
 
 console.log("smoke:pythagorean-chart passed");

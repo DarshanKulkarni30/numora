@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
+import { PythagoreanCompareStrip } from "@/components/report/PythagoreanCompareStrip";
 import { ShareLinkButton } from "@/components/report/ShareLinkButton";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
 import { buildComprehensiveReading } from "@/lib/numerology/comprehensive";
@@ -240,6 +241,11 @@ export function ComprehensiveReportView({
             </div>
           </div>
         </section>
+
+        <PythagoreanCompareStrip
+          fullName={live.person.operating_name || live.person.full_name}
+          dob={live.person.date_of_birth}
+        />
 
         <section className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h2 className="text-lg text-ink">How the numbers sit together</h2>

@@ -8,6 +8,7 @@ import { buildComprehensiveReading } from "../src/lib/numerology/comprehensive";
 import { lastFourVsTotalRoot } from "../src/lib/numerology/mobileChartExtras";
 import { evaluateMobileFit } from "../src/lib/numerology/mobileFit";
 import { generateReport } from "../src/lib/numerology/report";
+import { applyLivingTiming } from "../src/lib/numerology/livingTiming";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const a = JSON.stringify(actual);
@@ -76,6 +77,46 @@ ok(
 );
 ok(reading.methodNote.toLowerCase().includes("chaldean"), "method note names Chaldean");
 ok(reading.profile.soul.label === "10/1", "reading uses Chaldean soul");
+
+const engineReport = generateReport({
+  fullName: NAME,
+  dateOfBirth: "10/10/1980",
+  gender: "Male",
+  purpose: "Self-reflection",
+});
+eq(engineReport.numerology_snapshot.soul_urge_number, "1", "saved report soul is Chaldean root");
+eq(
+  engineReport.numerology_snapshot.expression_number,
+  String(chal.name.root),
+  "Expression is the Chaldean name root",
+);
+eq(
+  engineReport.numerology_snapshot.life_path,
+  String(pyth.lifePath),
+  "Life Path stays the date method",
+);
+eq(
+  engineReport.numerology_snapshot.birth_day,
+  String(pyth.birthDay),
+  "Birth Day stays the date method",
+);
+const overwritten = {
+  ...engineReport,
+  numerology_snapshot: {
+    ...engineReport.numerology_snapshot,
+    soul_urge_number: "6",
+    personality_number: "9",
+  },
+};
+const live = applyLivingTiming(overwritten);
+eq(live.numerology_snapshot.soul_urge_number, "1", "open-time layer rewrites Pythagorean soul");
+eq(
+  live.numerology_snapshot.life_path,
+  overwritten.numerology_snapshot.life_path,
+  "date Life Path unchanged by name layer",
+);
+ok(live.name_engine?.method === "CHALDEAN-NUMORA-1.0", "name engine attached");
+ok(live.name_engine?.soul.compound === 10, "trace keeps compound 10");
 
 const easy = evaluateMobileFit("01/01/1990", "1915173513", "personal");
 ok(easy.ok && easy.fit.lastFour, "mobile fixture parses");

@@ -9,7 +9,7 @@
 
 import { personalMonth, personalYearCycleAt } from "./cycles";
 import { calculateLoShu } from "./loShu";
-import { PYTHAGOREAN } from "./mappings";
+import { CHALDEAN } from "./mappings";
 import {
   NAME_PLANE_LETTERS,
   type NamePlaneId,
@@ -35,7 +35,7 @@ export type Derivation = {
 };
 
 function letterValue(ch: string): number {
-  return PYTHAGOREAN[ch] ?? 0;
+  return CHALDEAN[ch] ?? 0;
 }
 
 /** "D=4 + A=1 + K=2 = 7", truncated so a long name stays readable. */

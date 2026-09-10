@@ -1,18 +1,11 @@
 /**
  * Tagged numbers: every digit carries system + source + role.
- * Reports keep Pythagorean Soul vs Chaldean Name. Mobile uses Chaldean Soul too.
+ * Name seats (Soul, Personality, Name) use Chaldean letters.
  */
 
-import { calculateChaldean } from "@/lib/numerology/chaldean";
-import {
-  reduceToSingleDigit,
-  vedicDestinyFromDob,
-  vedicPsychicFromDob,
-} from "@/lib/numerology/dateNumbers";
+import { reduceToSingleDigit, vedicDestinyFromDob, vedicPsychicFromDob } from "@/lib/numerology/dateNumbers";
 import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
-import { CHALDEAN, PYTHAGOREAN, sumMappedLetters } from "@/lib/numerology/mappings";
-import { calculatePythagorean } from "@/lib/numerology/pythagorean";
-import { isVowel, reduceWithCompound } from "@/lib/numerology/reduce";
+import { calculateChaldeanNameSet } from "@/lib/numerology/chaldeanName";
 import type { NumerologySnapshot } from "@/lib/numerology/types";
 
 export type NumberSystem = "Pythagorean" | "Vedic" | "Chaldean" | "derived";
@@ -139,7 +132,7 @@ export function taggedChartFromParts(parts: {
   };
 }
 
-/** Report snapshot: Soul Urge, Vedic Psychic, Vedic Destiny, Chaldean name. */
+/** Report snapshot after the Chaldean name layer: Soul, Personality, Name. */
 export function taggedChartFromSnapshot(snap: NumerologySnapshot): TaggedChart {
   return taggedChartFromParts({
     soul: snapDigit(snap.soul_urge_number),
@@ -147,30 +140,30 @@ export function taggedChartFromSnapshot(snap: NumerologySnapshot): TaggedChart {
     destiny: snapDigit(snap.vedic_destiny),
     name: snapDigit(snap.chaldean_name_number),
     personality: snapDigit(snap.personality_number),
+    soulCompound: snapDigit(snap.soul_urge_compound, snapDigit(snap.soul_urge_number)),
     nameCompound: snapDigit(snap.compound_number, snapDigit(snap.chaldean_name_number)),
+    personalityCompound: snapDigit(
+      snap.personality_compound,
+      snapDigit(snap.personality_number),
+    ),
+    soulSystem: "Chaldean",
+    personalitySystem: "Chaldean",
   });
 }
 
-/** Live person (mobile): Chaldean Soul + Name, Vedic Birth/Destiny. */
+/** Live person (mobile and reports): Chaldean Soul, Personality, Name. */
 export function taggedChartFromPerson(fullName: string, dob: string): TaggedChart {
-  const pyth = calculatePythagorean(fullName, dob);
-  const chal = calculateChaldean(fullName);
-  const soulVowels = reduceWithCompound(
-    sumMappedLetters(fullName, CHALDEAN, (ch) => isVowel(ch)),
-    [],
-  );
-  const persCompound = reduceWithCompound(
-    sumMappedLetters(fullName, PYTHAGOREAN, (ch) => !isVowel(ch)),
-  ).compound;
+  const names = calculateChaldeanNameSet(fullName);
   return taggedChartFromParts({
-    soul: soulVowels.reduced || 9,
+    soul: names.soul.root,
     birth: vedicPsychicFromDob(dob),
     destiny: vedicDestinyFromDob(dob),
-    name: chal.nameNumber,
-    personality: pyth.personality,
-    soulCompound: soulVowels.compound,
-    nameCompound: chal.compound,
-    personalityCompound: persCompound,
+    name: names.expression.root,
+    personality: names.personality.root,
+    soulCompound: names.soul.compound,
+    nameCompound: names.expression.compound,
+    personalityCompound: names.personality.compound,
     soulSystem: "Chaldean",
+    personalitySystem: "Chaldean",
   });
 }

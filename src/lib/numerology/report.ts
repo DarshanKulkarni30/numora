@@ -1,5 +1,6 @@
 import { sunSignFromDob } from "@/lib/astrology/sunSign";
 import { calculateChaldean } from "./chaldean";
+import { calculateChaldeanNameSet } from "./chaldeanName";
 import { personalMonth } from "./cycles";
 import { buildPythagoreanChart } from "./pythagoreanChart";
 import {
@@ -806,9 +807,23 @@ export function generateReport(
     asOf: now,
   });
   const operatingName = names.force.operatingSpelling;
-  const pyth = calculatePythagorean(operatingName, input.dateOfBirth);
+  const chalOp = calculateChaldeanNameSet(operatingName);
+  const pythDate = calculatePythagorean(operatingName, input.dateOfBirth);
+  const pyth = {
+    ...pythDate,
+    expression: names.operating.expression,
+    soulUrge: names.operating.soulUrge,
+    personality: names.operating.personality,
+    maturity: names.operating.maturity,
+  };
   const natalPyth = names.differs
-    ? calculatePythagorean(fullName, input.dateOfBirth)
+    ? {
+        ...calculatePythagorean(fullName, input.dateOfBirth),
+        expression: names.natal.expression,
+        soulUrge: names.natal.soulUrge,
+        personality: names.natal.personality,
+        maturity: names.natal.maturity,
+      }
     : pyth;
   const chald = calculateChaldean(operatingName);
   const natalChald = names.differs ? calculateChaldean(fullName) : chald;
@@ -1089,6 +1104,9 @@ export function generateReport(
     soul_urge_number: String(pyth.soulUrge),
     personality_number: String(pyth.personality),
     maturity_number: String(pyth.maturity),
+    expression_compound: String(chalOp.expression.compound),
+    soul_urge_compound: String(chalOp.soul.compound),
+    personality_compound: String(chalOp.personality.compound),
     chaldean_name_number: String(chald.nameNumber),
     compound_number: String(chald.compound),
     vedic_psychic: String(vedic.psychic),

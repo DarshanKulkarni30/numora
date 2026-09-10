@@ -104,9 +104,10 @@ const chart = dualNameChart({
 eq(chart.differs, true, "dual chart flags a name change");
 eq(
   chart.operating.vedicName !== chart.natal.vedicName ||
-    chart.operating.expression !== chart.natal.expression,
+    chart.operating.expression !== chart.natal.expression ||
+    chart.operating.chaldeanCompound !== chart.natal.chaldeanCompound,
   true,
-  "surname change moves NN or Expression",
+  "surname change moves NN, Expression, or Chaldean compound",
 );
 
 const report = generateReport(

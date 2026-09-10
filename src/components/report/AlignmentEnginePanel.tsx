@@ -86,8 +86,9 @@ export function AlignmentEnginePanel({
             ? " — the date path and the day tone match."
             : "."}{" "}
           It is a Numora extra, not a classic Chaldean number. Birth stays the
-          working habit in the flow above. On this page Soul uses Pythagorean
-          vowels; Name uses Chaldean letters.
+          working habit in the flow above. Soul, Personality, and Name use
+          Chaldean letters. Birth is the day of the month. Percents are
+          Numora’s check of how two numbers sit.
         </p>
       </div>
 

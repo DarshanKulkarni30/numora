@@ -11,6 +11,7 @@ import {
 import { yearMonthMeaning } from "./meanings";
 import { LAND_LABEL, westernYearOutlook } from "./personalYearOutlook";
 import { personalDayNumber } from "./pythagoreanChart";
+import { applyChaldeanNameLayer } from "./applyChaldeanNameLayer";
 import type { NumerologyReport } from "./types";
 import { isValidDob } from "@/lib/profile/date";
 
@@ -28,7 +29,7 @@ export function applyLivingTiming(
   asOf = new Date(),
 ): NumerologyReport {
   const dob = report.person.date_of_birth;
-  if (!isValidDob(dob)) return report;
+  if (!isValidDob(dob)) return applyChaldeanNameLayer(report);
 
   const cycle = personalYearCycleAt(dob, asOf);
   const outlook = westernYearOutlook({
@@ -41,7 +42,7 @@ export function applyLivingTiming(
   const pm = personalMonth(cycle.number, asOf);
   const pd = personalDayNumber(cycle.number, asOf);
 
-  return {
+  const timed: NumerologyReport = {
     ...report,
     numerology_snapshot: {
       ...report.numerology_snapshot,
@@ -67,4 +68,5 @@ export function applyLivingTiming(
         "Let the Personal Month refine this year's climate into this month's weather — habits, not events. This number updates when you open the live reading.",
     },
   };
+  return applyChaldeanNameLayer(timed);
 }

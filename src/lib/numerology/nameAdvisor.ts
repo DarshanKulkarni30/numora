@@ -11,6 +11,7 @@ import {
   gendersForProfile,
   SUGGESTED_NAMES,
 } from "./nameSuggestions";
+import { calculateChaldeanNameSet } from "./chaldeanName";
 import { calculatePythagorean } from "./pythagorean";
 import { calculateVedic } from "./vedic";
 import { calculateChaldean } from "./chaldean";
@@ -114,11 +115,11 @@ function scoreName(
   birthDay: number,
 ): RankedSpelling {
   const fullName = joinGivenAndSurname(given, surname);
-  const pyth = calculatePythagorean(fullName, "01/01/2000");
+  const names = calculateChaldeanNameSet(fullName);
   const vedic = calculateVedic(fullName, "01/01/2000");
   const chald = calculateChaldean(fullName);
   const vedicName = reduceToSingleDigit(vedic.nameNumber);
-  const expression = reduceToSingleDigit(pyth.expression);
+  const expression = reduceToSingleDigit(names.expression.root);
   const chaldean = reduceToSingleDigit(chald.nameNumber);
   const vHit = vedicTrio(psychic, destiny, vedicName);
   const pHit = pythagoreanTrio(birthDay, lifePath, expression);
@@ -126,7 +127,7 @@ function scoreName(
   const rank = BAND_RANK[vHit.band] * 10 + BAND_RANK[pHit.band];
   const note = assertSafeCopy(
     source === "current"
-      ? `Current spelling. Vedic name ${vedicName} is ${vHit.band} (${vHit.label}); Pythagorean Expression ${expression} is ${pHit.band}.`
+      ? `Current spelling. Vedic name ${vedicName} is ${vHit.band} (${vHit.label}); Chaldean Expression ${expression} is ${pHit.band}.`
       : source === "spelling"
         ? `Spelling variant. Vedic name ${vedicName} is ${vHit.band} (${vHit.label}).`
         : `From the reflective name bank. Vedic name ${vedicName} is ${vHit.band} (${vHit.label}).`,

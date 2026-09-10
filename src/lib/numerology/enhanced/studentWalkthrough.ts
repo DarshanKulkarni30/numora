@@ -49,26 +49,26 @@ export function buildStudentWalkthrough(report: NumerologyReport): StudentWalkth
 
   const letters = name.toUpperCase().replace(/[^A-Z]/g, "").split("");
   const shown = letters.slice(0, 18);
-  const pythMap = shown.map((ch) => `${ch}=${PYTHAGOREAN[ch] ?? 0}`).join(" ");
   const chalMap = shown.map((ch) => `${ch}=${CHALDEAN[ch] ?? 0}`).join(" ");
-  const pythSum = sumMappedLetters(name, PYTHAGOREAN);
+  const pythMap = shown.map((ch) => `${ch}=${PYTHAGOREAN[ch] ?? 0}`).join(" ");
   const chalSum = sumMappedLetters(name, CHALDEAN);
-  const vowels = sumMappedLetters(name, PYTHAGOREAN, (ch) => isVowel(ch));
-  const consonants = sumMappedLetters(name, PYTHAGOREAN, (ch) => !isVowel(ch));
+  const pythSum = sumMappedLetters(name, PYTHAGOREAN);
+  const vowels = sumMappedLetters(name, CHALDEAN, (ch) => isVowel(ch));
+  const consonants = sumMappedLetters(name, CHALDEAN, (ch) => !isVowel(ch));
 
   const nameSteps: CalcStep[] = [
     { label: "Spelling in force", detail: name },
     {
-      label: "Pythagorean letters",
-      detail: `${pythMap}${letters.length > 18 ? " …" : ""} (sum ${pythSum} → Expression ${reduceNumber(pythSum)})`,
+      label: "Chaldean letters (this reading)",
+      detail: `${chalMap}${letters.length > 18 ? " …" : ""} (sum ${chalSum} → Expression ${reduceNumber(chalSum, [11, 22])})`,
     },
     {
       label: "Vowels / consonants",
-      detail: `Soul Urge from vowels (sum ${vowels} → ${reduceNumber(vowels)}); Personality from consonants (sum ${consonants} → ${reduceNumber(consonants)})`,
+      detail: `Soul from vowels (sum ${vowels} → ${reduceNumber(vowels)}); Personality from consonants (sum ${consonants} → ${reduceNumber(consonants)})`,
     },
     {
-      label: "Chaldean letters (no 9)",
-      detail: `${chalMap}${letters.length > 18 ? " …" : ""} (sum ${chalSum} → ${reduceNumber(chalSum, [11, 22])})`,
+      label: "Pythagorean letters (comparison only)",
+      detail: `${pythMap}${letters.length > 18 ? " …" : ""} (sum ${pythSum} → ${reduceNumber(pythSum)})`,
     },
   ];
 

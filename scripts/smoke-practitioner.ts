@@ -68,8 +68,8 @@ eq(karmicDebtsFromDob("30/08/1981"), [], "clean date carries no debt");
 
 // —— Karmic debt: name positions ——
 
-// Vowels of this spelling total 34 -> no debt; Expression totals 85 -> 13 -> 4.
-const nameDebts = karmicDebtsFromName("Jennifer Anne Smith", "operating");
+// Vowels of this spelling do not hit a debt; Expression totals 85 → 13 → 4.
+const nameDebts = karmicDebtsFromName("Jennifer Anne Whitfield", "operating");
 eq(
   nameDebts.map((d) => `${d.label}@${d.source}`),
   ["13/4@expression"],
@@ -83,9 +83,9 @@ has(
   "expression derivation shows the letter total",
 );
 
-// Respelling drops that debt: same final Expression, different route to it.
+// Respelling keeps Expression 4 but avoids 13/14/16/19 on the way down.
 eq(
-  karmicDebtsFromName("Jennifer Anne Whitfield", "operating").map((d) => d.label),
+  karmicDebtsFromName("Helen Smith", "operating").map((d) => d.label),
   [],
   "respelling clears the name debt",
 );
@@ -115,10 +115,14 @@ else {
   );
 }
 
-const cleanReport = generateReport({
-  fullName: "Darshan Kulkarni",
-  dateOfBirth: "30/08/1981",
-});
+const asOf = new Date(2026, 7, 22);
+const cleanReport = generateReport(
+  {
+    fullName: "Darshan Kulkarni",
+    dateOfBirth: "30/08/1981",
+  },
+  asOf,
+);
 has(
   cleanReport.sections.find((s) => s.id === "karmic-debt")?.body ?? "",
   "most charts have none",
@@ -127,7 +131,6 @@ has(
 
 // —— Derivations match the chart they describe ——
 
-const asOf = new Date(2026, 7, 22);
 const chart = resolvePythagoreanChart(cleanReport, asOf);
 const derivations = buildChartDerivations(cleanReport, chart, asOf);
 
@@ -210,10 +213,11 @@ else {
     fail("date rows never move", "a date row was marked changed");
   } else ok("date-based numbers are held fixed across the change");
   eq(
-    diff.debts.fellAway.map((d) => d.label),
+    diff.debts.appeared.map((d) => d.label),
     ["13/4"],
-    "diff reports the debt that fell away with the old spelling",
+    "diff reports the debt that arrived with the later spelling",
   );
+  eq(diff.debts.fellAway.map((d) => d.label), [], "natal Smith spelling had no Chaldean 13");
 }
 
 // —— Chart-specific throughlines (same dominant theme, different pulls) ——
