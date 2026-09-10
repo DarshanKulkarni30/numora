@@ -159,6 +159,17 @@ function overallWord(score: number, verdict: MobileVerdict): string {
   return `${score} / 100 — ${verdict.toUpperCase()}`;
 }
 
+function shownTagged(n: {
+  number: number;
+  compound: number;
+  root: number;
+}): string {
+  if (n.compound !== n.number && n.compound !== n.root) {
+    return `${n.compound}/${n.root}`;
+  }
+  return String(n.number);
+}
+
 function personVsMobile(
   id: string,
   label: string,
@@ -253,7 +264,13 @@ export function buildMobileGuidance(
   };
 
   const links = [
-    personVsMobile("soul", `Soul ${chart.soul.number}`, "Soul", chart.soul.root, root),
+    personVsMobile(
+      "soul",
+      `Soul ${shownTagged(chart.soul)}`,
+      "Soul",
+      chart.soul.root,
+      root,
+    ),
     personVsMobile("birth", `Birth ${chart.birth.number}`, "Birth", chart.birth.root, root),
     personVsMobile(
       "destiny",
@@ -262,7 +279,13 @@ export function buildMobileGuidance(
       chart.destiny.root,
       root,
     ),
-    personVsMobile("name", `Name ${chart.name.number}`, "Name", chart.name.root, root),
+    personVsMobile(
+      "name",
+      `Name ${shownTagged(chart.name)}`,
+      "Name",
+      chart.name.root,
+      root,
+    ),
   ];
   const overallFit = Math.round(
     links.reduce((s, l) => s + l.percent, 0) / links.length,
@@ -438,7 +461,7 @@ export function buildMobileGuidance(
     methodology: assertSafeList(
       [
         "System: Chaldean-aligned pair matrix plus selected traditional mobile rules.",
-        `Personal profile: Soul ${chart.soul.number} (Pythagorean vowels), Birth ${chart.birth.number} (day), Destiny ${chart.destiny.number} (date sum), Name ${chart.name.number} (Chaldean).`,
+        `Personal profile: Soul ${shownTagged(chart.soul)} (Chaldean vowels), Birth ${chart.birth.number} (day), Destiny ${chart.destiny.number} (date sum), Name ${shownTagged(chart.name)} (Chaldean).`,
         "Structural analysis: digit position, repetition, sequence, pairs, Lo Shu.",
         "The 100-point headline is unchanged. Purpose bars are a separate weighted view.",
         "Interpretations are reflective guidance, not scientific prediction.",

@@ -75,7 +75,9 @@ ok(
 );
 
 const live = taggedChartFromPerson("Darshan Kulkarni", "10/10/1980");
-eq(live.soul.system, "Pythagorean", "live soul Pythagorean");
+eq(live.soul.system, "Chaldean", "live soul Chaldean");
+eq(live.soul.compound, 10, "live Chaldean soul compound 10");
+eq(live.soul.root, 1, "live Chaldean soul root 1");
 eq(live.name.system, "Chaldean", "live name Chaldean");
 eq(live.birth.system, "Vedic", "live birth Vedic");
 ok(live.soul.role === "soul" && live.name.role === "name", "roles not swapped");
@@ -87,6 +89,7 @@ const report = generateReport({
   purpose: "Self-reflection",
 });
 const fromSnap = taggedChartFromSnapshot(report.numerology_snapshot);
+eq(fromSnap.soul.system, "Pythagorean", "snapshot soul stays Pythagorean");
 eq(fromSnap.soul.number, Number(report.numerology_snapshot.soul_urge_number), "snapshot soul");
 eq(
   fromSnap.name.number,

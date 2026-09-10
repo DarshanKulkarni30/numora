@@ -39,8 +39,7 @@ export function MobileExplorer({ people }: Props) {
     const first = self ?? selectable[0];
     return first ? personKey(first) : "";
   });
-  const [personal, setPersonal] = useState("");
-  const [business, setBusiness] = useState("");
+  const [number, setNumber] = useState("");
 
   const selected = selectable.find((p) => personKey(p) === selectedKey);
   const dob = selected?.date_of_birth ?? "";
@@ -98,24 +97,15 @@ export function MobileExplorer({ people }: Props) {
             ) : null}
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="max-w-xl">
             <MobileFitPanel
-              title="Personal mobile"
+              title="Mobile"
               use="personal"
               dob={dob}
               fullName={selected?.full_name ?? ""}
               gender={selected?.gender}
-              value={personal}
-              onChange={setPersonal}
-            />
-            <MobileFitPanel
-              title="Business mobile"
-              use="business"
-              dob={dob}
-              fullName={selected?.full_name ?? ""}
-              gender={selected?.gender}
-              value={business}
-              onChange={setBusiness}
+              value={number}
+              onChange={setNumber}
             />
           </div>
         </>

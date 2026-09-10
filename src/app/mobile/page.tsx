@@ -45,16 +45,16 @@ export default async function MobilePage() {
       <SiteHeader email={user.email} />
       <main className="mx-auto max-w-6xl px-5 pb-20 pt-6">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-ink">Mobile numbers</h1>
+          <h1 className="text-4xl text-ink">Mobile</h1>
           <p className="mt-3 text-ink-soft">
-            Pick someone from your profile and check a personal number and a
-            business number side by side. Sequence comes first (including the
-            last-four receiver/caller tail), then how the mobile root sits with
-            destiny and birth number, then Lo Shu as a supporting lift. Digit
-            totals are shown for checking; they are not scored on their own.
-            Purpose bars sit beside the 100-point score. Traditional reading
-            only—not a prediction of events, and not telecom or legal advice.
-            For company name + domain + mobile together, use{" "}
+            Pick someone from your profile and check a national number. Sequence
+            comes first (including the last-four receiver/caller tail), then how
+            the mobile root sits with destiny and birth number, then Lo Shu as a
+            supporting lift. Digit totals are shown for checking; they are not
+            scored on their own. Purpose notes (personal, work, business, and
+            others) sit beside the 100-point score. Traditional reading only—not
+            a prediction of events, and not telecom or legal advice. For company
+            name + domain together, use{" "}
             <a href="/business" className="text-gold-deep underline">
               Business numbers
             </a>

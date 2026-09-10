@@ -80,7 +80,9 @@ export function MobileGuidancePanel({ guidance, change }: Props) {
       <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-4">
         <h3 className="text-lg text-ink">Person ↔ mobile</h3>
         <p className="mt-1 text-sm text-ink-soft">
-          Overall personal fit {personMobile.overall} / 100
+          Soul is vowels on the Chaldean letter chart (what you want inside).
+          Name is the whole name on that same chart. Birth is the day; Destiny
+          is the full date. Overall personal fit {personMobile.overall} / 100
         </p>
         <ul className="mt-3 space-y-3">
           {personMobile.links.map((l) => (

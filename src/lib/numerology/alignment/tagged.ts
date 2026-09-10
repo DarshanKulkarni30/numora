@@ -1,6 +1,6 @@
 /**
  * Tagged numbers: every digit carries system + source + role.
- * Prevents mixing Pythagorean vowels with Chaldean name math.
+ * Reports keep Pythagorean Soul vs Chaldean Name. Mobile uses Chaldean Soul too.
  */
 
 import { calculateChaldean } from "@/lib/numerology/chaldean";
@@ -10,7 +10,7 @@ import {
   vedicPsychicFromDob,
 } from "@/lib/numerology/dateNumbers";
 import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
-import { PYTHAGOREAN, sumMappedLetters } from "@/lib/numerology/mappings";
+import { CHALDEAN, PYTHAGOREAN, sumMappedLetters } from "@/lib/numerology/mappings";
 import { calculatePythagorean } from "@/lib/numerology/pythagorean";
 import { isVowel, reduceWithCompound } from "@/lib/numerology/reduce";
 import type { NumerologySnapshot } from "@/lib/numerology/types";
@@ -103,10 +103,12 @@ export function taggedChartFromParts(parts: {
   soulCompound?: number;
   nameCompound?: number;
   personalityCompound?: number;
+  soulSystem?: NumberSystem;
+  personalitySystem?: NumberSystem;
 }): TaggedChart {
   const soul = tag(
     "soul",
-    "Pythagorean",
+    parts.soulSystem ?? "Pythagorean",
     "vowels",
     parts.soul,
     parts.soulCompound,
@@ -122,7 +124,7 @@ export function taggedChartFromParts(parts: {
   );
   const personality = tag(
     "personality",
-    "Pythagorean",
+    parts.personalitySystem ?? "Pythagorean",
     "consonants",
     parts.personality,
     parts.personalityCompound,
@@ -149,24 +151,26 @@ export function taggedChartFromSnapshot(snap: NumerologySnapshot): TaggedChart {
   });
 }
 
-/** Live person (mobile): same formulas as the report engines, never mixed. */
+/** Live person (mobile): Chaldean Soul + Name, Vedic Birth/Destiny. */
 export function taggedChartFromPerson(fullName: string, dob: string): TaggedChart {
   const pyth = calculatePythagorean(fullName, dob);
   const chal = calculateChaldean(fullName);
-  const soulCompound = reduceWithCompound(
-    sumMappedLetters(fullName, PYTHAGOREAN, (ch) => isVowel(ch)),
-  ).compound;
+  const soulVowels = reduceWithCompound(
+    sumMappedLetters(fullName, CHALDEAN, (ch) => isVowel(ch)),
+    [],
+  );
   const persCompound = reduceWithCompound(
     sumMappedLetters(fullName, PYTHAGOREAN, (ch) => !isVowel(ch)),
   ).compound;
   return taggedChartFromParts({
-    soul: pyth.soulUrge,
+    soul: soulVowels.reduced || 9,
     birth: vedicPsychicFromDob(dob),
     destiny: vedicDestinyFromDob(dob),
     name: chal.nameNumber,
     personality: pyth.personality,
-    soulCompound,
+    soulCompound: soulVowels.compound,
     nameCompound: chal.compound,
     personalityCompound: persCompound,
+    soulSystem: "Chaldean",
   });
 }

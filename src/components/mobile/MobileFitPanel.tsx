@@ -589,8 +589,8 @@ export function MobileFitPanel({
             <MobileGuidancePanel guidance={guidance} change={change} />
           ) : (
             <p className="text-xs text-ink-soft">
-              Save a full name on this person to add Soul and Name alignment
-              under the score.
+              Save a full name on this person to add Soul (Chaldean vowels) and
+              Name alignment under the score.
             </p>
           )}
         </>

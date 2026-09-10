@@ -446,12 +446,12 @@ export function BusinessExplorer({
                     </p>
                   ) : null}
                   <p className="text-xs text-ink-soft">
-                    Personal and business side by side:{" "}
+                    Check any national number:{" "}
                     <Link
                       href="/mobile"
                       className="text-gold-deep underline underline-offset-2 hover:text-ink"
                     >
-                      Mobile numbers
+                      Mobile
                     </Link>
                     .
                   </p>

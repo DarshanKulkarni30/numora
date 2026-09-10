@@ -399,11 +399,16 @@ if (d10five && d10one) {
 if (easy.ok) {
   const chart = taggedChartFromPerson("Ada Lovelace", "01/01/1990");
   const guide = buildMobileGuidance(easy.fit, chart);
+  eq(chart.soul.system, "Chaldean", "mobile person soul is Chaldean");
   eq(guide.blueprint.score, easy.fit.score, "guidance reuses 100-point score");
   eq(guide.verdict.verdict, easy.fit.verdict, "guidance reuses verdict");
   ok(guide.personMobile.links.length === 4, "four person↔mobile links");
   ok(guide.dna.length === 5, "five DNA layers");
   ok(guide.verdict.methodology.length >= 3, "methodology lines");
+  ok(
+    guide.verdict.methodology.some((m) => /Chaldean vowels/.test(m)),
+    "methodology names Chaldean soul",
+  );
 }
 
 console.log("smoke-mobile-fit passed");
