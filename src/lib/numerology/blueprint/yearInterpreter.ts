@@ -43,8 +43,49 @@ export type YearInterpretation = {
   donts: string[];
   oneSentence: string;
   prepare: string[];
+  tableDo: string;
   numbers: Record<string, string | number | null>;
 };
+
+const LETTER_TINT: Record<number, string> = {
+  1: "put your name on the first step",
+  2: "do it with one other person",
+  3: "say the finding out loud once",
+  4: "put the step on a repeating list",
+  5: "do not swap the rest of the plan",
+  6: "keep the promise attached to it",
+  7: "think for ten minutes, then stop",
+  8: "tie it to one number you can count",
+  9: "close it; do not reopen it the same day",
+};
+
+/** One weekly move for a Personal Year, optionally tinted by Name Cycle. */
+export const YEAR_WEEKLY: Record<number, string> = {
+  1: "Start one real piece and put your name on it.",
+  2: "Finish one task with one other person.",
+  3: "Share one small finished thing — not ten drafts.",
+  4: "Fix one repeating system and keep it all week.",
+  5: "Change one thing on purpose. Leave the other four alone.",
+  6: "Keep one promise. Put one hour on the calendar that is only yours.",
+  7: "Block two quiet hours. Write one page of what you actually think.",
+  8: "Pick one result you can count. Put a date and a rest day beside it.",
+  9: "Finish or hand over one loop. Do not start its replacement the same day.",
+};
+
+export function yearPracticeLine(
+  personalYear: number,
+  cycleNumber: number | null,
+): string {
+  const py = reduceToSingleDigit(personalYear);
+  const base = YEAR_WEEKLY[py] ?? YEAR_WEEKLY[9]!;
+  const cycle =
+    cycleNumber != null ? reduceToSingleDigit(cycleNumber) : null;
+  if (cycle == null || cycle === py) {
+    return assertSafeCopy(base, "blueprint.year.practice");
+  }
+  const tint = LETTER_TINT[cycle] ?? "keep the showing-up style small";
+  return assertSafeCopy(`${base} Name letter: ${tint}.`, "blueprint.year.practice.tint");
+}
 
 const DIGIT_MODE: Record<number, YearMode> = {
   1: { verb: "INITIATE", title: "Start" },
@@ -78,7 +119,7 @@ function modeFor(n: number): YearMode {
   return yearModeFor(n);
 }
 
-function flowVerb(n: number): string {
+export function flowVerbFor(n: number): string {
   return FLOW_VERB[reduceToSingleDigit(n)] ?? "Use";
 }
 
@@ -192,7 +233,7 @@ export function interpretYear(opts: {
         ]
       : [
           nature.practice,
-          `Use your longer pattern (${flowVerb(opts.bn)} → ${flowVerb(opts.dn)} → ${flowVerb(opts.nameRoot)}) as the through-line, not a second forecast.`,
+          `Use your longer pattern (${flowVerbFor(opts.bn)} → ${flowVerbFor(opts.dn)} → ${flowVerbFor(opts.nameRoot)}) as the through-line, not a second forecast.`,
         ],
     "blueprint.year.prepare",
   );
@@ -215,7 +256,7 @@ export function interpretYear(opts: {
     strength: assertSafeCopy(plainTrait(amplified ? py : cycleN ?? py), "blueprint.year.str"),
     risk: assertSafeCopy(plainWatch(py), "blueprint.year.risk"),
     bestMove: assertSafeCopy(plainJob(py), "blueprint.year.move"),
-    energyFlow: `${flowVerb(opts.bn)} → ${flowVerb(opts.dn)} → ${flowVerb(opts.nameRoot)}`,
+    energyFlow: `${flowVerbFor(opts.bn)} → ${flowVerbFor(opts.dn)} → ${flowVerbFor(opts.nameRoot)}`,
     feel,
     asking,
     career: {
@@ -243,6 +284,7 @@ export function interpretYear(opts: {
     donts,
     oneSentence,
     prepare,
+    tableDo: yearPracticeLine(py, cycleN),
     numbers: {
       py,
       name_cycle_letter: letter,
@@ -256,7 +298,7 @@ export function interpretYear(opts: {
 }
 
 export function flowVerbs(bn: number, dn: number, nameRoot: number): string {
-  return `${flowVerb(bn)} → ${flowVerb(dn)} → ${flowVerb(nameRoot)}`;
+  return `${flowVerbFor(bn)} → ${flowVerbFor(dn)} → ${flowVerbFor(nameRoot)}`;
 }
 
 export function pyModeFor(n: number): YearMode {

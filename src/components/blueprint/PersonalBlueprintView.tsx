@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AlignmentMatrix } from "@/components/blueprint/AlignmentMatrix";
 import { CoreNumberJourney } from "@/components/blueprint/CoreNumberJourney";
+import { LifePatternFlow } from "@/components/blueprint/LifePatternFlow";
 import { NameJourney } from "@/components/blueprint/NameJourney";
 import { NumberInspector, type InspectorTarget } from "@/components/blueprint/NumberInspector";
 import { PanelRating } from "@/components/blueprint/PanelRating";
@@ -281,28 +282,18 @@ export function PersonalBlueprintView({
 
       <section id="pattern" className="scroll-mt-28 space-y-5">
         <h2 className="text-2xl text-ink">My life pattern</h2>
-        <p className="text-sm text-ink-soft">{interactions.naturalFlow}</p>
-        <p className="brand text-2xl text-ink">{interactions.energyFlow}</p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[20rem] text-left text-sm">
-            <thead>
-              <tr className="text-ink-soft">
-                <th className="py-2 font-medium">Interaction</th>
-                <th className="py-2 font-medium">Ease</th>
-                <th className="py-2 font-medium">What it means</th>
-              </tr>
-            </thead>
-            <tbody>
-              {interactions.items.map((row) => (
-                <tr key={row.id} className="border-t border-[var(--line)]">
-                  <td className="py-2 text-ink">{row.pair}</td>
-                  <td className="py-2 text-ink">{row.ease}</td>
-                  <td className="py-2 text-ink-soft">{row.meaning}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <LifePatternFlow
+          map={interactions}
+          onDigit={(digit, label) =>
+            openDigit(
+              digit,
+              label,
+              label === "Name Number"
+                ? { compound: blueprint.nameCompound }
+                : undefined,
+            )
+          }
+        />
         <div>
           <h3 className="text-lg text-ink">Where life feels easy / where it needs work</h3>
           <ul className="mt-3 space-y-2">
@@ -423,13 +414,13 @@ export function PersonalBlueprintView({
             </button>
           ) : null}
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[28rem] text-left text-sm">
+            <table className="w-full min-w-[32rem] table-fixed text-left text-sm">
               <thead>
                 <tr className="text-ink-soft">
-                  <th className="py-2 font-medium">Year</th>
-                  <th className="py-2 font-medium">PY</th>
-                  <th className="py-2 font-medium">Name Cycle</th>
-                  <th className="py-2 font-medium">Theme</th>
+                  <th className="w-16 py-2 pr-3 font-medium">Year</th>
+                  <th className="w-12 py-2 pr-3 font-medium">PY</th>
+                  <th className="w-[5.5rem] py-2 pr-3 font-medium">Letter</th>
+                  <th className="py-2 font-medium">Practise this year</th>
                 </tr>
               </thead>
               <tbody>
@@ -440,14 +431,19 @@ export function PersonalBlueprintView({
                       row.isCurrent ? "bg-gold/15 font-medium" : "text-ink-soft"
                     }`}
                   >
-                    <td className="py-2 text-ink">{row.year}</td>
-                    <td className="py-2 text-ink">{row.py}</td>
-                    <td className="py-2 text-ink">
+                    <td className="py-2 pr-3 align-top text-ink">{row.year}</td>
+                    <td className="py-2 pr-3 align-top text-ink">{row.py}</td>
+                    <td className="py-2 pr-3 align-top whitespace-nowrap text-ink">
                       {row.cycle
                         ? `${row.cycle.active.letter} / ${row.cycle.active.value}`
                         : "—"}
                     </td>
-                    <td className="py-2">{row.reading.signatureTitle}</td>
+                    <td className="py-2 align-top">
+                      <p className="text-ink">{row.reading.tableDo}</p>
+                      <p className="mt-0.5 text-xs font-normal text-ink-soft">
+                        {row.reading.signatureTitle}
+                      </p>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -462,13 +458,18 @@ export function PersonalBlueprintView({
         />
         <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
           <h3 className="text-lg text-ink">Transition</h3>
-          <p className="mt-2 text-sm text-ink">{blueprint.transition.changes}</p>
-          <p className="mt-2 text-sm text-ink">Do more: {blueprint.transition.doMore}</p>
-          <p className="mt-1 text-sm text-ink-soft">
-            Stop carrying: {blueprint.transition.stopCarrying}
+          <p className="mt-2 text-sm leading-6 text-ink">{blueprint.transition.changes}</p>
+          <p className="mt-3 text-sm leading-6 text-ink">
+            <span className="font-medium">Leave behind. </span>
+            {blueprint.transition.stopCarrying}
           </p>
-          <p className="mt-1 text-sm text-ink">
-            Prepare: {blueprint.transition.prepareNext}
+          <p className="mt-2 text-sm leading-6 text-ink">
+            <span className="font-medium">This week. </span>
+            {blueprint.transition.doMore}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-ink">
+            <span className="font-medium">Next year. </span>
+            {blueprint.transition.prepareNext}
           </p>
         </div>
         <PanelRating

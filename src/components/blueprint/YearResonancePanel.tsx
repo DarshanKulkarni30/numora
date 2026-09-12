@@ -12,14 +12,22 @@ const KIND_CLASS: Record<HarmonyKind, string> = {
   friction: "border-orange-200 bg-orange-50 text-orange-950",
 };
 
+function Chip({ kind, label }: { kind: HarmonyKind; label: string }) {
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wider ${KIND_CLASS[kind]}`}
+    >
+      {label}
+    </span>
+  );
+}
+
 function FitChip({ label, kind }: { label: string; kind: HarmonyKind }) {
   return (
-    <p className="text-sm text-ink">
-      {label}{" "}
-      <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wider ${KIND_CLASS[kind]}`}>
-        {HARMONY_LABEL[kind]}
-      </span>
-    </p>
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1">
+      <p className="text-sm text-ink">{label}</p>
+      <Chip kind={kind} label={HARMONY_LABEL[kind]} />
+    </div>
   );
 }
 
@@ -36,13 +44,11 @@ function EdgeList({ edges }: { edges: HarmonyEdge[] }) {
             onClick={() => setOpen(open === edge.id ? null : edge.id)}
             aria-expanded={open === edge.id}
           >
-            <span className="text-sm text-ink">
-              {edge.leftLabel} {edge.left} ↔ {edge.rightLabel} {edge.right}
-            </span>
-            <span
-              className={`ml-2 rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wider ${KIND_CLASS[edge.kind]}`}
-            >
-              {edge.kindLabel}
+            <span className="flex min-w-0 items-center justify-between gap-3">
+              <span className="min-w-0 text-sm text-ink">
+                {edge.leftLabel} {edge.left} ↔ {edge.rightLabel} {edge.right}
+              </span>
+              <Chip kind={edge.kind} label={edge.kindLabel} />
             </span>
             {open === edge.id ? (
               <p className="mt-2 text-sm leading-6 text-ink-soft">{edge.why}</p>

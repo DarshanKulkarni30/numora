@@ -78,5 +78,18 @@ assert(live.calendarYear === 2026, "live outlook year");
 assert(live.careers.length >= 5, "career rows");
 assert(live.life.length >= 5, "life rows");
 assert(live.personalYear >= 1 && live.personalYear <= 9, "personal year 1–9");
+assert(
+  py3.starKey.core.toLowerCase().includes("does not change"),
+  "star key explains core stays still",
+);
+assert(
+  py3.careers.every((r) => r.starRead.length > 20),
+  "each career row says how to read the stars",
+);
+assert(
+  venture7!.starRead.toLowerCase().includes("approach") ||
+    venture7!.starRead.toLowerCase().includes("method"),
+  "weaker year stars explain method, not quitting",
+);
 
 console.log("smoke:year-alignment passed");

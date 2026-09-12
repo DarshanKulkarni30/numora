@@ -530,7 +530,7 @@ function YearEntry({
       number={outlook.number}
       tag={outlook.nature.nature}
       tagClass={LAND_STYLE[outlook.land.band]}
-      shortMeaning={reading.signatureTitle}
+      shortMeaning={reading.tableDo}
       cycleLabel={
         nameCycle
           ? `${nameCycle.active.letter}/${nameCycle.active.value}`

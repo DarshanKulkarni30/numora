@@ -224,10 +224,10 @@ export function VedicSquarePanel({
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <div className="mt-5 space-y-5">
         <div>
           {layout === "lattice" ? (
-            <div className="relative mx-auto aspect-square w-full max-w-md">
+            <div className="relative mx-auto aspect-square w-full max-w-xl">
               <svg
                 viewBox={`0 0 ${size} ${size}`}
                 className="h-full w-full overflow-visible"
@@ -538,7 +538,7 @@ export function VedicSquarePanel({
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="mt-5 space-y-4">
         <div className="rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-ink-soft">
             Digit meaning

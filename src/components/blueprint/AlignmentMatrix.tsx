@@ -95,6 +95,7 @@ function RoleCard({
             </dd>
           </div>
         </dl>
+        <p className="mt-2 text-sm leading-6 text-ink">{row.starRead}</p>
         {open ? (
           <div className="mt-3 space-y-1 text-sm leading-6 text-ink-soft">
             <p>{row.why.bn}</p>
@@ -107,6 +108,31 @@ function RoleCard({
         ) : null}
       </button>
     </li>
+  );
+}
+
+function StarLegend({ keyCopy }: { keyCopy: YearAlignment["starKey"] }) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm leading-6 text-ink">
+      <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+        How to read the three star rows
+      </p>
+      <ul className="mt-2 space-y-1 text-ink-soft">
+        <li>
+          <span className="text-ink">Core fit. </span>
+          {keyCopy.core}
+        </li>
+        <li>
+          <span className="text-ink">This year. </span>
+          {keyCopy.year}
+        </li>
+        <li>
+          <span className="text-ink">Name Cycle. </span>
+          {keyCopy.cycle}
+        </li>
+      </ul>
+      <p className="mt-2 text-ink">{keyCopy.whenTheyDiffer}</p>
+    </div>
   );
 }
 
@@ -289,12 +315,22 @@ export function AlignmentMatrix({
             Not jobs to switch into. How aligned is this kind of work right now,
             and what is the best way to approach it.
           </p>
-          <RoleList rows={reading.careers} previewCount={5} />
+          <div className="mt-3">
+            <StarLegend keyCopy={reading.starKey} />
+          </div>
+          <div className="mt-3">
+            <RoleList rows={reading.careers} previewCount={5} />
+          </div>
         </div>
       ) : null}
 
       {focus === "life" || focus === "both" ? (
         <div>
+          {focus === "life" ? (
+            <div className="mb-3">
+              <StarLegend keyCopy={reading.starKey} />
+            </div>
+          ) : null}
           <h4 className="text-ink">
             Life areas this year
             {!showChrome ? ` (${reading.calendarYear})` : ""}

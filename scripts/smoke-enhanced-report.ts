@@ -1,6 +1,7 @@
 import { generateReport } from "../src/lib/numerology/report";
 import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
 import { buildBlueprintReading } from "../src/lib/numerology/blueprint";
+import { buildInteractionMap } from "../src/lib/numerology/blueprint/interactions";
 import { buildInspectorCardCopy } from "../src/lib/numerology/blueprint/inspectorCopy";
 import { buildVedicSquareReading } from "../src/lib/numerology/blueprint/vedicSquareReading";
 import { dualNameChart } from "../src/lib/numerology/nameLayers";
@@ -226,6 +227,28 @@ const ketu = planetPairForDigit(7);
 assert(ketu.vedic.name === "Ketu" && ketu.western.name === "Neptune", "7 is Ketu / Neptune");
 const rahu = planetPairForDigit(4);
 assert(rahu.vedic.name === "Rahu" && rahu.western.name === "Uranus", "4 is Rahu / Uranus");
+const lifePattern = blueprint.interactions;
+assert(lifePattern.nodes.length === 4, "life pattern has four nodes");
+assert(lifePattern.energyFlow.includes("→"), "life pattern has a verb path");
+assert(
+  lifePattern.items.every((row) => row.headline.length > 12 && row.easeLabel.length > 3),
+  "each pair has a headline and a plain ease label",
+);
+assert(
+  !lifePattern.items.some((row) => /sits with|expression and depth/i.test(row.meaning)),
+  "pair copy is not the generic sits-with template",
+);
+assert(
+  lifePattern.items.some((row) => row.id === "soul-bn" && /inner want/i.test(row.meaning)),
+  "soul row explains inner want, not Expression as a type",
+);
+const sevenTwoSix = buildInteractionMap({ bn: 7, dn: 2, nameRoot: 6, soul: 6 });
+assert(sevenTwoSix.energyFlow === "Deepen → Connect → Care", "7-2-6 verb path");
+assert(
+  sevenTwoSix.items[0]?.easeLabel === "Works together" ||
+    sevenTwoSix.items[0]?.easeLabel === "Smooth",
+  "7→2 ease is a plain label, not a jammed table cell",
+);
 assert(blueprint.coreJourney.layers.length === 5, "number journey has five layers");
 assert(blueprint.coreJourney.edges.length >= 4, "journey has harmony edges");
 assert(
@@ -239,6 +262,18 @@ assert(
 assert(
   blueprint.resonance.whyDifferent.toLowerCase().includes("never rewrite"),
   "resonance copy keeps personal year unrewritten",
+);
+assert(
+  blueprint.journey.every((row) => row.reading.tableDo.length > 12),
+  "year journey has a practise line",
+);
+assert(
+  !/NURTURE|REFLECT ×|ACHIEVE/.test(blueprint.transition.changes),
+  "transition uses plain year titles, not verb jargon",
+);
+assert(
+  !/previous year’s default/i.test(blueprint.transition.stopCarrying),
+  "leave-behind is a specific weekly job, not a generic default",
 );
 assert(blueprint.coreJourney.rememberAction.includes("One priority"), "journey has a one-thing box");
 assert(

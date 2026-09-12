@@ -41,6 +41,7 @@ export type AlignmentRow = {
   approach: string;
   result: string;
   why: AlignmentLayerWhy;
+  starRead: string;
 };
 
 export type YearAlignment = {
@@ -60,6 +61,12 @@ export type YearAlignment = {
   life: AlignmentRow[];
   priorities: AlignmentRow[];
   priorityLine: string;
+  starKey: {
+    core: string;
+    year: string;
+    cycle: string;
+    whenTheyDiffer: string;
+  };
 };
 
 const VERDICT_LABEL: Record<AlignmentVerdict, string> = {
@@ -511,6 +518,56 @@ function resultCopy(verdict: AlignmentVerdict, title: string, approach: string):
   );
 }
 
+function starRead(
+  verdict: AlignmentVerdict,
+  core: StarScore,
+  year: StarScore,
+  cycle: StarScore,
+  kind: "career" | "life",
+): string {
+  const noun = kind === "career" ? "kind of work" : "life area";
+  if (verdict === "better-later") {
+    return assertSafeCopy(
+      `This ${noun} still fits you. This year is a weaker time to push it — keep a light hold and use Best approach, not a quit decision.`,
+      "align.star.later",
+    );
+  }
+  if (verdict === "lighter-core") {
+    return assertSafeCopy(
+      `Lower core stars mean this is not a natural centre of the chart. Keep it small unless you already do it.`,
+      "align.star.light",
+    );
+  }
+  if (verdict === "strong-now") {
+    return assertSafeCopy(
+      `Core and this year agree. Lean in with Best approach — still one concrete move, not a life overhaul.`,
+      "align.star.now",
+    );
+  }
+  if (year > core) {
+    return assertSafeCopy(
+      `This year likes this ${noun} more than your core does. Use Best approach. Extra year stars are not a job-change signal.`,
+      "align.star.year-high",
+    );
+  }
+  if (year < core) {
+    return assertSafeCopy(
+      `You fit this ${noun} more than this year does. Keep the work; change the method (Best approach).`,
+      "align.star.year-low",
+    );
+  }
+  if (cycle !== core || cycle !== year) {
+    return assertSafeCopy(
+      `The badge means good fit, different method this year. Core / this year / name letter can disagree — read Best approach, not “switch.”`,
+      "align.star.diff",
+    );
+  }
+  return assertSafeCopy(
+    `Good fit. This year still wants a specific method — Best approach is the instruction, not the star count.`,
+    "align.star.same",
+  );
+}
+
 function scoreRole(
   role: RoleDef,
   opts: {
@@ -544,6 +601,7 @@ function scoreRole(
     verdictLabel: VERDICT_LABEL[verdict],
     approach: assertSafeCopy(approach, `align.${role.id}.approach`),
     result: resultCopy(verdict, role.title, approach),
+    starRead: starRead(verdict, core, year, cycle, role.kind),
     why: {
       bn: assertSafeCopy(
         `Birth Number ${opts.bn}: ${plainTrait(opts.bn)}.`,
@@ -655,6 +713,13 @@ export function scoreYearAlignment(opts: {
     life,
     priorities,
     priorityLine: priorityLine(priorities, pyMode.title),
+    starKey: {
+      core: "Who you are (Birth + Destiny + Name). This row does not change when you step the year.",
+      year: "This Personal Year. How to approach the same work or area now.",
+      cycle: "Active first-name letter. How you show up this year — not a rewrite of the year digit.",
+      whenTheyDiffer:
+        "If the rows disagree, keep the work that fits you and change the method (Best approach). Lower year stars are not a signal to quit.",
+    },
   };
 }
 
