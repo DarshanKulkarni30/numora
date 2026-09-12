@@ -71,7 +71,7 @@ export async function downloadEnhancedPdf(
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...SOFT);
-    doc.text(`${name} · Enhanced reading`, margin + (logo ? 36 : 0), 36);
+    doc.text(`${name} · Personal Blueprint`, margin + (logo ? 36 : 0), 36);
     doc.setDrawColor(...SAND);
     doc.setLineWidth(1.2);
     doc.line(margin, headerH + 4, pageW - margin, headerH + 4);

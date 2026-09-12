@@ -120,6 +120,10 @@ function uniq(list: string[]): string[] {
   return [...new Set(list)];
 }
 
+export function professionsForDigit(n: number): string[] {
+  return BY_NUMBER[n] ?? [];
+}
+
 export function modernProfessionsFor(
   lifePath: number,
   expression: number,

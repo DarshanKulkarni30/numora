@@ -621,7 +621,7 @@ export function ReportView({
                     href={`/report/${reportId}/enhanced`}
                     className="btn-tactile rounded-full bg-ink px-4 py-2 text-sm text-paper"
                   >
-                    Enhanced report
+                    Blueprint
                   </Link>
                   <Link
                     href={`/report/${reportId}/comprehensive`}

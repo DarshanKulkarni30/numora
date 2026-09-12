@@ -1,5 +1,6 @@
 import { generateReport } from "../src/lib/numerology/report";
 import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
+import { buildBlueprintReading } from "../src/lib/numerology/blueprint";
 import { dualNameChart } from "../src/lib/numerology/nameLayers";
 
 function eq(actual: unknown, expected: unknown, label: string) {
@@ -170,5 +171,17 @@ const sparseReading = buildEnhancedReading(
 );
 assert(sparseReading.season.asOf.includes("2026"), "sparse report still builds a season");
 assert(sparseReading.chaldean.reduced > 0, "sparse chaldean falls back to snapshot");
+
+const blueprint = buildBlueprintReading(adult, {
+  reportId: "test-id",
+  now: new Date("2026-08-21"),
+});
+assert(blueprint.interpretation.interpretationVersion === "1.0", "blueprint version");
+assert(blueprint.career.professions.length >= 1, "career compass ranked");
+assert(blueprint.nextMoves.prompt.length > 10, "next moves prompt");
+assert(
+  !blueprint.interpretation.feel.toLowerCase().includes("will happen"),
+  "year copy is not deterministic",
+);
 
 console.log("smoke:enhanced-report passed");

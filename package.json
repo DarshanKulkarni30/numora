@@ -20,6 +20,7 @@
     "smoke:strengths": "tsx scripts/smoke-strength-constellation.ts",
     "smoke:name-history": "tsx scripts/smoke-name-history.ts",
     "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts",
+    "smoke:name-cycle": "tsx scripts/smoke-name-cycle.ts",
     "smoke:pythagorean-chart": "tsx scripts/smoke-pythagorean-chart.ts",
     "smoke:p1-p2": "tsx scripts/smoke-p1-p2.ts",
     "smoke:living-share": "tsx scripts/smoke-living-share.ts",

@@ -122,7 +122,7 @@ export function ComprehensiveReportView({
             href={`/report/${reportId}/enhanced`}
             className="btn-tactile rounded-full border border-[var(--line)] bg-white/80 px-3 py-1.5 text-sm text-ink"
           >
-            Enhanced
+            Blueprint
           </Link>
           <Link
             href={`/report/${reportId}`}

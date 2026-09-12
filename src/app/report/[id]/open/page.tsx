@@ -39,9 +39,9 @@ export default async function ReportOpenPage({ params }: Props) {
         </p>
         <h1 className="mt-3 text-4xl text-ink">{name}</h1>
         <p className="mt-4 text-ink-soft">
-          Same numbers, three ways to read. Enhanced is one story using more
-          than one method. Detailed is every method in one place. Comprehensive
-          is a Chaldean-first story.
+          Same numbers, three ways to read. Personal Blueprint is one
+          interactive story. Detailed is every method in one place.
+          Comprehensive is a Chaldean-first story.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           <Link
@@ -54,7 +54,7 @@ export default async function ReportOpenPage({ params }: Props) {
             href={`/report/${id}/enhanced`}
             className="btn-tactile rounded-full border border-[var(--line)] bg-white px-6 py-3 text-ink"
           >
-            Open enhanced report
+            Open Personal Blueprint
           </Link>
           <Link
             href={`/report/${id}`}

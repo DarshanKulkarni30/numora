@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
+import { YearReading } from "@/components/blueprint/YearReading";
+import { nameCycleForYear } from "@/lib/numerology/blueprint/nameCycle";
+import { interpretYear } from "@/lib/numerology/blueprint/yearInterpreter";
+import { calculateChaldean } from "@/lib/numerology/chaldean";
 import { personalYearCycleAt } from "@/lib/numerology/cycles";
+import { vedicDestinyFromDob, vedicPsychicFromDob } from "@/lib/numerology/dateNumbers";
 import {
   LAND_LABEL,
   WESTERN_BIRTHDAY_NOTE,
@@ -173,6 +178,7 @@ export function YearOutlookExplorer({
         age={age}
         dob={dob}
         fullName={selected?.full_name}
+        history={selected?.name_history}
         tab={tab}
         yearAnchor={yearAnchor}
         isOpen={year === expandedYear}
@@ -223,9 +229,9 @@ export function YearOutlookExplorer({
             </select>
             {selected ? (
               <p className="mt-2 text-sm text-ink-soft">
-                Current year is open below. Click any other year for the same
-                collapsible reading. Earlier years stay hidden until you ask
-                for them.
+                Current year is open below. Each line shows Personal Year,
+                Pinnacle, and the Chaldean Name Cycle letter. Earlier years
+                stay hidden until you ask for them.
               </p>
             ) : null}
           </div>
@@ -348,6 +354,7 @@ function YearEntry({
   age,
   dob,
   fullName,
+  history,
   tab,
   yearAnchor,
   isOpen,
@@ -358,6 +365,7 @@ function YearEntry({
   age: number | null;
   dob: string;
   fullName?: string;
+  history?: unknown;
   tab: YearSystemTab;
   yearAnchor: WesternYearAnchor;
   isOpen: boolean;
@@ -365,14 +373,14 @@ function YearEntry({
   onToggle: () => void;
 }) {
   if (tab === "vedic") {
-    const cycle =
+    const vedicCycle =
       yearAnchor === "birthday"
         ? projectedYearCycleStarting(dob, year)
         : null;
-    const breakdown = cycle ?? projectedYearBreakdown(dob, year);
+    const breakdown = vedicCycle ?? projectedYearBreakdown(dob, year);
     const meta = projectedYearMeta(breakdown.number);
     const mandalaCycle =
-      cycle ??
+      vedicCycle ??
       ({
         ...breakdown,
         rangeStart: new Date(year, 0, 1),
@@ -380,18 +388,37 @@ function YearEntry({
         calendarYearUsed: year,
         rangeLabel: String(year),
       } as ReturnType<typeof projectedYearCycleStarting>);
+    const calendarYearUsed = vedicCycle?.calendarYearUsed ?? year;
+    const nameCycle = nameCycleForYear({
+      natalName: fullName || "",
+      dob,
+      calendarYearUsed,
+      history,
+      personalYear: breakdown.number,
+    });
     return (
       <YearRow
-        yearLabel={cycle ? cycle.rangeLabel : String(year)}
+        yearLabel={vedicCycle ? vedicCycle.rangeLabel : String(year)}
         age={age}
         number={breakdown.number}
         tag={meta.tag}
         tagClass={TAG_STYLE[meta.tag]}
         shortMeaning={meta.shortMeaning}
+        cycleLabel={
+          nameCycle
+            ? `${nameCycle.active.letter}/${nameCycle.active.value}`
+            : null
+        }
+        pinnacleLabel={null}
         isOpen={isOpen}
         isNow={isNow}
         onToggle={onToggle}
       >
+        <p className="mb-3 text-xs text-ink-soft">
+          Vedic year number is a separate calendar. Name Cycle beside it is the
+          Chaldean first-name letter for the same year — identity timing, not
+          mixed into the Vedic formula.
+        </p>
         <div className="mb-4">
           <YearOutlookMandala cycle={mandalaCycle} dob={dob} compact />
         </div>
@@ -400,11 +427,12 @@ function YearEntry({
           points={meta.details}
           practice={meta.practice}
           calc={[
-            cycle
-              ? `Birthday cycle ${cycle.rangeLabel}.`
+            vedicCycle
+              ? `Birthday cycle ${vedicCycle.rangeLabel}.`
               : `Calendar year ${year} (1 Jan – 31 Dec).`,
             `Month ${breakdown.month} + day ${breakdown.day} + last two digits ${breakdown.yearDigits} + ${breakdown.weekdayLabel} (${breakdown.weekdayDigit}) = ${breakdown.compound}`,
             `Reduce to ${breakdown.number}.`,
+            ...(nameCycle?.calcLines ?? []),
           ]}
         />
       </YearRow>
@@ -419,6 +447,26 @@ function YearEntry({
   });
   const pin = outlook.pinnacle;
   const pinCopy = outlook.pinnacleCopy;
+  const nameCycle = nameCycleForYear({
+    natalName: fullName || "",
+    dob,
+    calendarYearUsed: outlook.calendarYearUsed,
+    history,
+    personalYear: outlook.number,
+  });
+  const bn = vedicPsychicFromDob(dob);
+  const dn = vedicDestinyFromDob(dob);
+  const nameRoot = fullName ? calculateChaldean(fullName).nameNumber : 9;
+  const reading = interpretYear({
+    calendarYear: outlook.calendarYearUsed,
+    personalYear: outlook.number,
+    cycle: nameCycle,
+    bn,
+    dn,
+    nameRoot,
+    isPast: !isNow && year < new Date().getFullYear(),
+    isFuture: year > new Date().getFullYear(),
+  });
   const debtLine =
     outlook.debts.length > 0
       ? outlook.debts
@@ -429,19 +477,24 @@ function YearEntry({
   return (
     <YearRow
       yearLabel={
-        outlook.rangeLabel
-          ? outlook.rangeLabel
-          : String(year)
+        outlook.rangeLabel ? outlook.rangeLabel : String(year)
       }
       age={age}
       number={outlook.number}
       tag={outlook.nature.nature}
       tagClass={LAND_STYLE[outlook.land.band]}
-      shortMeaning={outlook.nature.short}
+      shortMeaning={reading.signatureTitle}
+      cycleLabel={
+        nameCycle
+          ? `${nameCycle.active.letter}/${nameCycle.active.value}`
+          : null
+      }
+      pinnacleLabel={`P${pin.id} ${pin.number}`}
       isOpen={isOpen}
       isNow={isNow}
       onToggle={onToggle}
     >
+      <YearReading reading={reading} isPast={!isNow && year < new Date().getFullYear()} isFuture={year > new Date().getFullYear()} />
       <YearDetail
         intro={`${LAND_LABEL[outlook.land.band]}. ${outlook.nature.typical}`}
         points={[
@@ -449,9 +502,14 @@ function YearEntry({
           `Pinnacle ${pin.id} (${pin.number} · ${pinCopy.name}): ${pinCopy.theme} Shadow: ${pinCopy.shadow}`,
           ...(debtLine ? [`Karmic: ${debtLine}`] : []),
           ...(outlook.land.momentNote ? [outlook.land.momentNote] : []),
+          ...(nameCycle?.echoLetters.length
+            ? [
+                `Other letters in the name with this Personal Year vibration: ${nameCycle.echoLetters.map((e) => `${e.letter}/${e.value}`).join(", ")}.`,
+              ]
+            : []),
         ]}
         practice={outlook.nature.practice}
-        calc={outlook.calcLines}
+        calc={[...outlook.calcLines, ...(nameCycle?.calcLines ?? [])]}
       />
     </YearRow>
   );
@@ -493,6 +551,8 @@ function YearRow({
   tag,
   tagClass,
   shortMeaning,
+  cycleLabel,
+  pinnacleLabel,
   isOpen,
   isNow,
   onToggle,
@@ -504,6 +564,8 @@ function YearRow({
   tag: string;
   tagClass: string;
   shortMeaning: string;
+  cycleLabel?: string | null;
+  pinnacleLabel?: string | null;
   isOpen: boolean;
   isNow: boolean;
   onToggle: () => void;
@@ -529,7 +591,15 @@ function YearRow({
             Age {age}
           </span>
         ) : null}
-        <span className="brand text-xl text-ink">{number}</span>
+        <span className="brand text-xl text-ink">PY {number}</span>
+        {cycleLabel ? (
+          <span className="rounded-full border border-gold-deep/40 bg-gold/15 px-2 py-0.5 text-xs text-ink">
+            {cycleLabel}
+          </span>
+        ) : null}
+        {pinnacleLabel ? (
+          <span className="text-xs text-ink-soft">{pinnacleLabel}</span>
+        ) : null}
         <span
           className={`rounded-full border px-2.5 py-0.5 text-xs ${tagClass}`}
         >

@@ -56,11 +56,13 @@ export default async function YearsPage({ searchParams }: Props) {
         <div className="max-w-2xl">
           <h1 className="text-4xl text-ink">Personal year</h1>
           <p className="mt-3 text-ink-soft">
-            See the year number from birth through age 90, plus a written
-            twelve-month chapter from this month. Personal Year and Vedic both
-            default to a birthday-to-birthday cycle. Toggle Calendar year if you
-            want the 1 Jan–31 Dec version. Click a year for the longer reading.
-            For name and mobile fit, open{" "}
+            See Personal Year from birth through age 90, with the Chaldean
+            Name Cycle letter for each year and a written twelve-month
+            chapter. Personal Year and Vedic both default to a
+            birthday-to-birthday cycle. Toggle Calendar year if you want the
+            1 Jan–31 Dec version. Click a year for the longer reading.
+            Pythagorean Essence transits stay on the detailed report. For name
+            and mobile fit, open{" "}
             <Link href="/name" className="text-gold-deep underline">
               What&apos;s my name
             </Link>

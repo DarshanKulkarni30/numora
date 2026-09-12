@@ -33,7 +33,7 @@ export function EnhancedExportPdfButton({ report, reportId }: Props) {
         onClick={onClick}
         className="btn-tactile rounded-full bg-sea px-4 py-2 text-sm text-paper"
       >
-        {busy ? "Preparing…" : "Export enhanced PDF"}
+        {busy ? "Preparing…" : "Export Blueprint PDF"}
       </button>
       {error ? <p className="text-xs text-rose-800">{error}</p> : null}
     </div>

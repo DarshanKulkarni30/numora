@@ -278,7 +278,7 @@ export function ReportsList({ initialReports }: Props) {
                     href={`/report/${r.id}/enhanced`}
                     className="btn-tactile rounded-full bg-ink px-3 py-1.5 text-sm text-paper"
                   >
-                    Enhanced
+                    Blueprint
                   </Link>
                   <Link
                     href={`/report/${r.id}`}
