@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { PlanetIcon } from "@/components/report/PlanetIcon";
+import { planetGuideHref } from "@/lib/guides/planets";
 import { plainJob, plainTrait, plainWatch } from "@/lib/numerology/layeredCopy";
-import { planetForVedic } from "@/lib/numerology/planets";
+import { planetPairForDigit } from "@/lib/numerology/planets";
 
 export type InspectorTarget = {
   label: string;
   digit: number;
   compound?: number;
   letter?: string;
+  meaning: string;
+  alsoKnownAs?: string;
   occurrences: string[];
-  calc?: string[];
+  calc: string[];
 };
 
 type Props = {
@@ -20,9 +22,8 @@ type Props = {
 };
 
 export function NumberInspector({ target, onClose }: Props) {
-  const [openCalc, setOpenCalc] = useState(false);
   if (!target) return null;
-  const planet = planetForVedic(target.digit);
+  const pair = planetPairForDigit(target.digit);
   const display =
     target.compound && target.compound !== target.digit
       ? `${target.compound}/${target.digit}`
@@ -48,10 +49,46 @@ export function NumberInspector({ target, onClose }: Props) {
         <h2 id="number-inspector-title" className="brand mt-1 text-3xl text-ink">
           {display}
         </h2>
-        <div className="mt-3 flex items-center gap-2">
-          <PlanetIcon planet={planet} size="sm" showName />
+        <p className="mt-3 text-sm leading-6 text-ink">{target.meaning}</p>
+        {target.alsoKnownAs ? (
+          <p className="mt-1 text-xs leading-5 text-ink-soft">{target.alsoKnownAs}</p>
+        ) : null}
+
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <PlanetIcon
+            planet={pair.vedic}
+            size="sm"
+            showName
+            href={planetGuideHref("vedic", pair.vedic.id)}
+          />
+          {!pair.same ? (
+            <>
+              <span className="text-sm text-ink-soft">/</span>
+              <PlanetIcon
+                planet={pair.western}
+                size="sm"
+                showName
+                href={planetGuideHref("pythagorean", pair.western.id)}
+              />
+            </>
+          ) : null}
         </div>
-        <p className="mt-3 text-sm leading-6 text-ink">
+        {pair.note ? (
+          <p className="mt-2 text-xs leading-5 text-ink-soft">{pair.note}</p>
+        ) : null}
+
+        <div className="mt-4">
+          <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+            How this is calculated
+          </p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink">
+            {target.calc.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ol>
+        </div>
+
+        <p className="mt-4 text-sm leading-6 text-ink">
           Strength: {plainTrait(target.digit)}.
         </p>
         <p className="mt-1 text-sm leading-6 text-ink-soft">
@@ -70,24 +107,6 @@ export function NumberInspector({ target, onClose }: Props) {
                 <li key={line}>{line}</li>
               ))}
             </ul>
-          </div>
-        ) : null}
-        {target.calc?.length ? (
-          <div className="mt-4">
-            <button
-              type="button"
-              className="btn-tactile rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-ink"
-              onClick={() => setOpenCalc((v) => !v)}
-            >
-              {openCalc ? "Hide calculation" : "How is this calculated?"}
-            </button>
-            {openCalc ? (
-              <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs text-ink-soft">
-                {target.calc.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ol>
-            ) : null}
           </div>
         ) : null}
         <button

@@ -11,6 +11,8 @@ import { yearsHrefForPerson } from "@/lib/numerology/yearPage";
 import { buildCareerCompass, buildLifeCompass } from "./compass";
 import { buildInteractionMap } from "./interactions";
 import { buildLifeAreaScores } from "./lifeAreas";
+import { buildNumberJourney } from "./numberJourney";
+import { buildYearResonance } from "./yearResonance";
 import { nameCycleForYear, type NameCycle } from "./nameCycle";
 import { buildNextMoves } from "./nextMoves";
 import { buildOperatingManual } from "./operatingManual";
@@ -29,7 +31,10 @@ export function coreSeatsFromReport(report: NumerologyReport) {
     9;
   const soul = parseChartNumber(snap.soul_urge_number) ?? bn;
   const nameCompound = parseChartNumber(snap.compound_number) ?? nameRoot;
-  return { bn, dn, nameRoot, soul, nameCompound };
+  const personality = parseChartNumber(snap.personality_number) ?? soul;
+  const personalityCompound =
+    parseChartNumber(snap.personality_compound) ?? personality;
+  return { bn, dn, nameRoot, soul, nameCompound, personality, personalityCompound };
 }
 
 export function cycleForReportYear(
@@ -54,7 +59,8 @@ export function buildBlueprintReading(
 ) {
   const now = opts?.now ?? new Date();
   const dob = report.person.date_of_birth;
-  const { bn, dn, nameRoot, soul, nameCompound } = coreSeatsFromReport(report);
+  const { bn, dn, nameRoot, soul, nameCompound, personality, personalityCompound } =
+    coreSeatsFromReport(report);
   const pyCycle = personalYearCycleAt(dob, now);
   const py = pyCycle.number;
   const year = pyCycle.calendarYearUsed;
@@ -144,11 +150,22 @@ export function buildBlueprintReading(
     soul,
     nameRoot,
     nameCompound,
+    personality,
+    personalityCompound,
     nameDisplay: cycle?.nameDisplay ?? String(nameRoot),
     py,
     year,
     cycle,
     interpretation,
+    resonance: buildYearResonance({
+      personalYear: py,
+      bn,
+      dn,
+      soul,
+      nameRoot,
+      cycleNumber: cycle?.active.value ?? null,
+      cycleLetter: cycle?.active.letter ?? null,
+    }),
     interactions,
     areas,
     manual,
@@ -157,6 +174,15 @@ export function buildBlueprintReading(
     transition,
     nextMoves,
     journey,
+    coreJourney: buildNumberJourney({
+      bn,
+      dn,
+      soul,
+      nameRoot,
+      nameCompound,
+      personality,
+      personalityCompound,
+    }),
     pinnacle: { ...pin, ...pinCopy },
     yearsHref,
     detailedHref: opts?.reportId ? `/report/${opts.reportId}` : "/dashboard",

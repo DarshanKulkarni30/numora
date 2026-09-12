@@ -1,7 +1,11 @@
 import { generateReport } from "../src/lib/numerology/report";
 import { buildEnhancedReading } from "../src/lib/numerology/enhanced";
 import { buildBlueprintReading } from "../src/lib/numerology/blueprint";
+import { buildInspectorCardCopy } from "../src/lib/numerology/blueprint/inspectorCopy";
+import { buildVedicSquareReading } from "../src/lib/numerology/blueprint/vedicSquareReading";
 import { dualNameChart } from "../src/lib/numerology/nameLayers";
+import { planetPairForDigit } from "../src/lib/numerology/planets";
+import { buildVedicSquareArchitecture } from "../src/lib/numerology/vedicSquareArchitecture";
 
 function eq(actual: unknown, expected: unknown, label: string) {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
@@ -177,8 +181,87 @@ const blueprint = buildBlueprintReading(adult, {
   now: new Date("2026-08-21"),
 });
 assert(blueprint.interpretation.interpretationVersion === "1.0", "blueprint version");
-assert(blueprint.career.professions.length >= 1, "career compass ranked");
+assert(blueprint.career.moves.length === 3, "career compass has three moves");
+assert(blueprint.career.domains.length >= 1, "career domains present");
+assert(
+  !blueprint.career.meaning.toLowerCase().includes("youtuber"),
+  "career compass is not a job list",
+);
+const lifeWhys = blueprint.life.themes.map((t) => t.why);
+const lifeDos = blueprint.life.themes.map((t) => t.doThis);
+assert(
+  new Set(lifeWhys).size === lifeWhys.length,
+  "life compass why lines are unique",
+);
+assert(
+  new Set(lifeDos).size === lifeDos.length,
+  "life compass do-this lines are unique",
+);
+assert(
+  !lifeWhys.some((w) => /keep this area from collapsing/i.test(w)),
+  "life compass has no filler maintain line",
+);
 assert(blueprint.nextMoves.prompt.length > 10, "next moves prompt");
+
+const soulCard = buildInspectorCardCopy({
+  label: "Soul",
+  digit: blueprint.soul,
+  dob: adult.person.date_of_birth,
+  operatingName: adult.person.operating_name || adult.person.full_name,
+  cycle: blueprint.cycle,
+  pinnacle: blueprint.pinnacle,
+});
+assert(soulCard.meaning.toLowerCase().includes("vowel"), "soul card describes the term");
+assert(soulCard.calc.length >= 2, "soul card shows calculation");
+const pinCard = buildInspectorCardCopy({
+  label: "Pinnacle",
+  digit: blueprint.pinnacle.number,
+  dob: adult.person.date_of_birth,
+  operatingName: adult.person.full_name,
+  pinnacle: blueprint.pinnacle,
+});
+assert(pinCard.meaning.toLowerCase().includes("chapter"), "pinnacle card describes the term");
+assert(pinCard.calc.some((line) => /pinnacle 1/i.test(line)), "pinnacle card shows the four chapters");
+const ketu = planetPairForDigit(7);
+assert(ketu.vedic.name === "Ketu" && ketu.western.name === "Neptune", "7 is Ketu / Neptune");
+const rahu = planetPairForDigit(4);
+assert(rahu.vedic.name === "Rahu" && rahu.western.name === "Uranus", "4 is Rahu / Uranus");
+assert(blueprint.coreJourney.layers.length === 5, "number journey has five layers");
+assert(blueprint.coreJourney.edges.length >= 4, "journey has harmony edges");
+assert(
+  blueprint.resonance.personalYear >= 1 && blueprint.resonance.personalYear <= 9,
+  "resonance year is 1–9",
+);
+assert(
+  !JSON.stringify(blueprint.resonance).includes("%"),
+  "year resonance has no percent grade",
+);
+assert(
+  blueprint.resonance.whyDifferent.toLowerCase().includes("never rewrite"),
+  "resonance copy keeps personal year unrewritten",
+);
+assert(blueprint.coreJourney.rememberAction.includes("One priority"), "journey has a one-thing box");
+assert(
+  blueprint.coreJourney.bridge === blueprint.dn - blueprint.bn,
+  "bridge is destiny minus birth",
+);
+const square = buildVedicSquareReading({
+  source: "psychic",
+  digit: blueprint.bn,
+  psychic: blueprint.bn,
+  destiny: blueprint.dn,
+  name: blueprint.nameRoot,
+  metrics: buildVedicSquareArchitecture(blueprint.bn).metrics,
+});
+assert(square.seatMeaning.toLowerCase().includes("initiate"), "psychic seat explains initiation");
+assert(
+  square.diagnostics.some((d) => /same for anyone highlighting/i.test(d.inGrid)),
+  "diagnostics admit table geometry is not a personal grade",
+);
+assert(
+  !square.missing.some((m) => /lack of/i.test(m.pattern)),
+  "missing digits are not judgmental",
+);
 assert(
   !blueprint.interpretation.feel.toLowerCase().includes("will happen"),
   "year copy is not deterministic",

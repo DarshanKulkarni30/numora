@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { AlignmentMatrix } from "@/components/blueprint/AlignmentMatrix";
+import { CoreNumberJourney } from "@/components/blueprint/CoreNumberJourney";
 import { NameJourney } from "@/components/blueprint/NameJourney";
 import { NumberInspector, type InspectorTarget } from "@/components/blueprint/NumberInspector";
 import { PanelRating } from "@/components/blueprint/PanelRating";
@@ -12,7 +14,9 @@ import { PinnacleYearPanel } from "@/components/report/PinnacleYearPanel";
 import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicSquarePanel } from "@/components/report/VedicSquarePanel";
 import { buildBlueprintReading } from "@/lib/numerology/blueprint";
+import { buildInspectorCardCopy } from "@/lib/numerology/blueprint/inspectorCopy";
 import { formatCompoundRoot } from "@/lib/numerology/chaldeanName";
+import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
 import { buildActionPlan } from "@/lib/numerology/enhanced/actionPlan";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
 import { applyLivingTiming } from "@/lib/numerology/livingTiming";
@@ -69,7 +73,8 @@ export function PersonalBlueprintView({
   );
   const [inspect, setInspect] = useState<InspectorTarget | null>(null);
   const [openArea, setOpenArea] = useState<string | null>(null);
-  const [openJob, setOpenJob] = useState<string | null>(null);
+  const [openDomain, setOpenDomain] = useState<string | null>(null);
+  const [alignYear, setAlignYear] = useState<number | null>(null);
   const [gridTab, setGridTab] = useState<"loshu" | "vedic">("loshu");
   const [showPastJourney, setShowPastJourney] = useState(false);
 
@@ -90,11 +95,24 @@ export function PersonalBlueprintView({
         : null,
       live.lo_shu?.present_numbers?.includes(digit) ? "Lo Shu present" : null,
     ].filter(Boolean) as string[];
+    const copy = buildInspectorCardCopy({
+      label,
+      digit,
+      dob: person.date_of_birth,
+      operatingName: person.operating_name || person.full_name,
+      soulCompound: parseChartNumber(snap.soul_urge_compound) ?? undefined,
+      cycle,
+      pinnacle: blueprint.pinnacle,
+    });
     setInspect({
       label,
       digit,
       occurrences,
-      ...extra,
+      meaning: copy.meaning,
+      alsoKnownAs: copy.alsoKnownAs,
+      calc: extra?.calc?.length ? extra.calc : copy.calc,
+      compound: extra?.compound ?? copy.compound,
+      letter: extra?.letter ?? copy.letter,
     });
   }
 
@@ -216,6 +234,32 @@ export function PersonalBlueprintView({
             </button>
           ))}
         </div>
+        <CoreNumberJourney
+          reading={blueprint.coreJourney}
+          onDigit={(digit, label) => {
+            const mapped =
+              label === "Inner drive"
+                ? "Soul"
+                : label === "Natural response"
+                  ? "Birth Number"
+                  : label === "Life direction"
+                    ? "Destiny Number"
+                    : label === "Outer expression"
+                      ? "Name Number"
+                      : label === "What others see"
+                      ? "Personality"
+                      : label;
+            openDigit(
+              digit,
+              mapped,
+              mapped === "Name Number"
+                ? { compound: blueprint.nameCompound }
+                : mapped === "Personality"
+                  ? { compound: blueprint.personalityCompound }
+                  : undefined,
+            );
+          }}
+        />
         {cycle ? (
           <NameJourney
             cycle={cycle}
@@ -349,13 +393,14 @@ export function PersonalBlueprintView({
       <section id="timing" className="scroll-mt-28 space-y-5">
         <h2 className="text-2xl text-ink">My timing</h2>
         <p className="text-sm text-ink-soft">
-          Personal Year is the season. Name Cycle is which part of your name is
-          active. Western Essence transits (letter lasts its number in years)
-          stay on the Detailed catalog.
+          Personal Year is the season (date only). Year Resonance is how your
+          Birth architecture, Name architecture, and Name Cycle meet that
+          season. Western Essence transits stay on the Detailed catalog.
         </p>
         <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5">
           <YearReading
             reading={interpretation}
+            resonance={blueprint.resonance}
             allowRating={allowRating}
             onDigit={(digit, label) => openDigit(digit, label)}
           />
@@ -436,23 +481,45 @@ export function PersonalBlueprintView({
       <section id="career" className="scroll-mt-28 space-y-4">
         <h2 className="text-2xl text-ink">Career Compass</h2>
         <p className="text-lg text-ink">{blueprint.career.modeLine}</p>
+        <p className="text-sm text-ink-soft">{blueprint.career.meaning}</p>
         <ul className="space-y-2">
-          {blueprint.career.professions.map((job) => (
-            <li key={job.title}>
+          {blueprint.career.moves.map((move) => (
+            <li
+              key={move.title}
+              className="rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3"
+            >
+              <p className="text-ink">{move.title}</p>
+              <p className="mt-2 text-sm text-ink">Do this: {move.doThis}</p>
+              <p className="mt-1 text-sm text-ink-soft">Watch: {move.watch}</p>
+            </li>
+          ))}
+        </ul>
+        <h3 className="text-lg text-ink">If this is already your kind of work</h3>
+        <p className="text-sm text-ink-soft">
+          These are not jobs to switch into. Open the one that matches work you
+          already do.
+        </p>
+        <ul className="space-y-2">
+          {blueprint.career.domains.map((domain) => (
+            <li key={domain.id}>
               <button
                 type="button"
                 className="btn-tactile w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-left"
                 onClick={() =>
-                  setOpenJob(openJob === job.title ? null : job.title)
+                  setOpenDomain(openDomain === domain.id ? null : domain.id)
                 }
+                aria-expanded={openDomain === domain.id}
               >
-                <p className="text-ink">{job.title}</p>
-                {openJob === job.title ? (
-                  <p className="mt-2 text-sm text-ink-soft">
-                    Why it fits this year: {job.why.join(" · ")}. Best use:{" "}
-                    {interpretation.bestMove}. Watch: {interpretation.career.watch}
-                  </p>
-                ) : null}
+                <p className="text-ink">{domain.title}</p>
+                {openDomain === domain.id ? (
+                  <div className="mt-2 space-y-1 text-sm leading-6">
+                    <p className="text-ink-soft">{domain.why}</p>
+                    <p className="text-ink">Use this year: {domain.useThisYear}</p>
+                    <p className="text-ink-soft">Watch: {domain.watch}</p>
+                  </div>
+                ) : (
+                  <p className="mt-1 text-sm text-ink-soft">{domain.useThisYear}</p>
+                )}
               </button>
             </li>
           ))}
@@ -462,25 +529,51 @@ export function PersonalBlueprintView({
           numbers={blueprint.numbersUsed}
           enabled={allowRating}
         />
+        <AlignmentMatrix
+          dob={person.date_of_birth}
+          natalName={snap.natal_name || person.full_name}
+          preferredName={person.preferred_name}
+          bn={blueprint.bn}
+          dn={blueprint.dn}
+          nameRoot={blueprint.nameRoot}
+          nameCompound={blueprint.nameCompound}
+          year={alignYear ?? blueprint.year}
+          onYearChange={setAlignYear}
+          focus="career"
+          allowRating={allowRating}
+        />
       </section>
 
       <section id="life" className="scroll-mt-28 space-y-4">
         <h2 className="text-2xl text-ink">Life Compass</h2>
-        <p className="text-sm text-ink-soft">
-          What deserves attention now, from your stored aim and this year’s
-          combination.
-        </p>
+        <AlignmentMatrix
+          dob={person.date_of_birth}
+          natalName={snap.natal_name || person.full_name}
+          preferredName={person.preferred_name}
+          bn={blueprint.bn}
+          dn={blueprint.dn}
+          nameRoot={blueprint.nameRoot}
+          nameCompound={blueprint.nameCompound}
+          year={alignYear ?? blueprint.year}
+          onYearChange={setAlignYear}
+          focus="life"
+          showChrome={false}
+          allowRating={allowRating}
+        />
+        <p className="text-sm text-ink-soft">{blueprint.life.intro}</p>
         <ul className="space-y-2">
           {blueprint.life.themes.map((theme) => (
             <li
-              key={theme.title}
+              key={theme.id}
               className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3"
             >
               <p className="text-[10px] uppercase tracking-wider text-ink-soft">
                 {theme.band}
               </p>
               <p className="text-ink">{theme.title}</p>
-              <p className="mt-1 text-sm text-ink-soft">{theme.why}</p>
+              <p className="mt-2 text-sm text-ink-soft">{theme.why}</p>
+              <p className="mt-2 text-sm text-ink">Do this: {theme.doThis}</p>
+              <p className="mt-1 text-sm text-ink-soft">Watch: {theme.watch}</p>
             </li>
           ))}
         </ul>
@@ -497,7 +590,8 @@ export function PersonalBlueprintView({
         <h2 className="text-2xl text-ink">My grids</h2>
         <p className="text-sm text-ink-soft">
           Lo Shu and Vedic Square stay separate. They do not share calculation
-          rules.
+          rules. Number Journey (above) is who you are. The square below shows
+          how a digit’s footprint reinforces or complicates that.
         </p>
         <div className="flex flex-wrap gap-1 rounded-full border border-[var(--line)] bg-white/50 p-1">
           {(

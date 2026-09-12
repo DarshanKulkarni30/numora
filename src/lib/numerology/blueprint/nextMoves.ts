@@ -18,22 +18,20 @@ export function buildNextMoves(opts: {
   nextPy: number;
   nextCycleLabel: string | null;
 }): NextMoves {
-  const topJobs = opts.career.professions.slice(0, 3).map((p) => p.title);
-  const primaryLife = opts.life.themes.filter((t) => t.band === "primary");
+  const topMove = opts.career.moves[0]?.doThis;
+  const rel = opts.life.themes.find((t) => t.id === "relationships");
+  const growth = opts.life.themes.find((t) => t.id === "growth");
   return {
     career: assertSafeCopy(
-      topJobs.length
-        ? `Focus on ${topJobs.join(" + ")} using this year’s ${opts.year.pyMode.verb} mode.`
-        : `Use this year’s ${opts.year.pyMode.verb} mode in the work you already have.`,
+      topMove ??
+        `Use this year’s ${opts.year.pyMode.verb} mode in the work you already have.`,
       "blueprint.next.career",
     ),
     relationships: assertSafeCopy(
-      primaryLife[0]?.title === "Relationships"
-        ? `Prioritize direct communication and meaningful time, not simply more social activity.`
-        : opts.year.relationships,
+      rel?.doThis ?? opts.year.relationships,
       "blueprint.next.rel",
     ),
-    growth: assertSafeCopy(opts.year.growth, "blueprint.next.growth"),
+    growth: assertSafeCopy(growth?.doThis ?? opts.year.growth, "blueprint.next.growth"),
     timing: assertSafeCopy(
       `${opts.year.calendarYear}: ${opts.year.pyMode.verb} → ${opts.nextYear}: Personal Year ${opts.nextPy}${opts.nextCycleLabel ? ` × ${opts.nextCycleLabel}` : ""}.`,
       "blueprint.next.timing",

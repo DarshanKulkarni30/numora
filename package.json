@@ -21,6 +21,8 @@
     "smoke:name-history": "tsx scripts/smoke-name-history.ts",
     "smoke:enhanced-report": "tsx scripts/smoke-enhanced-report.ts",
     "smoke:name-cycle": "tsx scripts/smoke-name-cycle.ts",
+    "smoke:year-alignment": "tsx scripts/smoke-year-alignment.ts",
+    "smoke:year-resonance": "tsx scripts/smoke-year-resonance.ts",
     "smoke:pythagorean-chart": "tsx scripts/smoke-pythagorean-chart.ts",
     "smoke:p1-p2": "tsx scripts/smoke-p1-p2.ts",
     "smoke:living-share": "tsx scripts/smoke-living-share.ts",

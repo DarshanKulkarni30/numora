@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import { VedicSquareGlyph } from "@/components/report/VedicSquareGlyph";
 import { buildVedicSquareArchitecture } from "@/lib/numerology/vedicSquareArchitecture";
+import { buildVedicSquareReading } from "@/lib/numerology/blueprint/vedicSquareReading";
 import {
   digitalRoot,
   layerContextLine,
@@ -29,23 +30,24 @@ function Meter({
 }: {
   label: string;
   value: number;
-  /** What a high bar actually means, so the percentage is not read as a grade. */
   help: string;
 }) {
   const pct = Math.round(Math.min(1, Math.max(0, value)) * 100);
   return (
-    <div title={`${label}: ${pct}% — ${help}`}>
+    <div>
       <div className="flex justify-between text-[10px] uppercase tracking-wider text-ink-soft">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
-      <p className="text-[10px] leading-4 text-ink-soft">{help}</p>
       <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[var(--line)]/50">
         <div
           className="h-full rounded-full bg-gold-deep/80 transition-[width] duration-300"
           style={{ width: `${pct}%` }}
         />
       </div>
+      {help ? (
+        <p className="mt-1 text-[10px] leading-4 text-ink-soft">{help}</p>
+      ) : null}
     </div>
   );
 }
@@ -78,6 +80,7 @@ export function VedicSquarePanel({
   const [manual, setManual] = useState(1);
   const [layout, setLayout] = useState<"lattice" | "classic">("lattice");
   const [tip, setTip] = useState<string | null>(null);
+  const [openMetric, setOpenMetric] = useState<string | null>(null);
 
   const highlight = useMemo(() => {
     if (source === "manual") return manual;
@@ -95,6 +98,19 @@ export function VedicSquarePanel({
   );
   const guide = squareDigitGuide(digit);
   const layerLine = layerContextLine(source, digit);
+  const reading = useMemo(
+    () =>
+      buildVedicSquareReading({
+        source,
+        digit,
+        psychic: Number(psychic) || 1,
+        destiny: Number(destiny) || 1,
+        name: Number(nameNumber) || 1,
+        unit: unitName ? Number(unitName) || null : null,
+        metrics: architecture.metrics,
+      }),
+    [source, digit, psychic, destiny, nameNumber, unitName, architecture.metrics],
+  );
   const oppDigit = architecture.oppositeDigit;
 
   const presets: { id: HighlightSource; label: string; value?: string }[] = [
@@ -405,49 +421,119 @@ export function VedicSquarePanel({
               title={`${digit} · ${architecture.planetLabel}`}
             />
             <div>
-              <p className="brand text-2xl leading-none text-ink">{digit}</p>
-              <p className="text-xs text-ink-soft">
-                {architecture.planetLabel} {architecture.planetSymbol}
+              <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                Your {digit} footprint
               </p>
+              <p className="brand text-2xl leading-none text-ink">{digit}</p>
+              <p className="text-xs text-ink-soft">{reading.planetLine}</p>
               <p className="mt-0.5 text-xs font-medium text-ink">
-                {architecture.archetype.name}
+                {reading.keywords}
               </p>
             </div>
           </div>
 
-          <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-2.5">
+          <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-2 text-sm leading-6">
             <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-              How your digits sit on this square
+              {reading.seatTitle}
+            </p>
+            <p className="text-ink">{reading.seatMeaning}</p>
+            <p className="text-ink-soft">{reading.expressed}</p>
+            <p>
+              <span className="font-medium text-ink">Advantage. </span>
+              {reading.advantage}
+            </p>
+            <p>
+              <span className="font-medium text-ink">Watch. </span>
+              {reading.watch}
+            </p>
+            <p>
+              <span className="font-medium text-ink">Use it. </span>
+              {reading.use}
+            </p>
+            {reading.together ? (
+              <p className="text-ink">{reading.together}</p>
+            ) : null}
+          </div>
+
+          <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-1.5 text-sm leading-6">
+            <p>
+              <span className="font-medium text-ink">Observed. </span>
+              {reading.observed}
+            </p>
+            <p>
+              <span className="font-medium text-ink">Meaning. </span>
+              {reading.meaning}
+            </p>
+            <p>
+              <span className="font-medium text-ink">Watch. </span>
+              {reading.watchLine}
+            </p>
+            <p>
+              <span className="font-medium text-ink">Action. </span>
+              {reading.action}
+            </p>
+            <p className="text-ink-soft">{reading.confirmLine}</p>
+          </div>
+
+          {reading.missing.length ? (
+            <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-2">
+              <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+                Underrepresented in your seats
+              </p>
+              {reading.missing.map((row) => (
+                <div key={row.digit} className="text-sm leading-6">
+                  <p className="font-medium text-ink">{row.digit} is quieter here</p>
+                  <p className="text-ink-soft">{row.pattern}</p>
+                  <p className="text-ink-soft">Watch: {row.watch}</p>
+                  <p className="text-ink">Practice: {row.practice}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="rounded-xl border border-[var(--line)] bg-white/60 px-3 py-3 space-y-2">
+            <p className="text-[10px] uppercase tracking-wider text-ink-soft">
+              Pattern diagnostics
             </p>
             <p className="text-[10px] leading-4 text-ink-soft">
-              These describe the shape of your grid, not how good it is. There
-              is no ideal set of bars.
+              These bars describe how {digit} sits in the 9×9 table — the same
+              for anyone highlighting {digit}. They are not a grade of your
+              chart. Open one for what it measures.
             </p>
-            <Meter
-              label="Frequency"
-              value={architecture.metrics.frequencyScore}
-              help="How often your digits repeat. Higher means fewer traits, used more strongly."
-              />
-            <Meter
-              label="Distribution"
-              value={architecture.metrics.distributionScore}
-              help="How spread out your digits are. Higher means more traits available, each less dominant."
-            />
-            <Meter
-              label="Symmetry"
-              value={architecture.metrics.symmetryScore}
-              help="How evenly your digits balance across the square. Higher means fewer lopsided areas."
-            />
-            <Meter
-              label="Opposite tension"
-              value={architecture.metrics.oppositeTension}
-              help="How often you hold digits that sit opposite each other. Higher means more internal push and pull."
-            />
-            <p className="text-[11px] text-ink-soft">
-              {architecture.metrics.frequencyLabel} ·{" "}
-              {architecture.metrics.clarity} clarity ·{" "}
-              {architecture.metrics.reactionStyle} reactions
-            </p>
+            {reading.diagnostics.map((row) => (
+              <div key={row.id}>
+                <button
+                  type="button"
+                  className="btn-tactile w-full rounded-lg border border-[var(--line)] bg-white px-2 py-2 text-left"
+                  onClick={() =>
+                    setOpenMetric(openMetric === row.id ? null : row.id)
+                  }
+                  aria-expanded={openMetric === row.id}
+                >
+                  <Meter
+                    label={row.label}
+                    value={row.percent / 100}
+                    help=""
+                  />
+                </button>
+                {openMetric === row.id ? (
+                  <div className="mt-1 space-y-1 px-1 text-xs leading-5 text-ink-soft">
+                    <p>
+                      <span className="text-ink">What this measures. </span>
+                      {row.measures}
+                    </p>
+                    <p>
+                      <span className="text-ink">In this grid. </span>
+                      {row.inGrid}
+                    </p>
+                    <p>
+                      <span className="text-ink">What you can do. </span>
+                      {row.doWith}
+                    </p>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         </div>
       </div>

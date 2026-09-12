@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import { YearReading } from "@/components/blueprint/YearReading";
+import { AlignmentMatrix } from "@/components/blueprint/AlignmentMatrix";
 import { nameCycleForYear } from "@/lib/numerology/blueprint/nameCycle";
 import { interpretYear } from "@/lib/numerology/blueprint/yearInterpreter";
 import { calculateChaldean } from "@/lib/numerology/chaldean";
+import { calculateChaldeanNameSet } from "@/lib/numerology/chaldeanName";
+import { buildYearResonance } from "@/lib/numerology/blueprint/yearResonance";
 import { personalYearCycleAt } from "@/lib/numerology/cycles";
 import { vedicDestinyFromDob, vedicPsychicFromDob } from "@/lib/numerology/dateNumbers";
 import {
@@ -117,6 +120,7 @@ export function YearOutlookExplorer({
     "default",
   );
   const [showPast, setShowPast] = useState(false);
+  const [alignYear, setAlignYear] = useState<number | null>(null);
 
   const selected = selectable.find((p) => personKey(p) === selectedKey);
   const dob = selected?.date_of_birth ?? "";
@@ -218,6 +222,7 @@ export function YearOutlookExplorer({
                 setSelectedKey(e.target.value);
                 setOpenYear("default");
                 setShowPast(false);
+                setAlignYear(null);
               }}
               className="w-full max-w-md rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-ink outline-none ring-gold focus:ring-2"
             >
@@ -250,6 +255,7 @@ export function YearOutlookExplorer({
                   setTab(id);
                   setOpenYear("default");
                   setShowPast(false);
+                  setAlignYear(null);
                 }}
                 className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
                   tab === id
@@ -276,6 +282,7 @@ export function YearOutlookExplorer({
                   setYearAnchor(id);
                   setOpenYear("default");
                   setShowPast(false);
+                  setAlignYear(null);
                 }}
                 className={`btn-tactile flex-1 rounded-full px-3 py-2 text-sm ${
                   yearAnchor === id
@@ -306,6 +313,36 @@ export function YearOutlookExplorer({
           {tab === "western" && selected ? (
             <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5">
               <YearForecastPanel dateOfBirth={selected.date_of_birth} />
+            </div>
+          ) : null}
+
+          {tab === "western" && selected && dob ? (
+            <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-5">
+              <AlignmentMatrix
+                dob={dob}
+                natalName={selected.full_name}
+                preferredName={selected.preferred_name}
+                history={selected.name_history}
+                bn={vedicPsychicFromDob(dob)}
+                dn={vedicDestinyFromDob(dob)}
+                nameRoot={
+                  selected.full_name
+                    ? calculateChaldean(selected.full_name).nameNumber
+                    : 9
+                }
+                nameCompound={
+                  selected.full_name
+                    ? calculateChaldean(selected.full_name).compound
+                    : undefined
+                }
+                year={alignYear ?? currentKeyYear}
+                onYearChange={(next) => {
+                  setAlignYear(next);
+                  setOpenYear(next);
+                  if (next < currentKeyYear) setShowPast(true);
+                }}
+                yearAnchor={yearAnchor}
+              />
             </div>
           ) : null}
 
@@ -457,6 +494,7 @@ function YearEntry({
   const bn = vedicPsychicFromDob(dob);
   const dn = vedicDestinyFromDob(dob);
   const nameRoot = fullName ? calculateChaldean(fullName).nameNumber : 9;
+  const nameSet = fullName ? calculateChaldeanNameSet(fullName) : null;
   const reading = interpretYear({
     calendarYear: outlook.calendarYearUsed,
     personalYear: outlook.number,
@@ -466,6 +504,15 @@ function YearEntry({
     nameRoot,
     isPast: !isNow && year < new Date().getFullYear(),
     isFuture: year > new Date().getFullYear(),
+  });
+  const resonance = buildYearResonance({
+    personalYear: outlook.number,
+    bn,
+    dn,
+    soul: nameSet?.soul.root ?? bn,
+    nameRoot,
+    cycleNumber: nameCycle?.active.value ?? null,
+    cycleLetter: nameCycle?.active.letter ?? null,
   });
   const debtLine =
     outlook.debts.length > 0
@@ -494,7 +541,7 @@ function YearEntry({
       isNow={isNow}
       onToggle={onToggle}
     >
-      <YearReading reading={reading} isPast={!isNow && year < new Date().getFullYear()} isFuture={year > new Date().getFullYear()} />
+      <YearReading reading={reading} resonance={resonance} isPast={!isNow && year < new Date().getFullYear()} isFuture={year > new Date().getFullYear()} />
       <YearDetail
         intro={`${LAND_LABEL[outlook.land.band]}. ${outlook.nature.typical}`}
         points={[

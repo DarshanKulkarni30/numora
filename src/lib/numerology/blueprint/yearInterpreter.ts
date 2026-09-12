@@ -70,8 +70,12 @@ const FLOW_VERB: Record<number, string> = {
   9: "Finish",
 };
 
-function modeFor(n: number): YearMode {
+export function yearModeFor(n: number): YearMode {
   return DIGIT_MODE[reduceToSingleDigit(n)] ?? DIGIT_MODE[9]!;
+}
+
+function modeFor(n: number): YearMode {
+  return yearModeFor(n);
 }
 
 function flowVerb(n: number): string {

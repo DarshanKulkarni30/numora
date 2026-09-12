@@ -81,3 +81,23 @@ export function planetForVedic(n: number | string): PlanetInfo {
 export function planetLabel(info: PlanetInfo): string {
   return `${info.symbol} ${info.name}`;
 }
+
+/** Vedic name plus Western name when the two traditions disagree (4 and 7). */
+export function planetPairForDigit(n: number | string): {
+  vedic: PlanetInfo;
+  western: PlanetInfo;
+  same: boolean;
+  note: string | null;
+} {
+  const vedic = planetForVedic(n);
+  const western = planetForPythagorean(n);
+  const same = vedic.id === western.id;
+  return {
+    vedic,
+    western,
+    same,
+    note: same
+      ? null
+      : `Indian-style charts name this digit ${vedic.name}. Western charts name the same digit ${western.name}. Same number, two traditions — not two extra planets.`,
+  };
+}

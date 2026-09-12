@@ -1,7 +1,9 @@
 "use client";
 
 import { PanelRating } from "@/components/blueprint/PanelRating";
+import { YearResonancePanel } from "@/components/blueprint/YearResonancePanel";
 import type { YearInterpretation } from "@/lib/numerology/blueprint/yearInterpreter";
+import type { YearResonance } from "@/lib/numerology/blueprint/yearResonance";
 
 type Props = {
   reading: YearInterpretation;
@@ -9,6 +11,7 @@ type Props = {
   isFuture?: boolean;
   allowRating?: boolean;
   onDigit?: (digit: number, label: string) => void;
+  resonance?: YearResonance;
 };
 
 export function YearReading({
@@ -17,6 +20,7 @@ export function YearReading({
   isFuture = false,
   allowRating = true,
   onDigit,
+  resonance,
 }: Props) {
   const nums = reading.numbers;
 
@@ -59,6 +63,11 @@ export function YearReading({
           {reading.risk}
         </p>
         <p className="mt-1 text-sm text-ink">Best move: {reading.bestMove}</p>
+        {resonance ? (
+          <div className="mt-4">
+            <YearResonancePanel resonance={resonance} />
+          </div>
+        ) : null}
         <PanelRating
           panelId="year.signature"
           numbers={nums}
