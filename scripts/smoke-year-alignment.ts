@@ -79,16 +79,21 @@ assert(live.careers.length >= 5, "career rows");
 assert(live.life.length >= 5, "life rows");
 assert(live.personalYear >= 1 && live.personalYear <= 9, "personal year 1–9");
 assert(
-  py3.starKey.core.toLowerCase().includes("does not change"),
+  py3.starKey.core.toLowerCase().includes("does not move"),
   "star key explains core stays still",
 );
 assert(
-  py3.careers.every((r) => r.starRead.length > 20),
-  "each career row says how to read the stars",
+  new Set(py3.careers.map((r) => r.starRead)).size === py3.careers.length,
+  "each career star line is unique to the row",
+);
+assert(
+  venture7!.starRead.includes("Entrepreneurship"),
+  "star line names the career row",
 );
 assert(
   venture7!.starRead.toLowerCase().includes("approach") ||
-    venture7!.starRead.toLowerCase().includes("method"),
+    venture7!.starRead.toLowerCase().includes("method") ||
+    venture7!.starRead.toLowerCase().includes("weaker"),
   "weaker year stars explain method, not quitting",
 );
 

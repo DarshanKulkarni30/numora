@@ -115,10 +115,10 @@ export function buildInspectorCardCopy(opts: {
     return {
       kind,
       meaning: assertSafeCopy(
-        "Name Number is the Chaldean letter total of the name currently in force (the spelling you use now). The long total is kept, then reduced. This is not the Western Expression chart, which uses a different letter table.",
+        "Name Number (NN) is the Chaldean letter total of the spelling this reading is using. NN, Soul Number (SN), and Personality Number (PN) always share that same spelling. This is not the Western Expression chart, which uses a different letter table.",
         "inspector.name.meaning",
       ),
-      alsoKnownAs: "Chaldean name number of the operating spelling.",
+      alsoKnownAs: "NN — Chaldean name number of the declared spelling.",
       compound: expression.compound,
       calc: assertSafeList(
         [
@@ -136,7 +136,7 @@ export function buildInspectorCardCopy(opts: {
     return {
       kind,
       meaning: assertSafeCopy(
-        "Soul Number uses only the vowels in that same Chaldean spelling. It is read as inner motive — what you reach for when nobody is scoring you — not a secret destiny.",
+        "Soul Number (SN) uses only the vowels in that same spelling as Name Number. It is inner motive — what you reach for when nobody is scoring you — not a secret destiny.",
         "inspector.soul.meaning",
       ),
       alsoKnownAs: "Also called Soul Urge. Consonants are not counted here.",
@@ -157,10 +157,10 @@ export function buildInspectorCardCopy(opts: {
     return {
       kind,
       meaning: assertSafeCopy(
-        "Personality Number uses the consonants in the Chaldean spelling. It is the outer manner people notice first — not the private want (Soul) and not the full name total.",
+        "Personality Number (PN) uses the consonants in that same spelling. It is the outer manner people notice first — not Soul (vowels) and not the full Name Number.",
         "inspector.pers.meaning",
       ),
-      alsoKnownAs: "Consonants of the name in force.",
+      alsoKnownAs: "PN — consonants of the same spelling as NN and SN.",
       compound: pers.compound !== pers.root ? pers.compound : undefined,
       calc: assertSafeList(
         [
@@ -226,7 +226,7 @@ export function buildInspectorCardCopy(opts: {
     return {
       kind,
       meaning: assertSafeCopy(
-        "Name Cycle is which letter of the first name is active in this Personal Year. Birth year is letter 1, then the name loops. It is a timing colour on the year — not a fifth core number, and not Pythagorean Essence (where a letter lasts as many years as its value).",
+        "Name Cycle is which letter of the given / first name is active in this Personal Year. Birth year is letter 1, then the name loops. It is everyday identity timing — not a fifth core number, and not Pythagorean Essence. If the given name later changed, natal cycle sits under Advanced.",
         "inspector.cycle.meaning",
       ),
       alsoKnownAs: "Chaldean first-name letter walk, one letter per Personal Year.",

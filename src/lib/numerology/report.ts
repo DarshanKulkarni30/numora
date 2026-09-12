@@ -1162,6 +1162,9 @@ export function generateReport(
       report_type,
       gender: input.gender?.trim() || "",
       purpose: input.purpose?.trim() || "",
+      ...(input.nameHistory
+        ? { name_history: input.nameHistory }
+        : {}),
       ...(names.differs
         ? {
             operating_name: operatingName,

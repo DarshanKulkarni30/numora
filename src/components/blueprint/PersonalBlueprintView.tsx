@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AlignmentMatrix } from "@/components/blueprint/AlignmentMatrix";
 import { CoreNumberJourney } from "@/components/blueprint/CoreNumberJourney";
+import { IdentityLayers } from "@/components/blueprint/IdentityLayers";
 import { LifePatternFlow } from "@/components/blueprint/LifePatternFlow";
-import { NameJourney } from "@/components/blueprint/NameJourney";
 import { NumberInspector, type InspectorTarget } from "@/components/blueprint/NumberInspector";
 import { PanelRating } from "@/components/blueprint/PanelRating";
 import { YearReading } from "@/components/blueprint/YearReading";
@@ -16,7 +16,6 @@ import { TriviaPanel } from "@/components/report/TriviaPanel";
 import { VedicSquarePanel } from "@/components/report/VedicSquarePanel";
 import { buildBlueprintReading } from "@/lib/numerology/blueprint";
 import { buildInspectorCardCopy } from "@/lib/numerology/blueprint/inspectorCopy";
-import { formatCompoundRoot } from "@/lib/numerology/chaldeanName";
 import { parseChartNumber } from "@/lib/numerology/enhanced/digits";
 import { buildActionPlan } from "@/lib/numerology/enhanced/actionPlan";
 import { buildEnhancedReading } from "@/lib/numerology/enhanced";
@@ -60,7 +59,11 @@ export function PersonalBlueprintView({
     [live, reportId],
   );
   const blueprint = useMemo(
-    () => buildBlueprintReading(live, { reportId }),
+    () =>
+      buildBlueprintReading(live, {
+        reportId,
+        history: live.person.name_history,
+      }),
     [live, reportId],
   );
   const actionPlan = useMemo(
@@ -81,15 +84,19 @@ export function PersonalBlueprintView({
 
   const snap = live.numerology_snapshot;
   const person = live.person;
-  const { cycle, interpretation, interactions } = blueprint;
-  const nameLabel = formatCompoundRoot(blueprint.nameCompound, blueprint.nameRoot);
+  const { cycle, natalCycle, interpretation, interactions, identity } = blueprint;
 
-  function openDigit(digit: number, label: string, extra?: Partial<InspectorTarget>) {
+  function openDigit(
+    digit: number,
+    label: string,
+    extra?: Partial<InspectorTarget> & { spelling?: string },
+  ) {
     const occurrences = [
       blueprint.bn === digit ? "Birth Number" : null,
       blueprint.dn === digit ? "Destiny Number" : null,
-      blueprint.nameRoot === digit ? "Name root" : null,
-      blueprint.soul === digit ? "Soul" : null,
+      blueprint.nameRoot === digit ? "NN" : null,
+      blueprint.soul === digit ? "SN" : null,
+      blueprint.personality === digit ? "PN" : null,
       blueprint.py === digit ? "Personal Year" : null,
       cycle?.active.value === digit
         ? `Name Cycle ${cycle.active.letter}`
@@ -100,7 +107,11 @@ export function PersonalBlueprintView({
       label,
       digit,
       dob: person.date_of_birth,
-      operatingName: person.operating_name || person.full_name,
+      operatingName:
+        extra?.spelling ||
+        identity.active.spelling ||
+        person.operating_name ||
+        person.full_name,
       soulCompound: parseChartNumber(snap.soul_urge_compound) ?? undefined,
       cycle,
       pinnacle: blueprint.pinnacle,
@@ -170,8 +181,9 @@ export function PersonalBlueprintView({
           {[
             ["BN", blueprint.bn, "Birth Number"],
             ["DN", blueprint.dn, "Destiny Number"],
-            ["NAME", blueprint.nameRoot, "Name Number"],
-            ["SOUL", blueprint.soul, "Soul"],
+            ["NN", blueprint.nameRoot, "Name Number"],
+            ["SN", blueprint.soul, "Soul"],
+            ["PN", blueprint.personality, "Personality"],
             ["PY", blueprint.py, "Personal Year"],
             ["PIN", blueprint.pinnacle.number, "Pinnacle"],
           ].map(([label, value, title]) => (
@@ -204,37 +216,19 @@ export function PersonalBlueprintView({
       <section id="overview" className="scroll-mt-28 space-y-5">
         <h2 className="text-2xl text-ink">My numbers</h2>
         <p className="text-sm text-ink-soft">
-          Core Code is permanent. Name Cycle below is this year’s active letter —
-          not a fifth core number.
+          Foundation is the date. Identity is one declared spelling for NN, SN,
+          and PN. Name Cycle is the given-name letter this year — not a fifth
+          core number.
         </p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            ["Birth Number", blueprint.bn, "Driver", "The day you were born reduced."],
-            ["Destiny Number", blueprint.dn, "Pathway", "The full date reduced."],
-            ["Name Number", nameLabel, "Depth", "Chaldean letters of the name in force."],
-            ["Soul", String(blueprint.soul), "Inner motive", "Chaldean vowels."],
-          ].map(([label, value, role, hint]) => (
-            <button
-              key={label}
-              type="button"
-              className="btn-tactile rounded-2xl border border-[var(--line)] bg-white/80 p-4 text-left"
-              onClick={() => {
-                const digit =
-                  label === "Name Number" ? blueprint.nameRoot : Number(value);
-                openDigit(digit, String(label), {
-                  compound: label === "Name Number" ? blueprint.nameCompound : undefined,
-                });
-              }}
-            >
-              <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-                {label}
-              </p>
-              <p className="brand mt-1 text-3xl text-ink">{value}</p>
-              <p className="mt-1 text-sm text-ink">{role}</p>
-              <p className="mt-1 text-xs text-ink-soft">{hint}</p>
-            </button>
-          ))}
-        </div>
+        <IdentityLayers
+          bn={blueprint.bn}
+          dn={blueprint.dn}
+          py={blueprint.py}
+          identity={identity}
+          activeCycle={cycle}
+          natalCycle={natalCycle}
+          onDigit={(digit, label, extra) => openDigit(digit, label, extra)}
+        />
         <CoreNumberJourney
           reading={blueprint.coreJourney}
           onDigit={(digit, label) => {
@@ -254,25 +248,16 @@ export function PersonalBlueprintView({
               digit,
               mapped,
               mapped === "Name Number"
-                ? { compound: blueprint.nameCompound }
+                ? {
+                    compound: blueprint.nameCompound,
+                    spelling: identity.active.spelling,
+                  }
                 : mapped === "Personality"
                   ? { compound: blueprint.personalityCompound }
                   : undefined,
             );
           }}
         />
-        {cycle ? (
-          <NameJourney
-            cycle={cycle}
-            onSelectLetter={(letter, value) =>
-              openDigit(value, "Name Cycle", { letter, calc: cycle.calcLines })
-            }
-          />
-        ) : (
-          <p className="text-sm text-ink-soft">
-            Add a Latin first name to read the annual Name Cycle.
-          </p>
-        )}
         <PanelRating
           panelId="blueprint.core"
           numbers={blueprint.numbersUsed}
@@ -534,6 +519,7 @@ export function PersonalBlueprintView({
           dob={person.date_of_birth}
           natalName={snap.natal_name || person.full_name}
           preferredName={person.preferred_name}
+          history={person.name_history}
           bn={blueprint.bn}
           dn={blueprint.dn}
           nameRoot={blueprint.nameRoot}
@@ -551,6 +537,7 @@ export function PersonalBlueprintView({
           dob={person.date_of_birth}
           natalName={snap.natal_name || person.full_name}
           preferredName={person.preferred_name}
+          history={person.name_history}
           bn={blueprint.bn}
           dn={blueprint.dn}
           nameRoot={blueprint.nameRoot}

@@ -107,6 +107,8 @@ export type NumerologyReport = {
     purpose: string;
     operating_name?: string;
     name_era_label?: string;
+    /** Later name eras; natal spelling stays full_name. */
+    name_history?: unknown;
   };
   numerology_snapshot: NumerologySnapshot;
   pythagorean: {

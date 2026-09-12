@@ -14,6 +14,11 @@ import { buildLifeAreaScores } from "./lifeAreas";
 import { buildNumberJourney } from "./numberJourney";
 import { buildYearResonance } from "./yearResonance";
 import { nameCycleForYear, type NameCycle } from "./nameCycle";
+import {
+  buildIdentityReading,
+  historyFromReport,
+  natalNameCycle,
+} from "./identity";
 import { buildNextMoves } from "./nextMoves";
 import { buildOperatingManual } from "./operatingManual";
 import { buildYearTransition } from "./transitions";
@@ -59,12 +64,20 @@ export function buildBlueprintReading(
 ) {
   const now = opts?.now ?? new Date();
   const dob = report.person.date_of_birth;
+  const history = historyFromReport(report, opts?.history);
   const { bn, dn, nameRoot, soul, nameCompound, personality, personalityCompound } =
     coreSeatsFromReport(report);
   const pyCycle = personalYearCycleAt(dob, now);
   const py = pyCycle.number;
   const year = pyCycle.calendarYearUsed;
-  const cycle = cycleForReportYear(report, year, py, opts?.history);
+  const identity = buildIdentityReading(report, { history });
+  const cycle = cycleForReportYear(report, year, py, history);
+  const natalCycle = natalNameCycle({
+    identity,
+    dob,
+    calendarYearUsed: year,
+    personalYear: py,
+  });
   const interpretation = interpretYear({
     calendarYear: year,
     personalYear: py,
@@ -78,13 +91,13 @@ export function buildBlueprintReading(
   const nextYear = year + 1;
   const prevPy = personalYearForCalendarYear(dob, prevYear);
   const nextPy = personalYearForCalendarYear(dob, nextYear);
-  const prevCycle = cycleForReportYear(report, prevYear, prevPy, opts?.history);
-  const nextCycle = cycleForReportYear(report, nextYear, nextPy, opts?.history);
+  const prevCycle = cycleForReportYear(report, prevYear, prevPy, history);
+  const nextCycle = cycleForReportYear(report, nextYear, nextPy, history);
 
   const journeyYears = [year - 3, year - 2, year - 1, year, year + 1, year + 2, year + 3];
   const journey = journeyYears.map((y) => {
     const yPy = personalYearForCalendarYear(dob, y);
-    const yCycle = cycleForReportYear(report, y, yPy, opts?.history);
+    const yCycle = cycleForReportYear(report, y, yPy, history);
     const reading = interpretYear({
       calendarYear: y,
       personalYear: yPy,
@@ -152,10 +165,12 @@ export function buildBlueprintReading(
     nameCompound,
     personality,
     personalityCompound,
-    nameDisplay: cycle?.nameDisplay ?? String(nameRoot),
+    nameDisplay: identity.active.nnDisplay,
     py,
     year,
     cycle,
+    natalCycle,
+    identity,
     interpretation,
     resonance: buildYearResonance({
       personalYear: py,

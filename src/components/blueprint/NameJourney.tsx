@@ -6,19 +6,20 @@ import { plainTrait } from "@/lib/numerology/layeredCopy";
 
 type Props = {
   cycle: NameCycle;
+  eyebrow?: string;
+  intro?: string;
   onSelectLetter?: (letter: string, value: number) => void;
 };
 
-export function NameJourney({ cycle, onSelectLetter }: Props) {
+export function NameJourney({ cycle, eyebrow, intro, onSelectLetter }: Props) {
   return (
     <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-5">
       <p className="text-[10px] uppercase tracking-[0.18em] text-gold-deep">
-        Your Name Cycle
+        {eyebrow ?? "Name Cycle"}
       </p>
       <p className="mt-2 text-sm leading-6 text-ink">
-        Your name moves through a repeating annual letter cycle. Each year
-        activates the next letter in your first name. Name Number{" "}
-        {cycle.nameDisplay} stays the permanent name vibration.
+        {intro ??
+          `Your name moves through a repeating annual letter cycle. Each year activates the next letter in your first name. Name Number ${cycle.nameDisplay} stays the permanent name vibration.`}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         {cycle.letters.map((row) => {

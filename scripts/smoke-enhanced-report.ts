@@ -182,6 +182,43 @@ const blueprint = buildBlueprintReading(adult, {
   now: new Date("2026-08-21"),
 });
 assert(blueprint.interpretation.interpretationVersion === "1.0", "blueprint version");
+assert(blueprint.identity.sameSpelling === false, "later spelling is a second identity layer");
+assert(blueprint.identity.givenUnchanged, "surname-only change keeps one Name Cycle");
+assert(
+  blueprint.identity.showNatalCycle === false && blueprint.natalCycle == null,
+  "natal cycle hidden when given name is unchanged",
+);
+assert(blueprint.identity.active.nnDisplay.length >= 1, "active NN is declared");
+assert(
+  blueprint.identity.question.toLowerCase().includes("bn"),
+  "identity question names BN → DN support",
+);
+const givenChanged = generateReport({
+  fullName: "Darshan Kulkarni",
+  dateOfBirth: "30/08/1981",
+  purpose: "Self-reflection",
+  nameHistory: [
+    {
+      id: "e1",
+      full_name: "Anita Sharma",
+      started_on: "22/10/2005",
+      ended_on: "",
+      reason: "marriage",
+    },
+  ],
+});
+const givenChangedBp = buildBlueprintReading(givenChanged, {
+  now: new Date("2026-08-21"),
+});
+assert(givenChangedBp.identity.showNatalCycle, "given-name change shows natal cycle as advanced");
+assert(
+  givenChangedBp.cycle?.firstName.toUpperCase().startsWith("A"),
+  "active cycle uses everyday given name",
+);
+assert(
+  givenChangedBp.natalCycle?.firstName.toUpperCase().startsWith("D"),
+  "natal cycle uses birth given name",
+);
 assert(blueprint.career.moves.length === 3, "career compass has three moves");
 assert(blueprint.career.domains.length >= 1, "career domains present");
 assert(

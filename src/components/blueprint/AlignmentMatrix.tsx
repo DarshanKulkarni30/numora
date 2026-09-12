@@ -74,38 +74,42 @@ function RoleCard({
             {row.verdictLabel}
           </span>
         </div>
-        <p className="mt-2 text-sm text-ink">Best approach: {row.approach}</p>
-        <dl className="mt-2 grid grid-cols-3 gap-2 text-xs text-ink-soft">
-          <div>
-            <dt>Core fit</dt>
-            <dd>
-              <Stars n={row.core} label="Core fit" />
-            </dd>
-          </div>
-          <div>
-            <dt>This year</dt>
-            <dd>
-              <Stars n={row.year} label="Year fit" />
-            </dd>
-          </div>
-          <div>
-            <dt>Name Cycle</dt>
-            <dd>
-              <Stars n={row.cycle} label="Name Cycle fit" />
-            </dd>
-          </div>
-        </dl>
+        <p className="mt-2 text-sm text-ink">Do this: {row.approach}</p>
         <p className="mt-2 text-sm leading-6 text-ink">{row.starRead}</p>
         {open ? (
-          <div className="mt-3 space-y-1 text-sm leading-6 text-ink-soft">
-            <p>{row.why.bn}</p>
-            <p>{row.why.dn}</p>
-            <p>{row.why.name}</p>
-            <p>{row.why.year}</p>
-            <p>{row.why.cycle}</p>
-            <p className="text-ink">{row.result}</p>
+          <div className="mt-3 space-y-2">
+            <dl className="grid grid-cols-3 gap-2 text-xs text-ink-soft">
+              <div>
+                <dt>Core</dt>
+                <dd>
+                  <Stars n={row.core} label="Core fit" />
+                </dd>
+              </div>
+              <div>
+                <dt>This year</dt>
+                <dd>
+                  <Stars n={row.year} label="Year fit" />
+                </dd>
+              </div>
+              <div>
+                <dt>Name Cycle</dt>
+                <dd>
+                  <Stars n={row.cycle} label="Name Cycle fit" />
+                </dd>
+              </div>
+            </dl>
+            <div className="space-y-1 text-sm leading-6 text-ink-soft">
+              <p>{row.why.bn}</p>
+              <p>{row.why.dn}</p>
+              <p>{row.why.name}</p>
+              <p>{row.why.year}</p>
+              <p>{row.why.cycle}</p>
+              <p className="text-ink">{row.result}</p>
+            </div>
           </div>
-        ) : null}
+        ) : (
+          <p className="mt-2 text-xs text-ink-soft">Tap for star rows and why</p>
+        )}
       </button>
     </li>
   );
@@ -113,25 +117,19 @@ function RoleCard({
 
 function StarLegend({ keyCopy }: { keyCopy: YearAlignment["starKey"] }) {
   return (
-    <div className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm leading-6 text-ink">
+    <div className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm leading-6">
       <p className="text-[10px] uppercase tracking-wider text-ink-soft">
-        How to read the three star rows
+        Three star rows
       </p>
-      <ul className="mt-2 space-y-1 text-ink-soft">
-        <li>
-          <span className="text-ink">Core fit. </span>
-          {keyCopy.core}
-        </li>
-        <li>
-          <span className="text-ink">This year. </span>
-          {keyCopy.year}
-        </li>
-        <li>
-          <span className="text-ink">Name Cycle. </span>
-          {keyCopy.cycle}
-        </li>
-      </ul>
-      <p className="mt-2 text-ink">{keyCopy.whenTheyDiffer}</p>
+      <p className="mt-2 text-ink-soft">
+        <span className="text-ink">Core. </span>
+        {keyCopy.core}{" "}
+        <span className="text-ink">This year. </span>
+        {keyCopy.year}{" "}
+        <span className="text-ink">Name Cycle. </span>
+        {keyCopy.cycle}
+      </p>
+      <p className="mt-2 text-sm text-ink">{keyCopy.whenTheyDiffer}</p>
     </div>
   );
 }
@@ -260,36 +258,11 @@ export function AlignmentMatrix({
           </button>
         </div>
       </div>
-      <p className="text-sm text-ink-soft">{reading.coreIntro}</p>
-      <p className="text-sm text-ink">{reading.yearIntro}</p>
-      <p className="text-xs text-ink-soft">
-        Stars are a rank from this engine (core × year × Name Cycle), not a score
-        out of 100.
+      <p className="brand text-xl text-ink">
+        {reading.calendarYear} — {reading.pyModeTitle} year
       </p>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[18rem] text-left text-sm">
-          <caption className="sr-only">Core numbers for {reading.calendarYear}</caption>
-          <tbody>
-            {[
-              ["Birth Number (BN)", String(reading.bn)],
-              ["Destiny Number (DN)", String(reading.dn)],
-              ["Name", reading.nameDisplay],
-              [
-                "Name Cycle",
-                reading.cycleLetter && reading.cycleNumber != null
-                  ? `${reading.cycleLetter}/${reading.cycleNumber}`
-                  : "—",
-              ],
-              ["Personal Year", String(reading.personalYear)],
-            ].map(([label, value]) => (
-              <tr key={label} className="border-t border-[var(--line)]">
-                <th className="py-1.5 font-medium text-ink-soft">{label}</th>
-                <td className="py-1.5 text-right text-ink">{value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <p className="text-sm text-ink">{reading.yearIntro}</p>
+      <p className="text-sm text-ink-soft">{reading.coreIntro}</p>
         </>
       ) : null}
 
@@ -310,10 +283,18 @@ export function AlignmentMatrix({
 
       {focus === "career" || focus === "both" ? (
         <div>
-          <h4 className="text-ink">Career directions this year</h4>
+          <h4 className="text-ink">Put energy here first</h4>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-ink">
+            {reading.careers.slice(0, 3).map((row) => (
+              <li key={row.id}>
+                {row.title}
+                <span className="text-ink-soft"> — {row.verdictLabel}</span>
+              </li>
+            ))}
+          </ol>
+          <h4 className="mt-4 text-ink">Career directions this year</h4>
           <p className="mt-1 text-sm text-ink-soft">
-            Not jobs to switch into. How aligned is this kind of work right now,
-            and what is the best way to approach it.
+            Not jobs to switch into. Same work, different year, different method.
           </p>
           <div className="mt-3">
             <StarLegend keyCopy={reading.starKey} />

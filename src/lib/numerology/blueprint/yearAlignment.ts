@@ -524,46 +524,53 @@ function starRead(
   year: StarScore,
   cycle: StarScore,
   kind: "career" | "life",
+  title: string,
 ): string {
   const noun = kind === "career" ? "kind of work" : "life area";
+  if (verdict === "strong-now" && core <= 2) {
+    return assertSafeCopy(
+      `${title}: this year is carrying this more than your birth pattern. Use Best approach — low core stars are not “not for you.”`,
+      "align.star.now-low-core",
+    );
+  }
   if (verdict === "better-later") {
     return assertSafeCopy(
-      `This ${noun} still fits you. This year is a weaker time to push it — keep a light hold and use Best approach, not a quit decision.`,
+      `${title}: this ${noun} still fits you. This year is a weaker time to push it — keep a light hold, not a quit decision.`,
       "align.star.later",
     );
   }
   if (verdict === "lighter-core") {
     return assertSafeCopy(
-      `Lower core stars mean this is not a natural centre of the chart. Keep it small unless you already do it.`,
+      `${title}: lower core stars mean this is not a natural centre of the chart. Keep it small unless you already do it.`,
       "align.star.light",
     );
   }
   if (verdict === "strong-now") {
     return assertSafeCopy(
-      `Core and this year agree. Lean in with Best approach — still one concrete move, not a life overhaul.`,
+      `${title}: core and this year agree. Lean in with Best approach — one concrete move, not a life overhaul.`,
       "align.star.now",
     );
   }
   if (year > core) {
     return assertSafeCopy(
-      `This year likes this ${noun} more than your core does. Use Best approach. Extra year stars are not a job-change signal.`,
+      `${title}: the year wants this more than your core does. Stay in work you already do; change the method.`,
       "align.star.year-high",
     );
   }
   if (year < core) {
     return assertSafeCopy(
-      `You fit this ${noun} more than this year does. Keep the work; change the method (Best approach).`,
+      `${title}: you fit this ${noun} more than this year does. Keep the work; change the method (Best approach).`,
       "align.star.year-low",
     );
   }
   if (cycle !== core || cycle !== year) {
     return assertSafeCopy(
-      `The badge means good fit, different method this year. Core / this year / name letter can disagree — read Best approach, not “switch.”`,
+      `${title}: good fit, different method this year. Read Best approach — the star rows can disagree.`,
       "align.star.diff",
     );
   }
   return assertSafeCopy(
-    `Good fit. This year still wants a specific method — Best approach is the instruction, not the star count.`,
+    `${title}: good fit. Best approach is the instruction, not the star count.`,
     "align.star.same",
   );
 }
@@ -601,7 +608,7 @@ function scoreRole(
     verdictLabel: VERDICT_LABEL[verdict],
     approach: assertSafeCopy(approach, `align.${role.id}.approach`),
     result: resultCopy(verdict, role.title, approach),
-    starRead: starRead(verdict, core, year, cycle, role.kind),
+    starRead: starRead(verdict, core, year, cycle, role.kind, role.title),
     why: {
       bn: assertSafeCopy(
         `Birth Number ${opts.bn}: ${plainTrait(opts.bn)}.`,
@@ -680,10 +687,6 @@ export function scoreYearAlignment(opts: {
   const careers = rankRows(CAREER_ROLES.map((role) => scoreRole(role, ctx)));
   const life = rankRows(LIFE_AREAS.map((role) => scoreRole(role, ctx)));
   const priorities = life.slice(0, 5);
-  const pyLabel =
-    rawPy !== py
-      ? `Personal Year ${rawPy} (read here as ${py}`
-      : `Personal Year ${py}`;
   return {
     calendarYear: opts.calendarYear,
     personalYear: py,
@@ -696,17 +699,15 @@ export function scoreYearAlignment(opts: {
     nameDisplay,
     nameRoot,
     coreIntro: assertSafeCopy(
-      `Core stays still: Birth ${bn}, Destiny ${dn}, Name ${nameDisplay}. Personal Year and Name Cycle change how to use that core.`,
+      `Core does not change when you step the year. Stars change the method, not who you are. Core fit uses BN + DN + Active NN.`,
       "align.coreIntro",
     ),
     yearIntro: assertSafeCopy(
-      rawPy !== py
-        ? `${opts.calendarYear} is ${pyLabel}, a ${pyMode.title} year${
-            cycleLetter && cycleNumber != null ? ` × Name Cycle ${cycleLetter}/${cycleNumber}` : ""
-          }). Same role, different year → different approach.`
-        : `${opts.calendarYear} is a ${pyMode.title} year (${pyLabel}${
-            cycleLetter && cycleNumber != null ? ` × Name Cycle ${cycleLetter}/${cycleNumber}` : ""
-          }). Same role, different year → different approach.`,
+      `${opts.calendarYear} — ${pyMode.title} year. Personal Year ${py}${
+        cycleLetter && cycleNumber != null
+          ? ` · Active Name Cycle ${cycleLetter}/${cycleNumber}`
+          : ""
+      }. Foundation stays BN ${bn} → DN ${dn}. Active NN ${nameDisplay}.`,
       "align.yearIntro",
     ),
     careers,
@@ -714,9 +715,9 @@ export function scoreYearAlignment(opts: {
     priorities,
     priorityLine: priorityLine(priorities, pyMode.title),
     starKey: {
-      core: "Who you are (Birth + Destiny + Name). This row does not change when you step the year.",
-      year: "This Personal Year. How to approach the same work or area now.",
-      cycle: "Active first-name letter. How you show up this year — not a rewrite of the year digit.",
+      core: "Who you are (BN + DN + Active NN). Does not move when you step the year.",
+      year: "How to work this area now.",
+      cycle: "Active first-name letter — how you show up this year.",
       whenTheyDiffer:
         "If the rows disagree, keep the work that fits you and change the method (Best approach). Lower year stars are not a signal to quit.",
     },
